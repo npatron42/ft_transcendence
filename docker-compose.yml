@@ -20,7 +20,7 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - /home/npatron/Documents/ft_transcendence/backend
+      - /ft_transcendence/backend
       - ./backend:/backend
     ports:                                                 
       - 8000:8000
@@ -34,7 +34,7 @@ services:
     depends_on:
       - db
     volumes:
-      - /home/npatron/Documents/ft_transcendence/frontend
+      - /ft_transcendence/frontend
       - ./frontend:/app
     ports:
       - 5173:5173
