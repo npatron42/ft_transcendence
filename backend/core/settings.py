@@ -1,6 +1,5 @@
 import os
 from pathlib import Path
-import environ
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -12,13 +11,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
 	'rest_framework',
 	'corsheaders',
-	'users.apps.UserConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'users',
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']

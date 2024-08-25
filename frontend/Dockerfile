@@ -6,14 +6,15 @@
 #    By: npatron <npatron@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 14:30:21 by npatron           #+#    #+#              #
-#    Updated: 2024/08/24 18:59:30 by npatron          ###   ########.fr        #
+#    Updated: 2024/08/25 12:48:22 by npatron          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 FROM node:18-bullseye
 
 WORKDIR /app
-COPY . .
+
+COPY package*.json ./
 
 RUN npm install
 

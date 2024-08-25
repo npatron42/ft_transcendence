@@ -6,7 +6,7 @@
 #    By: npatron <npatron@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/19 20:25:37 by npatron           #+#    #+#              #
-#    Updated: 2024/08/24 16:57:44 by npatron          ###   ########.fr        #
+#    Updated: 2024/08/25 13:04:55 by npatron          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,7 +17,7 @@ WORKDIR /backend
 COPY . /backend
 COPY requirements.txt /backend
 
-RUN apk add gcc musl-dev
+RUN apk add gcc musl-dev postgresql-client
 RUN pip install --no-cache-dir -r /backend/requirements.txt
 
 EXPOSE 8000
