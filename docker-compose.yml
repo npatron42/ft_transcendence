@@ -13,7 +13,6 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    # command: python manage.py runserver 0.0.0.0:8000
     restart: unless-stopped
     depends_on:
       - db
@@ -22,9 +21,8 @@ services:
     volumes:
       - /ft_transcendence/backend
       - ./backend:/backend
-    ports:                                                 
+    ports:
       - 8000:8000
-docker
   frontend:
     container_name: frontend
     build:

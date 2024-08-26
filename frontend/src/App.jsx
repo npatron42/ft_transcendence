@@ -4,24 +4,18 @@ import axios from 'axios'
 
 function App() {
 
-  let [name, Brillancon] = useState("");
+  const printName = () => {
+    const names = ["Nico", "Ilyes", "Fabio"];
+    const choice = Math.floor(Math.random() * 3)
 
-
-  const getUsers = async () => {
-    let res = await axios.get(import.meta.env.VITE_API_URL + "users");
-
-    Brillancon(res.data);
+    return (names[choice])
   }
-
-  useEffect(() => {
-    console.log(import.meta.env.VITE_API_URL)
-    console.log("ceci est un test")
-    getUsers();
-  }, [])
 
   return (
     <div>
-      <span>{name}</span>
+      <p>
+        Hello {printName()}
+      </p>
     </div>
   )
 }

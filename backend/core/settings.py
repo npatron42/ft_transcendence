@@ -19,6 +19,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users',
     'authentication',
+	'api',
 ]
 
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
