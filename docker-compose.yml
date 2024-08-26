@@ -24,7 +24,7 @@ services:
       - ./backend:/backend
     ports:                                                 
       - 8000:8000
-
+docker
   frontend:
     container_name: frontend
     build:
@@ -34,10 +34,11 @@ services:
     depends_on:
       - db
     volumes:
-      - /ft_transcendence/frontend
       - ./frontend:/app
+      - /app/node_modules
     ports:
       - 5173:5173
+
 
   adminer:
     image: adminer
