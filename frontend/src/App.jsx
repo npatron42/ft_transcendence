@@ -1,37 +1,63 @@
-import { useState, useEffect } from 'react'
 import './App.css'
-import axios from 'axios'
+import React, { useState } from 'react';
+import axios from 'axios';
 
 function App() {
-  const [details, setDetails] = useState([]);
+  const [data, setData] = useState({
+    name: '',
+    email: ''
+  });
 
-  // Fonction pour récupérer les données depuis le backend
-  const printDataFromBackend = () => {
-    axios.get(import.meta.env.VITE_API_URL)
-      .then(res => {
-        setDetails(res.data); // Mise à jour de l'état avec les données reçues
-      })
-      .catch(err => {
-        console.error(err); // Gestion des erreurs éventuelles
+  const handleChange = (e) => {
+    setData({
+      ...data,
+      [e.target.name]: e.target.value,
+      // [date_subscription]: '2004-16-08',
+      // [date_lastvisit]: '2004-16-08',
+      // [friend]: '2004-16-08',
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post('http://localhost:8000/api/create/', data, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       });
-  }
-
-  // Utilisation de useEffect pour appeler la fonction lors du montage du composant
-  useEffect(() => {
-    printDataFromBackend();
-  }, []); // Le tableau vide [] signifie que l'effet ne se produit que lors du montage
+      console.log('Response:', response.data);
+    } catch (error) {
+      console.error('Error during the POST request:', error);
+    }
+  };
 
   return (
     <div>
-      <p>Hello Django!</p>
-      <hr />
-      {details.map((output, id) => (
-        <div key={id}>
-          <h2>{output.username}</h2>
-          <h2>{output.email}</h2>
-          <h2>{output.password}</h2>
-        </div>
-      ))}
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          name="username"
+          value={data.username}
+          onChange={handleChange}
+          placeholder="Username"
+        />
+        <input
+          type="text"
+          name="password"
+          value={data.password}
+          onChange={handleChange}
+          placeholder="Password"
+        />
+        <input
+          type="text"
+          name="email"
+          value={data.email}
+          onChange={handleChange}
+          placeholder="Email"
+        />
+        <button type="submit">Submit</button>
+      </form>
     </div>
   );
 }
