@@ -30,7 +30,7 @@ services:
       dockerfile: Dockerfile
     restart: unless-stopped
     depends_on:
-      - db
+      - backend
     volumes:
       - ./frontend:/app
       - /app/node_modules
