@@ -22,9 +22,9 @@ def getUsers(request):
 
 @api_view(['POST'])
 def createUser(request):
-	serializer = UserSerializer(data=request.data)
-	# if (serializer.is_valid()):
-	serializer.save()
+	newUser = UserSerializer(data=request.data)
+	if (newUser.is_valid()):
+		newUser.save()
 	logger.info("FABIO")
-	return Response(serializer.data, status=status.HTTP_201_CREATED)
-	# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+	return Response(newUser.data, status=status.HTTP_201_CREATED)
+	# return Response(newUser.errors, status=status.HTTP_400_BAD_REQUEST)
