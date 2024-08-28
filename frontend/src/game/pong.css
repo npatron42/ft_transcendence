@@ -1,0 +1,76 @@
+.pong-container {
+    margin: 20px auto;
+}
+
+.board {
+    width: 800px;
+    height: 600px;
+    background-color: #333;
+    position: relative;
+    margin: 0 auto;
+}
+
+.paddle {
+    width: 10px;
+    height: 80px;
+    background-color: #c90e0e;
+    position: absolute;
+}
+
+.paddleleft {
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.paddleright {
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.ball {
+    width: 15px;
+    height: 15px;
+    background-color: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.score {
+    position: absolute;
+    top: 10px;
+    font-size: 60px;
+    padding: 30px;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+
+.score_1 {
+    left: 40px;
+}
+
+.score_2 {
+    right: 40px;
+}
+
+.button {
+    border: 1px solid blue;
+    border-radius: 5px;
+    box-shadow: 2px 2px 2px black;
+    background-color: blue;
+    color: white;
+    padding: 10px 20px;
+    width: 150px;
+    text-align: center;
+}
+
+.button:hover {
+    background-color: white;
+    color: blue;
+    cursor: pointer;
+}
+
