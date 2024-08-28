@@ -4,24 +4,35 @@ import axios from 'axios';
 
 function App() {
   const [data, setData] = useState({
-    name: '',
-    email: ''
+    username: '',
+    email: '',
+    password: ''
   });
 
   const handleChange = (e) => {
     setData({
       ...data,
-      [e.target.name]: e.target.value,
-      // [date_subscription]: '2004-16-08',
-      // [date_lastvisit]: '2004-16-08',
-      // [friend]: '2004-16-08',
     });
   };
+
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     const response = await axios.post('http://localhost:8000/api/create/', data, {
+  //       headers: {
+  //         'Content-Type': 'application/json'
+  //       }
+  //     });
+  //     console.log('Response:', response.data);
+  //   } catch (error) {
+  //     console.error('Error during the POST request:', error);
+  //   }
+  // };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/api/create/', data, {
+      const response = await axios.get('https://jsonplaceholder.typicode.com/users', {
         headers: {
           'Content-Type': 'application/json'
         }

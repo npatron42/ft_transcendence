@@ -13,18 +13,18 @@ def getUsers(request):
 	serializer = UserSerializer(users, many=True)
 	return Response(serializer.data)
 
-@api_view(['POST'])
-def createUser(request):
-	# print("JE PASSE PAR ICI")
-	# print(request.body)
-	logger.info(request.data)
-	return Response(request.data)
-
 # @api_view(['POST'])
 # def createUser(request):
-# 	serializer = UserSerializer(data=request.data)
-# 	if (serializer.is_valid()):
-# 		serializer.save()
-# 		return Response(serializer.data, status=status.HTTP_201_CREATED)
-# 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-		
+# 	# print("JE PASSE PAR ICI")
+# 	# print(request.body)
+# 	logger.info(request.data)
+# 	return Response(request.data)
+
+@api_view(['POST'])
+def createUser(request):
+	serializer = UserSerializer(data=request.data)
+	# if (serializer.is_valid()):
+	serializer.save()
+	logger.info("FABIO")
+	return Response(serializer.data, status=status.HTTP_201_CREATED)
+	# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
