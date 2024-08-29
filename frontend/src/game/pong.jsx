@@ -30,16 +30,16 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
         };
 
         const updatePaddlePositions = () => {
-            if (keysPressed['ArrowUp']) {
+            if (keysPressed['w']) {
                 setPaddleLeftPos(prevPos => Math.max(prevPos - 5, 40));
             }
-            if (keysPressed['ArrowDown']) {
+            if (keysPressed['s']) {
                 setPaddleLeftPos(prevPos => Math.min(prevPos + 5, 600 - 40));
             }
-            if (keysPressed['w'] || keysPressed['W']) {
+            if (keysPressed['ArrowUp'] || keysPressed['W']) {
                 setPaddleRightPos(prevPos => Math.max(prevPos - 5, 40));
             }
-            if (keysPressed['s'] || keysPressed['S']) {
+            if (keysPressed['ArrowDown'] || keysPressed['S']) {
                 setPaddleRightPos(prevPos => Math.min(prevPos + 5, 600 - 40));
             }
 
@@ -78,7 +78,7 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 dx *= -1;
             }
 
-            if (y <= 0 || y >= 600 - 15) {
+            if (y <= 15 || y >= 600 - 15) {
                 dy *= -1;
             }
 
@@ -109,6 +109,8 @@ const Pong = () => {
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
     const [isGameActive, setIsGameActive] = useState(false);
+    const [score1, setScore1] = useState(0);
+    const [score2, setScore2] = useState(0);
 
     usePaddleMovement(setPaddleLeftPos, setPaddleRightPos, isGameActive);
     useBallMovement(ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive);
@@ -145,6 +147,8 @@ const Pong = () => {
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
+                <div className="score score_1">{score1}</div>
+                <div className="score score_2">{score2}</div>
             </div>
         </div>
     );
