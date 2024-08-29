@@ -7,7 +7,6 @@ import { StartButton } from './game/Pong.jsx';
 function App() {
   return (
     <div className="App">
-      <StartButton />
       <Pong />
     </div>
   );

@@ -1,42 +1,74 @@
-#root {
+/* Conteneur principal avec centrage et espacement */
+.pong-container {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+  position: relative; /* Pour le positionnement absolu des boutons */
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Conteneur pour les boutons Start et Stop */
+.buttons-container {
+  margin-bottom: 1rem; /* Espacement sous les boutons */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* Style général des boutons */
+.button {
+  display: inline-block;
+  padding: 1rem 2rem;
+  margin: 0 0.5rem; /* Espacement horizontal entre les boutons */
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 300ms, transform 300ms;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Style du bouton au survol */
+.button:hover {
+  background-color: #5050a0;
+  transform: scale(1.05); /* Effet de zoom au survol */
 }
 
-.card {
-  padding: 2em;
+/* Style du bouton désactivé */
+.button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
 }
 
-.read-the-docs {
-  color: #888;
+/* Style de la zone de jeu */
+.board {
+  position: relative;
+  width: 800px;
+  height: 600px;
+  background-color: #000;
+  margin: 0 auto;
+  border: 2px solid #fff;
+  overflow: hidden; /* Pour masquer les éléments sortants */
+}
+
+/* Style pour les paddles et la balle */
+.paddle {
+  position: absolute;
+  width: 15px;
+  height: 80px;
+  background-color: #fff;
+}
+
+.paddleleft {
+  left: 10px;
+}
+
+.paddleright {
+  right: 10px;
+}
+
+.ball {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background-color: #fff;
+  border-radius: 50%; /* Pour une balle ronde */
 }
