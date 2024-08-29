@@ -2,16 +2,17 @@ import {useState} from 'react'
 
 export default function Buttont() {
   
-	const [login, setlogin] = useState("login")
+	const [login, setlogin] = useState("default")
 	
 	function handleClick(){
-		setlogin("isouaidi")
-	}
+		setlogin("seconnecter ")
+	} 
 
 	return (
 	<div>
-		<p>{login}</p>
-		<button onClick={handleClick}>add</button>
+		<h1>{login}</h1>
+		<button onClick={() => setlogin("npatron")}>npatron </button>
+		<button onClick={() => setlogin("isouaidi")}> isouaidi</button>
 	</div>
   )
 }
