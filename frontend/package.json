@@ -1,4 +1,12 @@
 {
+  "reactSnippets.settings.importReactOntop": false,
+"emmet.includeLanguages": {
+  "javascript" : "javascriptreact"
+ },
+ "emmet.syntacProfiles": {
+  "javascript" : "jsx"
+ },
+
   "name": "frontend",
   "private": true,
   "version": "0.0.0",
