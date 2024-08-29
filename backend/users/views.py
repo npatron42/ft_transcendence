@@ -25,6 +25,5 @@ def createUser(request):
 	newUser = UserSerializer(data=request.data)
 	if (newUser.is_valid()):
 		newUser.save()
-	logger.info("FABIO")
 	return Response(newUser.data, status=status.HTTP_201_CREATED)
 	# return Response(newUser.errors, status=status.HTTP_400_BAD_REQUEST)
