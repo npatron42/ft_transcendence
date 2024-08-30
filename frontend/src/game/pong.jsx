@@ -47,21 +47,23 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
 const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2) => {
     useEffect(() => {
         if (!isGameActive) return;
-
+    
+        let animationFrameId;
+    
         const updateBallPosition = () => {
             let { x, y } = ballPos;
             let { x: dx, y: dy } = ballDir;
-
+    
             x += dx;
             y += dy;
-
+    
             if (
                 (x <= 30 && y >= paddleLeftPos - 30 && y <= paddleLeftPos + 30) ||
                 (x >= 770 && y >= paddleRightPos - 30 && y <= paddleRightPos + 30)
             ) {
                 dx *= -1;
             }
-
+    
             if (y <= 15 || y >= 600 - 15) {
                 dy *= -1;
             }
@@ -74,31 +76,37 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                     console.log('Player 1 scores');
                     setScore1(prev => prev + 1);
                 }
-
+    
                 x = 400;
                 y = 300;
                 dx = 1;
                 dy = 1;
             }
-
+    
             setBallPos({ x, y });
             setBallDir({ x: dx, y: dy });
-
-            requestAnimationFrame(updateBallPosition);
+    
+            animationFrameId = requestAnimationFrame(updateBallPosition);
         };
-
-        requestAnimationFrame(updateBallPosition);
+    
+        animationFrameId = requestAnimationFrame(updateBallPosition);
+    
         return () => {
-            cancelAnimationFrame(updateBallPosition);
+            cancelAnimationFrame(animationFrameId);
         };
     }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2]);
-};
+};    
 
 const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
+    
+    //state
+
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
+
+    //comportement
 
     usePaddleMovement(setPaddleLeftPos, setPaddleRightPos, isGameActive);
     useBallMovement(
@@ -113,6 +121,9 @@ const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
         setScore2
     );
 
+    //render
+
+    //1 element dans le return
     return (
         <div className="pong-container">
             <div className="board">
