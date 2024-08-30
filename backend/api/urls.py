@@ -1,8 +1,8 @@
 from django.urls import path, include
-from users.views import getUsers, createUser
 from oauth.views import loginOAuth, loginOAuthRedirect
+from authentication.views import AuthenticationView
 
 urlpatterns = [
-	path('users/', getUsers, name='getUsers'),
-	path('create/', createUser, name='createUser'),
+	path('users/', AuthenticationView.as_view()),
+	# path('create/', createUser, name='createUser'),
 ]

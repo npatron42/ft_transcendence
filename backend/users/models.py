@@ -9,7 +9,7 @@ class User(AbstractUser):
         blank=True,
         default=list
 	),
-	profilePicture = models.CharField(max_length=250, default=None),
+	profilePicture = models.CharField(max_length=250)
 	isFrom42 = models.BooleanField(default=False)
 
 
