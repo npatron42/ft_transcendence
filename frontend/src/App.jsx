@@ -1,15 +1,13 @@
+// App.js
 import React from 'react';
-import './App.css';
-import './game/pong.css';
-import Pong from './game/Pong.jsx';
-import { StartButton } from './game/Pong.jsx';
+import GlobalGame from "./game/GlobalGame";
 
-function App() {
+const App = () => {
   return (
     <div className="App">
-      <Pong />
+      <GlobalGame />
     </div>
   );
-}
+};
 
 export default App;

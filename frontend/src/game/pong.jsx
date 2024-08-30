@@ -1,20 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import './pong.css';
+import './style.css';
 
-// Composant pour le bouton Start
-export const StartButton = ({ onStart }) => {
-    return (
-        <div className="button" onClick={onStart}> Start </div>
-    );
-};
-
-export const StopButton = ({ onStop }) => {
-    return (
-        <div className="button" onClick={onStop}> Stop </div>
-    );
-};
-
-// Hook pour gérer les mouvements des paddles
 const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) => {
     useEffect(() => {
         if (!isGameActive) return;
@@ -58,11 +44,9 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
     }, [setPaddleLeftPos, setPaddleRightPos, isGameActive]);
 };
 
-// Hook pour gérer le mouvement de la balle
-const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive) => {
+const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2) => {
     useEffect(() => {
-        if (!isGameActive) 
-            return;
+        if (!isGameActive) return;
 
         const updateBallPosition = () => {
             let { x, y } = ballPos;
@@ -72,8 +56,8 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
             y += dy;
 
             if (
-                (x <= 30 && y >= paddleLeftPos && y <= paddleLeftPos) ||
-                (x >= 770 && y >= paddleRightPos && y <= paddleRightPos)
+                (x <= 30 && y >= paddleLeftPos - 30 && y <= paddleLeftPos + 30) ||
+                (x >= 770 && y >= paddleRightPos - 30 && y <= paddleRightPos + 30)
             ) {
                 dx *= -1;
             }
@@ -83,10 +67,18 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
             }
 
             if (x <= 0 || x >= 800 - 15) {
+                if (x <= 0) {
+                    console.log('Player 2 scores');
+                    setScore2(prev => prev + 1);
+                } else {
+                    console.log('Player 1 scores');
+                    setScore1(prev => prev + 1);
+                }
+
                 x = 400;
                 y = 300;
-                dx = 2;
-                dy = 2;
+                dx = 1;
+                dy = 1;
             }
 
             setBallPos({ x, y });
@@ -99,56 +91,34 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
         return () => {
             cancelAnimationFrame(updateBallPosition);
         };
-    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, isGameActive]);
+    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2]);
 };
 
-// Composant Pong
-const Pong = () => {
+const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
-    const [isGameActive, setIsGameActive] = useState(false);
-    const [score1, setScore1] = useState(0);
-    const [score2, setScore2] = useState(0);
 
     usePaddleMovement(setPaddleLeftPos, setPaddleRightPos, isGameActive);
-    useBallMovement(ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive);
-
-    const resetGame = () => {
-        setPaddleLeftPos(300);
-        setPaddleRightPos(300);
-        setBallPos({ x: 400, y: 300 });
-        setBallDir({ x: 1, y: 1 });
-        setIsGameActive(false);
-    };
-
-    const handleStart = () => {
-        setIsGameActive(true);
-    };
-
-    const handleStop = () => {
-        resetGame();
-    };
-
-    useEffect(() => {
-        if (!isGameActive) {
-            resetGame();
-        }
-    }, [isGameActive]);
+    useBallMovement(
+        ballPos,
+        setBallPos,
+        ballDir,
+        setBallDir,
+        paddleLeftPos,
+        paddleRightPos,
+        isGameActive,
+        setScore1,
+        setScore2
+    );
 
     return (
         <div className="pong-container">
-            <div className="buttons-container">
-                <StartButton onStart={handleStart} />
-                <StopButton onStop={handleStop} />
-            </div>
             <div className="board">
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
-                <div className="score score_1">{score1}</div>
-                <div className="score score_2">{score2}</div>
             </div>
         </div>
     );

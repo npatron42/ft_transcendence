@@ -1,6 +1,9 @@
 .pong-container {
     margin: 20px auto;
+    position: relative;
+    width: 800px;
 }
+
 
 .board {
     width: 800px;
@@ -41,23 +44,28 @@
 }
 
 .score {
-    position: absolute;
-    top: 10px;
+    position: static;
+    top: 20px;
     font-size: 60px;
     padding: 30px;
-    color: #fff;
     font-family: Arial, sans-serif;
 }
 
 .score_1 {
-    left: 40px;
+    left: 20px;
 }
 
 .score_2 {
-    right: 40px;
+    right: 20px;
+}
+
+.buttons-container {
+    margin-bottom: 20px;
+    text-align: center;
 }
 
 .button {
+    position: static;
     border: 1px solid blue;
     border-radius: 5px;
     box-shadow: 2px 2px 2px black;
@@ -66,11 +74,12 @@
     padding: 10px 20px;
     width: 150px;
     text-align: center;
+    cursor: pointer;
 }
 
 .button:hover {
     background-color: white;
     color: blue;
-    cursor: pointer;
 }
+
 
