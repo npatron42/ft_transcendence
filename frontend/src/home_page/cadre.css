@@ -1,0 +1,85 @@
+@import url('https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
+
+.custom-cadre {
+	position: relative; /* Nécessaire pour le positionnement absolu des éléments enfants */
+	width: 80vw; /* Prend 95% de la largeur de la fenêtre */
+	height: 90vh; /* Prend 95% de la hauteur de la fenêtre */
+	margin: 2.5vw auto; /* Centre le cadre horizontalement et ajoute une marge automatique */
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 2px solid #032871; /* Bordure orange épaisse */
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1); /* Ombrage pour le cadre */
+	display: flex; /* Utilise flexbox pour centrer le contenu */
+	align-items: center; /* Centre verticalement */
+	justify-content: center; /* Centre horizontalement */
+	border-radius: 10px;
+}
+
+.para-user {
+	position: absolute;
+	top: 245px;
+	left: 500px;
+	color: #FFFFFF;
+	font-size: 8px;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+.para-login {
+	position: absolute;
+	top: 170px;
+	left: 500px;
+	color: #FFFFFF;
+	font-size: 8px;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+.para-mdp {
+	position: absolute;
+	top: 210px;
+	right: 150px;
+	color: #969393;
+	font-size: 5px;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+	font-style: italic;
+}
+
+.para-id {
+	position: absolute;
+	top: 130px;
+	left: 500px;
+	color: #FFFFFF;
+	font-size: 8px;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+.h1-titre {
+	position: absolute;
+	top: 40px;
+	left: 425px;
+	color: #FFFFFF;
+	text-shadow: 0px 3px 5px rgba(1, 20, 95, 0.993); 
+	font-family: 'Metrophobic', sans-serif;
+	font-weight: 600;
+}
+
+
+.para-co {
+	position: absolute;
+	top: 100px;
+	left: 500px;
+	color: #FFFFFF;
+	font-size: 8px;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+
+
+

@@ -23,6 +23,17 @@ body, html, #root {
   }
 
 .content {
-  color: #887a91; /* Assure que le texte est visible sur l'image de fond */
+  color: #4dbe0c; /* Assure que le texte est visible sur l'image de fond */
   text-align: center; /* Centre le texte */
+}
+
+.button-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px;
+}
+
+.custom-button {
+  background-color: #181818;
+  border-color: #770606;
 }
