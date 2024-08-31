@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap');
+
 .GlobalGame {
     display: flex;
     flex-direction: column;
@@ -23,7 +25,48 @@
     background-color: #333;
     position: relative;
     margin: 0 auto;
+    border-radius: 10px;
+    opacity: 0.8;
+
+    /* Amélioration de l'effet de l'ombre */
+    box-shadow: 
+        0 0 20px rgba(102, 87, 233, 0.6),
+        0 0 40px rgba(102, 87, 233, 0.4),
+        0 10px 20px rgba(0, 0, 0, 0.5),
+        inset 0 0 15px rgba(255, 255, 255, 0.1);
+    
+    /* Ajout d'un effet de bordure lumineuse */
+    border: 2px solid rgba(102, 87, 233, 0.8);
+    
+    animation: pulse 2s infinite;
 }
+
+/* Animation pour créer un effet de pulsation lumineuse */
+@keyframes pulse {
+    0% {
+        box-shadow: 
+            0 0 20px rgba(102, 87, 233, 0.6),
+            0 0 40px rgba(102, 87, 233, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+    50% {
+        box-shadow: 
+            0 0 30px rgba(102, 87, 233, 0.8),
+            0 0 60px rgba(102, 87, 233, 0.6),
+            0 15px 30px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(255, 255, 255, 0.15);
+    }
+    100% {
+        box-shadow: 
+            0 0 20px rgba(102, 87, 233, 0.6),
+            0 0 40px rgba(102, 87, 233, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+    }
+}
+
+
 
 .paddle {
     width: 10px;
@@ -55,55 +98,50 @@
     transform: translate(-50%, -50%);
 }
 
-
-
-
 .scoreboard {
     display: flex;
     justify-content: space-around;
     align-items: center;
     width: 50%;
-    background-color: #282c34;
+    background-color: #1c1f26;
     border-radius: 15px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    padding: 5px;
+    padding: 10px 10px;
+    font-family: "Manuale", serif;
+    
+    box-shadow: 
+    0 4px 6px rgba(0, 0, 0, 0.3), 
+    0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .score {
     flex: 1;
-    padding: 10px 10px;
-    font-size: 24px;
+    padding: 10px 15px;
+    font-size: 25px;
     text-align: center;
-    color: white;
-    background-color: transparent;
+    color: #e0e0e0;
+    background-color: #2a2f3a;
+    border-radius: 10px;
+    box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
 .score_1 {
-    background-color: #4caf50;
-    border-radius: 10px;
+    background-color: #d9e86880;
     margin-right: 5px;
 }
 
 .score_2 {
-    background-color: #2196f3;
-    border-radius: 10px;
+    background-color: #325bc378;
     margin-left: 5px;
 }
 
 .buttons-container {
     display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-    justify-content: center;
-    text-align: center;
-}
-
-.StartButton {
-    background-color: #1fde0d;
-}
-
-.StopButton {
-    background-color: #ff5252;
+    flex-direction: column; /* Arrange les boutons en colonne */
+    align-items: flex-end; /* Aligne les boutons à droite */
+    position: absolute; /* Positionnement absolu pour les placer à droite */
+    right: 20px; /* Positionne les boutons à 20px du bord droit */
+    top: 50%; /* Centrer verticalement sur la page */
+    transform: translateY(-50%); /* Centrer précisément au milieu verticalement */
 }
 
 .StartButton,
@@ -111,7 +149,7 @@
     display: inline-block;
     padding: 10px 20px;
     font-size: 24px;
-    margin: 0 20px;
+    margin: 10px 0; /* Espacement entre les boutons */
     font-weight: bold;
     text-align: center;
     text-decoration: none;
@@ -121,6 +159,14 @@
     box-shadow: 5px 5px 0px #000;
     transition: all 0.3s ease;
     cursor: pointer;
+}
+
+.StartButton {
+    background-color: #1fde0d;
+}
+
+.StopButton {
+    background-color: #ff5252;
 }
 
 .StartButton:hover,

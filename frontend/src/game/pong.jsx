@@ -16,16 +16,16 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
         };
 
         const updatePaddlePositions = () => {
-            if (keysPressed['w']) {
+            if (keysPressed['w'] || keysPressed['W']) {
                 setPaddleLeftPos(prevPos => Math.max(prevPos - 10, 40));
             }
-            if (keysPressed['s']) {
+            if (keysPressed['s'] || keysPressed['S']) {
                 setPaddleLeftPos(prevPos => Math.min(prevPos + 10, 600 - 40));
             }
-            if (keysPressed['ArrowUp'] || keysPressed['W']) {
+            if (keysPressed['ArrowUp']) {
                 setPaddleRightPos(prevPos => Math.max(prevPos - 10, 40));
             }
-            if (keysPressed['ArrowDown'] || keysPressed['S']) {
+            if (keysPressed['ArrowDown']) {
                 setPaddleRightPos(prevPos => Math.min(prevPos + 10, 600 - 40));
             }
 
@@ -49,7 +49,7 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
         if (!isGameActive) return;
 
         let animationFrameId;
-        const acceleration = 1.20;
+        const acceleration = 1.10;
         const maxSpeed = 10;
 
         const updateBallPosition = () => {
@@ -64,25 +64,30 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 (x >= 770 && y >= paddleRightPos - 30 && y <= paddleRightPos + 30)
             ) {
                 dx *= -1;
-            }
 
-            if (y <= 15 || y >= 600 - 20) {
-                dy *= -1;
-            }
+                if (x <= 30) x = 31;
+                if (x >= 770) x = 769;
 
-            if (x <= 0 || x >= 800 - 20) {
-                if (x <= 0) {
-                    setScore2(prev => prev + 1);
-                } else {
-                    setScore1(prev => prev + 1);
-                }
                 if (Math.abs(dx) < maxSpeed) {
                     dx *= acceleration;
                 }
                 if (Math.abs(dy) < maxSpeed) {
                     dy *= acceleration;
                 }
+            }
 
+            if (y <= 0 + 15 || y >= 600 - 15) {
+                dy *= -1;
+            }
+
+            if (x <= 0 || x >= 800) {
+                if (x <= 0) {
+                    setScore2(prev => prev + 1);
+                } else {
+                    setScore1(prev => prev + 1);
+                }
+                dy = 2;
+                dx = 2;
                 x = 400;
                 y = 300;
             }
@@ -107,7 +112,7 @@ const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
     //state
 
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
-    const [paddleRightPos, setPaddleRightPos] = useState(300);
+    const [paddleRightPos, setPaddleRightPos] = useState(530);
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
 
