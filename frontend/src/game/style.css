@@ -1,3 +1,16 @@
+.GlobalGame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-image: linear-gradient(to bottom, #3d4a83, #060c45);
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
 .pong-container {
     margin: 20px auto;
     position: relative;
@@ -43,43 +56,85 @@
     transform: translate(-50%, -50%);
 }
 
+
+
+
+.scoreboard {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 50%;
+    background-color: #282c34;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    padding: 5px;
+}
+
 .score {
-    position: static;
-    top: 20px;
-    font-size: 60px;
-    padding: 30px;
-    font-family: Arial, sans-serif;
+    flex: 1;
+    padding: 10px 10px;
+    font-size: 24px;
+    text-align: center;
+    color: white;
+    background-color: transparent;
 }
 
 .score_1 {
-    left: 20px;
+    background-color: #4caf50;
+    border-radius: 10px;
+    margin-right: 5px;
 }
 
 .score_2 {
-    right: 20px;
+    background-color: #2196f3;
+    border-radius: 10px;
+    margin-left: 5px;
 }
 
 .buttons-container {
+    display: flex;
+    align-items: center;
     margin-bottom: 20px;
+    justify-content: center;
     text-align: center;
 }
 
-.button {
-    position: static;
-    border: 1px solid blue;
-    border-radius: 5px;
-    box-shadow: 2px 2px 2px black;
-    background-color: blue;
-    color: white;
+.StartButton {
+    background-color: #1fde0d;
+}
+
+.StopButton {
+    background-color: #ff5252;
+}
+
+.StartButton,
+.StopButton {
+    display: inline-block;
     padding: 10px 20px;
-    width: 150px;
+    font-size: 24px;
+    margin: 0 20px;
+    font-weight: bold;
     text-align: center;
+    text-decoration: none;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px #000;
+    transition: all 0.3s ease;
     cursor: pointer;
 }
 
-.button:hover {
-    background-color: white;
-    color: blue;
+.StartButton:hover,
+.StopButton:hover {
+    background-color: #fff;
+    color: #ff5252;
+    border: 2px solid #ff5252;
+    box-shadow: 5px 5px 0px #ff5252;
 }
 
-
+.StartButton:active,
+.StopButton:active {
+    background-color: #fcf414;
+    box-shadow: none;
+    transform: translateY(4px);
+}

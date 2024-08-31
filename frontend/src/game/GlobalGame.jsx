@@ -17,7 +17,7 @@ const GlobalGame = () => {
     };
 
     return (
-        <div>
+        <div className="GlobalGame">
             <div className="buttons-container">
                 <StartButton onStart={handleStart} />
                 <StopButton onStop={handleStop} />
