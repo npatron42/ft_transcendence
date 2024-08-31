@@ -1,74 +1,28 @@
-/* Conteneur principal avec centrage et espacement */
-.pong-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-  position: relative; /* Pour le positionnement absolu des boutons */
+/* src/App.css */
+
+/* Réinitialisation des marges et paddings pour tout l'écran */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-/* Conteneur pour les boutons Start et Stop */
-.buttons-container {
-  margin-bottom: 1rem; /* Espacement sous les boutons */
-}
+/* Style pour le conteneur de fond */
+.background-container {
+  background-image: url('./assets/background.png'); /* Assurez-vous que ce chemin est correct */
+  background-size: contain; /* Changer la taille de l'image de fond pour les petits écrans */
+  background-position: center; /* Centre l'image */
+  height: 100vh; /* Fait en sorte que le conteneur prenne toute la hauteur de la fenêtre */
+  width: 100vw; /* Fait en sorte que le conteneur prenne toute la largeur de la fenêtre */
+  display: flex; /* Utilise flexbox pour centrer le contenu */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  /* flex-direction: column; Adaptation du contenu pour un écran plus étroit */
+  }
 
-/* Style général des boutons */
-.button {
-  display: inline-block;
-  padding: 1rem 2rem;
-  margin: 0 0.5rem; /* Espacement horizontal entre les boutons */
-  background-color: #646cff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
-  cursor: pointer;
-  transition: background-color 300ms, transform 300ms;
-}
-
-/* Style du bouton au survol */
-.button:hover {
-  background-color: #5050a0;
-  transform: scale(1.05); /* Effet de zoom au survol */
-}
-
-/* Style du bouton désactivé */
-.button:disabled {
-  background-color: #ccc;
-  cursor: not-allowed;
-}
-
-/* Style de la zone de jeu */
-.board {
-  position: relative;
-  width: 800px;
-  height: 600px;
-  background-color: #000;
-  margin: 0 auto;
-  border: 2px solid #fff;
-  overflow: hidden; /* Pour masquer les éléments sortants */
-}
-
-/* Style pour les paddles et la balle */
-.paddle {
-  position: absolute;
-  width: 15px;
-  height: 80px;
-  background-color: #fff;
-}
-
-.paddleleft {
-  left: 10px;
-}
-
-.paddleright {
-  right: 10px;
-}
-
-.ball {
-  position: absolute;
-  width: 15px;
-  height: 15px;
-  background-color: #fff;
-  border-radius: 50%; /* Pour une balle ronde */
+.content {
+  color: #887a91; /* Assure que le texte est visible sur l'image de fond */
+  text-align: center; /* Centre le texte */
 }
