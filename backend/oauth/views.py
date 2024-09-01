@@ -5,26 +5,37 @@ from users.models import User
 from rest_framework import status
 from rest_framework.response import Response
 from users.serializers import UserSerializer
-from authentication.views import generateTokenJWT
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework.views import APIView
+from django.http import HttpResponse
+import jwt, datetime
+import os
 import requests
 import logging
 logger = logging.getLogger(__name__)
 
 myId = "u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122"
 mySecret = "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"
-url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A8000%2Foauth2%2Flogin%2Fredirect&response_type=code"
-myRedirect = "http://localhost:8000/oauth2/login/redirect"
+url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5174%2Fhome&response_type=code"
+myRedirect = "http://localhost:5173/home"
 
-def	loginOAuth(request: HttpRequest):
-    return redirect(url_42)
+class OAuthView(APIView):
+    def post(self, request):
+        code = request.data.get('code')
+        if not code:
+            return Response({"error": "Code is required"}, status=status.HTTP_401_UNAUTHORIZED)
+        try:
+            access_token = giveMe42Token(code)
+            myJson = doRequestTo42(access_token, "/v2/me")
+            myUser = add42UserToDB(myJson)
+            logger.info(myUser)
+            response = attributeToUserJWT(myUser)
+            logger.info(response)
+            return response
+        except Exception as e:
+            return Response({"Error": "Failed during creation proccess, to DB"})
 
-def loginOAuthRedirect(request: HttpRequest):
-    code = request.GET.get('code')
-    access_token = giveMe42Token(code)
-    myJson = doRequestTo42(access_token, "/v2/me")
-    token = add42UserToDB(myJson)
-    return JsonResponse({"TokenUser": token})
+
 
 
 def giveMe42Token(code: str):
@@ -35,10 +46,17 @@ def giveMe42Token(code: str):
         "code": code,
         "redirect_uri": myRedirect
     }
-    response = requests.post("https://api.intra.42.fr/oauth/token", data=data)
-    tmp = response.json()
-    access_token = tmp["access_token"]
-    return (access_token)
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded"
+    }
+    response = requests.post("https://api.intra.42.fr/oauth/token", data=data, headers=headers)
+    response_data = response.json()
+    access_token = response_data.get("access_token")
+    
+    return access_token
+
+
+
 
 def	doRequestTo42(access_token: str, endpoint: str):
     finalendpoint = "https://api.intra.42.fr" + endpoint
@@ -47,13 +65,15 @@ def	doRequestTo42(access_token: str, endpoint: str):
     })
     return response.json()
 
+
+
+
 def add42UserToDB(jsonFile):
     login42 = jsonFile.get("login")
     email42 = jsonFile.get("email")
     picture = jsonFile.get("image", {}).get("link")
     bool42 = True
 
-    # Préparer les données pour le sérialiseur
     data42 = {
         "username": login42 + "_42",
         "email": email42,
@@ -62,19 +82,31 @@ def add42UserToDB(jsonFile):
     }
 
     newUser42 = UserSerializer(data=data42)
-    if newUser42.is_valid():
-        newUser42.save()
-        try:
-            myUser = User.objects.get(username=login42 + "_42")
-        except User.DoesNotExist:
-            return JsonResponse({"data": "false"}, status=status.HTTP_404_NOT_FOUND)
-        token = generateTokenJWT(myUser.id)
-        response = Response(
-            data={'jwt': token},
-            status=status.HTTP_200_OK
-        )
-        logger.info("LE TOKEN : ")
-        logger.info(token)
-        response.set_cookie(key='jwt', value=token, httponly=True)
-        return token
-    return JsonResponse({"data": "false"}, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        newUser42.is_valid()
+        myReturnUser = newUser42.save()
+        return myReturnUser
+    except:
+        raise(Exception("Cannot add User to DB"))
+    
+
+
+
+def attributeToUserJWT(myUser: User):
+    userId = myUser.id
+    logger.info(userId)
+    myPayload = {
+		'id': userId,
+		'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
+		'iat': datetime.datetime.utcnow()
+	}
+    logger.info(os.getenv('SECRET_KEY'))
+    token = jwt.encode(myPayload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    response = Response()
+    response.set_cookie(key='jwt', value=token, httponly=True)
+    response.data = {
+        'jwt': token
+    }
+    return (response)
+
+

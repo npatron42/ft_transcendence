@@ -1,42 +1,28 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+/* src/App.css */
+
+/* Réinitialisation des marges et paddings pour tout l'écran */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Style pour le conteneur de fond */
+.background-container {
+  background-image: url('./assets/background.png'); /* Assurez-vous que ce chemin est correct */
+  background-size: contain; /* Changer la taille de l'image de fond pour les petits écrans */
+  background-position: center; /* Centre l'image */
+  height: 100vh; /* Fait en sorte que le conteneur prenne toute la hauteur de la fenêtre */
+  width: 100vw; /* Fait en sorte que le conteneur prenne toute la largeur de la fenêtre */
+  display: flex; /* Utilise flexbox pour centrer le contenu */
+  justify-content: center; /* Centre horizontalement */
+  align-items: center; /* Centre verticalement */
+  /* flex-direction: column; Adaptation du contenu pour un écran plus étroit */
   }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+.content {
+  color: #887a91; /* Assure que le texte est visible sur l'image de fond */
+  text-align: center; /* Centre le texte */
 }

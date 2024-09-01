@@ -1,7 +1,6 @@
 from django.urls import path, include
-from .views import loginOAuth, loginOAuthRedirect
+from .views import OAuthView
 
 urlpatterns = [
-	path('login/', loginOAuth, name='loginOAuth'),
-	path('login/redirect/', loginOAuthRedirect, name='loginOAuthRedirct')
+	path('login/', OAuthView.as_view())
 ]

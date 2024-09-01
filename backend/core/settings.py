@@ -26,11 +26,14 @@ INSTALLED_APPS = [
 ]
 
 
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
 
 
 AUTH_USER_MODEL = 'users.User'
 
+
 CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,6 +63,12 @@ TEMPLATES = [
         },
     },
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 100,
+    'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',)
+}
 
 WSGI_APPLICATION = 'core.wsgi.application'
 
