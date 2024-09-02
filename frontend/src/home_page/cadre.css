@@ -4,6 +4,7 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
 
+
 .custom-cadre {
 	position: relative; /* Nécessaire pour le positionnement absolu des éléments enfants */
 	width: 80vw; /* Prend 95% de la largeur de la fenêtre */
@@ -18,67 +19,71 @@
 	border-radius: 10px;
 }
 
-.para-user {
+.h1-titre {
 	position: absolute;
-	top: 245px;
-	left: 500px;
+	top: 12vh;
+	left: 52vw;
 	color: #FFFFFF;
-	font-size: 8px;
+	text-shadow: 0px 10px 20px rgba(1, 20, 95, 0.993); 
+	font-family: 'Metrophobic', sans-serif;
+	font-weight: 600;
+	font-size: 4.2vw;
+}
+
+.para-co {
+	position: absolute;
+	top: 27vh;
+	left: 61vw;
+	color: #FFFFFF;
+	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
 }
 
+.para-id {
+	position: absolute;
+	left: 61vw;
+	top: 34.5vh;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+
 .para-login {
 	position: absolute;
-	top: 170px;
-	left: 500px;
+	top: 44vh;
+	left: 61vw;
 	color: #FFFFFF;
-	font-size: 8px;
+	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
 }
 
 .para-mdp {
 	position: absolute;
-	top: 210px;
-	right: 150px;
+	top: 53vh;
+	left:75vw;
 	color: #969393;
-	font-size: 5px;
+	font-size: 0.7vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
 	font-style: italic;
 }
 
-.para-id {
+
+.para-user {
 	position: absolute;
-	top: 130px;
-	left: 500px;
+	top: 62vh;
+	left: 61vw;
 	color: #FFFFFF;
-	font-size: 8px;
+	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
 }
 
-.h1-titre {
-	position: absolute;
-	top: 40px;
-	left: 425px;
-	color: #FFFFFF;
-	text-shadow: 0px 3px 5px rgba(1, 20, 95, 0.993); 
-	font-family: 'Metrophobic', sans-serif;
-	font-weight: 600;
-}
 
-
-.para-co {
-	position: absolute;
-	top: 100px;
-	left: 500px;
-	color: #FFFFFF;
-	font-size: 8px;
-	font-family: 'Manuale', sans-serif;
-	font-weight: 600;
-}
 
 
 
