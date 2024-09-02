@@ -1,6 +1,4 @@
-/* src/App.css */
 
-/* Réinitialisation des marges et paddings pour tout l'écran */
 body, html, #root {
   margin: 0;
   padding: 0;
@@ -9,7 +7,6 @@ body, html, #root {
   overflow-x: hidden;
 }
 
-/* Style pour le conteneur de fond */
 .background-container {
   background-image: url('./assets/background.png'); /* Assurez-vous que ce chemin est correct */
   background-size: contain; /* Changer la taille de l'image de fond pour les petits écrans */
@@ -19,21 +16,4 @@ body, html, #root {
   display: flex; /* Utilise flexbox pour centrer le contenu */
   justify-content: center; /* Centre horizontalement */
   align-items: center; /* Centre verticalement */
-  /* flex-direction: column; Adaptation du contenu pour un écran plus étroit */
   }
-
-.content {
-  color: #4dbe0c; /* Assure que le texte est visible sur l'image de fond */
-  text-align: center; /* Centre le texte */
-}
-
-.button-container {
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px;
-}
-
-.custom-button {
-  background-color: #181818;
-  border-color: #770606;
-}

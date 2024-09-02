@@ -2,6 +2,7 @@ import {useState} from "react"
 import './buttonCreate.jsx';
 import ButtonCreate from './buttonCreate.jsx';
 import Button42 from './button42.jsx';
+import Image from "./Image.jsx";
 import Cadre from './cadre.jsx';
 import './cadre.css';
 

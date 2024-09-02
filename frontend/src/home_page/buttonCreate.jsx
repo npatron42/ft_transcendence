@@ -1,4 +1,3 @@
-import List from "./List"
 import Button from 'react-bootstrap/Button';
 import "./button.css"
 
