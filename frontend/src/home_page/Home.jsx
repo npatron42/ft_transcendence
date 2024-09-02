@@ -4,6 +4,14 @@ import axios from 'axios';
 import React, { useEffect } from 'react';
 import Button42 from "../Button42/Button42"
 
+
+// const reponse = {
+//     Failure : Boolean,
+//     Success: Boolean,
+//     data: Object,
+//     Reason: String,
+// };
+
 const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
@@ -13,6 +21,10 @@ const Home = () => {
                 const response = await axios.post("http://localhost:8000/oauth2/login/", {
                     code: codeFromUrl,
                 });
+
+                if (response.data.Error === "Failed during creation proccess, to DB")
+                    return ;
+
                 localStorage.setItem("jwt", response.data.jwt);
             } catch (error) {
                 console.error("Error during login:", error);
@@ -22,8 +34,6 @@ const Home = () => {
         const getUser = async () => {
             try {
                 const token = localStorage.getItem('jwt');
-                console.log("MON JWT : ")
-                console.log(token)
                 const config = {
                     headers: {
                         Authorization: `Bearer ${token}`
