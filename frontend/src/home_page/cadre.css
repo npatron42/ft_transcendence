@@ -6,25 +6,25 @@
 
 
 .custom-cadre {
-	position: relative; /* Nécessaire pour le positionnement absolu des éléments enfants */
-	width: 80vw; /* Prend 95% de la largeur de la fenêtre */
-	height: 90vh; /* Prend 95% de la hauteur de la fenêtre */
-	margin: 2.5vw auto; /* Centre le cadre horizontalement et ajoute une marge automatique */
+	position: relative; 
+	width: 80vw;
+	height: 90vh; 
+	margin: 2.5vw auto; 
 	background-color: rgba(0, 0, 0, 0.35);
-	border: 2px solid #032871; /* Bordure orange épaisse */
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1); /* Ombrage pour le cadre */
-	display: flex; /* Utilise flexbox pour centrer le contenu */
-	align-items: center; /* Centre verticalement */
-	justify-content: center; /* Centre horizontalement */
+	border: 2px solid #032871; 
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1); 
+	display: flex; 
+	align-items: center; 
+	justify-content: center;
 	border-radius: 10px;
 }
 
 .h1-titre {
 	position: absolute;
 	top: 12vh;
-	left: 52vw;
+	left: 48vw;
 	color: #FFFFFF;
-	text-shadow: 0vw 0.8vw 1vw rgba(1, 20, 95, 0.993); 
+	text-shadow: 0vw 0.3vw 0.5vw rgb(3, 40, 113); 
 	font-family: 'Manuale', sans-serif;
 	font-weight: 550;
 	font-size: 4.2vw;
@@ -33,16 +33,17 @@
 .para-co {
 	position: absolute;
 	top: 27vh;
-	left: 61vw;
+	left: 57vw;
 	color: #FFFFFF;
-	font-size: 1.1vw;
+	font-size: 1.3vw;
 	font-family: 'Manuale', sans-serif;
-	font-weight: 600;
+	font-weight: 1000;
+	
 }
 
 .para-id {
 	position: absolute;
-	left: 61vw;
+	left: 57vw;
 	top: 34.5vh;
 	color: #FFFFFF;
 	font-size: 1.1vw;
@@ -50,21 +51,70 @@
 	font-weight: 600;
 }
 
-
-.para-login {
+.input-id {
 	position: absolute;
-	top: 44vh;
-	left: 61vw;
-	color: #FFFFFF;
-	font-size: 1.1vw;
+	left: 57vw;
+	top: 38.5vh;
+	font-size: 1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
+	background-color: rgba(0, 0, 0, 0.35);
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
 }
 
+	.input-id input {
+		width: 15vw;
+		color:#969393;
+		padding: 0.9vw;
+		border-radius: 0.58vw;
+		background-color: rgba(0, 0, 0, 0.35);
+		border: 0.1vw solid #222222; }
+	
+	.input-id input:focus {
+		color:#969393;
+		background-color: rgba(0, 0, 0, 0.35);
+		border: 0.07vw solid #001f41;}
+	
+	
+.input-pass {
+	position: absolute;
+	color:#969393;
+	left: 57vw;
+	top: 48vh;
+	font-size: 1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+	background-color: rgba(0, 0, 0, 0.35);
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+}
+
+	.input-pass input:focus {
+		color:#969393;
+		background-color: rgba(0, 0, 0, 0.35);
+		border: 0.07vw solid #001f41;}
+
+	.input-pass input {
+		color:#969393;
+		background-color: rgba(0, 0, 0, 0.35);
+		width: 15vw; 
+		padding: 0.9vw; 
+		border-radius: 0.58vw; 
+		border: 0.1vw solid #222222; }
+
+
+.para-login {
+		position: absolute;
+		top: 44vh;
+		left: 57vw;
+		color: #FFFFFF;
+		font-size: 1.1vw;
+		font-family: 'Manuale', sans-serif;
+		font-weight: 600;}
+	
 .para-mdp {
 	position: absolute;
 	top: 53vh;
-	left:75vw;
+	left:69vw;
 	color: #969393;
 	font-size: 0.7vw;
 	font-family: 'Manuale', sans-serif;
@@ -76,7 +126,7 @@
 .para-user {
 	position: absolute;
 	top: 62vh;
-	left: 61vw;
+	left: 57vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;

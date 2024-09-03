@@ -4,8 +4,9 @@ import ButtonCreate from './buttonCreate.jsx';
 import Button42 from './button42.jsx';
 import Image from "./Image.jsx";
 import Cadre from './cadre.jsx';
+import Log from './idPass.jsx';
+import Button from 'react-bootstrap/Button';
 import './cadre.css';
-
 
 
 function homePage(){
@@ -14,12 +15,9 @@ function homePage(){
 			<Cadre />
 			<ButtonCreate />
 			<Button42 />
-			<h3 className="h1-titre">Transcendence</h3> 
-			<p className="para-login">Mot de passe :</p>
-			<p className="para-id">Identifiant :</p>
-			<p className="para-co">Se connecter</p>
+			<h3 className="h1-titre">Transcendence</h3>
+			<Log />
 			<p className="para-user">Nouvel utilisateur ?</p> 
-			<a href="https://openclassrooms.com/fr/" className="para-mdp"> Mot de passe oublié</a>
 		</div>
 	);
 }
