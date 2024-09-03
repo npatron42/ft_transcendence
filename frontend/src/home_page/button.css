@@ -3,38 +3,30 @@
 @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
 
 .custom-button {
-	position: absolute; /* Positionne le conteneur de bouton relativement à son parent le plus proche avec position définie */
-	top: 62vh; /* Espacement depuis le haut */
+	position: absolute; 
+	top: 62vh;
 	left: 68vw;
-	background-color: #0454EE; /* Bleu roi */
-	border-color: #0454EE; /* Même couleur pour la bordure */
-	color: rgb(132, 185, 247); /* Couleur du texte */
+	background-color: #0454EE; 
+	border-color: #0454EE;
+	color: rgb(132, 185, 247); 
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
-	padding: 0.2vw 0.8vw; /* Ajustement des marges internes du bouton */
-	font-size: 1vw; /* Taille de la police */
+	padding: 0.2vw 0.8vw; 
+	font-size: 1vw; 
 	font-family: 'Manuale', sans-serif;
 	font-weight: bold ;
-	border-radius: 20px; /* Arrondir légèrement les coins du bouton */
-	transition: transform 0.2s ease; /* Animation de transformation */
+	border-radius: 20px; 
+	transition: transform 0.2s ease; 
   }
 
-  .custom-button:focus {
-	  
-  transform: translateY(-0.2vw); /* Légère montée à l'hover */
-}
   
-  .custom-button:hover {
-	transform: translateY(-0.2vw); /* Légère montée à l'hover */
-}
-
-.custom-42 {
-	position: absolute; /* Positionne le conteneur de bouton relativement à son parent le plus proche avec position définie */
-	top: 75vh; /* Espacement depuis le haut */
+  .custom-42 {
+	position: absolute; 
+	top: 75vh; 
 	left: 57vw;
-	background-color: rgba(1, 7, 17, 0.5); /* Bleu roi */
-	border-color: rgba(1, 7, 17, 0.5);; /* Même couleur pour la bordure */
-	color: rgb(77, 78, 78); /* Couleur du texte */
-	box-shadow: 0px 0.5vw 1vw rgba(0, 2, 10, 0.5);
+	background-color:  rgba(2, 20, 51, 0.993); 
+	border-color:  #0454EE;
+	color:  rgb(132, 185, 247); 
+	box-shadow: 0px 1vw 2vw rgba(0, 2, 10, 0.5);
 	padding: 1.2vw 2.2vw; 
 	font-size: 1.1vw; 
 	font-family: 'Manuale', sans-serif;
@@ -46,50 +38,25 @@
 	transform: translateY(-0.5px);
 }
 
-.custom-42:focus,
-.custom-42:active{
-	background-color: rgba(1, 7, 17, 0.5); 
-	border-color: rgba(1, 7, 17, 0.5); 
-	color: rgb(77, 78, 78);
-	box-shadow: none; 
-	box-shadow: none;
-    transform: none; 
-}
-
-
-.custom-42:hover {
-	  transform: translateY(-0.5vw);
-	}
-  
 	
-	
-	.custom-log {
-		position: absolute; /* Positionne le conteneur de bouton relativement à son parent le plus proche avec position définie */
+
+.custom-log {
+		position: absolute;
 		top: 55vh;
 		left:57vw;
-		background-color: #0454EE; /* Bleu roi */
-		border-color: #0454EE; /* Même couleur pour la bordure */
-		color: rgb(132, 185, 247); /* Couleur du texte */
+		background-color: #0454EE; 
+		border-color: #0454EE; 
+		color: rgb(132, 185, 247); 
 		box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
-		padding: 0.2vw 0.8vw; /* Ajustement des marges internes du bouton */
-		font-size: 1vw; /* Taille de la police */
+		padding: 0.2vw 0.8vw;
+		font-size: 1vw;
 		font-family: 'Manuale', sans-serif;
 		font-weight: bold ;
-		border-radius: 20px; /* Arrondir légèrement les coins du bouton */
-		transition: transform 0.2s ease; /* Animation de transformation */
-	  }
-	
-	  .custom-log:focus {
-	
-	  transform: translateY(-0.2vw); /* Légère montée à l'hover */
+		border-radius: 20px; 
+		transition: transform 0.2s ease;
 	}
-	  
-	  .custom-log:hover {
-		transform: translateY(-0.2vw); /* Légère montée à l'hover */
+
+	
+	.custom-button:hover, .custom-42:hover , .custom-log:hover{
+		transform: translateY(-0.2vw); 
 	}
-	
-	
-	.custom-42:active{
-	  background-color: rgba(1, 7, 17, 0.5); 
-	  border-color: rgba(1, 7, 17, 0.5); 
-	  color: rgb(77, 78, 78);}
