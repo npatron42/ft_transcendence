@@ -1,15 +1,13 @@
-import {useState} from "react"
 import './buttonCreate.jsx';
 import ButtonCreate from './buttonCreate.jsx';
 import Button42 from './button42.jsx';
-import Image from "./Image.jsx";
 import Cadre from './cadre.jsx';
 import Log from './idPass.jsx';
-import Button from 'react-bootstrap/Button';
+import Langue from './luangages.jsx';
 import './cadre.css';
 
 
-function homePage(){
+function loginPage(){
 	return (
 		<div className="background-container">
 			<Cadre />
@@ -17,9 +15,10 @@ function homePage(){
 			<Button42 />
 			<h3 className="h1-titre">Transcendence</h3>
 			<Log />
+			<Langue />
 			<p className="para-user">Nouvel utilisateur ?</p> 
 		</div>
 	);
 }
 
-export default homePage;
+export default loginPage;

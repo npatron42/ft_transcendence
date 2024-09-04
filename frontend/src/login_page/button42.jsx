@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import './button.css'
-import myIcon from '../assets/42.svg';
+import myIcon from '../assets/login_page/42.svg';
 
 
 function button42() {

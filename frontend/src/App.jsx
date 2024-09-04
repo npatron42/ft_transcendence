@@ -1,14 +1,13 @@
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Home from './home_page/HomePage';
-import './home_page/HomePage'
+import LoginPage from './login_page/loginPage';
 
 
 
 function App(){
   return (
     <div>
-      <Home />
+      <LoginPage />
     </div>
   );
 }
