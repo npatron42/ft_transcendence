@@ -1,0 +1,12 @@
+{
+    "loginPage": {
+      "id": "Identificatore",
+      "champ1": "Inserisci il tuo identificatore",
+      "mdp" : "Password",
+      "champ2" : "Inserisci la tua password",
+      "login" : "Accedi",
+      "new" : "Nuovo utente?",
+      "createAccount" : "Crea un account",
+      "log42" : "Connettiti con"                                                                                                                                                                               
+    }
+  }

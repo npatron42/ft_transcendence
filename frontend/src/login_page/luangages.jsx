@@ -2,39 +2,43 @@ import flagF from '../assets/login_page/frenchFlag.svg';
 import flagI from '../assets/login_page/italianFlag.svg';
 import flagE from '../assets/login_page/englishFlag.svg';
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import './cadre.css';
 
 
-function luangages() {
+function Languages() {
+	
+	const { i18n } = useTranslation();
 	
 	const [selectedFlag, setSelectedFlag] = useState(null);
 	
-	const handleFlagClick = (flag) => {
-	  setSelectedFlag(flag);
+	const handleFlagClick = (language) => {
+	  setSelectedFlag(language);
+	  i18n.changeLanguage(language);
 	};
 	
 	return (
 	  <div>
 		<img 
 		  src={flagF} 
-		  className={`french-flag ${selectedFlag === 'french' ? 'selected' : ''}`} 
+		  className={`french-flag ${selectedFlag === 'fr' ? 'selected' : ''}`} 
 		  alt="frenchFlag svg" 
-		  onClick={() => handleFlagClick('french')}
+		  onClick={() => handleFlagClick('fr')}
 		/>
 		<img 
 		  src={flagI}  
-		  className={`italian-flag ${selectedFlag === 'italian' ? 'selected' : ''}`} 
+		  className={`italian-flag ${selectedFlag === 'it' ? 'selected' : ''}`} 
 		  alt="italianFlag svg" 
-		  onClick={() => handleFlagClick('italian')}
+		  onClick={() => handleFlagClick('it')}
 		/>
 		<img 
 		  src={flagE}  
-		  className={`english-flag ${selectedFlag === 'english' ? 'selected' : ''}`} 
+		  className={`english-flag ${selectedFlag === 'en' ? 'selected' : ''}`} 
 		  alt="englishFlag svg" 
-		  onClick={() => handleFlagClick('english')}
+		  onClick={() => handleFlagClick('en')}
 		/>
 	  </div>
 	);
   }
 
-export default luangages
+export default Languages

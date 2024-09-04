@@ -1,0 +1,12 @@
+{
+    "loginPage": {
+      "id": "Player id",
+      "champ1": "Enter your Id",
+      "mdp" : "Password",
+      "champ2" : "Enter your password",
+      "login" : "Login",
+      "new" : "New user ?",
+      "createAccount" : "Create Account",
+      "log42" : "Connect with"                                                                                                                                                                               
+    }
+  }

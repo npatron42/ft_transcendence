@@ -4,10 +4,13 @@ import Button42 from './button42.jsx';
 import Cadre from './cadre.jsx';
 import Log from './idPass.jsx';
 import Langue from './luangages.jsx';
+import { useTranslation } from 'react-i18next';
 import './cadre.css';
 
 
 function loginPage(){
+	const { t } = useTranslation();
+	console.log(t('loginPage.createAccount'));
 	return (
 		<div className="background-container">
 			<Cadre />
@@ -16,7 +19,7 @@ function loginPage(){
 			<h3 className="h1-titre">Transcendence</h3>
 			<Log />
 			<Langue />
-			<p className="para-user">Nouvel utilisateur ?</p> 
+			<p className="para-user">{t('loginPage.new')}</p>
 		</div>
 	);
 }

@@ -1,0 +1,12 @@
+{
+    "loginPage": {
+      "id": "Identifiant",
+      "champ1": "Entrez votre Identifiant",
+      "mdp" : "Mot de passe",
+      "champ2" : "Entrez votre Mot de passe",
+      "login" : "Se connecter",
+      "new" : "Nouvel utilisateur ?",
+      "createAccount" : "Créer un compte",
+      "log42" : "Se connecter avec"                                                                                                                                                                               
+    }
+  }
