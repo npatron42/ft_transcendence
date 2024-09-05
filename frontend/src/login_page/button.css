@@ -4,8 +4,8 @@
 
 .custom-button {
 	position: absolute; 
-	top: 62vh;
-	left: 68vw;
+	top: 66.3vh;
+	left: 63vw;
 	background-color: #0454EE; 
 	border-color: #0454EE;
 	color: rgb(132, 185, 247); 
@@ -56,7 +56,8 @@
 		transition: transform 0.2s ease;
 	}
 
-	
-	.custom-button:hover, .custom-42:hover , .custom-log:hover{
-		transform: translateY(-0.2vw); 
-	}
+		.custom-button:hover,
+		.custom-42:hover,
+		.custom-log:hover {
+			transform: translateY(-0.2vw);
+		}

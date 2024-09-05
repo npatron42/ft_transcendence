@@ -1,6 +1,6 @@
 {
     "loginPage": {
-      "id": "Identificatore",
+      "id": "Nome utente",
       "champ1": "Inserisci il tuo identificatore",
       "mdp" : "Password",
       "champ2" : "Inserisci la tua password",

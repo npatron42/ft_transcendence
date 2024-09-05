@@ -145,14 +145,14 @@
 
 .french-flag {
 	position: absolute;
-	top: 6.5vh;
+	top: 1.3vh;
 	left: 80vw;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	}
 
 .italian-flag {
 	position: absolute;
-	top: 6.5vh;
+	top: 1.3vh;
 	left: 82.5vw;
 	border: 0.1vw solid #222222; 
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
@@ -160,15 +160,17 @@
 
 .english-flag {
 	position: absolute;
-	top: 6.5vh;
+	top: 1.5vh;
 	left: 85vw;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	}
 
-	.english-flag:hover, .italian-flag:hover ,.french-flag:hover{
-		transform: translateY(-0.1vw); 
-	}
-
+		.english-flag:hover,
+		.italian-flag:hover,
+		.french-flag:hover {
+			transform: translateY(-0.1vw);
+		}
+		
 .selected {
-    border: 0.06vw solid rgb(156, 154, 154); /* Contour bleu lorsqu'un drapeau est sélectionné */
+    border: 0.06vw solid rgb(156, 154, 154); 
 }	

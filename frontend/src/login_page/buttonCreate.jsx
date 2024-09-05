@@ -6,7 +6,7 @@ function buttonCreate() {
   const { t } = useTranslation();
   return (
     <div>
-    <Button size="sm" variant="outline-dark" className="custom-button">{t('loginPage.createAccount')}</Button>
+    <Button href="/register" size="sm" variant="outline-dark" className="custom-button">{t('loginPage.createAccount')}</Button>
   </div>
   );
 }
