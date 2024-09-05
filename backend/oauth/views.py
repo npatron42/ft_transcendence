@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from users.serializers import UserSerializer
 from rest_framework.exceptions import AuthenticationFailed
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework.views import APIView
 from django.http import HttpResponse
 import jwt, datetime
@@ -101,11 +102,11 @@ def attributeToUserJWT(myUser: User):
 	}
     logger.info(os.getenv('SECRET_KEY'))
     token = jwt.encode(myPayload, os.getenv('SECRET_KEY'), algorithm='HS256')
+    logger.info("Voici mon JWT : ${token}")
     response = Response()
     response.set_cookie(key='jwt', value=token, httponly=True)
     response.data = {
         'jwt': token
     }
     return (response)
-
 

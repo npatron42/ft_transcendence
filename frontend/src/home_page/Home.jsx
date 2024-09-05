@@ -2,15 +2,7 @@ import "../index.css";
 import "../App.css";
 import axios from 'axios';
 import React, { useEffect } from 'react';
-import Button42 from "../Button42/Button42"
-
-
-// const reponse = {
-//     Failure : Boolean,
-//     Success: Boolean,
-//     data: Object,
-//     Reason: String,
-// };
+import WebSocketComponent from "../FriendsList/FriendsList";
 
 const Home = () => {
     useEffect(() => {
@@ -52,14 +44,21 @@ const Home = () => {
 
         const fetchDataAndGetUser = async () => {
             await fetchData();
-            await getUser(); 
+            await getUser();
+            const myJwt = localStorage.getItem('jwt');
+            const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
+            const socket = new WebSocket(myUrl);
         };
 
         fetchDataAndGetUser();
+
+        
+
     }, []);
 
     return (
         <div className="background-container">
+        {/* <WebSocketComponent/> */}
         </div>
     );
 }

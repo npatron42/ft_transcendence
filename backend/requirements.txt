@@ -7,4 +7,6 @@ django-cors-headers
 djangorestframework-simplejwt==4.7.2
 requests
 pyjwt
-
+channels
+daphne
+channels_redis

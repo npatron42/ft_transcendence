@@ -6,5 +6,5 @@ from oauth import urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
-	path('oauth2/', include('oauth.urls'))
+	path('oauth2/', include('oauth.urls')),
 ]

@@ -10,6 +10,12 @@ DEBUG = os.getenv('DEBUG')
 ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
+	'daphne',
+	'chat',
+    'users',
+    'authentication',
+	'api',
+	'oauth',
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'corsheaders',
@@ -19,10 +25,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
-    'authentication',
-	'api',
-	'oauth'
 ]
 
 
@@ -31,9 +33,26 @@ ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
 
 AUTH_USER_MODEL = 'users.User'
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:8000',
+]
 
-CORS_ALLOWED_ORIGINS = ['http://localhost:5173']
-CSRF_TRUSTED_ORIGINS = ['http://localhost:5173']
+CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'http://localhost:8000',
+]
+
+ASGI_APPLICATION = 'core.asgi.application'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": [('redis', 6379)],
+        },
+    },
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -69,11 +88,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
-WSGI_APPLICATION = 'core.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
 DATABASES = {
     'default': {
@@ -140,6 +154,11 @@ LOGGING = {
             'propagate': True,
         },
 		'oauth': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+		'chat': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
