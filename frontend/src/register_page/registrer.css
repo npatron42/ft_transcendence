@@ -1,6 +1,6 @@
 .id {
 	position: absolute;
-	left: 32vw;
+	left: 25vw;
 	top: 30vh;
 	color: #FFFFFF;
 	font-size: 1.1vw;
@@ -10,7 +10,7 @@
 
 .input_id {
 	position: absolute;
-	left: 32vw;
+	left: 25vw;
 	top: 34vh;
 	font-size: 1vw;
 	font-family: 'Manuale', sans-serif;
@@ -36,7 +36,7 @@
 .mail {
 	position: absolute;
 	top: 41vh;
-	left: 32vw;
+	left: 25vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
@@ -46,7 +46,7 @@
 .input_mail {
 	position: absolute;
 	color: #969393;
-	left: 32vw;
+	left: 25vw;
 	top: 45vh;
 	font-size: 1vw;
 	font-family: 'Manuale', sans-serif;
@@ -74,7 +74,7 @@
 .pass {
 	position: absolute;
 	top: 51vh;
-	left: 32vw;
+	left: 25vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
@@ -86,7 +86,7 @@
 .input_pass {
 	position: absolute;
 	color:#969393;
-	left: 32vw;
+	left: 25vw;
 	top: 55vh;
 	font-size: 1vw;
 	font-family: 'Manuale', sans-serif;
@@ -111,8 +111,8 @@
 
 .custom-create {
 	position: absolute;
-	top: 65vh;
-	left: 32vw;
+	top: 62vh;
+	left: 25vw;
 	background-color: #0454EE;
 	border-color: #0454EE;
 	color: rgb(132, 185, 247);
@@ -128,3 +128,43 @@
 	.custom-create:hover {
 		transform: translateY(-0.2vw);
 	}
+
+.h1_titre {
+	position: absolute;
+	top: 15vh;
+	left: 25vw;
+	color: #ffffff;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 650;
+	font-size: 2.8vw;
+}
+
+.custom-co {
+	position: absolute;
+	top: 78vh;
+	left: 35vw;
+	background-color: #0454EE;
+	border-color: #0454EE;
+	color: rgb(132, 185, 247);
+	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
+	padding: 0.2vw 0.8vw;
+	font-size: 1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: bold;
+	border-radius: 20px;
+	transition: transform 0.2s ease;
+}
+
+	.custom-create:hover {
+		transform: translateY(-0.2vw);
+	}
+
+.para-I {
+	position: absolute;
+	top: 73vh;
+	left: 25vw;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}

@@ -173,4 +173,16 @@
 		
 .selected {
     border: 0.06vw solid rgb(156, 154, 154); 
-}	
+}
+
+.error {
+	position: absolute;
+	top: 52.3vh;
+	left: 57vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 200;
+}
+	

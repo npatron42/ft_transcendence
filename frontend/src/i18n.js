@@ -32,7 +32,7 @@ i18n
  
     },
  
-    lng: 'fr',
+    lng:  sessionStorage.getItem('i18nextLng') ||  'fr',
  
     fallbackLng: 'fr',
  

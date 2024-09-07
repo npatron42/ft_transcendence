@@ -1,12 +1,31 @@
 {
     "loginPage": {
-      "id": "Nome utente",
-      "champ1": "Inserisci il tuo identificatore",
+      "id": "Utente",
+      "champ1": "Inserisci il tuo Utente",
       "mdp" : "Password",
       "champ2" : "Inserisci la tua password",
       "login" : "Accedi",
       "new" : "Nuovo utente?",
       "createAccount" : "Crea un account",
-      "log42" : "Connettiti con"                                                                                                                                                                               
+      "log42" : "Connettiti con",
+      "error" : "Utente o password errati."                                                                                                                                                                      
+    },
+
+    "registerPage": {
+      "id": "Utente",
+      "champ1": "Inserisci il tuo Utente",
+      "mail" : "Email",
+      "champ2": "Inserisci la tua Email",
+      "mdp" : "Password",
+      "champ3" : "Inserisci la tua password",
+      "login" : "Accedi",
+      "createAccount" : "Crea un account",
+      "Ihave" : "Ho gia un account ?",
+      "idRequired": "Utente è richiesto",
+      "idNoUnderscore": "Utente non deve contenere _",
+      "emailRequired": "L'email è richiesta",
+      "emailInvalid": "L'email non è valida",
+      "passwordRequired": "La password è richiesta",
+      "passwordMinLength": "La password deve essere lunga almeno 8 caratteri"
     }
   }

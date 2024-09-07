@@ -1,12 +1,31 @@
 {
     "loginPage": {
-      "id": "Player id",
+      "id": "Username",
       "champ1": "Enter your Id",
       "mdp" : "Password",
       "champ2" : "Enter your password",
       "login" : "Login",
       "new" : "New user ?",
       "createAccount" : "Create account",
-      "log42" : "Connect with"                                                                                                                                                                               
+      "log42" : "Connect with",
+      "error" : "Incorrect username or password."                                                                                                                                                                             
+    },
+
+    "registerPage": {
+      "id": "Username",
+      "champ1": "Enter your Id",
+      "mail" : "Email",
+      "champ2": "Entrez your Email",
+      "mdp" : "Password",
+      "champ3" : "Enter your password",
+      "login" : "Login",
+      "createAccount" : "Create account",
+      "Ihave" : "I already have an account ?",
+      "idRequired": "Username is required",
+      "idNoUnderscore": "Username should not contain _",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is not valid",
+      "passwordRequired": "Password is required",
+      "passwordMinLength": "Password must be at least 8 characters long"
     }
   }

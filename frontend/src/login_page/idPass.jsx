@@ -1,4 +1,4 @@
-import {useState} from "react"
+import React, { useState, useEffect } from 'react';
 import {Button, Form} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
@@ -10,14 +10,18 @@ function idPass() {
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
+	const [errorMessage, setErrorMessage] = useState("");
 
 	const handleClick = (e) => {
 		e.preventDefault();
 
-
-		if (username === '' || password === '')
+		
+		if (username === "" || password === "") {
+			setErrorMessage('loginPage.error');
 			return;
+			}
 
+		setErrorMessage(""); 
 		console.log('Username ', username);
 		console.log('Password ', password);
 	};
@@ -42,6 +46,9 @@ function idPass() {
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}/>
 				</Form.Group>
+
+				{errorMessage && <p className="error">{t(errorMessage)}</p>}
+				
 				<Button variant="outline-dark" className="custom-log" onClick={handleClick}> {t('loginPage.login')} </Button>
 			</Form>
 		</div>
