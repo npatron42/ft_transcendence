@@ -88,21 +88,18 @@ def add42UserToDB(jsonFile):
         return myReturnUser
     except:
         raise(Exception("Cannot add User to DB"))
-    
+
 
 
 
 def attributeToUserJWT(myUser: User):
     userId = myUser.id
-    logger.info(userId)
     myPayload = {
 		'id': userId,
-		'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=180),
+		'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=6000000),
 		'iat': datetime.datetime.utcnow()
 	}
-    logger.info(os.getenv('SECRET_KEY'))
     token = jwt.encode(myPayload, os.getenv('SECRET_KEY'), algorithm='HS256')
-    logger.info("Voici mon JWT : ${token}")
     response = Response()
     response.set_cookie(key='jwt', value=token, httponly=True)
     response.data = {

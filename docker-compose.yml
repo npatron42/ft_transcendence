@@ -37,7 +37,6 @@ services:
     ports:
       - 5173:5173
 
-
   adminer:
     image: adminer
     container_name: adminer

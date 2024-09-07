@@ -1,0 +1,7 @@
+
+h6 {
+    font-size: 1.5rem; /* Taille de la police */
+    color: #f00b0b; /* Couleur du texte */
+    font-weight: 500; /* Poids de la police */
+    margin: 20; /* Suppression des marges par défaut */
+}

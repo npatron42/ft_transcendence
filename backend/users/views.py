@@ -17,14 +17,19 @@ logger = logging.getLogger(__name__)
 
 def getUser(request):
 
-	payload = middleWareAuthentication(request)
-	user = User.objects.filter(id = payload['id']).first()
-	serializer = UserSerializer(user)
-	return JsonResponse(serializer.data)
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
+
+def getAllUsers(request):
+    payload = middleWareAuthentication(request)
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)  # Note l'utilisation de 'many=True'
+    return JsonResponse(serializer.data, safe=False)
 
 
 async def getUserFromJWT(token):
-    # Décodage du jeton
     decoded_token = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
     user_id = decoded_token.get('id')
     try:

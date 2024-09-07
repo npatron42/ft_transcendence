@@ -1,66 +1,36 @@
 import "../index.css";
+import "./Home.css";
 import "../App.css";
+import { fetchData, getAllUsers, getUser } from '../api/api'
 import axios from 'axios';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import WebSocketComponent from "../FriendsList/FriendsList";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import UsersList  from "../UsersList/UsersList";
 
 const Home = () => {
+
+    const [myUser, setUser] = useState(null);
     useEffect(() => {
-        const fetchData = async () => {
+        
+        const fetchDataAndGetUser = async () => {
             const params = new URLSearchParams(window.location.search);
             const codeFromUrl = params.get('code');
-            try {
-                const response = await axios.post("http://localhost:8000/oauth2/login/", {
-                    code: codeFromUrl,
-                });
-
-                if (response.data.Error === "Failed during creation proccess, to DB")
-                    return ;
-
-                localStorage.setItem("jwt", response.data.jwt);
-            } catch (error) {
-                console.error("Error during login:", error);
-            }
-        };
-
-        const getUser = async () => {
-            try {
-                const token = localStorage.getItem('jwt');
-                const config = {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                };
-                
-                const response = await axios.get("http://localhost:8000/api/users/", config);
-        
-                console.log("User data:", response.data);
-                return response.data;
-            } catch (error) {
-                console.error("Error fetching user data:", error);
-                throw error;
-            }
-        };
-
-        const fetchDataAndGetUser = async () => {
-            await fetchData();
-            await getUser();
-            const myJwt = localStorage.getItem('jwt');
-            const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
-            const socket = new WebSocket(myUrl);
+            if (codeFromUrl)
+                await fetchData(codeFromUrl);
+            const userData = await getUser();
+            setUser(userData);
         };
 
         fetchDataAndGetUser();
-
         
-
     }, []);
 
     return (
-        <div className="background-container">
-        {/* <WebSocketComponent/> */}
-        </div>
-    );
+    <div className="background-container">
+        <UsersList/>
+    </div>
+    )
 }
 
 export default Home;
