@@ -6,7 +6,7 @@
 #    By: isouaidi <isouaidi@student.42nice.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 14:30:21 by npatron           #+#    #+#              #
-#    Updated: 2024/08/30 16:57:44 by isouaidi         ###   ########.fr        #
+#    Updated: 2024/09/05 19:05:45 by isouaidi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,6 +17,10 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install
+
+RUN npm install i18next react-i18next 
+
+RUN npm install react-router-dom
 
 COPY . .
 

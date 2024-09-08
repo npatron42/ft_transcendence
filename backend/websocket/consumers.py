@@ -71,6 +71,18 @@ class StatusConsumer(AsyncWebsocketConsumer):
         message = event['message']
         await self.send(text_data=json.dumps(message))
 
+class InviteFriendConsumer(AsyncWebsocketConsumer):
+
+    async def connect(self):
+        if self.scope['user'].is_authenticated:
+            logger.info("INVITE")
+            logger.info(self.scope['user'])
+            await self.accept()
+
+    async def disconnect(self, close_code):
+        logger.info("END INVITATION")
+        pass
+
 
 
         

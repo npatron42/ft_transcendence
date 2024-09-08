@@ -11,7 +11,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 	'daphne',
-	'chat',
+	'websocket',
     'users',
     'authentication',
 	'api',
@@ -158,7 +158,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-		'chat': {
+		'websocket': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
