@@ -3,28 +3,37 @@ from rest_framework.response import Response
 from rest_framework import status
 from users.models import User
 from users.serializers import UserSerializer
+from django.http import JsonResponse
+from rest_framework.views import APIView
+from rest_framework.exceptions import AuthenticationFailed
+from .utils import middleWareAuthentication
+from channels.db import database_sync_to_async
+import jwt, datetime
 import logging
+import os
 
 logger = logging.getLogger(__name__)
 
-@api_view(['GET'])
-def getUsers(request):
-	users = User.objects.all()
-	serializer = UserSerializer(users, many=True)
-	return Response(serializer.data)
 
-# @api_view(['POST'])
-# def createUser(request):
-# 	# print("JE PASSE PAR ICI")
-# 	# print(request.body)
-# 	logger.info(request.data)
-# 	return Response(request.data)
+def getUser(request):
 
-@api_view(['POST'])
-def createUser(request):
-	serializer = UserSerializer(data=request.data)
-	# if (serializer.is_valid()):
-	serializer.save()
-	logger.info("FABIO")
-	return Response(serializer.data, status=status.HTTP_201_CREATED)
-	# return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
+
+def getAllUsers(request):
+    payload = middleWareAuthentication(request)
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)  # Note l'utilisation de 'many=True'
+    return JsonResponse(serializer.data, safe=False)
+
+
+async def getUserFromJWT(token):
+    decoded_token = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
+    user_id = decoded_token.get('id')
+    try:
+        user = await database_sync_to_async(User.objects.get)(id=user_id)
+        return user
+    except User.DoesNotExist:
+        return None

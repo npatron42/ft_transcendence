@@ -1,76 +1,19 @@
 import './App.css'
-import React, { useState } from 'react';
-import axios from 'axios';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Routes, Route } from 'react-router-dom';
+import Home from './home_page/Home';
+import Login from './Login/Login';
 
-function App() {
-  const [data, setData] = useState({
-    username: '',
-    email: '',
-    password: ''
-  });
-
-  const handleChange = (e) => {
-    setData({
-      ...data,
-    });
-  };
-
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     const response = await axios.post('http://localhost:8000/api/create/', data, {
-  //       headers: {
-  //         'Content-Type': 'application/json'
-  //       }
-  //     });
-  //     console.log('Response:', response.data);
-  //   } catch (error) {
-  //     console.error('Error during the POST request:', error);
-  //   }
-  // };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/users', {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
-      console.log('Response:', response.data);
-    } catch (error) {
-      console.error('Error during the POST request:', error);
-    }
-  };
-
-  return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="username"
-          value={data.username}
-          onChange={handleChange}
-          placeholder="Username"
-        />
-        <input
-          type="text"
-          name="password"
-          value={data.password}
-          onChange={handleChange}
-          placeholder="Password"
-        />
-        <input
-          type="text"
-          name="email"
-          value={data.email}
-          onChange={handleChange}
-          placeholder="Email"
-        />
-        <button type="submit">Submit</button>
-      </form>
-    </div>
-  );
-}
+ 
+const App = () => {
+   return (
+      <>
+         <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/home" element={<Home />} />
+         </Routes>
+      </>
+   );
+};
 
 export default App;
