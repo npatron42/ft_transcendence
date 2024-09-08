@@ -4,9 +4,9 @@ import "../App.css";
 import { fetchData, getAllUsers, getUser } from '../api/api'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import WebSocketComponent from "../FriendsList/FriendsList";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UsersList  from "../UsersList/UsersList";
+import FriendsList from "../UsersList/FriendsList";
 
 const Home = () => {
 
@@ -29,6 +29,7 @@ const Home = () => {
     return (
     <div className="background-container">
         <UsersList/>
+        <FriendsList/>
     </div>
     )
 }

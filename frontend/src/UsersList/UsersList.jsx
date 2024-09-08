@@ -11,9 +11,9 @@ const UsersList = () => {
         const userStatus = () => {
             const myJwt = localStorage.getItem('jwt');
             const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
-            const socket = new WebSocket(myUrl);
+            const socketStatus = new WebSocket(myUrl);
 
-            socket.onmessage = function(event) {
+            socketStatus.onmessage = function(event) {
                 const data = JSON.parse(event.data);
                 setSocketMessage(data);
                 let numberOfConnected = Object.keys(data).length;
@@ -21,7 +21,7 @@ const UsersList = () => {
             };
 
             return () => {
-                socket.close();
+                socketStatus.close();
             };
         };
 
@@ -39,17 +39,22 @@ const UsersList = () => {
 
     }, []);
 
+    const handleInvitation = () => {
+        const myJwt = localStorage.getItem('jwt');
+        const myUrl = "ws://localhost:8000/ws/inviteFriend/?token=" + myJwt;
+        const socketInviteFriend = new WebSocket(myUrl);
+    }
+
     const chooseStatus = (username) => {
         return socketMessage[username] ? "Connected" : "Disconnected";
     };
 
     return (
         <div className="background-container">
-            <h2 className="mb-4">Users List</h2>
             <table className="table table-striped table-bordered">
                 <thead className="thead-dark">
                     <tr>
-                        <th>#</th>
+                        <th>USERS LIST</th>
                         <th>Username</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -67,7 +72,7 @@ const UsersList = () => {
                                 <td>{user.username}</td>
                                 <td>{chooseStatus(user.username)}</td>
                                 <td>
-                                    <button className="btn btn-primary btn-sm me-2">Edit</button>
+                                    <button onClick={handleInvitation} className="btn btn-primary btn-sm me-2">Add</button>
                                     <button className="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
