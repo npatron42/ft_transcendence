@@ -37,3 +37,10 @@ async def getUserFromJWT(token):
         return user
     except User.DoesNotExist:
         return None
+    
+    
+def postInvite(request):
+    payload = middleWareAuthentication(request)
+    users = User.objects.all()
+    serializer = UserSerializer(users, many=True)
+    return JsonResponse(serializer.data, safe=False)

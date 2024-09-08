@@ -6,6 +6,8 @@ const UsersList = () => {
     const [numberOfConnected, setNumberOfConnected] = useState(0);
     const [socketMessage, setSocketMessage] = useState({});
     const [usersList, setUsersList] = useState([]);
+    
+    const myJwt = localStorage.getItem('jwt');
 
     useEffect(() => {
         const userStatus = () => {
@@ -37,13 +39,20 @@ const UsersList = () => {
             cleanup();
         };
 
+        
     }, []);
+    
+    const handleInvitation = (userInvited) => {
 
-    const handleInvitation = () => {
-        const myJwt = localStorage.getItem('jwt');
-        const myUrl = "ws://localhost:8000/ws/inviteFriend/?token=" + myJwt;
-        const socketInviteFriend = new WebSocket(myUrl);
-    }
+        const inviteUrl = `ws://localhost:8000/ws/inviteFriend/?token=${myJwt}`;
+        const ws = new WebSocket(inviteUrl);
+
+        ws.onopen = () => {
+            const data = { invitation: userInvited.username };
+            ws.send(JSON.stringify(data));
+            console.log("Invitation sent:", data);
+        };
+    };
 
     const chooseStatus = (username) => {
         return socketMessage[username] ? "Connected" : "Disconnected";
@@ -72,7 +81,7 @@ const UsersList = () => {
                                 <td>{user.username}</td>
                                 <td>{chooseStatus(user.username)}</td>
                                 <td>
-                                    <button onClick={handleInvitation} className="btn btn-primary btn-sm me-2">Add</button>
+                                    <button onClick={() => handleInvitation(user)} className="btn btn-primary btn-sm me-2">Add</button>
                                     <button className="btn btn-danger btn-sm">Delete</button>
                                 </td>
                             </tr>
