@@ -1,0 +1,31 @@
+{
+    "loginPage": {
+      "id": "Username",
+      "champ1": "Enter your Id",
+      "mdp" : "Password",
+      "champ2" : "Enter your password",
+      "login" : "Login",
+      "new" : "New user ?",
+      "createAccount" : "Create account",
+      "log42" : "Connect with",
+      "error" : "Incorrect username or password."                                                                                                                                                                             
+    },
+
+    "registerPage": {
+      "id": "Username",
+      "champ1": "Enter your Id",
+      "mail" : "Email",
+      "champ2": "Entrez your Email",
+      "mdp" : "Password",
+      "champ3" : "Enter your password",
+      "login" : "Login",
+      "createAccount" : "Create account",
+      "Ihave" : "I already have an account ?",
+      "idRequired": "Username is required",
+      "idCara": "Username must contain between 3 & 11 characters (allowed characters A-Z & a-z)",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is not valid",
+      "passwordRequired": "Password is required",
+      "passwordInvalid": "Password must be at least 8 characters, including an uppercase letter,\na lowercase letter, a number, and a special character."
+    }
+  }
