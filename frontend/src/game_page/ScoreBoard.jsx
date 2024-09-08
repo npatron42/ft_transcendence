@@ -1,5 +1,5 @@
 import React from 'react';
-import '../css/game.css';
+import './css/game.css';
 
 export const ScoreBoard = ({ score1, score2 }) => {
   return (

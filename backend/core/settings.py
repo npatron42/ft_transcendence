@@ -11,7 +11,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
 	'daphne',
-	'chat',
+	'websocket',
     'users',
     'authentication',
 	'api',

@@ -107,7 +107,7 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
     }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2]);
 };
 
-const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
+const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
 
     //state
 
@@ -145,4 +145,4 @@ const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
     );
 }
 
-export default Pong;
+export default PongSolo;
