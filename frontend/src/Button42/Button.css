@@ -1,0 +1,17 @@
+.favorite {
+    background-color: #4a4f53;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 14px;
+    border: none;
+    cursor: pointer;
+}
+
+.styled {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.favorite:hover {
+    background-color: #50515e;
+}
