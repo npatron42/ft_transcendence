@@ -11,7 +11,7 @@ import background from "./assets/back.svg";
 const App = () => {
   return (
     <div className="background-container">
-      <div className="App">
+      <div className="App">gi 
       <GlobalGame />
       </div>
     </div>
