@@ -73,7 +73,7 @@
 		
 .pass {
 	position: absolute;
-	top: 51vh;
+	top: 52vh;
 	left: 25vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
@@ -87,7 +87,7 @@
 	position: absolute;
 	color:#969393;
 	left: 25vw;
-	top: 55vh;
+	top: 56vh;
 	font-size: 1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
@@ -111,7 +111,7 @@
 
 .custom-create {
 	position: absolute;
-	top: 62vh;
+	top: 67vh;
 	left: 25vw;
 	background-color: #0454EE;
 	border-color: #0454EE;
@@ -141,7 +141,7 @@
 
 .custom-co {
 	position: absolute;
-	top: 78vh;
+	top: 80vh;
 	left: 35vw;
 	background-color: #0454EE;
 	border-color: #0454EE;
@@ -155,16 +155,45 @@
 	transition: transform 0.2s ease;
 }
 
-	.custom-create:hover {
-		transform: translateY(-0.2vw);
-	}
-
 .para-I {
 	position: absolute;
-	top: 73vh;
+	top: 76.5vh;
 	left: 25vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
 	font-family: 'Manuale', sans-serif;
 	font-weight: 600;
+}
+
+.error-user {
+	position: absolute;
+	left: 25vw;
+	top: 38.5vh;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 200;
+}
+
+.error-mail {
+	position: absolute;
+	left: 25vw;
+	top: 49.5vh;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 200;
+}
+
+.error-password {
+	position: absolute;
+	left: 25vw;
+	top: 60.5vh;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 200;
 }

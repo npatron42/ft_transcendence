@@ -18,12 +18,11 @@ function idRegister() {
 
 	const newErrors = {};
 
+	const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
 	if(username === '')
 		newErrors.username = ("registerPage.idRequired");
-	else if(username.includes('_'))
-		newErrors.username = ("registerPage.idNoUnderscore");
-	else if(username.length > 9 )
-		newErrors.username = ("registerPage.idlength");
+	else if(!usernameRegex.test(username))
+		newErrors.username = ("registerPage.idCara");
 
 
 	const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,10 +31,12 @@ function idRegister() {
 	else if(!emailRegex.test(email))
 		newErrors.email = ("registerPage.emailInvalid");
 
+	const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 	if(password === '')
 		newErrors.password = ("registerPage.passwordRequired");
-	else if(password.length < 8)
-		newErrors.password = ("registerPage.passwordMinLength");
+	else if(!passwordRegex.test(password))
+		newErrors.password = ("registerPage.passwordInvalid");
+
 
 
 	if(Object.keys(newErrors).length > 0){
@@ -57,7 +58,6 @@ function idRegister() {
 					placeholder= {t("registerPage.champ1")}
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}/>
-					{errors.username && <p>{t(errors.username)}</p>}
 				</Form.Group>
 
 				<p className="mail"> {t("registerPage.mail")}</p> 
@@ -67,7 +67,6 @@ function idRegister() {
 					placeholder= {t("registerPage.champ2")}
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}/>
-					{errors.email && <p>{t(errors.email)}</p>}
 				</Form.Group>
 				 
 				<p className="pass">{t("registerPage.mdp")}</p> 
@@ -77,8 +76,11 @@ function idRegister() {
 					placeholder= {t("registerPage.champ3")}
 					value={password}
 					onChange={(e) => setPassword(e.target.value)}/>
-					{errors.password && <p>{t(errors.password)}</p>}
 				</Form.Group>
+					
+					{errors.username && <p className="error-user">{t(errors.username)}</p>}
+					{errors.email && <p className="error-mail">{t(errors.email)}</p>}
+					{errors.password &&<p className="error-password" dangerouslySetInnerHTML={{ __html: t(errors.password).replace(/\n/g, '<br />') }}></p>}
 				<Button variant="outline-dark" className="custom-create" onClick={handleClick}>{t("registerPage.createAccount")}</Button>
 			</Form>
 		</div>

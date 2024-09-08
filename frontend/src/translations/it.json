@@ -22,10 +22,11 @@
       "createAccount" : "Crea un account",
       "Ihave" : "Ho gia un account ?",
       "idRequired": "Utente è richiesto",
-      "idNoUnderscore": "Utente non deve contenere _",
+      "idCara": "Utente deve contenere tra 3 & 11 caratteri (caratteri consentiti A-Z & a-z)",
       "emailRequired": "L'email è richiesta",
       "emailInvalid": "L'email non è valida",
       "passwordRequired": "La password è richiesta",
-      "passwordMinLength": "La password deve essere lunga almeno 8 caratteri"
+      "passwordMinLength": "La password deve essere lunga almeno 8 caratteri",
+      "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale."
     }
   }

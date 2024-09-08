@@ -23,10 +23,11 @@
       "Ihave" : "J'ai déja un compte ?",
       "idlength" : "L'identifiant doit comporter moins de 11 caractères",
       "idRequired": "L'identifiant est requis",
-      "idNoUnderscore": "L'identifiant ne doit pas contenir de _",
+      "idCara": "L'identifiant doit contenir entre 3 & 11 caracteres (caracteres autorises A-Z & a-z)",
       "emailRequired": "L'email est requis",
       "emailInvalid": "L'email n'est pas valide",
       "passwordRequired": "Le mot de passe est requis",
-      "passwordMinLength": "Le mot de passe doit comporter au moins 8 caractères"
+      "passwordMinLength": "Le mot de passe doit comporter au moins 8 caractères",
+      "passwordInvalid": "Le mot de passe doit comporter au moins 8 caractères, incluant une majuscule,\nune minuscule, un chiffre et un caractère spécial."
     }
   }

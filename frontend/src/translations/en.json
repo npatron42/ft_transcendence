@@ -22,10 +22,10 @@
       "createAccount" : "Create account",
       "Ihave" : "I already have an account ?",
       "idRequired": "Username is required",
-      "idNoUnderscore": "Username should not contain _",
+      "idCara": "Username must contain between 3 & 11 characters (allowed characters A-Z & a-z)",
       "emailRequired": "Email is required",
       "emailInvalid": "Email is not valid",
       "passwordRequired": "Password is required",
-      "passwordMinLength": "Password must be at least 8 characters long"
+      "passwordInvalid": "Password must be at least 8 characters, including an uppercase letter,\na lowercase letter, a number, and a special character."
     }
   }
