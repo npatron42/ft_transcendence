@@ -1,0 +1,12 @@
+{
+	"username": "npatorn",
+	"password": "password123",
+	"email": "npatorn@example.com",
+	"date1": "2024-08-28T14:00:00Z",
+	"date2": "2024-09-01T10:30:00Z",
+	"arrayOfStrings": [
+	  "fabio",
+	  "ilyes",
+	  "tristan"
+	]
+  }

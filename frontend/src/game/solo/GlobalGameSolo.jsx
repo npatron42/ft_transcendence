@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Pong from './Pong';
 import { ScoreBoard } from './ScoreBoard';
-import { StartButton, StopButton } from './Buttons';
+import { StartButton, StopButton } from '../Buttons';
 
-const GlobalGame = () => {
+const GlobalGameSolo = () => {
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
     const [isGameActive, setIsGameActive] = useState(false);
@@ -28,4 +28,4 @@ const GlobalGame = () => {
     );
 };
 
-export default GlobalGame;
+export default GlobalGameSolo;

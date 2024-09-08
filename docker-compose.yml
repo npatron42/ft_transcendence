@@ -37,12 +37,17 @@ services:
     ports:
       - 5173:5173
 
-
   adminer:
     image: adminer
-    container_name: my_adminer
+    container_name: adminer
     ports:
       - "8080:8080"
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6380:6379"
 
 
 

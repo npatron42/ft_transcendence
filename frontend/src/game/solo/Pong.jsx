@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './style.css';
+import '../css/game.css';
 
 const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) => {
     useEffect(() => {
@@ -112,7 +112,7 @@ const Pong = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
     //state
 
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
-    const [paddleRightPos, setPaddleRightPos] = useState(530);
+    const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
 

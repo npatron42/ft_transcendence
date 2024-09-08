@@ -1,0 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
+
+
+.custom-cadre {
+	position: relative; /* Nécessaire pour le positionnement absolu des éléments enfants */
+	width: 80vw; /* Prend 95% de la largeur de la fenêtre */
+	height: 90vh; /* Prend 95% de la hauteur de la fenêtre */
+	margin: 2.5vw auto; /* Centre le cadre horizontalement et ajoute une marge automatique */
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 2px solid #032871; /* Bordure orange épaisse */
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1); /* Ombrage pour le cadre */
+	display: flex; /* Utilise flexbox pour centrer le contenu */
+	align-items: center; /* Centre verticalement */
+	justify-content: center; /* Centre horizontalement */
+	border-radius: 10px;
+}
+
+.h1-titre {
+	position: absolute;
+	top: 12vh;
+	left: 52vw;
+	color: #FFFFFF;
+	text-shadow: 0vw 0.8vw 1vw rgba(1, 20, 95, 0.993); 
+	font-family: 'Manuale', sans-serif;
+	font-weight: 550;
+	font-size: 4.2vw;
+}
+
+.para-co {
+	position: absolute;
+	top: 27vh;
+	left: 61vw;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+.para-id {
+	position: absolute;
+	left: 61vw;
+	top: 34.5vh;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+
+.para-login {
+	position: absolute;
+	top: 44vh;
+	left: 61vw;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+.para-mdp {
+	position: absolute;
+	top: 53vh;
+	left:75vw;
+	color: #969393;
+	font-size: 0.7vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+	font-style: italic;
+}
+
+
+.para-user {
+	position: absolute;
+	top: 62vh;
+	left: 61vw;
+	color: #FFFFFF;
+	font-size: 1.1vw;
+	font-family: 'Manuale', sans-serif;
+	font-weight: 600;
+}
+
+
+.img-custom {
+		position: absolute;
+		top: 2.6vh; 
+		left: 1.9vw;
+		height: 100vw;
+		max-width: 100vw; 
+		max-height: 85vh; 
+}
+
+
+
