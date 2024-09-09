@@ -16,6 +16,7 @@ INSTALLED_APPS = [
     'authentication',
 	'api',
 	'oauth',
+    'pongMulti',
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'corsheaders',

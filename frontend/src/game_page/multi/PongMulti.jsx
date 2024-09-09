@@ -3,23 +3,41 @@ import '../css/game.css';
 
 const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) => {
     useEffect(() => {
-        if (!isGameActive) return;
-
+        if (!isGameActive) 
+            return;
+    
+        const ws = new WebSocket('ws://localhost:8000/ws/pong/');
+        
+        ws.onopen = () => {
+            console.log('WebSocket connecté');
+            ws.send(JSON.stringify({ message: 'Salut Serveur Pong!' }));
+        };
+    
+        ws.onclose = (event) => {
+            console.log('WebSocket fermé, code :', event.code);
+        };
+    
+        ws.onerror = (error) => {
+            console.error('Erreur WebSocket :', error);
+        };
+    
         const keysPressed = {};
-
+    
         const handleKeyDown = (e) => {
             keysPressed[e.key] = true;
         };
-
+    
         const handleKeyUp = (e) => {
             keysPressed[e.key] = false;
         };
-
+    
         const updatePaddlePositions = () => {
             if (keysPressed['w'] || keysPressed['W']) {
+                ws.send(JSON.stringify({ action: 'paddleup' }));
                 setPaddleLeftPos(prevPos => Math.max(prevPos - 10, 40));
             }
             if (keysPressed['s'] || keysPressed['S']) {
+                ws.send(JSON.stringify({ action: 'paddledown' }));
                 setPaddleLeftPos(prevPos => Math.min(prevPos + 10, 600 - 40));
             }
             if (keysPressed['ArrowUp']) {
@@ -28,20 +46,22 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
             if (keysPressed['ArrowDown']) {
                 setPaddleRightPos(prevPos => Math.min(prevPos + 10, 600 - 40));
             }
-
+    
             requestAnimationFrame(updatePaddlePositions);
         };
-
+    
         window.addEventListener('keydown', handleKeyDown);
         window.addEventListener('keyup', handleKeyUp);
-
+    
         requestAnimationFrame(updatePaddlePositions);
-
+    
         return () => {
+            ws.close();  // Fermer proprement la connexion WebSocket
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
     }, [setPaddleLeftPos, setPaddleRightPos, isGameActive]);
+    
 };
 
 const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2) => {
@@ -91,8 +111,8 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 x = 400;
                 y = 300;
             }
-            console.log(" dx = ", dx);
-            console.log(" dy = ", dy);
+            //console.log(" dx = ", dx);
+            //console.log(" dy = ", dy);
             setBallPos({ x, y });
             setBallDir({ x: dx, y: dy });
 

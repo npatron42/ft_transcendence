@@ -8,24 +8,6 @@ const GlobalGameMulti = () => {
     const [score2, setScore2] = useState(0);
     const [isGameActive, setIsGameActive] = useState(false);
 
-    useEffect(() => {
-        const ws = new WebSocket('ws://localhost:8000/ws/pong/');
-        console.log('Tentative de connexion au WebSocket');
-      
-        ws.onopen = () => {
-          console.log('WebSocket connecté');
-          ws.send(JSON.stringify({ message: 'Salut Serveur Pong!' }));
-        };
-      
-        ws.onmessage = (event) => {
-          const data = JSON.parse(event.data);
-          console.log('Message reçu du serveur : ', data.message);
-        };
-      
-        return () => {
-          ws.close();
-        };
-      }, []);
 
     const handleStart = () => {
         setIsGameActive(true);
