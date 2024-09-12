@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { getUser } from '../api/api';
 
-const FriendsList = () => {
+const FriendsList = ({ myUser }) => {
     
     const [numberOfConnected, setNumberOfConnected] = useState(0);
     const [socketMessage, setSocketMessage] = useState({});
     const [FriendsList, setFriendsList] = useState([]);
-    const [myUser, setUser] = useState([]);
 
 
     useEffect(() => {
@@ -31,15 +30,7 @@ const FriendsList = () => {
           setFriendsList(myUser.friendsList)
         };
 
-        const defineUser = async () => {
-          const tmpUser = await getUser();
-          setUser(tmpUser);
-          console.log(tmpUser);
-          await defineFriendsList();
-          console.log("Friend List de ", tmpUser.username);
-          console.log(FriendsList);
-      };
-        defineUser();
+        defineFriendsList();
         const cleanup = userStatus();
 
         return () => {

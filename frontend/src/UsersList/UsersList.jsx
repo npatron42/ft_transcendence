@@ -1,57 +1,67 @@
-import React, { useEffect, useState } from 'react';
-import { getAllUsers } from '../api/api';
+import React, { useEffect, useState, useRef } from 'react';
+import { getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
 
-const UsersList = () => {
-    
+const UsersList = ({ myUser }) => {
     const [numberOfConnected, setNumberOfConnected] = useState(0);
     const [socketMessage, setSocketMessage] = useState({});
     const [usersList, setUsersList] = useState([]);
-    
+    const [isLoading, setIsLoading] = useState(true);
+    const [isInviting, setIsInviting] = useState(false);
     const myJwt = localStorage.getItem('jwt');
 
-    useEffect(() => {
-        const userStatus = () => {
-            const myJwt = localStorage.getItem('jwt');
-            const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
-            const socketStatus = new WebSocket(myUrl);
+    const socketStatus = useRef(null);
+    const socketInvite = useRef(null);
 
-            socketStatus.onmessage = function(event) {
+    useEffect(() => {
+        const initSocketStatus = () => {
+            const myUrl = `ws://localhost:8000/ws/status/?token=${myJwt}`;
+            socketStatus.current = new WebSocket(myUrl);
+
+            socketStatus.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 setSocketMessage(data);
-                let numberOfConnected = Object.keys(data).length;
-                setNumberOfConnected(numberOfConnected);
+                setNumberOfConnected(Object.keys(data).length);
             };
 
-            return () => {
-                socketStatus.close();
-            };
+        };
+
+        const initSocketInvite = () => {
+            socketInvite.current = new WebSocket(`ws://localhost:8000/ws/inviteFriend/?token=${myJwt}`);
         };
 
         const defineUsersList = async () => {
+            setIsLoading(true);
             const myList = await getAllUsers();
-            setUsersList(myList);
+            const filteredList = myList.filter(user => user.username !== myUser.username);
+            setUsersList(filteredList);
+            setIsLoading(false);
         };
 
+        initSocketStatus();
+        initSocketInvite();
         defineUsersList();
-        const cleanup = userStatus();
 
         return () => {
-            cleanup();
+            if (socketStatus.current && socketStatus.current.readyState === WebSocket.OPEN) {
+                socketStatus.current.close();
+            }
+            if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+                socketInvite.current.close();
+            }
         };
 
-        
-    }, []);
-    
+    }, [myJwt, myUser.username]);
+
     const handleInvitation = (userInvited) => {
-
-        const inviteUrl = `ws://localhost:8000/ws/inviteFriend/?token=${myJwt}`;
-        const ws = new WebSocket(inviteUrl);
-
-        ws.onopen = () => {
+        if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+            setIsInviting(true);
             const data = { invitation: userInvited.username };
-            ws.send(JSON.stringify(data));
+            socketInvite.current.send(JSON.stringify(data));
             console.log("Invitation sent:", data);
-        };
+            setIsInviting(false);
+        } else {
+            console.log("WebSocket for invitations is not open");
+        }
     };
 
     const chooseStatus = (username) => {
@@ -60,35 +70,44 @@ const UsersList = () => {
 
     return (
         <div className="background-container">
-            <table className="table table-striped table-bordered">
-                <thead className="thead-dark">
-                    <tr>
-                        <th>USERS LIST</th>
-                        <th>Username</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {usersList.length === 0 ? (
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : (
+                <table className="table table-striped table-bordered">
+                    <thead className="thead-dark">
                         <tr>
-                            <td colSpan="4" className="text-center">No users found</td>
+                            <th>USERS LIST</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
-                    ) : (
-                        usersList.map((user, index) => (
-                            <tr key={user.id}>
-                                <td>{index + 1}</td>
-                                <td>{user.username}</td>
-                                <td>{chooseStatus(user.username)}</td>
-                                <td>
-                                    <button onClick={() => handleInvitation(user)} className="btn btn-primary btn-sm me-2">Add</button>
-                                    <button className="btn btn-danger btn-sm">Delete</button>
-                                </td>
+                    </thead>
+                    <tbody>
+                        {usersList.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="text-center">No users found</td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            usersList.map((user, index) => (
+                                <tr key={user.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{user.username}</td>
+                                    <td>{chooseStatus(user.username)}</td>
+                                    <td>
+                                        <button
+                                            onClick={() => handleInvitation(user)}
+                                            className="btn btn-primary btn-sm me-2"
+                                            disabled={isInviting}
+                                        >
+                                            {isInviting ? "Inviting..." : "Add"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };
