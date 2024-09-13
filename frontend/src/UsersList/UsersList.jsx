@@ -30,7 +30,6 @@ const UsersList = ({ myUser }) => {
             socketInvite.current = new WebSocket(myURL);
 
             socketInvite.current.onmessage = (event) => {
-                console.log("JE PASSE PAR ICI");
                 const data = JSON.parse(event.data);
                 console.log(data);
             };
@@ -62,20 +61,13 @@ const UsersList = ({ myUser }) => {
     const handleInvitation = (userInvited) => {
         if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
             setIsInviting(true);
-            if (socketMessage[userInvited.username] == true) {
-                const data = {
-                    expeditor: myUser.username,
-                    receiver: userInvited.username,
-                    notification: userInvited.username
-                }
-                socketInvite.current.send(JSON.stringify(data));
-            } else {
-                const data = {
-                    expeditor: myUser.username,
-                    receiver: userInvited.username,
-                }
-                socketInvite.current.send(JSON.stringify(data));
+            const data = {
+                invitationFrom: myUser.username,
+                to: userInvited.username,
+                type: "friend",
+                parse: myUser.username + "|" + userInvited.username
             }
+            socketInvite.current.send(JSON.stringify(data));
             setIsInviting(false);
         } else {
             console.log("WebSocket for invitations is not open");

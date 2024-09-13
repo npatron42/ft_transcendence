@@ -9,5 +9,5 @@ class UserSerializer(serializers.ModelSerializer):
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
-        fields = ('invitationFrom', 'to', 'type')
+        fields = ('expeditor', 'receiver', 'message', 'parse')
 
