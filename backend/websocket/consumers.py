@@ -2,7 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import logging
 from asgiref.sync import sync_to_async
-from users.serializers import UserSerializer
+from users.serializers import UserSerializer, InvitationSerializer
 logger = logging.getLogger(__name__)
 
 #self contient --> type, le user, les headers, le path, query_string
@@ -19,6 +19,10 @@ logger = logging.getLogger(__name__)
 usersPool = {}
 usersStatus = {}
 pool_lock = asyncio.Lock()
+
+
+# UTILS FUNCTIONS FOR USER STATUS
+
 
 async def changeUserStatus(key, isConnected: bool):
     usersStatus[key] = isConnected
@@ -71,24 +75,68 @@ class StatusConsumer(AsyncWebsocketConsumer):
             }
         )
 
+
     async def status_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
+
+
+
+
+# UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
+
+
+async def update_Invitation(Invitation, data):
+    Invitation.waitList = data
+    await sync_to_async(Invitation.save)()
 
 
 class InviteFriendConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         if self.scope['user'].is_authenticated:
+            await self.channel_layer.group_add("invitations", self.channel_name)
+            await self.channel_layer.group_add("notification", self.channel_name)
             await self.accept()
 
     async def disconnect(self, close_code):
-        passer l
+        await self.channel_layer.group_discard("notification", self.channel_name)
+        pass;
     
+    async def send_notif(self, notif):
+        await self.channel_layer.group_send(
+            "notification",
+            {
+                "type": "notification_message",
+                "message": notif,
+            }
+        )
+
     async def receive(self, text_data):
-        data = json.loads(text_data)
-        invitation = data.get('invitation')
-        logger.info(invitation)
+        data = json.loads(text_data);
+        expeditor_username = data.get('expeditor')
+        receiver_username = data.get('receiver')
+        myNotif = data.get('notification')
+        myUser = self.scope['user']
+        if (myNotif != "None"): # NOTIF A SEND AU USER CONNECTE
+            data = {
+                "notification": receiver_username,
+            }
+            await self.send_notif(data)
+            logger.info(data)
+        # waitingInvitaiton = data
+        # waitingInvitation
+
+            
+            
+
+    async def notification_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+
+
+
+
 
 
 

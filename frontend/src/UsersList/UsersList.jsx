@@ -14,7 +14,7 @@ const UsersList = ({ myUser }) => {
 
     useEffect(() => {
         const initSocketStatus = () => {
-            const myUrl = `ws://localhost:8000/ws/status/?token=${myJwt}`;
+            const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
             socketStatus.current = new WebSocket(myUrl);
 
             socketStatus.current.onmessage = (event) => {
@@ -26,7 +26,14 @@ const UsersList = ({ myUser }) => {
         };
 
         const initSocketInvite = () => {
-            socketInvite.current = new WebSocket(`ws://localhost:8000/ws/inviteFriend/?token=${myJwt}`);
+            const myURL = 'ws://localhost:8000/ws/inviteFriend/?token=' + myJwt;
+            socketInvite.current = new WebSocket(myURL);
+
+            socketInvite.current.onmessage = (event) => {
+                console.log("JE PASSE PAR ICI");
+                const data = JSON.parse(event.data);
+                console.log(data);
+            };
         };
 
         const defineUsersList = async () => {
@@ -55,13 +62,29 @@ const UsersList = ({ myUser }) => {
     const handleInvitation = (userInvited) => {
         if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
             setIsInviting(true);
-            const data = { invitation: userInvited.username };
-            socketInvite.current.send(JSON.stringify(data));
-            console.log("Invitation sent:", data);
+            if (socketMessage[userInvited.username] == true) {
+                const data = {
+                    expeditor: myUser.username,
+                    receiver: userInvited.username,
+                    notification: userInvited.username
+                }
+                socketInvite.current.send(JSON.stringify(data));
+            } else {
+                const data = {
+                    expeditor: myUser.username,
+                    receiver: userInvited.username,
+                }
+                socketInvite.current.send(JSON.stringify(data));
+            }
             setIsInviting(false);
         } else {
             console.log("WebSocket for invitations is not open");
         }
+            // NOTIFICATIONS TO USER
+            // POST REQUEST TO BACKEND
+        // else
+        //     // POST REQUEST TO BACKEND
+
     };
 
     const chooseStatus = (username) => {
