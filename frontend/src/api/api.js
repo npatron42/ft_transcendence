@@ -11,7 +11,8 @@ export const fetchData = async (codeFromUrl) => {
 		if (response.data.Error === "Failed during creation proccess, to DB")
 			return ;
 
-		localStorage.setItem("jwt", response.data.jwt);
+		const myJWT = localStorage.setItem("jwt", response.data.jwt);
+		console.log(myJWT)
 	} catch (error) {
 		console.error("Error during login:", error);
 	}

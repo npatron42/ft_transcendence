@@ -8,7 +8,7 @@ const ChooseGame = () => {
     const navigate = useNavigate();
 
     const handleMultiClick = () => {
-        const roomId = uuidv4(); // Génère un identifiant unique pour la room
+        const roomId = uuidv4();
         navigate(`/GlobalGameMulti/${roomId}`);
     };
 

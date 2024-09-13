@@ -1,5 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap');
 
+.h1 { 
+    font-size: 12px;
+    color : red;
+}
+
 .GlobalGame {
     display: flex;
     flex-direction: column;
