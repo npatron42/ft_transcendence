@@ -159,7 +159,7 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-		'chat': {
+		'websocket': {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,

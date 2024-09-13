@@ -1,5 +1,7 @@
 import axios from 'axios';
 
+// GET METHODS
+
 export const fetchData = async (codeFromUrl) => {
 	try {
 		const response = await axios.post("http://localhost:8000/oauth2/login/", {
@@ -26,7 +28,6 @@ export const getUser = async () => {
 		
 		const response = await axios.get("http://localhost:8000/api/user/", config);
 
-		console.log("getUser:", response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user data:", error);
@@ -45,7 +46,6 @@ export const getAllUsers = async () => {
 		
 		const response = await axios.get("http://localhost:8000/api/users/", config);
 
-		console.log("getAllUsers", response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user data:", error);
@@ -53,4 +53,24 @@ export const getAllUsers = async () => {
 	}
 };
 
+
+// POST METHODS
+
+export const postInvite = async (myData) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		
+		const response = await axios.post("http://localhost:8000/api/sendInvite/", myData, config);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
 

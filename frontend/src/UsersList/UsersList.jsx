@@ -1,43 +1,91 @@
-import React, { useEffect, useState } from 'react';
-import { getAllUsers } from '../api/api';
+import React, { useEffect, useState, useRef } from 'react';
+import { getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
 
-const UsersList = () => {
-    
+const UsersList = ({ myUser }) => {
     const [numberOfConnected, setNumberOfConnected] = useState(0);
     const [socketMessage, setSocketMessage] = useState({});
     const [usersList, setUsersList] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [isInviting, setIsInviting] = useState(false);
+    const myJwt = localStorage.getItem('jwt');
+
+    const socketStatus = useRef(null);
+    const socketInvite = useRef(null);
 
     useEffect(() => {
-        const userStatus = () => {
-            const myJwt = localStorage.getItem('jwt');
+        const initSocketStatus = () => {
             const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
-            const socket = new WebSocket(myUrl);
+            socketStatus.current = new WebSocket(myUrl);
 
-            socket.onmessage = function(event) {
+            socketStatus.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 setSocketMessage(data);
-                let numberOfConnected = Object.keys(data).length;
-                setNumberOfConnected(numberOfConnected);
+                setNumberOfConnected(Object.keys(data).length);
             };
 
-            return () => {
-                socket.close();
+        };
+
+        const initSocketInvite = () => {
+            const myURL = 'ws://localhost:8000/ws/inviteFriend/?token=' + myJwt;
+            socketInvite.current = new WebSocket(myURL);
+
+            socketInvite.current.onmessage = (event) => {
+                console.log("JE PASSE PAR ICI");
+                const data = JSON.parse(event.data);
+                console.log(data);
             };
         };
 
         const defineUsersList = async () => {
+            setIsLoading(true);
             const myList = await getAllUsers();
-            setUsersList(myList);
+            const filteredList = myList.filter(user => user.username !== myUser.username);
+            setUsersList(filteredList);
+            setIsLoading(false);
         };
 
+        initSocketStatus();
+        initSocketInvite();
         defineUsersList();
-        const cleanup = userStatus();
 
         return () => {
-            cleanup();
+            if (socketStatus.current && socketStatus.current.readyState === WebSocket.OPEN) {
+                socketStatus.current.close();
+            }
+            if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+                socketInvite.current.close();
+            }
         };
 
-    }, []);
+    }, [myJwt, myUser.username]);
+
+    const handleInvitation = (userInvited) => {
+        if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+            setIsInviting(true);
+            if (socketMessage[userInvited.username] == true) {
+                const data = {
+                    expeditor: myUser.username,
+                    receiver: userInvited.username,
+                    notification: userInvited.username
+                }
+                socketInvite.current.send(JSON.stringify(data));
+            } else {
+                const data = {
+                    expeditor: myUser.username,
+                    receiver: userInvited.username,
+                }
+                socketInvite.current.send(JSON.stringify(data));
+            }
+            setIsInviting(false);
+        } else {
+            console.log("WebSocket for invitations is not open");
+        }
+            // NOTIFICATIONS TO USER
+            // POST REQUEST TO BACKEND
+        // else
+        //     // POST REQUEST TO BACKEND
+
+    };
 
     const chooseStatus = (username) => {
         return socketMessage[username] ? "Connected" : "Disconnected";
@@ -45,36 +93,44 @@ const UsersList = () => {
 
     return (
         <div className="background-container">
-            <h2 className="mb-4">Users List</h2>
-            <table className="table table-striped table-bordered">
-                <thead className="thead-dark">
-                    <tr>
-                        <th>#</th>
-                        <th>Username</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {usersList.length === 0 ? (
+            {isLoading ? (
+                <div>Loading...</div>
+            ) : (
+                <table className="table table-striped table-bordered">
+                    <thead className="thead-dark">
                         <tr>
-                            <td colSpan="4" className="text-center">No users found</td>
+                            <th>USERS LIST</th>
+                            <th>Username</th>
+                            <th>Status</th>
+                            <th>Actions</th>
                         </tr>
-                    ) : (
-                        usersList.map((user, index) => (
-                            <tr key={user.id}>
-                                <td>{index + 1}</td>
-                                <td>{user.username}</td>
-                                <td>{chooseStatus(user.username)}</td>
-                                <td>
-                                    <button className="btn btn-primary btn-sm me-2">Edit</button>
-                                    <button className="btn btn-danger btn-sm">Delete</button>
-                                </td>
+                    </thead>
+                    <tbody>
+                        {usersList.length === 0 ? (
+                            <tr>
+                                <td colSpan="4" className="text-center">No users found</td>
                             </tr>
-                        ))
-                    )}
-                </tbody>
-            </table>
+                        ) : (
+                            usersList.map((user, index) => (
+                                <tr key={user.id}>
+                                    <td>{index + 1}</td>
+                                    <td>{user.username}</td>
+                                    <td>{chooseStatus(user.username)}</td>
+                                    <td>
+                                        <button
+                                            onClick={() => handleInvitation(user)}
+                                            className="btn btn-primary btn-sm me-2"
+                                            disabled={isInviting}
+                                        >
+                                            {isInviting ? "Inviting..." : "Add"}
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
+                    </tbody>
+                </table>
+            )}
         </div>
     );
 };

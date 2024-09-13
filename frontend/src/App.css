@@ -19,15 +19,14 @@ body, html, #root {
 
 /* Style pour le conteneur de fond */
 .background-container {
-  background-image: url('./assets/background.png'); /* Assurez-vous que ce chemin est correct */
-  background-size: contain; /* Changer la taille de l'image de fond pour les petits écrans */
-  background-position: center; /* Centre l'image */
-  height: 100vh; /* Fait en sorte que le conteneur prenne toute la hauteur de la fenêtre */
-  width: 100vw; /* Fait en sorte que le conteneur prenne toute la largeur de la fenêtre */
-  display: flex; /* Utilise flexbox pour centrer le contenu */
-  justify-content: center; /* Centre horizontalement */
-  align-items: center; /* Centre verticalement */
-  /* flex-direction: column; Adaptation du contenu pour un écran plus étroit */
+  background-image: url('./assets/background.png'); 
+  background-size: contain; 
+  background-position: center; 
+  height: 100vh; 
+  width: 100vw; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center; 
   }
 
 .content {
@@ -35,13 +34,18 @@ body, html, #root {
   text-align: center; /* Centre le texte */
 }
 
-.background-container {
-  background-image: url('./assets/background.png'); /* Assurez-vous que ce chemin est correct */
-  background-size: contain; /* Changer la taille de l'image de fond pour les petits écrans */
-  background-position: center; /* Centre l'image */
-  height: 100vh; /* Fait en sorte que le conteneur prenne toute la hauteur de la fenêtre */
-  width: 100vw; /* Fait en sorte que le conteneur prenne toute la largeur de la fenêtre */
-  display: flex; /* Utilise flexbox pour centrer le contenu */
-  justify-content: center; /* Centre horizontalement */
-  align-items: center; /* Centre verticalement */
-  }
+
+.welcome-message {
+  position: absolute;  /* Positionnement absolu pour le placer dans un coin */
+  top: 20px;           /* Distance du haut de l'écran */
+  left: 20px;          /* Distance de la gauche de l'écran */
+  
+  font-family: 'Arial', sans-serif;  /* Police moderne */
+  font-size: 24px;                   /* Taille de police */
+  font-weight: bold;                 /* Texte en gras */
+  color: #0e0404;                       /* Couleur du texte blanche */
+  background-color: #392bb9;         /* Couleur de fond verte sympa */
+  padding: 10px 20px;                /* Espacement interne pour un effet de bouton */
+  border-radius: 10px;               /* Coins arrondis pour un effet moderne */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* Légère ombre pour un effet 3D */
+}
