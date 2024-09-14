@@ -1,16 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 
-// Hook pour la gestion des mouvements des raquettes
 const usePaddleMovement = (webSocket, isGameActive) => {
+    const [keysPressed, setKeysPressed] = useState({});
+
     useEffect(() => {
         if (!isGameActive || !webSocket) return;
-    
-        const keysPressed = {};
 
         const handleKeyDown = (e) => {
-            keysPressed[e.key] = true;
+            setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
+        };
 
+        const handleKeyUp = (e) => {
+            setKeysPressed((prev) => ({ ...prev, [e.key]: false }));
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+        };
+    }, [isGameActive, webSocket]);
+
+    useEffect(() => {
+        if (!isGameActive || !webSocket) return;
+
+        const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
                 webSocket.send(JSON.stringify({ action: 'paddleup', side: 'left' }));
             }
@@ -23,37 +40,24 @@ const usePaddleMovement = (webSocket, isGameActive) => {
             if (keysPressed['ArrowDown']) {
                 webSocket.send(JSON.stringify({ action: 'paddledown', side: 'right' }));
             }
-        };
+        }, 11); // Vérifie les touches toutes les 10ms
 
-        const handleKeyUp = (e) => {
-            keysPressed[e.key] = false;
-        };
-
-        window.addEventListener('keydown', handleKeyDown);
-        window.addEventListener('keyup', handleKeyUp);
-
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-        };
-    }, [webSocket, isGameActive]);
+        return () => clearInterval(interval);
+    }, [keysPressed, isGameActive, webSocket]);
 };
 
-const PongMulti = ({ roomId, isGameActive }) => {
+const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
     const [webSocket, setWebSocket] = useState(null);
 
-    // Initialisation du WebSocket
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
 
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', roomId);
-            ws.send(JSON.stringify({
-                message: 'Salut Serveur Pong!',
-            }));
+            ws.send(JSON.stringify({ message: 'Salut Serveur Pong!' }));
         };
 
         ws.onmessage = (event) => {
@@ -64,6 +68,10 @@ const PongMulti = ({ roomId, isGameActive }) => {
             }
             if (data.ball) {
                 setBallPos(data.ball);
+            }
+            if (data.score) {
+                setScore1(data.score.player1);
+                setScore2(data.score.player2);
             }
             console.log("Message reçu du serveur:", data);
         };
@@ -81,14 +89,15 @@ const PongMulti = ({ roomId, isGameActive }) => {
         return () => {
             if (ws) ws.close();
         };
-    }, [roomId]);
+    }, [roomId, setScore1, setScore2]);
 
-    // Utiliser le hook pour la gestion des mouvements
     usePaddleMovement(webSocket, isGameActive);
 
     return (
         <div className="pong-container">
             <h1>Room ID : {roomId}</h1>
+            <div className="scoreboard">
+            </div>
             <div className="board">
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
@@ -96,6 +105,6 @@ const PongMulti = ({ roomId, isGameActive }) => {
             </div>
         </div> 
     );
-}
+};
 
 export default PongMulti;
