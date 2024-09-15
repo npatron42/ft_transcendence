@@ -49,7 +49,7 @@ const usePaddleMovement = (webSocket, isGameActive) => {
 const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
-    const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
+    const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [webSocket, setWebSocket] = useState(null);
 
     useEffect(() => {
@@ -95,10 +95,10 @@ const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
 
     return (
         <div className="pong-container">
-            <h1>Room ID : {roomId}</h1>
             <div className="scoreboard">
             </div>
             <div className="board">
+                <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>

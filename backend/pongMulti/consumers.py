@@ -20,7 +20,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             PongConsumer.paddles[self.room_id] = {'left': 300, 'right': 300}
 
         if self.room_id not in PongConsumer.ball_pos:
-            PongConsumer.ball_pos[self.room_id] = {'x': 400, 'y': 300}
+            PongConsumer.ball_pos[self.room_id] = {'x': 450, 'y': 300}
             PongConsumer.ball_dir[self.room_id] = {'x': 1, 'y': 1}
 
         if self.room_id not in PongConsumer.score:
@@ -77,20 +77,20 @@ class PongConsumer(AsyncWebsocketConsumer):
     def move_paddle(self, direction, side):
         if side == 'left':
             if direction == 'up':
-                PongConsumer.paddles[self.room_id]['left'] = max(PongConsumer.paddles[self.room_id]['left'] - 10, 40)
+                PongConsumer.paddles[self.room_id]['left'] = max(PongConsumer.paddles[self.room_id]['left'] - 10, 45)
             elif direction == 'down':
-                PongConsumer.paddles[self.room_id]['left'] = min(PongConsumer.paddles[self.room_id]['left'] + 10, 600 - 40)
+                PongConsumer.paddles[self.room_id]['left'] = min(PongConsumer.paddles[self.room_id]['left'] + 10, 600 - 45)
         elif side == 'right':
             if direction == 'up':
-                PongConsumer.paddles[self.room_id]['right'] = max(PongConsumer.paddles[self.room_id]['right'] - 10, 40)
+                PongConsumer.paddles[self.room_id]['right'] = max(PongConsumer.paddles[self.room_id]['right'] - 10, 45)
             elif direction == 'down':
-                PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 40)
+                PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 45)
 
     # Faire mouvement balle
     async def update_ball(self):
         acceleration = 1.10
         max_speed = 10
-        paddle_height = 80
+        paddle_height = 90
 
         while True:
             ball = PongConsumer.ball_pos[self.room_id]
@@ -116,9 +116,9 @@ class PongConsumer(AsyncWebsocketConsumer):
                     direction['y'] *= acceleration
 
             # Collision avec la raquette droite
-            if ball['x'] >= 770 and PongConsumer.paddles[self.room_id]['right'] - 30 <= ball['y'] <= PongConsumer.paddles[self.room_id]['right'] + paddle_height:
+            if ball['x'] >= 870 and PongConsumer.paddles[self.room_id]['right'] - 30 <= ball['y'] <= PongConsumer.paddles[self.room_id]['right'] + paddle_height:
                 direction['x'] *= -1
-                ball['x'] = 769  # Ajustement pour éviter de "coller" à la raquette
+                ball['x'] = 869  # Ajustement pour éviter de "coller" à la raquette
 
                 # Accélérer la balle si la vitesse est en dessous de la limite
                 if abs(direction['x']) < max_speed:
@@ -127,14 +127,14 @@ class PongConsumer(AsyncWebsocketConsumer):
                     direction['y'] *= acceleration
 
             # Réinitialiser la balle si elle sort du cadre (score)
-            if ball['x'] <= 0 or ball['x'] >= 800:
+            if ball['x'] <= 0 or ball['x'] >= 900:
                 if ball['x'] <= 0:
                     PongConsumer.score[self.room_id]['player2'] += 1
-                elif ball['x'] >= 800:
+                elif ball['x'] >= 900:
                     PongConsumer.score[self.room_id]['player1'] += 1
 
                 # Réinitialiser la balle
-                ball['x'] = 400
+                ball['x'] = 450
                 ball['y'] = 300
                 direction['x'] = 2
                 direction['y'] = 2
@@ -159,7 +159,7 @@ class PongConsumer(AsyncWebsocketConsumer):
     async def game_state(self, event):
         paddles = event['paddles']
         ball = event['ball']
-        score = event.get('score')  # Utiliser 'get' pour éviter l'erreur si la clé est absente
+        score = event.get('score')
 
         # Préparer les données à envoyer
         data = {
@@ -167,7 +167,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             'ball': ball,
         }
 
-        # Ajouter le score seulement s'il existe
         if score is not None:
             data['score'] = score
 

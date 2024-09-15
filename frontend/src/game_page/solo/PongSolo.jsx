@@ -17,16 +17,16 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
 
         const updatePaddlePositions = () => {
             if (keysPressed['w'] || keysPressed['W']) {
-                setPaddleLeftPos(prevPos => Math.max(prevPos - 10, 40));
+                setPaddleLeftPos(prevPos => Math.max(prevPos - 10, 45));
             }
             if (keysPressed['s'] || keysPressed['S']) {
-                setPaddleLeftPos(prevPos => Math.min(prevPos + 10, 600 - 40));
+                setPaddleLeftPos(prevPos => Math.min(prevPos + 10, 600 - 45));
             }
             if (keysPressed['ArrowUp']) {
-                setPaddleRightPos(prevPos => Math.max(prevPos - 10, 40));
+                setPaddleRightPos(prevPos => Math.max(prevPos - 10, 45));
             }
             if (keysPressed['ArrowDown']) {
-                setPaddleRightPos(prevPos => Math.min(prevPos + 10, 600 - 40));
+                setPaddleRightPos(prevPos => Math.min(prevPos + 10, 600 - 45));
             }
 
             requestAnimationFrame(updatePaddlePositions);
@@ -61,12 +61,12 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
 
             if (
                 (x <= 30 && y >= paddleLeftPos - 30 && y <= paddleLeftPos + 30) ||
-                (x >= 770 && y >= paddleRightPos - 30 && y <= paddleRightPos + 30)
+                (x >= 870 && y >= paddleRightPos - 30 && y <= paddleRightPos + 30)
             ) {
                 dx *= -1;
 
                 if (x <= 30) x = 31;
-                if (x >= 770) x = 769;
+                if (x >= 870) x = 869;
 
                 if (Math.abs(dx) < maxSpeed) {
                     dx *= acceleration;
@@ -80,7 +80,7 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 dy *= -1;
             }
 
-            if (x <= 0 || x >= 800) {
+            if (x <= 0 || x >= 900) {
                 if (x <= 0) {
                     setScore2(prev => prev + 1);
                 } else {
@@ -88,7 +88,7 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 }
                 dy = 2;
                 dx = 2;
-                x = 400;
+                x = 450;
                 y = 300;
             }
             console.log(" dx = ", dx);
@@ -113,7 +113,7 @@ const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
 
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
-    const [ballPos, setBallPos] = useState({ x: 400, y: 300 });
+    const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
 
     //comportement
@@ -137,6 +137,7 @@ const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
     return (
         <div className="pong-container">
             <div className="board">
+                <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
