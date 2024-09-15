@@ -11,6 +11,7 @@ import FriendsList from "../UsersList/FriendsList";
 const Home = () => {
     const [myUser, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isFriendShown, setIsFriendShown] = useState(false);
 
     useEffect(() => {
         const fetchDataAndGetUser = async () => {
@@ -31,9 +32,15 @@ const Home = () => {
     }
 
     return (
-        <div className="background-container">
-            <UsersList myUser={myUser} />
-            <FriendsList myUser={myUser} />
+        <div className="background-home">
+            <h2 className="welcome-message">Welcome {myUser.username}</h2>
+            <div className="card-users" >
+                { isFriendShown ?
+                    <FriendsList myUser={myUser} />
+                    :
+                    <UsersList myUser={myUser} />
+                }
+            </div>
         </div>
     );
 }

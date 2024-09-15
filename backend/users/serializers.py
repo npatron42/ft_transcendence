@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Invitation
+from .models import User, Invitation, FriendsList
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -10,4 +10,9 @@ class InvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invitation
         fields = ('expeditor', 'receiver', 'message', 'parse')
+
+class FriendsListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FriendsList
+        fields = ('user1', 'user2', 'parse')
 

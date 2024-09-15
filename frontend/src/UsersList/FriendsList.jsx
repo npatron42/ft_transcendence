@@ -44,18 +44,14 @@ const FriendsList = ({ myUser }) => {
     };
 
     return (
-        <div className="background-container">
+        <div className="">
             <h2 className="welcome-message">Welcome {myUser.username}</h2>
-            <table className="table table-striped table-bordered">
-                <thead className="thead-dark">
                     <tr>
                         <th>FRIENDS LIST</th>
                         <th>Username</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
-                </thead>
-            </table>
         </div>
     );
 };

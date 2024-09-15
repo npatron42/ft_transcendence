@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
+import FriendItem from './FriendItem';
 
 const UsersList = ({ myUser }) => {
     const [numberOfConnected, setNumberOfConnected] = useState(0);
@@ -80,51 +81,39 @@ const UsersList = ({ myUser }) => {
     };
 
     const chooseStatus = (username) => {
-        return socketMessage[username] ? "Connected" : "Disconnected";
+        return socketMessage[username] ? "online" : "offline";
     };
 
     return (
-        <div className="background-container">
+        <div className="friends-list">
             {isLoading ? (
                 <div>Loading...</div>
             ) : (
-                <table className="table table-striped table-bordered">
-                    <thead className="thead-dark">
-                        <tr>
-                            <th>USERS LIST</th>
-                            <th>Username</th>
-                            <th>Status</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
+                <>
+                <h4 className="nameUserFriendComponent"> Users </h4>
+                <table className="table">
                     <tbody>
                         {usersList.length === 0 ? (
                             <tr>
                                 <td colSpan="4" className="text-center">No users found</td>
                             </tr>
                         ) : (
-                            usersList.map((user, index) => (
-                                <tr key={user.id}>
-                                    <td>{index + 1}</td>
-                                    <td>{user.username}</td>
-                                    <td>{chooseStatus(user.username)}</td>
-                                    <td>
-                                        <button
-                                            onClick={() => handleInvitation(user)}
-                                            className="btn btn-primary btn-sm me-2"
-                                            disabled={isInviting}
-                                        >
-                                            {isInviting ? "Inviting..." : "Add"}
-                                        </button>
-                                    </td>
-                                </tr>
+                            usersList.map((user) => (
+                                <FriendItem 
+                                    key={user.id} 
+                                    user={user} 
+                                    handleInvitation={handleInvitation} 
+                                    isInviting={isInviting}
+                                    chooseStatus={chooseStatus}
+                                />
                             ))
                         )}
                     </tbody>
                 </table>
+                </>
             )}
         </div>
     );
-};
+}
 
 export default UsersList;
