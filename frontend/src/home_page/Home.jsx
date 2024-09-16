@@ -5,8 +5,8 @@ import { fetchData, getAllUsers, getUser } from '../api/api'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import UsersList  from "../UsersList/UsersList";
-import FriendsList from "../UsersList/FriendsList";
+import UsersFriendsList  from "../UsersList/UsersFriendsList";
+import Loading from "../loading_page/Loading";
 
 const Home = () => {
     const [myUser, setUser] = useState(null);
@@ -28,18 +28,14 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading/>;
     }
 
     return (
-        <div className="background-home">
+        <div className="background-container">
             <h2 className="welcome-message">Welcome {myUser.username}</h2>
             <div className="card-users" >
-                { isFriendShown ?
-                    <FriendsList myUser={myUser} />
-                    :
-                    <UsersList myUser={myUser} />
-                }
+                    <UsersFriendsList myUser={myUser} />
             </div>
         </div>
     );

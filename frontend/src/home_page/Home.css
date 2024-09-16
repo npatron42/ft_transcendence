@@ -1,10 +1,4 @@
 
-h6 {
-    font-size: 1.5rem;
-    color: #f00b0b; 
-    font-weight: 500; 
-    margin: 20; 
-}
 
 @font-face {
     font-family: 'Millimetre'; /* Nom de la police */
@@ -13,15 +7,42 @@ h6 {
     font-style: normal;
 }
 
-.nameUserFriendComponent {
+.welcome-message {
+    position: absolute;
+    top: 20px; 
+    left: 20px;
+    font-family: 'Millimetre', sans-serif;
+    font-size: 24px; 
+    font-weight: bold;
+    color: #0e0404;
+    background-color: #363a45;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  }
+
+
+.nameUserComponent {
 
     font-family: 'Millimetre', sans-serif;
-    font-size: 24px;
+    font-size: 18px;
+    text-align: center;
+    color: #e7bfcd;
+    padding: 10px; 
+    margin-top: 20px;
+    margin-left: 40px;
+}
+
+.nameFriendComponent {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 18px;
     text-align: center;
     color: #e7bfcd;
     padding: 10px;
+    margin-top: 20px;
+    margin-left: 10px;
 }
-
 
 .username {
 
@@ -29,13 +50,23 @@ h6 {
     font-size: 16px;
     text-align: center;
     color: #f5f5f6;
-    padding: 10px;
 }
 
 .icon_checked {
 
     font-family: 'Millimetre', sans-serif;
+    width: 20%;
     font-size: 24px;
+    text-align: center;
+    color: #f5f5f6;
+    padding: 10px;
+}
+
+.icon_add {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 24px;
+    height: 25;
     text-align: center;
     color: #f5f5f6;
     padding: 10px;
@@ -47,7 +78,6 @@ h6 {
     font-size: 16px;
     text-align: center;
     color: #bee5c1;
-    padding: 10px;
 }
 
 .status.offline {
@@ -56,11 +86,11 @@ h6 {
     font-size: 16px;
     text-align: center;
     color: #e2c1cf;
-    padding: 10px;
+
 }
 
-.background-home {
-    background-color: #1d212d;
+.background-container {
+    background-image: url('../assets/background.png'); 
     background-size: contain; 
     background-position: center; 
     height: 100vh; 
@@ -70,33 +100,59 @@ h6 {
     align-items: center; 
     }
 
-    .friends-list {
-        height: 300px;
-        overflow-y: auto;
-        border-radius: 50px;
-        width: 130%; 
-        padding: 0;
-        margin: 0;
-        list-style-type: none;
-        background-color: #363a45;
-    }
-    
-    .friend-item {
-        border-bottom: 4px solid #40444c;
-        background-color: #363a45;
-        border-radius: 50px;
-        padding: 10px; 
-        margin: 5px 0; 
-    }
-    
+.friends-list {
+    height: 325px;
+    overflow-y: auto;
+    border-radius: 50px;
+    width: 450px; 
+    background-color: #363a45;
+}
+
+.buttonAdd {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    color: #e2c1cf;
+    margin-right: 15px;
+
+}
+
+.friend-item {
+    height: 60px;
+    width: 380px;
+    border-radius: 50px;
+    border-top: 3px solid #40444c;
+    border-bottom: 3px solid #40444c;
+    background-color: #363a45;
+    padding: 10px;
+    margin: 5px;
+    margin-left: 35px;
+    display: flex;
+    align-items: center;
+}
+
 .friend-item td {
-        background-color: #363a45;
-        padding: 10px;
-    }
-    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #363a45;
+    height: 40px;
+    width: 90px;
+}
+
 .profile-picture {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        object-fit: cover;
-    }
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.noUsers {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 20px;
+    padding-top: 80px;
+    padding-left: 115px;
+    color: #f5f5f6;
+}

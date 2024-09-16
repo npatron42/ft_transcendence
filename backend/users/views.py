@@ -1,14 +1,10 @@
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from users.models import User
-from users.serializers import UserSerializer
+from users.models import User, FriendsList
+from users.serializers import UserSerializer, FriendsListSerializer
 from django.http import JsonResponse
-from rest_framework.views import APIView
-from rest_framework.exceptions import AuthenticationFailed
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
-import jwt, datetime
+import jwt
 import logging
 import os
 
@@ -25,7 +21,14 @@ def getUser(request):
 def getAllUsers(request):
     payload = middleWareAuthentication(request)
     users = User.objects.all()
-    serializer = UserSerializer(users, many=True)  # Note l'utilisation de 'many=True'
+    serializer = UserSerializer(users, many=True)
+    return JsonResponse(serializer.data, safe=False)
+
+
+def getFriendsList(request):
+    payload = middleWareAuthentication(request)
+    myFriendsList = FriendsList.objects.filter(id = payload['id']).first()
+    serializer = FriendsListSerializer(myFriendsList, many=True)
     return JsonResponse(serializer.data, safe=False)
 
 
@@ -38,7 +41,7 @@ async def getUserFromJWT(token):
     except User.DoesNotExist:
         return None
     
-    
+
 def postInvite(request):
     payload = middleWareAuthentication(request)
     users = User.objects.all()

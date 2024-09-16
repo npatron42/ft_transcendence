@@ -180,34 +180,39 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
         typeMessage = data.get('type')
         parse = data.get('parse')
         myExpeditor = self.scope['user']
-        myReceiver = await getUserByUsername(myReceiverUsername)
+        logger.info(myReceiverUsername)
+        # myReceiver = await getUserByUsername(myReceiverUsername)
+        # myReceiver = self.scope['user']
 
-        myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
-        invitation_exists = await checkInvitation(parse)
-        if (invitation_exists == "FRIENDS NOW"):
-            sendData = {
-                "ok": "FRIEND"
-            }
-            friendList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
-            await saveRelationship(friendList)
-            await eraseInvitation(parse)
-            await self.send(text_data=json.dumps(sendData))
-        elif (invitation_exists == "ALREADY FRIENDS"):
-            sendData = {
-                "error": "Already friends"
-            }
-            await self.send(text_data=json.dumps(sendData))         
-        elif (invitation_exists):
-            sendData = {
-                "error": "Invitation already sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
-        else:
-            await saveInvitation(myInvitation)
-            sendData = {
-                "success": "Invitation sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
+        # logger.info(text_data)
+        # myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
+        # invitation_exists = await checkInvitation(parse)
+        # if (invitation_exists == "FRIENDS NOW"):
+        #     sendData = {
+        #         "ok": "FRIEND"
+        #     }
+        #     friendList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
+        #     await saveRelationship(friendList)
+        #     await eraseInvitation(parse)
+        #     await self.send(text_data=json.dumps(sendData))
+        # elif (invitation_exists == "ALREADY FRIENDS"):
+        #     sendData = {
+        #         "error": "Already friends"
+        #     }
+        #     await self.send(text_data=json.dumps(sendData))         
+        # elif (invitation_exists):
+        #     sendData = {
+        #         "error": "Invitation already sent"
+        #     }
+        #     logger.info("OUI JE PASSE PAR LA")
+        #     await self.send(text_data=json.dumps(sendData))
+        # else:
+        #     await saveInvitation(myInvitation)
+        #     sendData = {
+        #         "success": "Invitation sent"
+        #     }
+        #     logger.info("OUI JE PASSE PAR LA")
+        #     await self.send(text_data=json.dumps(sendData))
 
 
     async def notification_message(self, event):

@@ -1,4 +1,4 @@
-function FriendItem({ user, chooseStatus}) {
+function UserItem({ user, handleInvitation, isInviting, chooseStatus}) {
     return (
         <tr className="friend-item">
             <td className="friend-item.td">
@@ -7,10 +7,10 @@ function FriendItem({ user, chooseStatus}) {
 			<td className="friend-item.td"><span  className="username">{user.username}</span></td>
 			<td className="friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
             <td className="friend-item.td">
-                <button type="button" className="btn btn-outline-dark buttonAdd">message</button>
+                <button type="button" className="btn btn-outline-dark buttonAdd" onClick={handleInvitation(user.username)}>add</button>
             </td>
         </tr>
     );
 }
 
-export default FriendItem;
+export default UserItem;
