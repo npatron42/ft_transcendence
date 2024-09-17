@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 
-const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) => {
+const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos) => {
     useEffect(() => {
-        if (!isGameActive) return;
 
         const keysPressed = {};
 
@@ -41,12 +40,11 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameActive) =>
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [setPaddleLeftPos, setPaddleRightPos, isGameActive]);
+    }, [setPaddleLeftPos, setPaddleRightPos]);
 };
 
-const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2) => {
+const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2) => {
     useEffect(() => {
-        if (!isGameActive) return;
 
         let animationFrameId;
         const acceleration = 1.10;
@@ -104,10 +102,10 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, isGameActive, setScore1, setScore2]);
+    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2]);
 };
 
-const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
+const PongSolo = ({ score1, score2, setScore1, setScore2}) => {
 
     //state
 
@@ -118,7 +116,7 @@ const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
 
     //comportement
 
-    usePaddleMovement(setPaddleLeftPos, setPaddleRightPos, isGameActive);
+    usePaddleMovement(setPaddleLeftPos, setPaddleRightPos);
     useBallMovement(
         ballPos,
         setBallPos,
@@ -126,7 +124,6 @@ const PongSolo = ({ score1, score2, setScore1, setScore2, isGameActive }) => {
         setBallDir,
         paddleLeftPos,
         paddleRightPos,
-        isGameActive,
         setScore1,
         setScore2
     );

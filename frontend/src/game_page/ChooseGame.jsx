@@ -14,7 +14,7 @@ const ChooseGame = () => {
 
     const handleMultiClick = () => {
         const roomId = uuidv4();
-        navigate(`/GlobalGameMulti/${roomId}`);
+        navigate(`/GlobalGameMulti/${roomId}`, { state: { maxScore } });
     };
 
     const handleScoreChange = (event) => {

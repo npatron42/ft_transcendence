@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 
-const usePaddleMovement = (webSocket, isGameActive) => {
+const usePaddleMovement = (webSocket) => {
     const [keysPressed, setKeysPressed] = useState({});
 
     useEffect(() => {
-        if (!isGameActive || !webSocket) return;
+        if (!webSocket) return;
 
         const handleKeyDown = (e) => {
             setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
@@ -22,10 +22,10 @@ const usePaddleMovement = (webSocket, isGameActive) => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [isGameActive, webSocket]);
+    }, [webSocket]);
 
     useEffect(() => {
-        if (!isGameActive || !webSocket) return;
+        if (!webSocket) return;
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
@@ -40,13 +40,13 @@ const usePaddleMovement = (webSocket, isGameActive) => {
             if (keysPressed['ArrowDown']) {
                 webSocket.send(JSON.stringify({ action: 'paddledown', side: 'right' }));
             }
-        }, 11); // Vérifie les touches toutes les 10ms
+        }, 11);
 
         return () => clearInterval(interval);
-    }, [keysPressed, isGameActive, webSocket]);
+    }, [keysPressed, webSocket]);
 };
 
-const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
+const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
@@ -57,7 +57,8 @@ const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
 
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', roomId);
-            ws.send(JSON.stringify({ message: 'Salut Serveur Pong!' }));
+            // Envoyer maxScore au serveur
+            ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScore }));
         };
 
         ws.onmessage = (event) => {
@@ -73,7 +74,6 @@ const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
                 setScore1(data.score.player1);
                 setScore2(data.score.player2);
             }
-            console.log("Message reçu du serveur:", data);
         };
 
         ws.onclose = (event) => {
@@ -87,16 +87,16 @@ const PongMulti = ({ roomId, isGameActive, setScore1, setScore2 }) => {
         setWebSocket(ws);
 
         return () => {
-            if (ws) ws.close();
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                ws.close();
+            }
         };
-    }, [roomId, setScore1, setScore2]);
+    }, [roomId]);
 
-    usePaddleMovement(webSocket, isGameActive);
+    usePaddleMovement(webSocket);
 
     return (
         <div className="pong-container">
-            <div className="scoreboard">
-            </div>
             <div className="board">
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>

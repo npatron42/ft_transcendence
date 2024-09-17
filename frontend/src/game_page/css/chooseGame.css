@@ -1,13 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Manuale:ital,wght@0,300..800;1,300..800&display=swap');
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
 
 #ChooseGame {
     height: 100vh;
     width: 100vw;
     margin: 0;
     padding: 0;
-    /*background-image: url("../../assets/background.png");
-    background-size: contain;*/
-    background-color: #1d212d;
+    background-image: url("../../assets/background.png");
+    background-size: contain;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,9 +29,9 @@
 }
 
 .title {
-    font-family: 'Manuale', sans-serif;
+    font-family: 'Millimetre', sans-serif;
     font-style: oblique;
-    font-size: 1.5em;
+    font-size: 40px;
     font-weight: 900;
     text-align: center;
     margin: 10px 0;
@@ -65,24 +69,27 @@
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     border: 1px solid rgba(15, 25, 50, 0.8);
-    border-radius: 1rem;
+    border-radius: 50px;
     overflow: hidden;
 }
 
 /* Dégradé de la carte avant */
 .flip-card-front {
-    background: linear-gradient(135deg, rgba(10, 20, 50, 1) 0%, rgb(13, 27, 54) 30%, rgba(25, 50, 100, 1) 60%, rgba(10, 20, 50, 1) 100%);
-    color: #c5c5c5;
-    font-family: 'Manuale', sans-serif;
+    color: #1c2e56;
+    background: rgb(40,43,51);
+    background: linear-gradient(120deg, rgba(40,43,51,1) 0%, rgba(60,65,78,1) 20%, rgba(85,94,116,1) 40%, rgba(72,78,94,1) 60%, rgba(50,55,67,1) 80%, rgba(40,43,51,1) 100%);
+    font-family: 'Millimetre', sans-serif;
 }
+
 
 /* Dégradé de la carte arrière */
 .flip-card-back {
-    background: linear-gradient(135deg, rgba(15, 30, 60, 1) 0%, rgba(30, 50, 90, 1) 50%, rgba(10, 20, 50, 1) 100%);
-    color: #c5c5c5;
-    font-family: 'Manuale', sans-serif;
+    background: linear-gradient(300deg, rgba(40,43,51,1) 0%, rgba(50,55,67,1) 20%, rgba(72,78,94,1) 40%, rgba(85,94,116,1) 60%, rgba(60,65,78,1) 80%, rgba(40,43,51,1) 100%);
+    color: #1c2e56;
+    font-family: 'Millimetre', sans-serif;
     transform: rotateY(180deg);
 }
+
 
 /* Effet de reflet */
 .flip-card-front::before, .flip-card-back::before {
@@ -104,21 +111,21 @@
     padding: 8px 15px;
     border-radius: 8px;
     border: none;
-    background-color: #1e2f47;
-    color: #c5c5c5;
-    font-family: 'Manuale', sans-serif;
+    background-color: #1c2e56;
+    color: #e7bfcd;
+    font-family: 'Millimetre', sans-serif;
     font-size: 0.9em;
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
 .flip-card-back button:hover {
-    background-color: #142438;
+    background-color: #0c141f;
     transform: translateY(-2px);
 }
 
 /* Styles du bouton "Start the Game" en bleu */
 .start-game {
-    --blue: #1b6cfd;
+    --blue: #1c2e56;
     font-size: 15px;
     padding: 0.7em 2.7em;
     letter-spacing: 0.06em;
@@ -153,4 +160,35 @@
 
 .start-game:hover:before {
     transform: translateX(15em);
+}
+
+/* Styles du slider */
+#maxScore {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #1c2e56;
+    outline: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+#maxScore::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #e7bfcd; /* Couleur du pouce */
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Optionnel : ajouter une ombre */
+}
+
+#maxScore::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #c5c5c5;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
