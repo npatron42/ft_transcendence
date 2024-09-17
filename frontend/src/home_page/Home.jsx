@@ -5,12 +5,13 @@ import { fetchData, getAllUsers, getUser } from '../api/api'
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import UsersList  from "../UsersList/UsersList";
-import FriendsList from "../UsersList/FriendsList";
+import UsersFriendsList  from "../UsersList/UsersFriendsList";
+import Loading from "../loading_page/Loading";
 
 const Home = () => {
     const [myUser, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [isFriendShown, setIsFriendShown] = useState(false);
 
     useEffect(() => {
         const fetchDataAndGetUser = async () => {
@@ -27,12 +28,15 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <div>Loading...</div>;
+        return <Loading/>;
     }
 
     return (
         <div className="background-container">
-            <UsersList myUser={myUser} />
+            <h2 className="welcome-message">Welcome {myUser.username}</h2>
+            <div className="card-users" >
+                    <UsersFriendsList myUser={myUser} />
+            </div>
         </div>
     );
 }

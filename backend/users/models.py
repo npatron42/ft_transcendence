@@ -9,7 +9,13 @@ class User(AbstractUser):
 	isFrom42 = models.BooleanField(default=False)
 
 class Invitation(models.Model):
-	invitationFrom = models.CharField(max_length=50)
-	to = models.CharField(max_length=150)
-	type = models.CharField(max_length=45)
+    expeditor = models.ForeignKey(User, related_name="send_invitation", on_delete=models.CASCADE, default=None)
+    receiver = models.ForeignKey(User, related_name="receive_invitation", on_delete=models.CASCADE, default=None)
+    message = models.TextField(blank=True, null=True, default=None)
+    parse = models.CharField(max_length=125, default=None)
+    
+class FriendsList(models.Model):
+    user1 = models.ForeignKey(User, related_name="user1", on_delete=models.CASCADE, default=None)
+    user2 = models.ForeignKey(User, related_name="user2", on_delete=models.CASCADE, default=None)
+    parse = models.CharField(max_length=125, default=None)    
 
