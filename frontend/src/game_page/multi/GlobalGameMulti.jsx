@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useParams, useLocation } from 'react-router-dom'; // Import useLocation
+import { useParams, useLocation } from 'react-router-dom';
 import PongMulti from './PongMulti';
 import { ScoreBoard } from '../ScoreBoard';
 

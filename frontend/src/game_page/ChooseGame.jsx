@@ -18,8 +18,9 @@ const ChooseGame = () => {
     };
 
     const handleScoreChange = (event) => {
-        setMaxScore(event.target.value);
+        setMaxScore(Number(event.target.value));
     };
+    
 
     return (
         <div id="ChooseGame">

@@ -156,30 +156,31 @@
     margin-left: 10px;
 }
 
-.buttons-container {
+.WinComp {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
     display: flex;
-    flex-direction: column; /* Arrange les boutons en colonne */
-    align-items: flex-end; /* Aligne les boutons à droite */
-    position: absolute; /* Positionnement absolu pour les placer à droite */
-    right: 20px; /* Positionne les boutons à 20px du bord droit */
-    top: 50%; /* Centrer verticalement sur la page */
-    transform: translateY(-50%); /* Centrer précisément au milieu verticalement */
+    color: red;
+    z-index: 1000;
+
+
 }
 
-.StartButton,
-.StopButton {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 24px;
-    margin: 10px 0; /* Espacement entre les boutons */
-    font-weight: bold;
-    text-align: center;
-    text-decoration: none;
-    color: #fff;
-    border: 2px solid #000;
+.WinComp h1{
+    border-color: #46f9ff80;
+    border-width: 10px;
+    border-style: solid;
     border-radius: 10px;
-    box-shadow: 5px 5px 0px #000;
-    transition: all 0.3s ease;
-    cursor: pointer;
+    
+    background-color: #1c2e56;
 }
 
+#win-card {
+    height: 250px;
+    width: 380px;
+
+}

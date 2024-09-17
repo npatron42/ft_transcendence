@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PongSolo from './PongSolo';
 import { ScoreBoard } from '../ScoreBoard';
-import { StartButton, StopButton } from '../Buttons';
 
 const GlobalGameSolo = () => {
     const [score1, setScore1] = useState(0);
