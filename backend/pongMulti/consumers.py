@@ -5,7 +5,6 @@ import asyncio
 
 logger = logging.getLogger(__name__)
 
-    
 class PongConsumer(AsyncWebsocketConsumer):
     paddles = {}
     ball_pos = {}
@@ -18,6 +17,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         #if (self.scope["user"].is_authenticated):
+
+            #recup id room dans url
             self.room_id = self.scope['url_route']['kwargs']['room_id']
             self.room_group_name = f'game_{self.room_id}'
 
@@ -31,6 +32,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             if self.room_id not in PongConsumer.score:
                 PongConsumer.score[self.room_id] = {'player1': 0, 'player2': 0}
 
+            # Ajout ws dans le groupe de la room pour envoyer les messages à tous les clients
             await self.channel_layer.group_add(
                 self.room_group_name,
                 self.channel_name
@@ -53,23 +55,26 @@ class PongConsumer(AsyncWebsocketConsumer):
             #await self.send(text_data=json.dumps(dataToSend))
 
     async def disconnect(self, close_code):
+        # Arrêter la tâche de jeu
         if hasattr(self, 'game_task'):
             self.game_task.cancel()
 
+        # Supprimer le joueur de la room
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
+    # Reception message
     async def receive(self, text_data):
         data = json.loads(text_data)
         action = data.get('action', '')
 
         if action == 'set_max_score':
             max_score = data.get('maxScore', 10)
-            logger.info(f'Reçu max_score: {max_score} pour la room {self.room_id}')
             PongConsumer.max_scores[self.room_id] = max_score
 
+            # démarrer la balle
             if not hasattr(self, 'game_task') or self.game_task is None:
                 self.game_task = asyncio.create_task(self.update_ball())
                 return  
@@ -79,6 +84,7 @@ class PongConsumer(AsyncWebsocketConsumer):
         elif action == 'paddledown':
             self.move_paddle('down', data.get('side', ''))
 
+        #maj etat jeu
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -89,6 +95,7 @@ class PongConsumer(AsyncWebsocketConsumer):
             }
         )
 
+    # Déplacer la raquette
     def move_paddle(self, direction, side):
         if side == 'left':
             if direction == 'up':
@@ -101,19 +108,17 @@ class PongConsumer(AsyncWebsocketConsumer):
             elif direction == 'down':
                 PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 45)
 
+    # Mettre à jour la position de la balle
     async def update_ball(self):
         acceleration = 1.10
         max_speed = 10
         paddle_height = 90
         paddle_width = 10
         ball_radius = 15
-
         max_score = PongConsumer.max_scores.get(self.room_id, 5)
-        logger.info(f'Mise à jour de la balle avec max_score = {max_score} pour la room {self.room_id}')
 
         while True:
             if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
-                logger.info(f'Le score maximum de {max_score} a été atteint. Arrêt du jeu.')
                 break
 
             ball = PongConsumer.ball_pos[self.room_id]
@@ -122,17 +127,16 @@ class PongConsumer(AsyncWebsocketConsumer):
             ball['x'] += direction['x']
             ball['y'] += direction['y']
 
-            # Collision avec les murs (haut et bas)
+            # Collision avec les murs
             if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
                 direction['y'] *= -1
 
             # Collision avec la raquette gauche
             left_paddle_y = PongConsumer.paddles[self.room_id]['left']
             if ball['x'] <= 15 + paddle_width + ball_radius and left_paddle_y - paddle_height // 2 <= ball['y'] <= left_paddle_y + paddle_height // 2:
-                ball['x'] = 15 + paddle_width + ball_radius  # Corriger la position de la balle pour éviter qu'elle ne "colle" à la raquette
+                ball['x'] = 15 + paddle_width + ball_radius
                 direction['x'] *= -1
 
-                # Accélérer la balle
                 if abs(direction['x']) < max_speed:
                     direction['x'] *= acceleration
                 if abs(direction['y']) < max_speed:
@@ -144,26 +148,25 @@ class PongConsumer(AsyncWebsocketConsumer):
                 ball['x'] = 885 - paddle_width - ball_radius  # Corriger la position de la balle pour éviter qu'elle ne "colle" à la raquette
                 direction['x'] *= -1
 
-                # Accélérer la balle
                 if abs(direction['x']) < max_speed:
                     direction['x'] *= acceleration
                 if abs(direction['y']) < max_speed:
                     direction['y'] *= acceleration
 
-            # Réinitialiser la balle si elle sort du cadre (score)
+            # maj score
             if ball['x'] <= 0 or ball['x'] >= 900:
                 if ball['x'] <= 0:
                     PongConsumer.score[self.room_id]['player2'] += 1
                 elif ball['x'] >= 900:
                     PongConsumer.score[self.room_id]['player1'] += 1
 
-                # Réinitialiser la balle
+                # Reset ball
                 ball['x'] = 450
                 ball['y'] = 300
                 direction['x'] = 2
                 direction['y'] = 2
 
-            # Envoyer l'état mis à jour du jeu aux clients
+            # maj etat jeu
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
@@ -175,13 +178,12 @@ class PongConsumer(AsyncWebsocketConsumer):
             )
             await asyncio.sleep(0.01)
 
-    # Recevoir un message du groupe de la room
+    # envoie etat jeu
     async def game_state(self, event):
         paddles = event['paddles']
         ball = event['ball']
         score = event.get('score')
 
-        # Préparer les données à envoyer
         data = {
             'paddles': paddles,
             'ball': ball,
@@ -190,5 +192,4 @@ class PongConsumer(AsyncWebsocketConsumer):
         if score is not None:
             data['score'] = score
 
-        # Envoyer l'état actuel du jeu à tous les clients
         await self.send(text_data=json.dumps(data))

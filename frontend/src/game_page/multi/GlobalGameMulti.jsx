@@ -10,8 +10,6 @@ const GlobalGameMulti = () => {
     const location = useLocation();
     const maxScore = location.state?.maxScore || 10;
 
-    console.log('GlobalGameMulti: maxScore received from location:', maxScore);
-
     return (
         <div className="GlobalGame">
             <PongMulti
