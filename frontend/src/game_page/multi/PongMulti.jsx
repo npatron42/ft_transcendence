@@ -59,9 +59,11 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
     const [player2, setPlayer2] = useState(null);
 
     useEffect(() => {
-        const myJwt = localStorage.getItem("jwt");
+        /*const myJwt = localStorage.getItem("jwt");
         const myUrl = "ws://localhost:8000/ws/pong/" + roomId + "/?token=" + myJwt;
-        const ws = new WebSocket(myUrl);
+        const ws = new WebSocket(myUrl);*/
+        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
+
         
 
         ws.onopen = () => {

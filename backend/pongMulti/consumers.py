@@ -17,7 +17,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 
     async def connect(self):
-        if (self.scope["user"].is_authenticated):
+        #if (self.scope["user"].is_authenticated):
             self.room_id = self.scope['url_route']['kwargs']['room_id']
             self.room_group_name = f'game_{self.room_id}'
 
@@ -35,22 +35,22 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
-            user = self.scope["user"]
-            if (PongConsumer.player1 == False):
-                userId = 0
-                PongConsumer.player1 = True
-                dataToSend = {
-                    "id": userId
-                }
-            else:
-                userId = 1
-                PongConsumer.player2 = True
-                dataToSend = {
-                    "id": userId
-                }
+            #user = self.scope["user"]
+            # if (PongConsumer.player1 == False):
+            #     userId = 0
+            #     PongConsumer.player1 = True
+            #     dataToSend = {
+            #         "id": userId
+            #     }
+            # else:
+            #     userId = 1
+            #     PongConsumer.player2 = True
+            #     dataToSend = {
+            #         "id": userId
+            #     }
             
             await self.accept()
-            await self.send(text_data=json.dumps(dataToSend))
+            #await self.send(text_data=json.dumps(dataToSend))
 
     async def disconnect(self, close_code):
         if hasattr(self, 'game_task'):
