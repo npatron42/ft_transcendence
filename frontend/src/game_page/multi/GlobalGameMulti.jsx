@@ -14,12 +14,12 @@ const GlobalGameMulti = () => {
 
     return (
         <div className="GlobalGame">
-            <ScoreBoard score1={score1} score2={score2} />
             <PongMulti
                 setScore1={setScore1}
                 setScore2={setScore2}
                 roomId={roomId}
                 maxScore={maxScore}
+                
             />
         </div>
     );

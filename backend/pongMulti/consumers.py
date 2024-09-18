@@ -5,12 +5,16 @@ import asyncio
 
 logger = logging.getLogger(__name__)
 
+    
 class PongConsumer(AsyncWebsocketConsumer):
     paddles = {}
     ball_pos = {}
     ball_dir = {}
     score = {}
     max_scores = {}
+    player1 = False
+    player2 = False
+
 
     async def connect(self):
         if (self.scope["user"].is_authenticated):
@@ -31,8 +35,22 @@ class PongConsumer(AsyncWebsocketConsumer):
                 self.room_group_name,
                 self.channel_name
             )
-
+            user = self.scope["user"]
+            if (PongConsumer.player1 == False):
+                userId = 0
+                PongConsumer.player1 = True
+                dataToSend = {
+                    "id": userId
+                }
+            else:
+                userId = 1
+                PongConsumer.player2 = True
+                dataToSend = {
+                    "id": userId
+                }
+            
             await self.accept()
+            await self.send(text_data=json.dumps(dataToSend))
 
     async def disconnect(self, close_code):
         if hasattr(self, 'game_task'):

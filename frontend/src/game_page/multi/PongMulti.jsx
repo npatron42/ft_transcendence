@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 import { WinComp } from '../WinComp';
+import { ScoreBoard } from '../ScoreBoard';
 
 const usePaddleMovement = (webSocket) => {
     const [keysPressed, setKeysPressed] = useState({});
@@ -53,19 +54,26 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [webSocket, setWebSocket] = useState(null);
     const [isGameOver, setIsGameOver] = useState(false);
-    const [winner, setWinner] = useState(null); // Nouvel état pour stocker le gagnant
+    const [winner, setWinner] = useState(null);
+    const [player1, setPlayer1] = useState(null);
+    const [player2, setPlayer2] = useState(null);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
+        const myJwt = localStorage.getItem("jwt");
+        const myUrl = "ws://localhost:8000/ws/pong/" + roomId + "/?token=" + myJwt;
+        const ws = new WebSocket(myUrl);
+        
 
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', roomId);
             const maxScoreNum = Number(maxScore);
             ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
+            
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log(event.data);
             if (data.paddles) {
                 setPaddleLeftPos(data.paddles.left);
                 setPaddleRightPos(data.paddles.right);
@@ -77,7 +85,6 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
                 setScore1(data.score.player1);
                 setScore2(data.score.player2);
                 
-                // Vérifier si le score maximum est atteint pour l'un des joueurs
                 if (data.score.player1 >= maxScore) {
                     setIsGameOver(true);
                     setWinner(1); // Player 1 a gagné
@@ -109,6 +116,7 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
 
     return (
         <div className="pong-container">
+            <ScoreBoard score1={"ddw"} score2={"score2"}/>
             {isGameOver && <WinComp winner={winner} />}
             <div className="board">
                 <div className="center-line"></div>
