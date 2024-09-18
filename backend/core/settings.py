@@ -165,6 +165,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+		'pongMulti': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         # Add other apps here if needed
     },
 }

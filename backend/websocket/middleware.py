@@ -20,6 +20,7 @@ def splitQueryString(query_string):
 class JWTAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
         query_string = splitQueryString(scope['query_string'])
+        logger.info(" JE PASSE PAR LA %s", query_string)
         token = query_string.get('token')
         if token:
             try:
