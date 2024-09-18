@@ -11,7 +11,7 @@ const UsersFriendsList = ({ myUser }) => {
     const [friendsList, setFriendsList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isInviting, setIsInviting] = useState(false);
-    const [activeList, setActiveList] = useState('friends');
+    const [activeList, setActiveList] = useState('users');
     const myJwt = localStorage.getItem('jwt');
 
     const socketStatus = useRef(null);
@@ -27,39 +27,69 @@ const UsersFriendsList = ({ myUser }) => {
                 setSocketMessage(data);
                 setNumberOfConnected(Object.keys(data).length);
             };
-
         };
 
         const initSocketInvite = () => {
-            const myURL = 'ws://localhost:8000/ws/inviteFriend/?token=' + myJwt;
+            const myURL = "ws://localhost:8000/ws/inviteFriend/?token=" + myJwt;
             socketInvite.current = new WebSocket(myURL);
+            
+            socketInvite.current.onopen = () => {
+                console.log('WebSocket connection established');
+            };
 
             socketInvite.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log(data);
+                console.log("WS Data : ", data);
+                if (data["friend"])
+                    changeFriendsList(data);
             };
         };
 
-        const defineUsersList = async () => {
+        const changeFriendsList = (data) => {
+            const usernameFriendToMove = data["friend"];
+            const friendToMove = usersList[usernameFriendToMove]
+            console.log(usersList)
+            console.log(friendsList)
+
+        } 
+
+        const defineUsersList = async (friendsList) => {
             setIsLoading(true);
             const myList = await getAllUsers();
             const filteredList = myList.filter(user => user.username !== myUser.username);
-            setUsersList(filteredList);
+            const withoutFriends = [];
+            for (let i = 0; i < filteredList.length; i++) {
+                let isFriend = false;
+                const tmpName = filteredList[i].username;
+                for (let i = 0; i < friendsList.length; i++) {
+                    if (tmpName === friendsList[i].username) {
+                        isFriend = true;
+                    }
+                }
+                if (isFriend == false)
+                    withoutFriends.push(filteredList[i])
+            }
+            setUsersList(withoutFriends);
+            console.log(withoutFriends);
             setIsLoading(false);
         };
 
-        // const defineFriendsList = async () => {
-        //     setIsLoading(true);
-        //     const myFriendsList = await getFriendsList();
-        //     setFriendsList(myFriendsList);
-        //     console.log(myFriendsList);
-        //     setIsLoading(false);
-        // };
+        const defineFriendsList = async () => {
+            setIsLoading(true);
+            const myFriendsList = await getFriendsList();
+            setFriendsList(myFriendsList);
+            setIsLoading(false);
+            return (myFriendsList);
+        };
+        
+        const initMyLists = async () => {
+             const myFriendsList = await defineFriendsList();
+            await defineUsersList(myFriendsList);
+        }
 
         initSocketStatus(); 
         initSocketInvite();
-        defineUsersList();
-        // defineFriendsList();
+        initMyLists();
         
         return () => {
             if (socketStatus.current && socketStatus.current.readyState === WebSocket.OPEN) {
@@ -90,8 +120,8 @@ const UsersFriendsList = ({ myUser }) => {
                 parse: myUser.username + "|" + userInvited.username
             }
             socketInvite.current.send(JSON.stringify(data));
-            setUserInvitation(true);
             setIsInviting(false);
+            console.log("UsersList during invit : ", usersList);
         } else {
             console.log("WebSocket for invitations is not open");
         }
@@ -145,7 +175,7 @@ const UsersFriendsList = ({ myUser }) => {
                                 <tbody className="bodyUsers">
                                     {friendsList.length === 0 ? (
                                         <tr>
-                                                <td colSpan="4" className="noUsers">You don't have friends...</td>
+                                            <td colSpan="4" className="noUsers">You don't have friends...</td>
                                         </tr>
 
                                     ) : (

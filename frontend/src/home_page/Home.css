@@ -122,6 +122,8 @@
     border-radius: 50px;
     border-top: 3px solid #40444c;
     border-bottom: 3px solid #40444c;
+
+    /* border: 3px solid #40444c; */
     background-color: #363a45;
     padding: 10px;
     margin: 5px;

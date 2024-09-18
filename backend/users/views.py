@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from django.db.models import Q
 from users.models import User, FriendsList
 from users.serializers import UserSerializer, FriendsListSerializer
 from django.http import JsonResponse
@@ -25,10 +26,26 @@ def getAllUsers(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+# FRIENDS LIST 
+
+def getFriendsFromUser(user):
+    friendsRelationships = FriendsList.objects.filter(Q(user1=user) | Q(user2=user))
+    tabFriends = []
+    for relationship in friendsRelationships:
+        if relationship.user1 == user:
+            tabFriends.append(relationship.user2)
+        else:
+            tabFriends.append(relationship.user1)
+    
+    return tabFriends
+
+
 def getFriendsList(request):
     payload = middleWareAuthentication(request)
-    myFriendsList = FriendsList.objects.filter(id = payload['id']).first()
-    serializer = FriendsListSerializer(myFriendsList, many=True)
+    user = User.objects.filter(id = payload['id']).first()
+
+    myFriendsList = getFriendsFromUser(user)
+    serializer = UserSerializer(myFriendsList, many=True)
     return JsonResponse(serializer.data, safe=False)
 
 
