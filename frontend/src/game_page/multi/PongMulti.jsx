@@ -3,18 +3,19 @@ import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 
-const usePaddleMovement = (webSocket) => {
+const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({});
 
-    // Enregistrement des touches pressées
     useEffect(() => {
         if (!webSocket) return;
 
         const handleKeyDown = (e) => {
+            console.log(`Key pressed: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
         };
 
         const handleKeyUp = (e) => {
+            console.log(`Key released: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: false }));
         };
 
@@ -27,40 +28,42 @@ const usePaddleMovement = (webSocket) => {
         };
     }, [webSocket]);
 
-    // Envoi JSON au serveur
     useEffect(() => {
         if (!webSocket) return;
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', side: 'left' }));
+                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
             }
             if (keysPressed['s'] || keysPressed['S']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', side: 'left' }));
+                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
             }
             if (keysPressed['ArrowUp']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', side: 'right' }));
+                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
             }
             if (keysPressed['ArrowDown']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', side: 'right' }));
+                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
             }
         }, 11);
 
         return () => clearInterval(interval);
-    }, [keysPressed, webSocket]);
+    }, [keysPressed, webSocket, playerId]);
 };
 
-const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
+const PongMulti = ({ roomId, maxScore }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [webSocket, setWebSocket] = useState(null);
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
-    const [player1, setPlayer1] = useState(null);
-    const [player2, setPlayer2] = useState(null);
+    const [playerId, setPlayerId] = useState(null);
+    const [roomPlayers, setRoomPlayers] = useState([]);
+    const [score1, setScore1] = useState(0);
+    const [score2, setScore2] = useState(0);
 
     useEffect(() => {
+
 
         /*-------------------*/
         /* gestion websocket */
@@ -71,18 +74,22 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
         const ws = new WebSocket(myUrl);*/
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
 
-
-
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', roomId);
             const maxScoreNum = Number(maxScore);
             ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
-
+            
         };
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
             console.log(event.data);
+            if (data.id) {
+                setPlayerId(data.id);
+            }
+            if (data.players) {
+                setRoomPlayers(data.players);
+            }
             if (data.paddles) {
                 setPaddleLeftPos(data.paddles.left);
                 setPaddleRightPos(data.paddles.right);
@@ -121,11 +128,11 @@ const PongMulti = ({ roomId, setScore1, setScore2, maxScore }) => {
         };
     }, [roomId, maxScore, setScore1, setScore2]);
 
-    usePaddleMovement(webSocket);
+    usePaddleMovement(webSocket, playerId, roomPlayers);
 
     return (
         <div className="pong-container">
-            <ScoreBoard score1={"ddw"} score2={"score2"} />
+            <ScoreBoard score1={score1} score2={score2} player1Id={roomPlayers[0]} player2Id={roomPlayers[1]} />
             {isGameOver && <WinComp winner={winner} />}
             <div className="board">
                 <div className="center-line"></div>
