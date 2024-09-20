@@ -39,19 +39,39 @@ const UsersFriendsList = ({ myUser }) => {
 
             socketInvite.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                console.log("WS Data : ", data);
-                if (data["friend"])
+                if (data["friends"]) {
+                    console.log("OUI");
                     changeFriendsList(data);
+                }
+                if (data["AllUsers"])
+                    changeUsersList(data, )
             };
         };
 
         const changeFriendsList = (data) => {
-            const usernameFriendToMove = data["friend"];
-            const friendToMove = usersList[usernameFriendToMove]
-            console.log(usersList)
-            console.log(friendsList)
-
+            console.log(data);
         } 
+        
+        const changeUsersList = async (usersList, friendsList) => {
+            setIsLoading(true);
+            const allUsers = usersList
+            const filteredList = allUsers.filter(user => user.username !== myUser.username);
+            const withoutFriends = [];
+            for (let i = 0; i < filteredList.length; i++) {
+                let isFriend = false;
+                const tmpName = filteredList[i].username;
+                for (let i = 0; i < friendsList.length; i++) {
+                    if (tmpName === friendsList[i].username) {
+                        isFriend = true;
+                    }
+                }
+                if (isFriend == false)
+                    withoutFriends.push(filteredList[i])
+            }
+            setUsersList(withoutFriends);
+            console.log(withoutFriends);
+            setIsLoading(false);
+        };
 
         const defineUsersList = async (friendsList) => {
             setIsLoading(true);

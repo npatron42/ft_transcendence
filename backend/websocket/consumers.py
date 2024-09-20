@@ -177,9 +177,23 @@ async def getFriendsListByUsername(username):
     friends_relationships = await sync_to_async(lambda: list(
         FriendsList.objects.filter(Q(user1=user) | Q(user2=user))
     ))()
+    
     return friends_relationships
 
+def giveOnlyFriendsName(friendsList, myUsername):
+    result = []
 
+    size = len(friendsList)
+    i = 0
+
+    while i < size:
+        parse_value = friendsList[i].get("parse")
+        usernames = parse_value.split("|")
+        for username in usernames:
+            if username != myUsername:
+                result.append(username)
+        i += 1
+    return result
 
 class InviteFriendConsumer(AsyncWebsocketConsumer):
 
@@ -243,13 +257,32 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
             serializer_user = UserSerializer(allUsersTmp, many=True)
             AllUsers = serializer_user.data
 
-            logger.info("AllUsers --> : %s\n\n", AllUsers)
-            logger.info("FriendsList de %s --> %s\n\n", myExpeditor.username, serializerExpeditor.data)
-            logger.info("FriendsList de %s --> %s\n\n", myReceiver.username, serializerReceiver.data)
+            friendsListExpeditorTmp = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
+            friendsListReceiverTmp = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
 
 
-            await self.send(text_data=json.dumps(serializerExpeditor.data))
-            await sendToClient(self, socketReceiver, serializerReceiver.data)
+            allUsersToSend = {
+                "AllUsers": AllUsers
+            }
+
+            friendsListReceiverToSend = {
+                "friends": friendsListReceiverTmp
+            }
+
+            friendsListExpeditorToSend = {
+                "friends": friendsListExpeditorTmp
+            }
+
+
+            # users to clients
+
+            await self.send(text_data=json.dumps(allUsersToSend))
+            await sendToClient(self, socketReceiver, allUsersToSend)
+
+            #friendsList to clients
+
+            await self.send(text_data=json.dumps(friendsListExpeditorToSend))
+            await sendToClient(self, socketReceiver, friendsListReceiverToSend)
 
 
 
