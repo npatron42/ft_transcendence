@@ -68,7 +68,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 	
 	#envoi liste des joueurs
 	async def updatePlayers(self, event):
+		logger.info(f"Liste des joueurs envoyée: {event['players']}")
 		await self.send(text_data=json.dumps({'players': event['players']}))
+
 
 	async def disconnect(self, close_code):
 		if hasattr(self, 'game_task'):
@@ -86,10 +88,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		# Set max_score
 		if action == 'set_max_score':
-			max_score = data.get('maxScore', 10)
-			logger.info(f'Reçu max_score: {max_score} pour la room {self.room_id}')
-			PongConsumer.max_scores[self.room_id] = max_score
-			logger.info(f'PongConsumer.max_scores: {PongConsumer.max_scores[self.room_id]}')
+			if self.room_id in PongConsumer.max_scores:
+				logger.warning(f"Le max_score ne peut pas être réinitialisé après le début du jeu pour la room {self.room_id}")
+			else:
+				max_score = data.get('maxScore', 10)
+				PongConsumer.max_scores[self.room_id] = max_score
+				logger.info(f"Max score défini à {max_score} pour la room {self.room_id}")
+
 
 		if player_id != self.player_id:
 			return
@@ -204,6 +209,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 		data = {
 			'paddles': paddles,
 			'ball': ball,
+			'players': PongConsumer.players[self.room_id]
 		}
 
 		if score is not None:

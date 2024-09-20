@@ -14,14 +14,13 @@ export const WinComp = ({ winner }) => {
     const handleMenuClick = () => {
         navigate('/ChooseGame');
     };
-
     return (
         <div className="WinComp">
             <div id="win-card" className="flip-card">
                 <div className="flip-card-inner">
                     <div className="flip-card-front">
                         <div className="flip-card-content">
-                            <p className="title">fpalumbo_42 Win</p>
+                            <p className="title">{winner}</p>
                         </div>
                     </div>
                     <div className="flip-card-back">
