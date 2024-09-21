@@ -38,27 +38,36 @@ async def update_user_status(user, status):
     user.status = status
     await sync_to_async(user.save)()
 
+async def sendToClient(channel_layer, socket, message):
+    await channel_layer.send(socket, {
+        "type": "notif",
+        "message": message,
+    })
+
 
 socketStatus_user = {}
 
-
-async def sendToEveryClientsUsersList(self):
+async def sendToEveryClientsUsersList(channel_layer):
+    logger.info("Toutes les sockets --> %s", socketStatus_user)
     size = len(socketStatus_user)
+    logger.info("Ma size ---> %d", size)
     i = 0
     usersConnected = list(socketStatus_user.keys())
+    sockets = list(socketStatus_user.values())
     logger.info(usersConnected)
     while i < size:
         allUsersTmp = await getAllUser()
         allUsers = UserSerializer(allUsersTmp, many=True)
 
-        myUserTmp = await getUserByUsername(usersConnected[i])
-        myUserSerializer = UserSerializer(myUserTmp, many=True)
-        myUser = myUserSerializer.data
-
-        myUserFriendsList = await getFriendsListByUsername(myUser.username)
+        myUser = await getUserByUsername(usersConnected[i])
+        myUserFriendsList = await getFriendsListByUsername(myUser)
         myUserListTmp = await usersListWithoutFriends(myUserFriendsList, allUsers.data, myUser.username)
         myUserList = UserSerializer(myUserListTmp, many=True)
-        sendToClient(self, socketStatus_user[i], myUserList.data)
+        dataToSend = {
+            "AllUsers": myUserList.data
+        }
+        logger.info("JE PASSE PAR LA")
+        await sendToClient(channel_layer, sockets[i], dataToSend)
         i += 1
 
 class StatusConsumer(AsyncWebsocketConsumer):
@@ -74,7 +83,7 @@ class StatusConsumer(AsyncWebsocketConsumer):
 
             await self.send_status_to_all()
             await update_user_status(myUser, "online")
-            await sendToEveryClientsUsersList(self)
+            await sendToEveryClientsUsersList(self.channel_layer)
 
         else:
             await self.close()
@@ -86,11 +95,7 @@ class StatusConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard("status_updates", self.channel_name)
 
         await self.send_status_to_all()
-        if socketStatus_user[user.username]:
-            socketStatus_user.remove(user.username)
-        logger.info("Mon socket_user --> %s", socketStatus_user)
-        nb = len(socketStatus_user)
-        logger.info("Nombre de sockets connected : %d", nb)
+        socketStatus_user.pop(user.username, None)
         await update_user_status(user, "offline")
 
     async def send_status_to_all(self):
@@ -102,7 +107,10 @@ class StatusConsumer(AsyncWebsocketConsumer):
             }
         )
 
-
+    async def notif(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+        
     async def status_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
@@ -193,13 +201,6 @@ async def removeFriend(parse_value):
 # DEGUEU MAIS CA MARCHE HAHAHAHAHHAAA
 
 socketsFriendsList = {}
-
-async def sendToClient(self, socket, message):
-    await self.channel_layer.send(socket, {
-        "type": "notification_to_client",
-        "message": message,
-    })
-
 
 async def getFriendsListByUsername(username):
     user = await sync_to_async(User.objects.get)(username=username)

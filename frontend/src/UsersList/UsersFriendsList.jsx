@@ -26,6 +26,11 @@ const UsersFriendsList = ({ myUser }) => {
                 const data = JSON.parse(event.data);
                 setSocketMessage(data);
                 console.log(data)
+                if (data["status"])
+                    setSocketMessage(data["status"])
+                if (data["AllUsers"]) {
+                    changeFriendsList(data)
+                }
             };
 
             // Send to all Users the new UsersList / FriendsList
