@@ -25,7 +25,7 @@ services:
       - ./backend:/backend
     ports:
       - 8000:8000
-
+  
   frontend:
     container_name: frontend
     build:

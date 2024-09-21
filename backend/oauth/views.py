@@ -30,7 +30,6 @@ class OAuthView(APIView):
             myJson = doRequestTo42(access_token, "/v2/me")
             myUser = add42UserToDB(myJson)
             response = attributeToUserJWT(myUser)
-            logger.info(response)
             return response
         except Exception as e:
             return Response({"Error": "Failed during creation proccess, to DB"})

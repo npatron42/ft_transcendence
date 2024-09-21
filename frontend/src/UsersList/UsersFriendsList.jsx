@@ -25,8 +25,10 @@ const UsersFriendsList = ({ myUser }) => {
             socketStatus.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 setSocketMessage(data);
-                setNumberOfConnected(Object.keys(data).length);
+                console.log(data)
             };
+
+            // Send to all Users the new UsersList / FriendsList
         };
 
         const initSocketInvite = () => {
@@ -40,20 +42,19 @@ const UsersFriendsList = ({ myUser }) => {
             socketInvite.current.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 if (data["friends"]) {
-                    console.log("OUI");
                     changeFriendsList(data);
                 }
                 if (data["AllUsers"])
-                    changeUsersList(data, )
+                    changeUsersList(data["AllUsers"], friendsList)
             };
         };
 
         const changeFriendsList = (data) => {
-            console.log(data);
+            setFriendsList(data["friends"])
+            changeUsersList(data["AllUsers"], friendsList)
         } 
-        
+  
         const changeUsersList = async (usersList, friendsList) => {
-            setIsLoading(true);
             const allUsers = usersList
             const filteredList = allUsers.filter(user => user.username !== myUser.username);
             const withoutFriends = [];
@@ -69,8 +70,7 @@ const UsersFriendsList = ({ myUser }) => {
                     withoutFriends.push(filteredList[i])
             }
             setUsersList(withoutFriends);
-            console.log(withoutFriends);
-            setIsLoading(false);
+            console.log("Ma withoutfriends : ", withoutFriends);
         };
 
         const defineUsersList = async (friendsList) => {
