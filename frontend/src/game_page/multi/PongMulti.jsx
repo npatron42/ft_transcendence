@@ -61,8 +61,6 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
-    const [player1, setPlayer1] = useState(null);
-    const [player2, setPlayer2] = useState(null);
 
     useEffect(() => {
 
@@ -89,8 +87,6 @@ const PongMulti = ({ roomId, maxScore }) => {
             }
             if (data.players) {
                 setRoomPlayers(data.players);
-                setPlayer1(data.players[0]);
-                setPlayer2(data.players[1]);
             }
             if (data.paddles) {
                 setPaddleLeftPos(data.paddles.left);
@@ -102,13 +98,14 @@ const PongMulti = ({ roomId, maxScore }) => {
             if (data.score) {
                 setScore1(data.score.player1);
                 setScore2(data.score.player2);
+                console.log("la" , maxScore, data.score.player1);
                 if (data.players && data.players.length >= 2) {
                     if (data.score.player1 >= maxScore) {
-                        console.log("Gagnant :", data.players[0]);  // Utilisez directement data.players[0]
+                        console.log("Gagnant :", data.players[0]);
                         setWinner(data.players[0]);
                         setIsGameOver(true);
                     } else if (data.score.player2 >= maxScore) {
-                        console.log("Gagnant :", data.players[1]);  // Utilisez directement data.players[1]
+                        console.log("Gagnant :", data.players[1]);
                         setWinner(data.players[1]);
                         setIsGameOver(true);
                     }
