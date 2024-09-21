@@ -30,7 +30,6 @@ const UsersList = ({ myUser }) => {
             socketInvite.current = new WebSocket(myURL);
 
             socketInvite.current.onmessage = (event) => {
-                console.log("JE PASSE PAR ICI");
                 const data = JSON.parse(event.data);
                 console.log(data);
             };
