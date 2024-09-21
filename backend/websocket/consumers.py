@@ -153,6 +153,40 @@ async def removeFriend(parse_value):
         await sync_to_async(myRelationShip.delete)()
         pass   
 
+ 
+# DEGUEU MAIS CA MARCHE HAHAHAHAHHAAA
+
+sockets_user = {}
+
+async def sendToClient(self, socket, message):
+    await self.channel_layer.send(socket, {
+        "type": "notification_to_client",
+        "message": message,
+    })
+
+
+async def getFriendsListByUsername(username):
+    user = await sync_to_async(User.objects.get)(username=username)
+    friends_relationships = await sync_to_async(lambda: list(
+        FriendsList.objects.filter(Q(user1=user) | Q(user2=user))
+    ))()
+    
+    return friends_relationships
+
+def giveOnlyFriendsName(friendsList, myUsername):
+    result = []
+
+    size = len(friendsList)
+    i = 0
+
+    while i < size:
+        parse_value = friendsList[i].get("parse")
+        usernames = parse_value.split("|")
+        for username in usernames:
+            if username != myUsername:
+                result.append(username)
+        i += 1
+    return result
 
 class InviteFriendConsumer(AsyncWebsocketConsumer):
 
@@ -165,6 +199,94 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         pass;
     
+
+
+    async def receive(self, text_data):
+
+        data = json.loads(text_data);
+
+        myReceiverUsername = data.get('to')
+        typeMessage = data.get('type')
+        parse = data.get('parse')
+
+        myExpeditor = self.scope['user']
+        myReceiver = await getUserByUsername(myReceiverUsername)
+        socketReceiver = sockets_user.get(myReceiverUsername)
+
+        myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
+        invitation_exists = await checkInvitation(parse)
+
+        if (invitation_exists == "FRIENDS NOW"): # USERS FRIENDS
+
+            friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
+            await saveRelationship(friendsList)
+            await eraseInvitation(parse)
+
+            friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
+            serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
+
+            friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
+            serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
+
+
+
+            allUsersTmp = await getAllUser()
+            serializer_user = UserSerializer(allUsersTmp, many=True)
+            AllUsers = serializer_user.data
+
+            friendsListExpeditorTmp = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
+            friendsListReceiverTmp = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
+
+
+            allUsersToSend = {
+                "AllUsers": AllUsers
+            }
+
+            friendsListReceiverToSend = {
+                "friends": friendsListReceiverTmp
+            }
+
+            friendsListExpeditorToSend = {
+                "friends": friendsListExpeditorTmp
+            }
+
+
+            # users to clients
+
+            await self.send(text_data=json.dumps(allUsersToSend))
+            await sendToClient(self, socketReceiver, allUsersToSend)
+
+            #friendsList to clients
+
+            await self.send(text_data=json.dumps(friendsListExpeditorToSend))
+            await sendToClient(self, socketReceiver, friendsListReceiverToSend)
+
+
+
+        elif (invitation_exists == "ALREADY FRIENDS"):
+            sendData = {
+                "error": "Already friends"
+            }
+            await self.send(text_data=json.dumps(sendData))      
+
+
+
+        elif (invitation_exists):
+            sendData = {
+                "error": "Invitation already sent"
+            }
+            await self.send(text_data=json.dumps(sendData))
+
+
+
+        else:
+            await saveInvitation(myInvitation)
+            sendData = {
+                "success": "Invitation sent"
+            }
+            await self.send(text_data=json.dumps(sendData))
+
+
     async def send_notif(self, notif):
         await self.channel_layer.group_send(
             "notification",
@@ -174,47 +296,3 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    async def receive(self, text_data):
-        data = json.loads(text_data);
-        myReceiverUsername = data.get('to')
-        typeMessage = data.get('type')
-        parse = data.get('parse')
-        myExpeditor = self.scope['user']
-        logger.info(myReceiverUsername)
-        # myReceiver = await getUserByUsername(myReceiverUsername)
-        # myReceiver = self.scope['user']
-
-        # logger.info(text_data)
-        # myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
-        # invitation_exists = await checkInvitation(parse)
-        # if (invitation_exists == "FRIENDS NOW"):
-        #     sendData = {
-        #         "ok": "FRIEND"
-        #     }
-        #     friendList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
-        #     await saveRelationship(friendList)
-        #     await eraseInvitation(parse)
-        #     await self.send(text_data=json.dumps(sendData))
-        # elif (invitation_exists == "ALREADY FRIENDS"):
-        #     sendData = {
-        #         "error": "Already friends"
-        #     }
-        #     await self.send(text_data=json.dumps(sendData))         
-        # elif (invitation_exists):
-        #     sendData = {
-        #         "error": "Invitation already sent"
-        #     }
-        #     logger.info("OUI JE PASSE PAR LA")
-        #     await self.send(text_data=json.dumps(sendData))
-        # else:
-        #     await saveInvitation(myInvitation)
-        #     sendData = {
-        #         "success": "Invitation sent"
-        #     }
-        #     logger.info("OUI JE PASSE PAR LA")
-        #     await self.send(text_data=json.dumps(sendData))
-
-
-    async def notification_message(self, event):
-        message = event['message']
-        await self.send(text_data=json.dumps(message))

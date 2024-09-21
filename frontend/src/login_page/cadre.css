@@ -5,6 +5,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
 
 
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
 .custom-cadre {
 	position: relative;
 	width: 80vw;
@@ -25,7 +33,7 @@
 	left: 48vw;
 	color: #FFFFFF;
 	text-shadow: 0vw 0.3vw 0.5vw rgb(3, 40, 113);
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 550;
 	font-size: 4.2vw;
 }
@@ -36,7 +44,7 @@
 	left: 57vw;
 	color: #FFFFFF;
 	font-size: 1.3vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 1000;
 
 }
@@ -47,7 +55,7 @@
 	top: 34.5vh;
 	color: #FFFFFF;
 	font-size: 1.1vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 }
 
@@ -56,7 +64,7 @@
 	left: 57vw;
 	top: 38.5vh;
 	font-size: 1vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 	background-color: rgba(0, 0, 0, 0.35);
 	box-shadow: 0px 0px 2vw rgba(0, 0, 0, 1);
@@ -82,7 +90,7 @@
 	left: 57vw;
 	top: 48vh;
 	font-size: 1vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 	background-color: rgba(0, 0, 0, 0.35);
 	box-shadow: 0vw 0vw 2vw rgba(0, 0, 0, 1);
@@ -108,7 +116,7 @@
 		left: 57vw;
 		color: #FFFFFF;
 		font-size: 1.1vw;
-		font-family: 'Manuale', sans-serif;
+		font-family: 'Millimetre', sans-serif;
 		font-weight: 600;}
 
 .para-mdp {
@@ -117,7 +125,7 @@
 	left:69vw;
 	color: #969393;
 	font-size: 0.7vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 	font-style: italic;
 }
@@ -129,7 +137,7 @@
 	left: 57vw;
 	color: #FFFFFF;
 	font-size: 1.1vw;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 }
 
@@ -154,13 +162,12 @@
 	position: absolute;
 	top: 1.3vh;
 	left: 82.5vw;
-	border: 0.1vw solid #222222; 
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	}
 
 .english-flag {
 	position: absolute;
-	top: 1.5vh;
+	top: 1.3vh;
 	left: 85vw;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	}
@@ -182,7 +189,7 @@
 	color: #fc00008e;
 	font-size: 0.9vw;
 	font-style: italic;
-	font-family: 'Manuale', sans-serif;
+	font-family: 'Millimetre', sans-serif;
 	font-weight: 200;
 }
 	
