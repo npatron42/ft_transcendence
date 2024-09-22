@@ -443,16 +443,55 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
             stringRelation = data["parse"]
             myUser = self.scope["user"]
             userDeleted = await getUserByUsername(data["userDeleted"])
+            socketUserDeleted = socketsFriendsList.get(userDeleted.username)
 
             await deleteRelationShip(stringRelation)
-            myUserFriendsList = await getFriendsListByUsername(myUserFriendsList.username)
-            userDeleted = await getFriendsListByUsername(userDeleted.username)
+            allUsersTmp = await getAllUser()
+            serializer_user = UserSerializer(allUsersTmp, many=True)
+            AllUsers = serializer_user.data
 
-        
+            myUserFriendsList = await getFriendsListByUsername(myUser.username)
+            userDeletedFriendsList = await getFriendsListByUsername(userDeleted.username)
 
+            serializerUserFriendsList = FriendsListSerializer(myUserFriendsList, many=True)
+            serializerUserDeletedFriendsList = FriendsListSerializer(userDeletedFriendsList, many=True)
 
+            friendsNamesUser = giveOnlyFriendsName(serializerUserFriendsList.data, myUser.username)
+            friendsNamesDeletedUser = giveOnlyFriendsName(serializerUserDeletedFriendsList.data, userDeleted.username)
 
+            finalFriendsListUser = await finalFriendsList(friendsNamesUser)
+            serializerFinalUser = UserSerializer(finalFriendsListUser, many=True)
 
+            finalFriendsListDeletedUser = await finalFriendsList(friendsNamesDeletedUser)
+            serializerFinalDeletedUser = UserSerializer(finalFriendsListDeletedUser, many=True)
+
+            friendsListDeletedUserToSend = {
+                "friends": serializerFinalDeletedUser.data
+            }
+
+            friendsListUserToSend = {
+                "friends": serializerFinalUser.data
+            }
+
+            usersListExpeditor = await usersListWithoutFriends(serializerFinalUser.data, AllUsers, myUser.username)
+            serializerAllUsersExpeditor = UserSerializer(usersListExpeditor, many=True)
+
+            usersListReceiver = await usersListWithoutFriends(serializerFinalDeletedUser.data, AllUsers, userDeleted.username)
+            serializerAllUsersReceiver = UserSerializer(usersListReceiver, many=True)
+
+            allUsersToSendExpeditor = {
+                "AllUsers": serializerAllUsersExpeditor.data
+            }
+
+            allUsersToSendReceiver = {
+                "AllUsers": serializerAllUsersReceiver.data
+            }
+
+            await self.send(text_data=json.dumps(friendsListUserToSend))   
+            await sendToClient2(self, socketUserDeleted, friendsListDeletedUserToSend)
+
+            await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
+            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)  
 
 
     async def send_notif(self, notif):
