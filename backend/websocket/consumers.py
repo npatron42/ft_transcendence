@@ -18,6 +18,16 @@ pool_lock = asyncio.Lock()
 
 # UTILS FUNCTIONS FOR USER STATUS
 
+async def finalFriendsList(friendsList):
+    size = len(friendsList)
+    result = []
+    i = 0
+    while i < size:
+        username = friendsList[i]
+        myUser = await getUserByUsername(username)
+        result.append(myUser)
+        i += 1
+    return (result)
 
 async def changeUserStatus(key, isConnected: bool):
     usersStatus[key] = isConnected
@@ -48,27 +58,38 @@ async def sendToClient(channel_layer, socket, message):
 socketStatus_user = {}
 
 async def sendToEveryClientsUsersList(channel_layer):
-    logger.info("Toutes les sockets --> %s", socketStatus_user)
     size = len(socketStatus_user)
-    logger.info("Ma size ---> %d", size)
     i = 0
     usersConnected = list(socketStatus_user.keys())
     sockets = list(socketStatus_user.values())
-    logger.info(usersConnected)
     while i < size:
         allUsersTmp = await getAllUser()
         allUsers = UserSerializer(allUsersTmp, many=True)
 
         myUser = await getUserByUsername(usersConnected[i])
-        myUserFriendsList = await getFriendsListByUsername(myUser)
-        myUserListTmp = await usersListWithoutFriends(myUserFriendsList, allUsers.data, myUser.username)
+
+        myUserFriendsList = await getFriendsListByUsername(myUser.username)
+        friendsListSerializer = FriendsListSerializer(myUserFriendsList, many=True)
+
+        friendsNames = giveOnlyFriendsName(friendsListSerializer.data, myUser.username)
+
+        final = await finalFriendsList(friendsNames)
+        serializerFinal = UserSerializer(final, many=True)
+
+        myUserListTmp = await usersListWithoutFriends(serializerFinal.data, allUsers.data, myUser.username)
+
         myUserList = UserSerializer(myUserListTmp, many=True)
         dataToSend = {
             "AllUsers": myUserList.data
         }
-        logger.info("JE PASSE PAR LA")
+        friendsToSend = {
+            "friends": serializerFinal.data
+        }
+        await sendToClient(channel_layer, sockets[i], friendsToSend)
         await sendToClient(channel_layer, sockets[i], dataToSend)
         i += 1
+
+
 
 class StatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -225,24 +246,14 @@ def giveOnlyFriendsName(friendsList, myUsername):
         i += 1
     return result
 
-async def finalFriendsList(friendsList):
-    size = len(friendsList)
-    result = []
-    i = 0
-    while i < size:
-        username = friendsList[i]
-        myUser = await getUserByUsername(username)
-        result.append(myUser)
-        i += 1
-    return (result)
 
 async def usersListWithoutFriends(friendsList, AllUsers, myUsername): 
     allFriendsName = []
     size = len(friendsList)
     i = 0
     while i < size:
-        allFriendsName.append(friendsList[i].get("username"))
-        i += 1
+            allFriendsName.append(friendsList[i].get("username"))
+            i += 1
 
     allUsersnames = []
     size = len(AllUsers)
@@ -272,6 +283,12 @@ async def usersListWithoutFriends(friendsList, AllUsers, myUsername):
     return userResult
 
 
+
+async def sendToClient2(self, socket, message):
+    await self.channel_layer.send(socket, {
+        "type": "notification_to_client",
+        "message": message,
+    })
 
 
 class InviteFriendConsumer(AsyncWebsocketConsumer):
@@ -306,7 +323,6 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
 
         data = json.loads(text_data);
-
         myReceiverUsername = data.get('to')
         typeMessage = data.get('type')
         parse = data.get('parse')
@@ -369,13 +385,14 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
                 "AllUsers": serializerAllUsersReceiver.data
             }
 
+
             await self.send(text_data=json.dumps(allUsersToSendExpeditor))
-            await sendToClient(self, socketReceiver, allUsersToSendReceiver)
+            await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
 
             #friendsList to clients
 
             await self.send(text_data=json.dumps(friendsListExpeditorToSend))
-            await sendToClient(self, socketReceiver, friendsListReceiverToSend)
+            await sendToClient2(self, socketReceiver, friendsListReceiverToSend)
 
 
 
