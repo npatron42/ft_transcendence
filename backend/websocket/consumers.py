@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import logging
 from asgiref.sync import sync_to_async
+from django.core.exceptions import ObjectDoesNotExist
 from users.serializers import UserSerializer, InvitationSerializer, FriendsListSerializer
 from users.models import Invitation, User, FriendsList
 logger = logging.getLogger(__name__)
@@ -283,6 +284,20 @@ async def usersListWithoutFriends(friendsList, AllUsers, myUsername):
     return userResult
 
 
+async def deleteRelationShip(parseLine):
+    key, key2 = parseLine.split("|", 1)
+    solution1 = parseLine
+    solution2 = key2 + "|" + key
+
+    try:
+        myRelation = await sync_to_async(FriendsList.objects.get)(parse=solution1)
+    except ObjectDoesNotExist:
+        try:
+            myRelation = await sync_to_async(FriendsList.objects.get)(parse=solution2)
+        except ObjectDoesNotExist:
+            return
+
+    await sync_to_async(myRelation.delete)()
 
 async def sendToClient2(self, socket, message):
     await self.channel_layer.send(socket, {
@@ -323,101 +338,121 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
 
         data = json.loads(text_data);
-        myReceiverUsername = data.get('to')
-        typeMessage = data.get('type')
-        parse = data.get('parse')
+        logger.info(data)
+        type = data["type"]
 
-        myExpeditor = self.scope['user']
-        myReceiver = await getUserByUsername(myReceiverUsername)
-        socketReceiver = socketsFriendsList.get(myReceiverUsername)
+        # INVITE METHODE
+        if (type == "INVITE"):
+            myReceiverUsername = data.get('to')
+            typeMessage = data.get('type')
+            parse = data.get('parse')
 
-        myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
-        invitation_exists = await checkInvitation(parse)
+            myExpeditor = self.scope['user']
+            myReceiver = await getUserByUsername(myReceiverUsername)
+            socketReceiver = socketsFriendsList.get(myReceiverUsername)
 
-        if (invitation_exists == "FRIENDS NOW"): # USERS FRIENDS
+            myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
+            invitation_exists = await checkInvitation(parse)
 
-            friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
-            await saveRelationship(friendsList)
-            await eraseInvitation(parse)
+            if (invitation_exists == "FRIENDS NOW"): # USERS FRIENDS
 
-            friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
-            serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
+                friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
+                await saveRelationship(friendsList)
+                await eraseInvitation(parse)
 
-            friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
-            serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
+                friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
+                serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
 
-
-
-            allUsersTmp = await getAllUser()
-            serializer_user = UserSerializer(allUsersTmp, many=True)
-            AllUsers = serializer_user.data
-
-            friendsNamesExpeditor = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
-            friendsNamesReceiver = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
+                friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
+                serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
 
 
 
-            finalFriendsListExpeditor = await finalFriendsList(friendsNamesExpeditor)
-            serializerFinalExpeditor = UserSerializer(finalFriendsListExpeditor, many=True)
+                allUsersTmp = await getAllUser()
+                serializer_user = UserSerializer(allUsersTmp, many=True)
+                AllUsers = serializer_user.data
 
-            finalFriendsListReceiver = await finalFriendsList(friendsNamesReceiver)
-            serializerFinalReceiver = UserSerializer(finalFriendsListReceiver, many=True)
-
-            friendsListReceiverToSend = {
-                "friends": serializerFinalReceiver.data
-            }
-
-            friendsListExpeditorToSend = {
-                "friends": serializerFinalExpeditor.data
-            }
-
-
-            usersListExpeditor = await usersListWithoutFriends(serializerFinalExpeditor.data, AllUsers, myExpeditor.username)
-            serializerAllUsersExpeditor = UserSerializer(usersListExpeditor, many=True)
-            usersListReceiver = await usersListWithoutFriends(serializerFinalReceiver.data, AllUsers, myReceiverUsername)
-            serializerAllUsersReceiver = UserSerializer(usersListReceiver, many=True)
-
-            allUsersToSendExpeditor = {
-                "AllUsers": serializerAllUsersExpeditor.data
-            }
-
-            allUsersToSendReceiver = {
-                "AllUsers": serializerAllUsersReceiver.data
-            }
-
-
-            await self.send(text_data=json.dumps(allUsersToSendExpeditor))
-            await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
-
-            #friendsList to clients
-
-            await self.send(text_data=json.dumps(friendsListExpeditorToSend))
-            await sendToClient2(self, socketReceiver, friendsListReceiverToSend)
+                friendsNamesExpeditor = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
+                friendsNamesReceiver = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
 
 
 
-        elif (invitation_exists == "ALREADY FRIENDS"):
-            sendData = {
-                "error": "Already friends"
-            }
-            await self.send(text_data=json.dumps(sendData))      
+                finalFriendsListExpeditor = await finalFriendsList(friendsNamesExpeditor)
+                serializerFinalExpeditor = UserSerializer(finalFriendsListExpeditor, many=True)
+
+                finalFriendsListReceiver = await finalFriendsList(friendsNamesReceiver)
+                serializerFinalReceiver = UserSerializer(finalFriendsListReceiver, many=True)
+
+                friendsListReceiverToSend = {
+                    "friends": serializerFinalReceiver.data
+                }
+
+                friendsListExpeditorToSend = {
+                    "friends": serializerFinalExpeditor.data
+                }
+
+
+                usersListExpeditor = await usersListWithoutFriends(serializerFinalExpeditor.data, AllUsers, myExpeditor.username)
+                serializerAllUsersExpeditor = UserSerializer(usersListExpeditor, many=True)
+                usersListReceiver = await usersListWithoutFriends(serializerFinalReceiver.data, AllUsers, myReceiverUsername)
+                serializerAllUsersReceiver = UserSerializer(usersListReceiver, many=True)
+
+                allUsersToSendExpeditor = {
+                    "AllUsers": serializerAllUsersExpeditor.data
+                }
+
+                allUsersToSendReceiver = {
+                    "AllUsers": serializerAllUsersReceiver.data
+                }
+
+
+                await self.send(text_data=json.dumps(allUsersToSendExpeditor))
+                await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
+
+                #friendsList to clients
+
+                await self.send(text_data=json.dumps(friendsListExpeditorToSend))
+                await sendToClient2(self, socketReceiver, friendsListReceiverToSend)
 
 
 
-        elif (invitation_exists):
-            sendData = {
-                "error": "Invitation already sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
+            elif (invitation_exists == "ALREADY FRIENDS"):
+                sendData = {
+                    "error": "Already friends"
+                }
+                await self.send(text_data=json.dumps(sendData))      
 
 
 
-        else:
-            await saveInvitation(myInvitation)
-            sendData = {
-                "success": "Invitation sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
+            elif (invitation_exists):
+                sendData = {
+                    "error": "Invitation already sent"
+                }
+                await self.send(text_data=json.dumps(sendData))
+
+
+
+            else:
+                await saveInvitation(myInvitation)
+                sendData = {
+                    "success": "Invitation sent"
+                }
+                await self.send(text_data=json.dumps(sendData))
+
+        elif type == "DELETE":
+            stringRelation = data["parse"]
+            myUser = self.scope["user"]
+            userDeleted = await getUserByUsername(data["userDeleted"])
+
+            await deleteRelationShip(stringRelation)
+            myUserFriendsList = await getFriendsListByUsername(myUserFriendsList.username)
+            userDeleted = await getFriendsListByUsername(userDeleted.username)
+
+        
+
+
+
+
 
 
     async def send_notif(self, notif):

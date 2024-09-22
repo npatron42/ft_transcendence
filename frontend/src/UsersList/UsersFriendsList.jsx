@@ -133,9 +133,9 @@ const UsersFriendsList = ({ myUser }) => {
         if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
             setIsInviting(true);
             const data = {
+                type: "INVITE",
                 invitationFrom: myUser.username,
                 to: userInvited.username,
-                type: "friend",
                 parse: myUser.username + "|" + userInvited.username
             }
             socketInvite.current.send(JSON.stringify(data));
@@ -146,6 +146,19 @@ const UsersFriendsList = ({ myUser }) => {
         
     };
 
+    const deleteFriend = (userDeleted) => {
+        if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+            const data = {
+                type: "DELETE",
+                userWhoDelete: myUser.username,
+                userDeleted: userDeleted.username,
+                parse: myUser.username + "|" + userDeleted.username
+            }
+            socketInvite.current.send(JSON.stringify(data));
+        } else {
+            console.log("WebSocket for invitations is not open");
+        }
+    };
 
     const chooseStatus = (username) => {
         return socketMessage[username] ? "online" : "offline";
@@ -208,6 +221,7 @@ const UsersFriendsList = ({ myUser }) => {
                                                     key={user.id} 
                                                     user={user} 
                                                     chooseStatus={chooseStatus}
+                                                    deleteFriend={deleteFriend}
                                                 />
                                             ))
                                         )
