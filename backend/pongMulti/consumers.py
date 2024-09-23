@@ -158,7 +158,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         paddle_height = 90
         paddle_width = 10
         ball_radius = 15
-        logger.info(f'Mise à jour de la balle avec max_score = {max_score} pour la room {self.room_id}')
 
         while True:
             if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:

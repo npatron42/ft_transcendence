@@ -15,18 +15,31 @@ body, html, #root {
   height: 100%;
   width: 100%;
   overflow-x: hidden;
-}
+} 
+ #background-container {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-image: url("./assets/background.png");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  }  */
 
-.background-container {
-  background-image: url('./assets/background.png'); 
-  background-size: contain; 
-  background-position: center; 
-  height: 100vh; 
-  width: 100vw; 
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  }
+  /* #ChooseGame {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-image: url("../../assets/test.svg");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+} */
 
 .content {
   color: #887a91;

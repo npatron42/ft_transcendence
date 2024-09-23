@@ -11,11 +11,10 @@
     margin: 0;
     padding: 0;
     background-image: url("../../assets/background.png");
-    background-size: contain;
+    background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 50px;
 }
 
 /* Styles de la carte flip */
@@ -47,12 +46,12 @@
 }
 
 .flip-card-content {
-    padding: 20px; /* Ajouter du padding ici pour espacer les éléments */
+    padding: 20px;
     width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: space-around; /* Espacer les éléments dans la carte */
+    justify-content: space-around;
     align-items: center;
 }
 
@@ -60,7 +59,8 @@
     transform: rotateY(180deg);
 }
 
-.flip-card-front,
+/* Effet de vitre sur les cartes */
+.flip-card-front, 
 .flip-card-back {
     box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.5);
     position: absolute;
@@ -71,39 +71,46 @@
     border: 1px solid rgba(15, 25, 50, 0.8);
     border-radius: 50px;
     overflow: hidden;
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-/* Dégradé de la carte avant */
+.flip-card-content {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+}
+
 .flip-card-front {
-    color: #1c2e56;
-    background: rgb(40,43,51);
-    background: linear-gradient(120deg, rgba(40,43,51,1) 0%, rgba(60,65,78,1) 20%, rgba(85,94,116,1) 40%, rgba(72,78,94,1) 60%, rgba(50,55,67,1) 80%, rgba(40,43,51,1) 100%);
+    border: solid 3px #1c2e56;
+    background: linear-gradient(120deg, rgba(40,43,51,0.2) 0%, rgba(60,65,78,0.2) 20%, rgba(85,94,116,0.2) 40%, rgba(72,78,94,0.2) 60%, rgba(50,55,67,0.2) 80%, rgba(40,43,51,0.2) 100%);
     font-family: 'Millimetre', sans-serif;
 }
 
-
-/* Dégradé de la carte arrière */
 .flip-card-back {
-    background: linear-gradient(300deg, rgba(40,43,51,1) 0%, rgba(50,55,67,1) 20%, rgba(72,78,94,1) 40%, rgba(85,94,116,1) 60%, rgba(60,65,78,1) 80%, rgba(40,43,51,1) 100%);
+    background: linear-gradient(300deg, rgba(40,43,51,0.2) 0%, rgba(50,55,67,0.2) 20%, rgba(72,78,94,0.2) 40%, rgba(85,94,116,0.2) 60%, rgba(60,65,78,0.2) 80%, rgba(40,43,51,0.2) 100%);
     color: #1c2e56;
-    font-family: 'Millimetre', sans-serif;
+    border: solid 3px #1c2e56;
     transform: rotateY(180deg);
 }
 
 
+
 /* Effet de reflet */
-.flip-card-front::before, .flip-card-back::before {
+/* .flip-card-front::before, .flip-card-back::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 30%, rgba(255, 255, 255, 0.1) 70%);
     opacity: 0.1;
     pointer-events: none;
     z-index: 1;
-}
+} */
 
 /* Boutons sur la carte arrière */
 .flip-card-back button {
@@ -112,7 +119,7 @@
     border-radius: 8px;
     border: none;
     background-color: #1c2e56;
-    color: #e7bfcd;
+    color: #fff;
     font-family: 'Millimetre', sans-serif;
     font-size: 0.9em;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -164,7 +171,6 @@
 
 /* Styles du slider */
 #maxScore {
-    -webkit-appearance: none;
     width: 100%;
     height: 8px;
     background: #1c2e56;
@@ -178,10 +184,10 @@
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #e7bfcd; /* Couleur du pouce */
+    background: #fff;
     cursor: pointer;
     border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2); /* Optionnel : ajouter une ombre */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
 #maxScore::-moz-range-thumb {
