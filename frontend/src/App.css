@@ -28,19 +28,6 @@ body, html, #root {
   align-items: center;
   }  */
 
-  /* #ChooseGame {
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    background-image: url("../../assets/test.svg");
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 50px;
-} */
-
 .content {
   color: #887a91;
   text-align: center;
