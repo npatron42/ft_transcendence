@@ -9,7 +9,7 @@ const ChooseGame = () => {
     const [maxScore, setMaxScore] = useState(10);
 
     const handleSoloClick = () => {
-        navigate('/GlobalGameSolo');
+        navigate('/GlobalGameSolo', { state: { maxScore } });
     };
 
     const handleMultiClick = () => {

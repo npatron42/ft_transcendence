@@ -1,8 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import '../css/game.css';
+import { ScoreBoard } from '../ScoreBoard';
+import { WinComp } from '../WinComp';
 
-const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos) => {
+const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos, isGameOver) => {
     useEffect(() => {
+
+        if (isGameOver)
+            return;
 
         const keysPressed = {};
 
@@ -40,15 +45,19 @@ const usePaddleMovement = (setPaddleLeftPos, setPaddleRightPos) => {
             window.removeEventListener('keydown', handleKeyDown);
             window.removeEventListener('keyup', handleKeyUp);
         };
-    }, [setPaddleLeftPos, setPaddleRightPos]);
+    }, [setPaddleLeftPos, setPaddleRightPos, isGameOver]);
 };
 
-const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2) => {
+const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2, maxScore, setIsGameOver, setWinner, score1, score2, isGameOver) => {
     useEffect(() => {
 
         let animationFrameId;
         const acceleration = 1.10;
         const maxSpeed = 10;
+        console.log(maxScore);
+
+        if (isGameOver)
+            return;
 
         const updateBallPosition = () => {
             let { x, y } = ballPos;
@@ -89,12 +98,22 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
                 x = 450;
                 y = 300;
             }
-            console.log(" dx = ", dx);
-            console.log(" dy = ", dy);
+
+            // Vérifier si un joueur a atteint le maxScore
+            if (score1 >= maxScore) {
+                setIsGameOver(true);
+                setWinner("Player 1");
+            } else if (score2 >= maxScore) {
+                setIsGameOver(true);
+                setWinner("Player 2");
+            }
+
             setBallPos({ x, y });
             setBallDir({ x: dx, y: dy });
 
-            animationFrameId = requestAnimationFrame(updateBallPosition);
+            if (!isGameOver) {
+                animationFrameId = requestAnimationFrame(updateBallPosition);
+            }
         };
 
         animationFrameId = requestAnimationFrame(updateBallPosition);
@@ -102,21 +121,22 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
         return () => {
             cancelAnimationFrame(animationFrameId);
         };
-    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2]);
+    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, setScore1, setScore2, maxScore, setIsGameOver, setWinner, isGameOver]);
 };
 
-const PongSolo = ({ score1, score2, setScore1, setScore2}) => {
-
+const PongSolo = ({maxScore}) => {
     //state
-
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [ballDir, setBallDir] = useState({ x: 1, y: 1 });
+    const [score1, setScore1] = useState(0);
+    const [score2, setScore2] = useState(0);
+    const [isGameOver, setIsGameOver] = useState(false);
+    const [winner, setWinner] = useState(null);
 
     //comportement
-
-    usePaddleMovement(setPaddleLeftPos, setPaddleRightPos);
+    usePaddleMovement(setPaddleLeftPos, setPaddleRightPos, isGameOver);
     useBallMovement(
         ballPos,
         setBallPos,
@@ -125,14 +145,20 @@ const PongSolo = ({ score1, score2, setScore1, setScore2}) => {
         paddleLeftPos,
         paddleRightPos,
         setScore1,
-        setScore2
+        setScore2,
+        maxScore,
+        setIsGameOver,
+        setWinner, 
+        score1,
+        score2,
+        isGameOver
     );
 
     //render
-
-    //1 element dans le return
     return (
         <div className="pong-container">
+            <ScoreBoard score1={score1} score2={score2} player1Id={"oui"} player2Id={"nonn"} />
+            {isGameOver && winner ? <WinComp winner={winner} /> : null}
             <div className="board">
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
