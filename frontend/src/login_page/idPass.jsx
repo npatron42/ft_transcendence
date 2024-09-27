@@ -32,12 +32,12 @@ function idPass() {
    			 	password
 			});
 				if (response.data.success) {
-                	localStorage.setItem('access_token', response.data.token);
-					console.log('Essai de connexion avec:', { username, password });
+                	localStorage.setItem('jwt', response.data.token);
+					// console.log('Essai de connexion avec:', { username, password });
                 	navigate('/home');
             	} else {
                 	setErrorMessage('loginPage.error');
-					console.log('Essai de connexion avec:', { username, password });
+					// console.log('Essai de connexion avec:', { username, password });
             	}
         	} catch (error) {
             	setErrorMessage("Une erreur est survenue lors de la connexion.");

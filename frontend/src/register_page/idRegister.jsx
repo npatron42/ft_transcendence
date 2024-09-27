@@ -8,41 +8,44 @@ import axios from 'axios';
 
 function idRegister() {
 
-	const { t } = useTranslation();
-	const navigate = useNavigate();
-
-	const [username, setUsername] = useState('');
-	const [password, setPassword] = useState('');
-	const [email, setEmail] = useState('');
-	const [errors, setErrors] = useState({});
-
-	const handleClick = async (e) => {
-		e.preventDefault();
-
-	const newErrors = {};
-
-	// const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
-	// if(username === '')
-	// 	newErrors.username = ("registerPage.idRequired");
-	// else if(!usernameRegex.test(username))
-	// 	newErrors.username = ("registerPage.idCara");
-
-
-	// const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,64}\.[^\s@]+$/;
-
-	// if(email === '')
-	// 	newErrors.email = ("registerPage.emailRequired");
-	// else if(!emailRegex.test(email))
-	// 	newErrors.email = ("registerPage.emailInvalid");
-
-	// const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^_\-=~.])[A-Za-z\d@$!%*?&#^_\-=~.]{8,40}$/;
-
-	// if(password === '')
-	// 	newErrors.password = ("registerPage.passwordRequired");
-	// else if(!passwordRegex.test(password))
-	// 	newErrors.password = ("registerPage.passwordInvalid");
-
-	try {
+		const { t } = useTranslation();
+		const navigate = useNavigate();
+	
+		const [username, setUsername] = useState('');
+		const [password, setPassword] = useState('');
+		const [email, setEmail] = useState('');
+		const [errors, setErrors] = useState({});
+	
+		const handleClick = async (e) => {
+			e.preventDefault();
+	
+		const newErrors = {};
+	
+		const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
+		if(username === '')
+			newErrors.username = ("registerPage.idRequired");
+		else if(!usernameRegex.test(username))
+			newErrors.username = ("registerPage.idCara");
+	
+	
+		const emailRegex = /^[^\s@]{1,64}@[^\s@]{1,64}\.[^\s@]+$/;
+	
+		if(email === '')
+			newErrors.email = ("registerPage.emailRequired");
+		else if(!emailRegex.test(email))
+			newErrors.email = ("registerPage.emailInvalid");
+	
+		const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^_\-=~.])[A-Za-z\d@$!%*?&#^_\-=~.]{8,40}$/;
+	
+		if(password === '')
+			newErrors.password = ("registerPage.passwordRequired");
+		else if(!passwordRegex.test(password))
+			newErrors.password = ("registerPage.passwordInvalid");
+	
+		if(Object.keys(newErrors).length > 0){
+			setErrors(newErrors);
+			return;
+		}
 		const response = await axios.post('http://localhost:8000/auth/register/', {
 			username,
 			email,
@@ -54,22 +57,16 @@ function idRegister() {
 			}
 			else {
 				if (response.data.username === false){
-					newErrors.username('user deja pris poto');
+					newErrors.username = ('user deja pris poto');
 				}
 				if (response.data.email === false){
-				newErrors.username('eamil deja pris poto');
+					newErrors.password =('eamil deja pris poto');
+				}
+				if(Object.keys(newErrors).length > 0){
+					setErrors(newErrors);
+					return;
 				}
 			}
-		} catch (error) {
-			console.error('Erreur lors de la requête :', error);
-		}
-
-
-	if(Object.keys(newErrors).length > 0){
-		setErrors(newErrors);
-		return;
-	}
-
 		
 	// console.log('Username ', username);
 	// console.log('Password ', password);
