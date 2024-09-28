@@ -10,7 +10,7 @@ const ChooseGame = () => {
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]);
 
-    setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
+    //setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
 
 
     const handleSoloClick = () => {

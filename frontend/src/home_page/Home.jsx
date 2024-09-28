@@ -2,7 +2,7 @@ import "../index.css";
 import "./Home.css";
 import "../App.css";
 import { fetchData, getAllUsers, getUser } from '../api/api'
-import axios from 'axios';
+import NavbarBS from "../components/Navbar";
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UsersFriendsList  from "../UsersList/UsersFriendsList";
@@ -33,9 +33,8 @@ const Home = () => {
 
     return (
         <div id="background-container">
-            <h2 className="welcome-message">Welcome {myUser.username}</h2>
             <div className="card-users" >
-                    <UsersFriendsList myUser={myUser} />
+                <UsersFriendsList myUser={myUser} />
             </div>
         </div>
     );

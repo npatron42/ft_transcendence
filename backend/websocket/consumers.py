@@ -2,15 +2,15 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 import logging
 from asgiref.sync import sync_to_async
+from django.core.exceptions import ObjectDoesNotExist
 from users.serializers import UserSerializer, InvitationSerializer, FriendsListSerializer
 from users.models import Invitation, User, FriendsList
 logger = logging.getLogger(__name__)
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
 import json
-from asgiref.sync import sync_to_async
+from django.db.models import Q
 import logging
-
 logger = logging.getLogger(__name__)
 
 usersPool = {}
@@ -19,6 +19,16 @@ pool_lock = asyncio.Lock()
 
 # UTILS FUNCTIONS FOR USER STATUS
 
+async def finalFriendsList(friendsList):
+    size = len(friendsList)
+    result = []
+    i = 0
+    while i < size:
+        username = friendsList[i]
+        myUser = await getUserByUsername(username)
+        result.append(myUser)
+        i += 1
+    return (result)
 
 async def changeUserStatus(key, isConnected: bool):
     usersStatus[key] = isConnected
@@ -39,17 +49,64 @@ async def update_user_status(user, status):
     user.status = status
     await sync_to_async(user.save)()
 
+async def sendToClient(channel_layer, socket, message):
+    await channel_layer.send(socket, {
+        "type": "notif",
+        "message": message,
+    })
+
+
+socketStatus_user = {}
+
+async def sendToEveryClientsUsersList(channel_layer):
+    size = len(socketStatus_user)
+    i = 0
+    usersConnected = list(socketStatus_user.keys())
+    sockets = list(socketStatus_user.values())
+    while i < size:
+        allUsersTmp = await getAllUser()
+        allUsers = UserSerializer(allUsersTmp, many=True)
+
+        myUser = await getUserByUsername(usersConnected[i])
+
+        myUserFriendsList = await getFriendsListByUsername(myUser.username)
+        friendsListSerializer = FriendsListSerializer(myUserFriendsList, many=True)
+
+        friendsNames = giveOnlyFriendsName(friendsListSerializer.data, myUser.username)
+
+        final = await finalFriendsList(friendsNames)
+        serializerFinal = UserSerializer(final, many=True)
+
+        myUserListTmp = await usersListWithoutFriends(serializerFinal.data, allUsers.data, myUser.username)
+
+        myUserList = UserSerializer(myUserListTmp, many=True)
+        dataToSend = {
+            "AllUsers": myUserList.data
+        }
+        friendsToSend = {
+            "friends": serializerFinal.data
+        }
+        await sendToClient(channel_layer, sockets[i], friendsToSend)
+        await sendToClient(channel_layer, sockets[i], dataToSend)
+        i += 1
+
+
+
 class StatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'].is_authenticated:
-            user = self.scope['user']
-            await addToPool(user, self.channel_name)
-            await changeUserStatus(user.username, True)
+            myUser = self.scope['user']
+            await addToPool(myUser, self.channel_name)
+            await changeUserStatus(myUser.username, True)
             await self.channel_layer.group_add("status_updates", self.channel_name)
             await self.accept()
+            mySocket = self.channel_name
+            socketStatus_user[myUser.username] = mySocket
 
             await self.send_status_to_all()
-            await update_user_status(user, "online")
+            await update_user_status(myUser, "online")
+            await sendToEveryClientsUsersList(self.channel_layer)
+
         else:
             await self.close()
 
@@ -60,6 +117,7 @@ class StatusConsumer(AsyncWebsocketConsumer):
         await self.channel_layer.group_discard("status_updates", self.channel_name)
 
         await self.send_status_to_all()
+        socketStatus_user.pop(user.username, None)
         await update_user_status(user, "offline")
 
     async def send_status_to_all(self):
@@ -71,10 +129,15 @@ class StatusConsumer(AsyncWebsocketConsumer):
             }
         )
 
-
+    async def notif(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+        
     async def status_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
+
+
 
 
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
@@ -83,6 +146,9 @@ class StatusConsumer(AsyncWebsocketConsumer):
 async def getUserByUsername(name):
     return await sync_to_async(User.objects.get)(username=name)
 
+async def getAllUser():
+    users = await sync_to_async(list)(User.objects.all())
+    return users
 
 async def saveInvitation(myInvitation):
     await sync_to_async(myInvitation.save)()
@@ -156,14 +222,7 @@ async def removeFriend(parse_value):
  
 # DEGUEU MAIS CA MARCHE HAHAHAHAHHAAA
 
-sockets_user = {}
-
-async def sendToClient(self, socket, message):
-    await self.channel_layer.send(socket, {
-        "type": "notification_to_client",
-        "message": message,
-    })
-
+socketsFriendsList = {}
 
 async def getFriendsListByUsername(username):
     user = await sync_to_async(User.objects.get)(username=username)
@@ -188,15 +247,90 @@ def giveOnlyFriendsName(friendsList, myUsername):
         i += 1
     return result
 
+
+async def usersListWithoutFriends(friendsList, AllUsers, myUsername): 
+    allFriendsName = []
+    size = len(friendsList)
+    i = 0
+    while i < size:
+            allFriendsName.append(friendsList[i].get("username"))
+            i += 1
+
+    allUsersnames = []
+    size = len(AllUsers)
+    i = 0
+    while i < size:
+        allUsersnames.append(AllUsers[i].get("username"))
+        i += 1
+    allUsersnames.remove(myUsername)
+
+    result = []
+    i = 0
+    size = len(allUsersnames)
+    while i < size:
+        username = allUsersnames[i]
+        if username not in allFriendsName:
+            result.append(username)
+        i += 1
+    i = 0
+    userResult = []
+    size = len(result)
+    if size == 0:
+        return userResult
+    while i < size:
+        myUser = await getUserByUsername(result[i])
+        userResult.append(myUser)
+        i += 1
+    return userResult
+
+
+async def deleteRelationShip(parseLine):
+    key, key2 = parseLine.split("|", 1)
+    solution1 = parseLine
+    solution2 = key2 + "|" + key
+
+    try:
+        myRelation = await sync_to_async(FriendsList.objects.get)(parse=solution1)
+    except ObjectDoesNotExist:
+        try:
+            myRelation = await sync_to_async(FriendsList.objects.get)(parse=solution2)
+        except ObjectDoesNotExist:
+            return
+
+    await sync_to_async(myRelation.delete)()
+
+async def sendToClient2(self, socket, message):
+    await self.channel_layer.send(socket, {
+        "type": "notification_to_client",
+        "message": message,
+    })
+
+
 class InviteFriendConsumer(AsyncWebsocketConsumer):
+
+    async def notification_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+
+    async def notification_to_client(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
 
     async def connect(self):
         if self.scope['user'].is_authenticated:
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
+
+            mySocket = self.channel_name
+            myUser = self.scope['user']
+            socketsFriendsList[myUser.username] = mySocket
+
             await self.accept()
 
     async def disconnect(self, close_code):
+        self.username = self.scope['user']
+        if self.username in socketsFriendsList:
+            del socketsFriendsList[self.username]
         pass;
     
 
@@ -204,87 +338,160 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
 
         data = json.loads(text_data);
+        logger.info(data)
+        type = data["type"]
 
-        myReceiverUsername = data.get('to')
-        typeMessage = data.get('type')
-        parse = data.get('parse')
+        # INVITE METHODE
+        if (type == "INVITE"):
+            myReceiverUsername = data.get('to')
+            typeMessage = data.get('type')
+            parse = data.get('parse')
 
-        myExpeditor = self.scope['user']
-        myReceiver = await getUserByUsername(myReceiverUsername)
-        socketReceiver = sockets_user.get(myReceiverUsername)
+            myExpeditor = self.scope['user']
+            myReceiver = await getUserByUsername(myReceiverUsername)
+            socketReceiver = socketsFriendsList.get(myReceiverUsername)
 
-        myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
-        invitation_exists = await checkInvitation(parse)
+            myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
+            invitation_exists = await checkInvitation(parse)
 
-        if (invitation_exists == "FRIENDS NOW"): # USERS FRIENDS
+            if (invitation_exists == "FRIENDS NOW"): # USERS FRIENDS
 
-            friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
-            await saveRelationship(friendsList)
-            await eraseInvitation(parse)
+                friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
+                await saveRelationship(friendsList)
+                await eraseInvitation(parse)
 
-            friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
-            serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
+                friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
+                serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
 
-            friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
-            serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
+                friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
+                serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
 
 
 
+                allUsersTmp = await getAllUser()
+                serializer_user = UserSerializer(allUsersTmp, many=True)
+                AllUsers = serializer_user.data
+
+                friendsNamesExpeditor = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
+                friendsNamesReceiver = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
+
+
+
+                finalFriendsListExpeditor = await finalFriendsList(friendsNamesExpeditor)
+                serializerFinalExpeditor = UserSerializer(finalFriendsListExpeditor, many=True)
+
+                finalFriendsListReceiver = await finalFriendsList(friendsNamesReceiver)
+                serializerFinalReceiver = UserSerializer(finalFriendsListReceiver, many=True)
+
+                friendsListReceiverToSend = {
+                    "friends": serializerFinalReceiver.data
+                }
+
+                friendsListExpeditorToSend = {
+                    "friends": serializerFinalExpeditor.data
+                }
+
+
+                usersListExpeditor = await usersListWithoutFriends(serializerFinalExpeditor.data, AllUsers, myExpeditor.username)
+                serializerAllUsersExpeditor = UserSerializer(usersListExpeditor, many=True)
+                usersListReceiver = await usersListWithoutFriends(serializerFinalReceiver.data, AllUsers, myReceiverUsername)
+                serializerAllUsersReceiver = UserSerializer(usersListReceiver, many=True)
+
+                allUsersToSendExpeditor = {
+                    "AllUsers": serializerAllUsersExpeditor.data
+                }
+
+                allUsersToSendReceiver = {
+                    "AllUsers": serializerAllUsersReceiver.data
+                }
+
+
+                await self.send(text_data=json.dumps(allUsersToSendExpeditor))
+                await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
+
+                #friendsList to clients
+
+                await self.send(text_data=json.dumps(friendsListExpeditorToSend))
+                await sendToClient2(self, socketReceiver, friendsListReceiverToSend)
+
+
+
+            elif (invitation_exists == "ALREADY FRIENDS"):
+                sendData = {
+                    "error": "Already friends"
+                }
+                await self.send(text_data=json.dumps(sendData))      
+
+
+
+            elif (invitation_exists):
+                sendData = {
+                    "error": "Invitation already sent"
+                }
+                await self.send(text_data=json.dumps(sendData))
+
+
+
+            else:
+                await saveInvitation(myInvitation)
+                sendData = {
+                    "success": "Invitation sent"
+                }
+                await self.send(text_data=json.dumps(sendData))
+
+        elif type == "DELETE":
+            stringRelation = data["parse"]
+            myUser = self.scope["user"]
+            userDeleted = await getUserByUsername(data["userDeleted"])
+            socketUserDeleted = socketsFriendsList.get(userDeleted.username)
+
+            await deleteRelationShip(stringRelation)
             allUsersTmp = await getAllUser()
             serializer_user = UserSerializer(allUsersTmp, many=True)
             AllUsers = serializer_user.data
 
-            friendsListExpeditorTmp = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
-            friendsListReceiverTmp = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
+            myUserFriendsList = await getFriendsListByUsername(myUser.username)
+            userDeletedFriendsList = await getFriendsListByUsername(userDeleted.username)
 
+            serializerUserFriendsList = FriendsListSerializer(myUserFriendsList, many=True)
+            serializerUserDeletedFriendsList = FriendsListSerializer(userDeletedFriendsList, many=True)
 
-            allUsersToSend = {
-                "AllUsers": AllUsers
+            friendsNamesUser = giveOnlyFriendsName(serializerUserFriendsList.data, myUser.username)
+            friendsNamesDeletedUser = giveOnlyFriendsName(serializerUserDeletedFriendsList.data, userDeleted.username)
+
+            finalFriendsListUser = await finalFriendsList(friendsNamesUser)
+            serializerFinalUser = UserSerializer(finalFriendsListUser, many=True)
+
+            finalFriendsListDeletedUser = await finalFriendsList(friendsNamesDeletedUser)
+            serializerFinalDeletedUser = UserSerializer(finalFriendsListDeletedUser, many=True)
+
+            friendsListDeletedUserToSend = {
+                "friends": serializerFinalDeletedUser.data
             }
 
-            friendsListReceiverToSend = {
-                "friends": friendsListReceiverTmp
+            friendsListUserToSend = {
+                "friends": serializerFinalUser.data
             }
 
-            friendsListExpeditorToSend = {
-                "friends": friendsListExpeditorTmp
+            usersListExpeditor = await usersListWithoutFriends(serializerFinalUser.data, AllUsers, myUser.username)
+            serializerAllUsersExpeditor = UserSerializer(usersListExpeditor, many=True)
+
+            usersListReceiver = await usersListWithoutFriends(serializerFinalDeletedUser.data, AllUsers, userDeleted.username)
+            serializerAllUsersReceiver = UserSerializer(usersListReceiver, many=True)
+
+            allUsersToSendExpeditor = {
+                "AllUsers": serializerAllUsersExpeditor.data
             }
 
-
-            # users to clients
-
-            await self.send(text_data=json.dumps(allUsersToSend))
-            await sendToClient(self, socketReceiver, allUsersToSend)
-
-            #friendsList to clients
-
-            await self.send(text_data=json.dumps(friendsListExpeditorToSend))
-            await sendToClient(self, socketReceiver, friendsListReceiverToSend)
-
-
-
-        elif (invitation_exists == "ALREADY FRIENDS"):
-            sendData = {
-                "error": "Already friends"
+            allUsersToSendReceiver = {
+                "AllUsers": serializerAllUsersReceiver.data
             }
-            await self.send(text_data=json.dumps(sendData))      
 
+            await self.send(text_data=json.dumps(friendsListUserToSend))   
+            await sendToClient2(self, socketUserDeleted, friendsListDeletedUserToSend)
 
-
-        elif (invitation_exists):
-            sendData = {
-                "error": "Invitation already sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
-
-
-
-        else:
-            await saveInvitation(myInvitation)
-            sendData = {
-                "success": "Invitation sent"
-            }
-            await self.send(text_data=json.dumps(sendData))
+            await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
+            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)  
 
 
     async def send_notif(self, notif):
@@ -295,4 +502,3 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
                 "message": notif,
             }
         )
-

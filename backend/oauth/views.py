@@ -16,8 +16,8 @@ import logging
 logger = logging.getLogger(__name__)
 
 myId = "u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122"
-mySecret = "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"
-url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5174%2Fhome&response_type=code"
+mySecret = "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"
+url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fhome&response_type=code"
 myRedirect = "http://localhost:5173/home"
 
 class OAuthView(APIView):
@@ -30,7 +30,6 @@ class OAuthView(APIView):
             myJson = doRequestTo42(access_token, "/v2/me")
             myUser = add42UserToDB(myJson)
             response = attributeToUserJWT(myUser)
-            logger.info(response)
             return response
         except Exception as e:
             return Response({"Error": "Failed during creation proccess, to DB"})

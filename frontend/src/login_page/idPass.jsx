@@ -2,28 +2,47 @@ import React, { useState, useEffect } from 'react';
 import {Button, Form} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 
 function idPass() {
 
 	const { t } = useTranslation();
+	const navigate = useNavigate();
+
 
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const handleClick = (e) => {
+	const handleClick = async (e) => {
 		e.preventDefault();
 
 		
-		if (username === "" || password === "") {
+		if (username === "" || password === "" 
+			|| username.includes("_") || password.includes("_")) {
 			setErrorMessage('loginPage.error');
 			return;
 			}
-
-		setErrorMessage(""); 
-		console.log('Username ', username);
-		console.log('Password ', password);
+		
+		try {
+			const response = await axios.post('http://localhost:8000/auth/login/', {
+    			username,
+   			 	password
+			});
+				if (response.data.success) {
+                	localStorage.setItem('jwt', response.data.token);
+					// console.log('Essai de connexion avec:', { username, password });
+                	navigate('/home');
+            	} else {
+                	setErrorMessage('loginPage.error');
+					// console.log('Essai de connexion avec:', { username, password });
+            	}
+        	} catch (error) {
+            	setErrorMessage("Une erreur est survenue lors de la connexion.");
+        	}
+    	
 	};
 
 	return(
