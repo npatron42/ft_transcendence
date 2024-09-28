@@ -35,7 +35,7 @@
 }
 
 .navbar-nav {
-    background-color: #1F2D55;
+    background-color: #5e6472;
     border-bottom: solid 3px #000000;;
     border-radius: 20px;
     position: fixed; 
@@ -48,17 +48,6 @@
     padding-top: 5px;
     padding-bottom: 5px;
     margin-top: 10px;
-}
-
-.navbar-nav-right {
-    background-color: #1F2D55;
-    border-bottom: solid 3px #000000;;
-    border-radius: 20px;
-    position: fixed; 
-    top: 0;
-    left: 1000px;
-    width: 14%;
-	height: 50px;
 }
 
 .nav-link {
@@ -74,8 +63,8 @@
 
 .nav-link.active {
     font-family: Millimetre;
-    font-size: 20px;
-    color: #fdf0d5 !important;
+    font-size: 19px;
+    color: #ffa69e !important;
 }
 
 .profile-navbar {
