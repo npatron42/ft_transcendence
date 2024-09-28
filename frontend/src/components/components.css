@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.navbar-bs {
+	background-color: #363a45;
+	border-color: #1e2d4b;
+	border-bottom: 5px solid #1e2d4b;
+}
+
+/* .logo-transcendence {
+
+} */
+
+.police {
+	font-family: Millimetre;
+	font-size: 20px;
+}
