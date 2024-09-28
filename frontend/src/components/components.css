@@ -5,17 +5,102 @@
     font-style: normal;
 }
 
-.navbar-bs {
-	background-color: #363a45;
-	border-color: #1e2d4b;
-	border-bottom: 5px solid #1e2d4b;
+.navbar {
+    --bs-navbar-padding-x: 0;
+    --bs-navbar-padding-y: 0;
+    --bs-navbar-color: rgba(var(--bs-emphasis-color-rgb), 0.65);
+    --bs-navbar-hover-color: rgba(var(--bs-emphasis-color-rgb), 0.8);
+    --bs-navbar-disabled-color: rgba(var(--bs-emphasis-color-rgb), 0.3);
+    --bs-navbar-active-color: rgba(var(--bs-emphasis-color-rgb), 1);
+    --bs-navbar-brand-padding-y: 0.3125rem;
+    --bs-navbar-brand-margin-end: 1rem;
+    --bs-navbar-brand-font-size: 1.25rem;
+    --bs-navbar-brand-color: rgba(var(--bs-emphasis-color-rgb), 1);
+    --bs-navbar-brand-hover-color: rgba(var(--bs-emphasis-color-rgb), 1);
+    --bs-navbar-nav-link-padding-x: 0.5rem;
+    --bs-navbar-toggler-padding-y: 0.25rem;
+    --bs-navbar-toggler-padding-x: 0.75rem;
+    --bs-navbar-toggler-font-size: 1.25rem;
+    --bs-navbar-toggler-icon-bg: url(data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%2833, 37, 41, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e);
+    --bs-navbar-toggler-border-color: rgba(var(--bs-emphasis-color-rgb), 0.15);
+    --bs-navbar-toggler-border-radius: var(--bs-border-radius);
+    --bs-navbar-toggler-focus-width: 0.25rem;
+    --bs-navbar-toggler-transition: box-shadow 0.15s ease-in-out;
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
 }
 
-/* .logo-transcendence {
+.navbar-nav {
+    background-color: #1F2D55;
+    border-bottom: solid 3px #000000;;
+    border-radius: 20px;
+    position: fixed; 
+    top: 0; 
+    left: 50%;
+    transform: translateX(-50%);
+	height: 50px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    margin-top: 10px;
+}
 
-} */
+.navbar-nav-right {
+    background-color: #1F2D55;
+    border-bottom: solid 3px #000000;;
+    border-radius: 20px;
+    position: fixed; 
+    top: 0;
+    left: 1000px;
+    width: 14%;
+	height: 50px;
+}
 
-.police {
+.nav-link {
+    font-family: Millimetre;
+    font-size: 18px;
+    color: #fdf0d5 !important;
+}
+
+.logo-navbar {
+    font-size: 32px !important;
+}
+
+
+.nav-link.active {
+    font-family: Millimetre;
+    font-size: 20px;
+    color: #fdf0d5 !important;
+}
+
+.profile-navbar {
+	margin-left: 80px;
+}
+
+.police-navbar .nav-link {
 	font-family: Millimetre;
 	font-size: 20px;
+	color: #fdf0d5 !important;
+
+}
+
+.logo-navbar {
+    font-family: Millimetre;
+	font-size: 20px;
+	color: #fdf0d5 !important;
+}
+
+.profile-picture-navbar {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
 }
