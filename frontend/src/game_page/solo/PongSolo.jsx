@@ -157,8 +157,8 @@ const PongSolo = ({maxScore}) => {
     //render
     return (
         <div className="pong-container">
-            <ScoreBoard score1={score1} score2={score2} player1Id={"oui"} player2Id={"nonn"} />
             <div className="board">
+            <ScoreBoard score1={score1} score2={score2} maxScoreToUse={maxScore} />
             {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
