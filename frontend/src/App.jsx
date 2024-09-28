@@ -7,6 +7,7 @@ import HomePage from './home_page/Home.jsx';
 import ChooseGame from './game_page/ChooseGame';
 import GlobalGameMulti from './game_page/multi/GlobalGameMulti';
 import RegisterPage from './register_page/registerPage';
+import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
 import './i18n';
 
 const App = () => {
@@ -16,9 +17,10 @@ const App = () => {
             <Route path="/" element={<LoginPage />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/register" element={<RegisterPage />} />
-            <Route path="/ChooseGame" element={<ChooseGame />} />
-            <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
-            <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
+            <Route path="/chooseGame" element={<ChooseGame />} />
+            <Route path="/globalGameSolo" element={<GlobalGameSolo />} />
+            <Route path="/globalGameMulti/:roomId" element={<GlobalGameMulti />} />
+            <Route path="/globalTournaments" element={<GlobalTournaments />} />
          </Routes>
       </>
    );
