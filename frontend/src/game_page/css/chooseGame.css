@@ -31,7 +31,6 @@
 
 .title {
     font-family: 'Millimetre', sans-serif;
-    font-style: oblique;
     font-size: 40px;
     font-weight: 900;
     text-align: center;
@@ -52,6 +51,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    font-family: 'Millimetre', sans-serif;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;

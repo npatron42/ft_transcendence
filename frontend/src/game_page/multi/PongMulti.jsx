@@ -61,7 +61,7 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
-    const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore); // <-- Ajout du useState pour maxScoreToUse
+    const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
