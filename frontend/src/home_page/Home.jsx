@@ -32,8 +32,8 @@ const Home = () => {
     }
 
     return (
-        <div className="background-container">
-            {/* <h2 className="welcome-message">Welcome {myUser.username}</h2> */}
+        <div id="background-container">
+            <h2 className="welcome-message">Welcome {myUser.username}</h2>
             <div className="card-users" >
                     <UsersFriendsList myUser={myUser} />
             </div>

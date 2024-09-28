@@ -78,7 +78,7 @@ const PongMulti = ({ roomId, maxScore }) => {
             const maxScoreNum = Number(maxScore);
             ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
         };
-
+        
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
         
@@ -98,21 +98,21 @@ const PongMulti = ({ roomId, maxScore }) => {
             if (data.score) {
                 setScore1(data.score.player1);
                 setScore2(data.score.player2);
-                console.log("la" , maxScore, data.score.player1);
+                const maxScoreToUse = data.max_score ;
                 if (data.players && data.players.length >= 2) {
-                    if (data.score.player1 >= maxScore) {
+                    if (data.score.player1 >= maxScoreToUse) {
                         console.log("Gagnant :", data.players[0]);
                         setWinner(data.players[0]);
                         setIsGameOver(true);
-                    } else if (data.score.player2 >= maxScore) {
+                    } else if (data.score.player2 >= maxScoreToUse) {
                         console.log("Gagnant :", data.players[1]);
                         setWinner(data.players[1]);
                         setIsGameOver(true);
                     }
                 }
             }
-        };        
-
+        };
+        
 
         ws.onclose = (event) => {
             console.log('WebSocket fermé, code :', event.code);

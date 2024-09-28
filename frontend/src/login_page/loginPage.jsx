@@ -6,13 +6,14 @@ import Log from './idPass.jsx';
 import Langue from './languages.jsx';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
+import '../App.css'
 
 
 function loginPage(){
 	const { t } = useTranslation();
 	
 	return (
-		<div className="background-container">
+		<div id="background-container">
 			<Cadre />
 			<ButtonCreate />
 			<Button42 />

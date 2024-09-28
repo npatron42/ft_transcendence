@@ -9,7 +9,7 @@ function registerPage(){
 	const { t } = useTranslation();
 	
 	return (
-		<div className="background-container">
+		<div id="background-container">
 			<Cadre/>
 			<h1 className="h1_titre">{t("registerPage.createAccount")}</h1>
 			<IdRegister />
