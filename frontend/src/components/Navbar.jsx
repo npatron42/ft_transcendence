@@ -26,9 +26,6 @@ function NavbarBS({ myUser }) {
           </Nav>
           <Nav className="navbar-nav-profile">
             <div className="notif-placement">
-              <i class="bi bi-search notif"></i>
-            </div>
-            <div className="notif-placement">
               <i class="bi bi-bell-fill notif"></i>
             </div>
             <Nav.Link as={NavLink} to="/profile" className="nav-link-profile">

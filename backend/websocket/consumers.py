@@ -306,6 +306,18 @@ async def sendToClient2(self, socket, message):
     })
 
 
+async def getAllInvitationsInWaitlist(myUser):
+    result = {}
+    allInvitations = await sync_to_async(Invitation.objects.filter)(receiver_id=myUser.id)
+    for sender in allInvitations:
+        mySenderTmp = sender.expeditor_id
+        mySender = UserSerializer(mySenderTmp, many=True)
+        result.append(mySender.data)
+    logger.info("FINAL RESULT --> %s", result)
+    return result
+
+
+
 class InviteFriendConsumer(AsyncWebsocketConsumer):
 
     async def notification_message(self, event):
@@ -342,6 +354,7 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
         type = data["type"]
 
         # INVITE METHODE
+        logger.info("CE QUE JE RECOIS DANS LE BACK ---> %s", data)
         if (type == "INVITE"):
             myReceiverUsername = data.get('to')
             typeMessage = data.get('type')
@@ -434,8 +447,13 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
 
             else:
                 await saveInvitation(myInvitation)
+
+                userReceiverName = data["to"]
+                myReceiver = await getUserByUsername(userReceiverName)
+
+                dataToSend = await getAllInvitationsInWaitlist(myReceiver)
                 sendData = {
-                    "success": "Invitation sent"
+                    "friendInvitation": dataToSend
                 }
                 await self.send(text_data=json.dumps(sendData))
 
