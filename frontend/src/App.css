@@ -23,6 +23,7 @@ body, html, #root {
   margin: 0;
   padding: 0;
   background-image: url("./assets/background.png");
+  background-color: #C0C78C;
   background-size: cover;
   display: flex;
   justify-content: center;

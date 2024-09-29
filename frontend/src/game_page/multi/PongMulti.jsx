@@ -61,16 +61,9 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
+    const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
 
     useEffect(() => {
-
-        /*-------------------*/
-        /* gestion websocket */
-        /*-------------------*/
-
-        /*const myJwt = localStorage.getItem("jwt");
-        const myUrl = "ws://localhost:8000/ws/pong/" + roomId + "/?token=" + myJwt;
-        const ws = new WebSocket(myUrl);*/
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
 
         ws.onopen = () => {
@@ -78,10 +71,10 @@ const PongMulti = ({ roomId, maxScore }) => {
             const maxScoreNum = Number(maxScore);
             ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
         };
-        
+
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data);
-        
+
             if (data.id) {
                 setPlayerId(data.id);
             }
@@ -98,21 +91,24 @@ const PongMulti = ({ roomId, maxScore }) => {
             if (data.score) {
                 setScore1(data.score.player1);
                 setScore2(data.score.player2);
-                const maxScoreToUse = data.max_score ;
-                if (data.players && data.players.length >= 2) {
-                    if (data.score.player1 >= maxScoreToUse) {
-                        console.log("Gagnant :", data.players[0]);
-                        setWinner(data.players[0]);
-                        setIsGameOver(true);
-                    } else if (data.score.player2 >= maxScoreToUse) {
-                        console.log("Gagnant :", data.players[1]);
-                        setWinner(data.players[1]);
-                        setIsGameOver(true);
-                    }
+            }
+            if (data.max_score !== undefined) {
+                setMaxScoreToUse(data.max_score);
+            }
+
+            if (data.players && data.players.length >= 2) {
+                const maxScore2 = data.max_score;
+                if (data.score.player1 >= maxScore2) {
+                    console.log("Gagnant :", data.players[0]);
+                    setWinner(data.players[0]);
+                    setIsGameOver(true);
+                } else if (data.score.player2 >= maxScore2) {
+                    console.log("Gagnant :", data.players[1]);
+                    setWinner(data.players[1]);
+                    setIsGameOver(true);
                 }
             }
         };
-        
 
         ws.onclose = (event) => {
             console.log('WebSocket fermé, code :', event.code);
@@ -129,15 +125,15 @@ const PongMulti = ({ roomId, maxScore }) => {
                 ws.close();
             }
         };
-    }, [roomId, maxScore, setScore1, setScore2]);
+    }, [roomId, maxScore]);
 
     usePaddleMovement(webSocket, playerId, roomPlayers);
 
     return (
         <div className="pong-container">
-            <ScoreBoard score1={score1} score2={score2} player1Id={roomPlayers[0]} player2Id={roomPlayers[1]} />
-            {isGameOver && winner ? <WinComp winner={winner} /> : null}
             <div className="board">
+                <ScoreBoard score1={score1} score2={score2} maxScoreToUse={maxScoreToUse} />
+                {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
@@ -146,5 +142,6 @@ const PongMulti = ({ roomId, maxScore }) => {
         </div>
     );
 };
+
 
 export default PongMulti;

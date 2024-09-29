@@ -8,6 +8,7 @@ import HomePage from './home_page/Home.jsx';
 import ChooseGame from './game_page/ChooseGame';
 import GlobalGameMulti from './game_page/multi/GlobalGameMulti';
 import RegisterPage from './register_page/registerPage';
+import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
 import { getUser } from './api/api.js';
 import './i18n';
 import { useState, useEffect } from 'react';
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/ChooseGame" element={<ChooseGame />} />
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
+        <Route path="/globalTournaments" element={<GlobalTournaments />} />
       </Routes>
     </>
   );

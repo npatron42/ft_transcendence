@@ -20,16 +20,17 @@
 /* Styles de la carte flip */
 .flip-card {
     background-color: transparent;
-    width: 250px;
-    height: 380px;
+    width: 280px;
+    height: 400px;
     perspective: 1000px;
     font-family: sans-serif;
     cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 .title {
     font-family: 'Millimetre', sans-serif;
-    font-style: oblique;
     font-size: 40px;
     font-weight: 900;
     text-align: center;
@@ -50,6 +51,7 @@
     width: 100%;
     height: 100%;
     display: flex;
+    font-family: 'Millimetre', sans-serif;
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
@@ -68,10 +70,9 @@
     height: 100%;
     -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
-    border: 1px solid rgba(15, 25, 50, 0.8);
     border-radius: 50px;
     overflow: hidden;
-    background: rgba(255, 255, 255, 0.2);
+    border: solid 4px #FFA69E;
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
@@ -81,36 +82,17 @@
 .flip-card-content {
     position: relative;
     z-index: 1;
-    color: #fff;
+    color: #FAF3DD;
 }
 
 .flip-card-front {
-    border: solid 3px #1c2e56;
     background: linear-gradient(120deg, rgba(40,43,51,0.2) 0%, rgba(60,65,78,0.2) 20%, rgba(85,94,116,0.2) 40%, rgba(72,78,94,0.2) 60%, rgba(50,55,67,0.2) 80%, rgba(40,43,51,0.2) 100%);
-    font-family: 'Millimetre', sans-serif;
 }
 
 .flip-card-back {
     background: linear-gradient(300deg, rgba(40,43,51,0.2) 0%, rgba(50,55,67,0.2) 20%, rgba(72,78,94,0.2) 40%, rgba(85,94,116,0.2) 60%, rgba(60,65,78,0.2) 80%, rgba(40,43,51,0.2) 100%);
-    color: #1c2e56;
-    border: solid 3px #1c2e56;
     transform: rotateY(180deg);
 }
-
-
-
-/* Effet de reflet */
-/* .flip-card-front::before, .flip-card-back::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0.1;
-    pointer-events: none;
-    z-index: 1;
-} */
 
 /* Boutons sur la carte arrière */
 .flip-card-back button {
@@ -118,8 +100,8 @@
     padding: 8px 15px;
     border-radius: 8px;
     border: none;
-    background-color: #1c2e56;
-    color: #fff;
+    background-color: #5E6472;
+    color: #FAF3DD;
     font-family: 'Millimetre', sans-serif;
     font-size: 0.9em;
     transition: background-color 0.3s ease, transform 0.2s ease;
@@ -132,7 +114,8 @@
 
 /* Styles du bouton "Start the Game" en bleu */
 .start-game {
-    --blue: #1c2e56;
+    --blue: #AED9E0;
+    color: #AED9E0 !important;
     font-size: 15px;
     padding: 0.7em 2.7em;
     letter-spacing: 0.06em;
@@ -145,13 +128,13 @@
     border: 2px solid var(--blue);
     background: linear-gradient(to right, rgba(27, 108, 253, 0.1) 1%, transparent 40%, transparent 60%, rgba(27, 108, 253, 0.1) 100%);
     color: var(--blue);
-    box-shadow: inset 0 0 10px rgba(27, 108, 253, 0.4), 0 0 9px 3px rgba(27, 108, 253, 0.1);
+    box-shadow: inset 0 0 10px #AED9E0, 0 0 9px 3px #5E6472;
     margin-top: 20px;
 }
 
 .start-game:hover {
-    color: #82b3ff;
-    box-shadow: inset 0 0 10px rgba(27, 108, 253, 0.6), 0 0 9px 3px rgba(27, 108, 253, 0.2);
+    color: #FAF3DD;
+    box-shadow: inset 0 0 10px #AED9E0, 0 0 9px 3px rgba(28, 111, 255, 0)
 }
 
 .start-game:before {
@@ -170,31 +153,47 @@
 }
 
 /* Styles du slider */
-#maxScore {
+.slider-container input[type="range"] {
+    font-family: 'Millimetre', sans-serif !important;
+    -webkit-appearance: none;
+    appearance: none;
     width: 100%;
     height: 8px;
-    background: #1c2e56;
+    background: #5E6472;
     outline: none;
     border-radius: 5px;
     transition: background 0.3s ease;
 }
 
-#maxScore::-webkit-slider-thumb {
+.slider-container input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     appearance: none;
     width: 20px;
     height: 20px;
-    background: #fff;
+    background: #FAF3DD;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.slider-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #FAF3DD;
     cursor: pointer;
     border-radius: 50%;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-#maxScore::-moz-range-thumb {
-    width: 20px;
-    height: 20px;
-    background: #c5c5c5;
-    cursor: pointer;
-    border-radius: 50%;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+.slider-container input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(120deg, rgba(40,43,51,0.2), rgba(60,65,78,0.2), rgba(85,94,116,0.2), rgba(72,78,94,0.2));
+}
+
+.slider-container input[type="range"]:hover::-webkit-slider-thumb {
+    background-color: #B8F2E6;
+}
+
+.slider-container input[type="range"]:hover::-moz-range-thumb {
+    background-color: #B8F2E6;
 }

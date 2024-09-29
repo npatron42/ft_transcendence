@@ -8,11 +8,11 @@ export const WinComp = ({ winner }) => {
     const navigate = useNavigate();
     
     const handleRematchClick = () => {
-        navigate('/GlobalGameSolo');
+        navigate('/globalGameSolo');
     };
     
     const handleMenuClick = () => {
-        navigate('/ChooseGame');
+        navigate('/chooseGame');
     };
     return (
         <div className="WinComp">
