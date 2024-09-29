@@ -28,7 +28,11 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <Loading/>;
+        return (
+        <div id="background-container">
+             <Loading/>
+        </div>
+        )
     }
 
     return (
