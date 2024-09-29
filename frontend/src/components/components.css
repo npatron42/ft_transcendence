@@ -68,6 +68,15 @@
     width: 65px;
 }
 
+.nav-link-profile {
+    display: flex;
+    justify-content: center;
+    font-family: Millimetre;
+    font-size: 18px;
+    color: #fdf0d5 !important;
+    width: 40px;
+}
+
 .center {
     display: flex;
     justify-content: center;
@@ -111,6 +120,7 @@
     height: 35px;
     border-radius: 50%;
     object-fit: cover;
+    padding-bottom: 10px;
 }
 
 
@@ -131,7 +141,7 @@
 }
 
 .notif-placement {
-    width: 60px;
+    width: 40px;
     height: 40px;
 }
 

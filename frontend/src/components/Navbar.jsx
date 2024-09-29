@@ -13,6 +13,7 @@ function NavbarBS({ myUser }) {
 
   const handleHome = () => {
     navigate("/home")
+    console.log("NAVBAR USER ---> ", myUser)
   };
 
   return (
@@ -25,15 +26,22 @@ function NavbarBS({ myUser }) {
           </Nav>
           <Nav className="navbar-nav-profile">
             <div className="notif-placement">
+              <i class="bi bi-search notif"></i>
+            </div>
+            <div className="notif-placement">
               <i class="bi bi-bell-fill notif"></i>
             </div>
-            <Nav.Link as={NavLink} to="/profile">
+            <Nav.Link as={NavLink} to="/profile" className="nav-link-profile">
+            {myUser && myUser.profilePicture ? (
               <img 
                 src={myUser.profilePicture}
                 alt="Profile" 
                 className="profile-picture-navbar"
-                />
-            </Nav.Link>
+              />
+            ) : (
+              <div></div>
+            )}
+          </Nav.Link>
           </Nav>
       </Navbar>
 

@@ -170,13 +170,26 @@ const UsersFriendsList = ({ myUser }) => {
                 <Loading />
             ) : (
                 <>
-                    <div className="">
-                        <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                            Users List
-                        </h4>
-                        <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                            Friends List
-                        </h4>
+                    <div className="center-container">
+                        {activeList === 'users' ? (
+                        <div>
+                            <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
+                                Users
+                            </h4>
+                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
+                                Friends
+                            </h4>
+                        </div>
+                        ) : (
+                        <div>
+                            <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
+                                Users
+                            </h4>
+                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
+                                Friends
+                            </h4>
+                        </div>
+                        )}
                     </div>
                     {activeList === 'users' ? (
                         <div className="users-list">
