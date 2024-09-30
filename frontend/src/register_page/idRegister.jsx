@@ -52,15 +52,15 @@ function idRegister() {
 			password
 		});
 			if (response.data.success) {
-				console.log('Essai de connexion avec:', { username: response.data.user.username, email: response.data.user.email, password: response.data.user.password })
+				// console.log('Essai de connexion avec:', { username: response.data.user.username, email: response.data.user.email, password: response.data.user.password })
 				navigate('/');
 			}
 			else {
 				if (response.data.username === false){
-					newErrors.username = ('user deja pris poto');
+					newErrors.username = ("registerPage.userPris");
 				}
 				if (response.data.email === false){
-					newErrors.password =('eamil deja pris poto');
+					newErrors.email =("registerPage.mailPris");
 				}
 				if(Object.keys(newErrors).length > 0){
 					setErrors(newErrors);

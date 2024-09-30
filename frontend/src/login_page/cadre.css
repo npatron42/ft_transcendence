@@ -7,7 +7,7 @@
 
 
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
+    font-family: 'Millimetre';
     src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
     font-weight: normal;
     font-style: normal;

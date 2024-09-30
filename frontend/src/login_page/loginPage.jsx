@@ -5,12 +5,25 @@ import Cadre from './cadre.jsx';
 import Log from './idPass.jsx';
 import Langue from './languages.jsx';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
 import './cadre.css';
 
 
 function loginPage(){
 	const { t } = useTranslation();
+	const navigate = useNavigate();
 	
+	useEffect(() => {
+		const token = localStorage.getItem('jwt');
+		
+		if (token) {
+		  console.log("ok");
+		  navigate('/home');
+		} else {
+		  console.log("pas ok");
+		}
+	  });
 	return (
 		<div className="background-container">
 			<Cadre />

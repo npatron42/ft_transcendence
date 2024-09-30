@@ -40,7 +40,7 @@ function idPass() {
 					// console.log('Essai de connexion avec:', { username, password });
             	}
         	} catch (error) {
-            	setErrorMessage("Une erreur est survenue lors de la connexion.");
+            	console.log("Une erreur est survenue lors de la connexion.");
         	}
     	
 	};
