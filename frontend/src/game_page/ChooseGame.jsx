@@ -8,10 +8,7 @@ import { v4 as uuidv4 } from 'uuid';
 const ChooseGame = () => {
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
-    const [invitedPlayer, setInvitedPlayer] = useState([]);
-
-    //setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
-
+    const [invitedPlayer, setInvitedPlayer] = useState([]); 
 
     const handleSoloClick = () => {
         navigate('/globalGameSolo', { state: { maxScore } });
@@ -23,8 +20,11 @@ const ChooseGame = () => {
     };
 
     const handleTournamentsClick = () => {
-        navigate('/globalTournaments', {state: { invitedPlayer, maxScore }});
-    }
+        const players = [{ id: 1, name: 'Player1' }, { id: 2, name: 'Player2' }, { id: 3, name: 'Player3' }, { id: 4, name: 'Player4' }];
+        setInvitedPlayer(players);
+        navigate('/waitingTournaments', { state: { invitedPlayer: players } });
+    };
+    
 
     const handleScoreChange = (event) => {
         setMaxScore(Number(event.target.value));
@@ -116,10 +116,10 @@ const ChooseGame = () => {
                                     <p className="title">Settings</p>
                                     <button className="btn btn-primary mb-2">Power Up</button>
                                     <div className="slider-container">
-                                        <label htmlFor="maxScoreMulti">Max Score: {maxScore}</label>
+                                        <label htmlFor="maxScoreTournaments">Max Score: {maxScore}</label>
                                         <input
                                             type="range"
-                                            id="maxScoreMulti"
+                                            id="maxScoreTournaments"
                                             name="maxScore"
                                             min="1"
                                             max="20"

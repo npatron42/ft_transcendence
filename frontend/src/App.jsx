@@ -13,6 +13,7 @@ import { getUser } from './api/api.js';
 import './i18n';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
 
 
 
@@ -42,6 +43,7 @@ const App = () => {
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
+        <Route path="/waitingTournaments" element={<WaitingTournaments />} />
       </Routes>
     </>
   );
