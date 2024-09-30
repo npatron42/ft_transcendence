@@ -23,7 +23,7 @@ function loginPage(){
 		} else {
 		  console.log("pas ok");
 		}
-	  });
+	  }, [navigate]);
 	return (
 		<div className="background-container">
 			<Cadre />
