@@ -306,15 +306,23 @@ async def sendToClient2(self, socket, message):
     })
 
 
+from asgiref.sync import sync_to_async
+
 async def getAllInvitationsInWaitlist(myUser):
-    result = {}
-    allInvitations = await sync_to_async(Invitation.objects.filter)(receiver_id=myUser.id)
-    for sender in allInvitations:
-        mySenderTmp = sender.expeditor_id
-        mySender = UserSerializer(mySenderTmp, many=True)
-        result.append(mySender.data)
-    logger.info("FINAL RESULT --> %s", result)
+    result = []
+    
+    allInvitationsTmp = await sync_to_async(list)(Invitation.objects.filter(receiver_id=myUser.id))
+    allInvitations = InvitationSerializer(allInvitationsTmp, many=True)
+    logger.info("AllInvitations.data --> ", allInvitations.data)
+    
+    # for sender in all_invitations:
+    #     my_sender_tmp = sender.expeditor_id
+    #     my_sender = UserSerializer(my_sender_tmp, many=True)
+    #     result.append(my_sender)
+        
+    # logger.info("FINAL RESULT --> %s", result)
     return result
+
 
 
 
