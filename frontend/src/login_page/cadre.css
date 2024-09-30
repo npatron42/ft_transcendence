@@ -7,32 +7,18 @@
 
 
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
+    font-family: 'Millimetre';
     src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
     font-weight: normal;
     font-style: normal;
-}
-
-.custom-cadre {
-	position: relative;
-	width: 80vw;
-	height: 90vh;
-	margin: 2.5vw auto;
-	background-color: rgba(0, 0, 0, 0.35);
-	border: 2px solid #032871;
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: 10px;
 }
 
 .h1-titre {
 	position: absolute;
 	top: 12vh;
 	left: 48vw;
-	color: #FFFFFF;
-	text-shadow: 0vw 0.3vw 0.5vw rgb(3, 40, 113);
+	color: #FAF3DD;
+	text-shadow: 0vw 0.14vw 0.2vw #FFA69E;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 550;
 	font-size: 4.2vw;
@@ -42,7 +28,7 @@
 	position: absolute;
 	top: 27vh;
 	left: 57vw;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.3vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 1000;
@@ -53,7 +39,7 @@
 	position: absolute;
 	left: 57vw;
 	top: 34.5vh;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
@@ -114,7 +100,7 @@
 		position: absolute;
 		top: 44vh;
 		left: 57vw;
-		color: #FFFFFF;
+		color: #FAF3DD;
 		font-size: 1.1vw;
 		font-family: 'Millimetre', sans-serif;
 		font-weight: 600;}
@@ -135,7 +121,7 @@
 	position: absolute;
 	top: 62vh;
 	left: 57vw;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;

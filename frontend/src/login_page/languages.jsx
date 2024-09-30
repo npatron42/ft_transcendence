@@ -12,9 +12,20 @@ function Languages() {
 	
 	const [selectedFlag, setSelectedFlag] = useState(null);
 
-
+	
 	useEffect(() => {
-	const storedLang = sessionStorage.getItem('i18nextLng');
+	
+	const token = localStorage.getItem('jwt');
+	let storedLang;
+
+	if (token) {
+		storedLang = localStorage.getItem('i18nextLng');
+		sessionStorage.removeItem('i18nextLng');
+	}
+	else {
+		storedLang = sessionStorage.getItem('i18nextLng');
+	}
+
 	if (storedLang) {
 		setSelectedFlag(storedLang);
 		i18n.changeLanguage(storedLang);

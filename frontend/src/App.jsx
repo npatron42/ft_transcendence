@@ -10,6 +10,7 @@ import GlobalGameMulti from './game_page/multi/GlobalGameMulti';
 import RegisterPage from './register_page/registerPage';
 import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
 import { getUser } from './api/api.js';
+import ProfilPage from './profil_page/profilPage.jsx';
 import './i18n';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
@@ -37,6 +38,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
+        <Route path="/profile" element={<ProfilPage/>} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/ChooseGame" element={<ChooseGame />} />
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {Button, Form} from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
+import '../register_page/registrer.css'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -40,7 +41,7 @@ function idPass() {
 					// console.log('Essai de connexion avec:', { username, password });
             	}
         	} catch (error) {
-            	setErrorMessage("Une erreur est survenue lors de la connexion.");
+            	console.log("Une erreur est survenue lors de la connexion.");
         	}
     	
 	};
@@ -54,7 +55,8 @@ function idPass() {
 					type="text"
 					placeholder={t('loginPage.champ1')}
 					value={username}
-					onChange={(e) => setUsername(e.target.value)}/>
+					onChange={(e) => setUsername(e.target.value)}
+					className="form-test" />
 				</Form.Group>
 				 
 				<p className="para-login">{t('loginPage.mdp')}</p> 
@@ -63,7 +65,8 @@ function idPass() {
 					type="password"
 					placeholder={t('loginPage.champ2')}
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}/>
+					onChange={(e) => setPassword(e.target.value)}
+					className="form-test" />
 				</Form.Group>
 
 				{errorMessage && <p className="error">{t(errorMessage)}</p>}

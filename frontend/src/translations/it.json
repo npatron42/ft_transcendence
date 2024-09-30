@@ -27,6 +27,8 @@
       "emailInvalid": "L'email non è valida",
       "passwordRequired": "La password è richiesta",
       "passwordMinLength": "La password deve essere lunga almeno 8 caratteri",
-      "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale."
+      "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale.",
+      "userPris": "Utente già in uso",
+      "mailPris": "Email già in uso"
     }
   }
