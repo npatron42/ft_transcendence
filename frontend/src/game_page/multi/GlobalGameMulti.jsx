@@ -12,7 +12,6 @@ const GlobalGameMulti = () => {
             <PongMulti
                 roomId={roomId}
                 maxScore={maxScore}
-                
             />
         </div>
     );

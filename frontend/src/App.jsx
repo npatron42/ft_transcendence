@@ -43,7 +43,7 @@ const App = () => {
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
-        <Route path="/waitingTournaments" element={<WaitingTournaments />} />
+        <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
       </Routes>
     </>
   );

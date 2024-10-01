@@ -115,7 +115,7 @@ const PongMulti = ({ roomId, maxScore }) => {
         };
 
         ws.onerror = (error) => {
-            console.error('Erreur WebSocket :', error);
+            console.error('Erreur WebbalGameMulti/a2ff89a8-ff76-4128-8deb-114108418c63Socket :', error);
         };
 
         setWebSocket(ws);
