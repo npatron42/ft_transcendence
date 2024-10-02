@@ -9,6 +9,7 @@ const ChooseGame = () => {
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]); 
+    const [numberInvitedPlayer, setNumberInvitedPlayer] = useState(4);
 
     const handleSoloClick = () => {
         navigate('/globalGameSolo', { state: { maxScore } });
@@ -20,10 +21,8 @@ const ChooseGame = () => {
     };
 
     const handleTournamentsClick = () => {
-        const players = [{ id: 1, name: 'Player1' }, { id: 2, name: 'Player2' }, { id: 3, name: 'Player3' }, { id: 4, name: 'Player4' }];
         const waitRoomId = uuidv4();
-        setInvitedPlayer(players);
-        navigate(`/waitingTournaments/${waitRoomId}`, { state: { invitedPlayer: players } });
+        navigate(`/waitingTournaments/${waitRoomId}`, { state: { numberInvitedPlayer, maxScore } });
     };
     
 
