@@ -170,10 +170,10 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
-        'Tournaments': {
+        'tournaments': {
             'handlers': ['console'],
-            'level': 'INFO',
-            'propagate': True,
+            'level': 'DEBUG',
+            'propagate': False,
         },
         # Add other apps here if needed
     },

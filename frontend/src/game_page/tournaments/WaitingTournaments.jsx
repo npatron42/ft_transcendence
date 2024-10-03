@@ -35,7 +35,8 @@ const WaitingTournaments = () => {
 
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', waitRoomId);
-            console.log("nb invitedplayerSend", nbplayer);
+            console.log('envoie nb joueur ; ', nbplayer)
+            ws.send(JSON.stringify({ numberPlayerInvited: nbplayer }));
         };        
 
         ws.onmessage = (event) => {
@@ -67,7 +68,6 @@ const WaitingTournaments = () => {
     useEffect(() => {
         if (webSocket && webSocket.readyState === WebSocket.OPEN && user) {
             webSocket.send(JSON.stringify({ name: user.username }));
-            webSocket.send(JSON.stringify({ nbplayer: nbplayer }));
             console.log("Nom d'utilisateur envoyé via WebSocket :", user.username);
         }
     }, [webSocket, user, nbplayer]);

@@ -39,7 +39,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         if self.room_id not in PongConsumer.score:
             PongConsumer.score[self.room_id] = {'player1': 0, 'player2': 0}
 
-        # Ajout du WebSocket dans le groupe de la room
         await self.channel_layer.group_add(
             self.room_group_name,
             self.channel_name
@@ -56,7 +55,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             }
         )
 
-        # Démarre le jeu si 2 joueurs sont connectés
         if len(PongConsumer.players[self.room_id]) == 2:
             max_score = PongConsumer.max_scores.get(self.room_id)
             logger.info(f'Tentative de démarrage du jeu - joueurs: {PongConsumer.players[self.room_id]}, max_score: {max_score}')
@@ -81,7 +79,6 @@ class PongConsumer(AsyncWebsocketConsumer):
         action = data.get('action', '')
         player_id = data.get('id', None)
 
-        # Set max_score
         if action == 'set_max_score': 
             if self.room_id in PongConsumer.max_scores:
                 logger.warning(f"Le max_score ne peut pas être réinitialisé après le début du jeu pour la room {self.room_id}")
@@ -96,7 +93,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 max_score = data.get('maxScore')
                 PongConsumer.max_scores[self.room_id] = max_score
                 logger.info(f"Max score défini à {max_score} pour le joueur {self.player_id}")
-                # Envoyer le nouveau max_score aux joueurs
                 await self.channel_layer.group_send(
                     self.room_group_name,
                     {
@@ -108,20 +104,17 @@ class PongConsumer(AsyncWebsocketConsumer):
         if player_id != self.player_id:
             return
 
-        # Définir le côté du joueur
         player_index = PongConsumer.players[self.room_id].index(player_id)
         if player_index == 0:
             side = 'left'
         else:
             side = 'right'
 
-        # Déplacement de la raquette
         if action == 'paddleup':
             self.move_paddle('up', side)
         elif action == 'paddledown':
             self.move_paddle('down', side)
 
-        # Mise à jour de l'état du jeu
         await self.channel_layer.group_send(
             self.room_group_name,
             {
@@ -133,12 +126,10 @@ class PongConsumer(AsyncWebsocketConsumer):
             }
         )
 
-    # Nouveau handler pour gérer le type 'sendMaxScore'
     async def sendMaxScore(self, event):
         max_score = event['max_score']
         await self.send(text_data=json.dumps({'max_score': max_score}))
 
-    # Déplacement de la raquette
     def move_paddle(self, direction, side):
         if side == 'left':
             if direction == 'up':
@@ -151,7 +142,6 @@ class PongConsumer(AsyncWebsocketConsumer):
             elif direction == 'down':
                 PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 45)
 
-    # Mise à jour de la position de la balle
     async def update_ball(self, max_score):
         acceleration = 1.10
         max_speed = 10
@@ -203,7 +193,6 @@ class PongConsumer(AsyncWebsocketConsumer):
                 direction['x'] = 2
                 direction['y'] = 2
 
-            # Mise à jour de l'état du jeu
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
