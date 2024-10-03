@@ -34,9 +34,9 @@ const Home = () => {
         </div>
         )
     }
-
     return (
         <div id="background-container">
+            <NavbarBS myUser={myUser}/>
             <div className="card-users" >
                 <UsersFriendsList myUser={myUser} />
             </div>

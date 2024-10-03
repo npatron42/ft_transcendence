@@ -11,13 +11,16 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import json
 from django.db.models import Q
 import logging
-logger = logging.getLogger(__name__)
+from asgiref.sync import sync_to_async
 
-usersPool = {}
-usersStatus = {}
+logger = logging.getLogger(__name__)
 pool_lock = asyncio.Lock()
 
 # UTILS FUNCTIONS FOR USER STATUS
+
+socketsUsers = {}
+usersPool = {}
+usersStatus = {}
 
 async def finalFriendsList(friendsList):
     size = len(friendsList)
@@ -30,39 +33,12 @@ async def finalFriendsList(friendsList):
         i += 1
     return (result)
 
-async def changeUserStatus(key, isConnected: bool):
-    usersStatus[key] = isConnected
-
-async def addToPool(key, value):
-    async with pool_lock:
-        usersPool[key.username] = value
-
-async def getFromPool(key):
-    async with pool_lock:
-        return usersPool.get(key.username, None)
-
-async def removeFromPool(key):
-    async with pool_lock:
-        usersPool.pop(key.username, None)
-
-async def update_user_status(user, status):
-    user.status = status
-    await sync_to_async(user.save)()
-
-async def sendToClient(channel_layer, socket, message):
-    await channel_layer.send(socket, {
-        "type": "notif",
-        "message": message,
-    })
-
-
-socketStatus_user = {}
 
 async def sendToEveryClientsUsersList(channel_layer):
-    size = len(socketStatus_user)
+    size = len(socketsUsers)
     i = 0
-    usersConnected = list(socketStatus_user.keys())
-    sockets = list(socketStatus_user.values())
+    usersConnected = list(socketsUsers.keys())
+    sockets = list(socketsUsers.values())
     while i < size:
         allUsersTmp = await getAllUser()
         allUsers = UserSerializer(allUsersTmp, many=True)
@@ -90,61 +66,14 @@ async def sendToEveryClientsUsersList(channel_layer):
         await sendToClient(channel_layer, sockets[i], dataToSend)
         i += 1
 
-
-
-class StatusConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-        if self.scope['user'].is_authenticated:
-            myUser = self.scope['user']
-            await addToPool(myUser, self.channel_name)
-            await changeUserStatus(myUser.username, True)
-            await self.channel_layer.group_add("status_updates", self.channel_name)
-            await self.accept()
-            mySocket = self.channel_name
-            socketStatus_user[myUser.username] = mySocket
-
-            await self.send_status_to_all()
-            await update_user_status(myUser, "online")
-            await sendToEveryClientsUsersList(self.channel_layer)
-
-        else:
-            await self.close()
-
-    async def disconnect(self, close_code):
-        user = self.scope['user']
-        await removeFromPool(user)
-        await changeUserStatus(user.username, False)
-        await self.channel_layer.group_discard("status_updates", self.channel_name)
-
-        await self.send_status_to_all()
-        socketStatus_user.pop(user.username, None)
-        await update_user_status(user, "offline")
-
-    async def send_status_to_all(self):
-        await self.channel_layer.group_send(
-            "status_updates",
-            {
-                "type": "status_message",
-                "message": usersStatus,
-            }
-        )
-
-    async def notif(self, event):
-        message = event['message']
-        await self.send(text_data=json.dumps(message))
-        
-    async def status_message(self, event):
-        message = event['message']
-        await self.send(text_data=json.dumps(message))
-
-
-
-
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
 
 
 async def getUserByUsername(name):
     return await sync_to_async(User.objects.get)(username=name)
+
+async def getUserById(myId):
+    return await sync_to_async(User.objects.get)(id=myId)
 
 async def getAllUser():
     users = await sync_to_async(list)(User.objects.all())
@@ -218,11 +147,6 @@ async def removeFriend(parse_value):
         myRelationShip = await sync_to_async(FriendsList.objects.get)(parse=other_value)
         await sync_to_async(myRelationShip.delete)()
         pass   
-
- 
-# DEGUEU MAIS CA MARCHE HAHAHAHAHHAAA
-
-socketsFriendsList = {}
 
 async def getFriendsListByUsername(username):
     user = await sync_to_async(User.objects.get)(username=username)
@@ -306,27 +230,58 @@ async def sendToClient2(self, socket, message):
     })
 
 
-from asgiref.sync import sync_to_async
-
-async def getAllInvitationsInWaitlist(myUser):
+async def getAllNotifications(username):
     result = []
-    
-    allInvitationsTmp = await sync_to_async(list)(Invitation.objects.filter(receiver_id=myUser.id))
-    allInvitations = InvitationSerializer(allInvitationsTmp, many=True)
-    logger.info("AllInvitations.data --> ", allInvitations.data)
-    
-    # for sender in all_invitations:
-    #     my_sender_tmp = sender.expeditor_id
-    #     my_sender = UserSerializer(my_sender_tmp, many=True)
-    #     result.append(my_sender)
-        
-    # logger.info("FINAL RESULT --> %s", result)
-    return result
+
+    myUser = await getUserByUsername(username)
+    id = myUser.id
+
+    allInvitationsTmp = await sync_to_async(list)(Invitation.objects.filter(receiver=id))
+
+    allInvitations = await sync_to_async(InvitationSerializer)(allInvitationsTmp, many=True)
+
+    for invitation in allInvitations.data:
+        idInvitation = invitation.get("receiver")
+        if idInvitation == id:
+            userToAddTmp = await getUserById(invitation.get("expeditor"))
+            userToAdd = await sync_to_async(UserSerializer)(userToAddTmp)
+            result.append(userToAdd.data)
+
+    dataToSend = {
+        "friendsInvitations": result
+    }
+    return dataToSend
 
 
 
 
-class InviteFriendConsumer(AsyncWebsocketConsumer):
+
+async def changeUserStatus(key, isConnected: bool):
+    usersStatus[key] = isConnected
+
+async def addToPool(key, value):
+    async with pool_lock:
+        usersPool[key.username] = value
+
+async def getFromPool(key):
+    async with pool_lock:
+        return usersPool.get(key.username, None)
+
+async def removeFromPool(key):
+    async with pool_lock:
+        usersPool.pop(key.username, None)
+
+async def update_user_status(user, status):
+    user.status = status
+    await sync_to_async(user.save)()
+
+async def sendToClient(channel_layer, socket, message):
+    await channel_layer.send(socket, {
+        "type": "notif",
+        "message": message,
+    })
+
+class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def notification_message(self, event):
         message = event['message']
@@ -336,33 +291,89 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
         message = event['message']
         await self.send(text_data=json.dumps(message))
 
+    async def send_notif(self, notif):
+        await self.channel_layer.group_send(
+            "notification",
+            {
+                "type": "notification_message",
+                "message": notif,
+            }
+        )
+
+    async def send_status_to_all(self):
+        dataToSend = {
+            "status": usersStatus
+        }
+        await self.channel_layer.group_send(
+            "status_updates",
+            {
+                "type": "status_message",
+                "message": dataToSend,
+            }
+        )
+
+    async def notif(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+        
+    async def status_message(self, event):
+        message = event['message']
+        await self.send(text_data=json.dumps(message))
+
+
+    ## CONNECT ##
+
+
     async def connect(self):
         if self.scope['user'].is_authenticated:
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
+            await self.channel_layer.group_add("status_updates", self.channel_name)
 
             mySocket = self.channel_name
             myUser = self.scope['user']
-            socketsFriendsList[myUser.username] = mySocket
 
+            socketsUsers[myUser.username] = mySocket
+
+            await addToPool(myUser, self.channel_name)
+            await changeUserStatus(myUser.username, True)
             await self.accept()
 
+            await self.send_status_to_all()
+            await update_user_status(myUser, "online")
+            await sendToEveryClientsUsersList(self.channel_layer)
+        else:
+            await self.close()
+
+
+    ## DISCONNECT ##
+
+
     async def disconnect(self, close_code):
-        self.username = self.scope['user']
-        if self.username in socketsFriendsList:
-            del socketsFriendsList[self.username]
+        myUser = self.scope['user']
+
+        if myUser.username in socketsUsers:
+            del socketsUsers[myUser.username]
         pass;
+
+        await removeFromPool(myUser)
+        await changeUserStatus(myUser.username, False)
+        await self.channel_layer.group_discard("status_updates", self.channel_name)
+
+        await self.send_status_to_all()
+        socketsUsers.pop(myUser.username, None)
+        await update_user_status(myUser, "offline")
     
+
+    ## RECEIVE ##
 
 
     async def receive(self, text_data):
 
         data = json.loads(text_data);
-        logger.info(data)
         type = data["type"]
 
         # INVITE METHODE
-        logger.info("CE QUE JE RECOIS DANS LE BACK ---> %s", data)
         if (type == "INVITE"):
             myReceiverUsername = data.get('to')
             typeMessage = data.get('type')
@@ -370,7 +381,7 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
 
             myExpeditor = self.scope['user']
             myReceiver = await getUserByUsername(myReceiverUsername)
-            socketReceiver = socketsFriendsList.get(myReceiverUsername)
+            socketReceiver = socketsUsers.get(myReceiverUsername)
 
             myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
             invitation_exists = await checkInvitation(parse)
@@ -451,25 +462,19 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
                 }
                 await self.send(text_data=json.dumps(sendData))
 
-
-
             else:
                 await saveInvitation(myInvitation)
 
                 userReceiverName = data["to"]
-                myReceiver = await getUserByUsername(userReceiverName)
 
-                dataToSend = await getAllInvitationsInWaitlist(myReceiver)
-                sendData = {
-                    "friendInvitation": dataToSend
-                }
-                await self.send(text_data=json.dumps(sendData))
+                dataToSend = await getAllNotifications(userReceiverName)
+                await sendToClient2(self, socketReceiver, dataToSend)
 
         elif type == "DELETE":
             stringRelation = data["parse"]
             myUser = self.scope["user"]
             userDeleted = await getUserByUsername(data["userDeleted"])
-            socketUserDeleted = socketsFriendsList.get(userDeleted.username)
+            socketUserDeleted = socketsUsers.get(userDeleted.username)
 
             await deleteRelationShip(stringRelation)
             allUsersTmp = await getAllUser()
@@ -520,11 +525,3 @@ class InviteFriendConsumer(AsyncWebsocketConsumer):
             await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)  
 
 
-    async def send_notif(self, notif):
-        await self.channel_layer.group_send(
-            "notification",
-            {
-                "type": "notification_message",
-                "message": notif,
-            }
-        )

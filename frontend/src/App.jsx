@@ -13,8 +13,7 @@ import { getUser } from './api/api.js';
 import './i18n';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-
-
+import { WebSocketProvider } from './provider/WebSocketProvider.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -32,9 +31,11 @@ const App = () => {
 
   return (
     <>
-      {!hideNavbarPaths.includes(location.pathname) && <NavbarBS myUser={user} />}
       
+      <WebSocketProvider>
+      {!hideNavbarPaths.includes(location.pathname) && <NavbarBS myUser={user} />}
       <Routes>
+
         <Route path="/" element={<LoginPage />} />
         <Route path="/home" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -42,7 +43,9 @@ const App = () => {
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
+
       </Routes>
+      </WebSocketProvider>
     </>
   );
 };

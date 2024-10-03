@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import './css/chooseGame.css';
@@ -11,7 +11,6 @@ const ChooseGame = () => {
     const [invitedPlayer, setInvitedPlayer] = useState([]);
 
     //setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
-
 
     const handleSoloClick = () => {
         navigate('/globalGameSolo', { state: { maxScore } });
