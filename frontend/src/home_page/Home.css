@@ -22,26 +22,47 @@
   }
 
 
-.nameUserComponent {
-
-    font-family: 'Millimetre', sans-serif;
-    font-size: 18px;
-    text-align: center;
-    color: #e7bfcd;
-    padding: 10px; 
-    margin-top: 20px;
-    margin-left: 40px;
-}
-
+.nameUserComponent,
 .nameFriendComponent {
+      font-family: 'Millimetre', sans-serif;
+      font-size: 18px;
+      text-align: center;
+      color: #FAF3DD;
+      padding: 8px;
+      padding-bottom: 3px;
+      width: 85px;
+      margin-top: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
+  }
 
-    font-family: 'Millimetre', sans-serif;
-    font-size: 18px;
-    text-align: center;
-    color: #e7bfcd;
-    padding: 10px;
-    margin-top: 20px;
-    margin-left: 10px;
+
+.nameUserComponent-active,
+.nameFriendComponent-active {
+        font-family: 'Millimetre', sans-serif;
+        font-size: 18px;
+        text-align: center;
+        color: #AED9E0;
+        padding: 8px;
+        padding-bottom: 3px;
+        width: 85px;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+}
+  
+.center-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+  }
+  
+
+.btn-outline-dark {
+    padding-bottom: 3px;
+    border: 1px solid #5E6472;
+
 }
 
 .username {
@@ -52,32 +73,12 @@
     color: #f5f5f6;
 }
 
-.icon_checked {
-
-    font-family: 'Millimetre', sans-serif;
-    width: 20%;
-    font-size: 24px;
-    text-align: center;
-    color: #f5f5f6;
-    padding: 10px;
-}
-
-.icon_add {
-
-    font-family: 'Millimetre', sans-serif;
-    font-size: 24px;
-    height: 25;
-    text-align: center;
-    color: #f5f5f6;
-    padding: 10px;
-}
-
 .status.online {
 
     font-family: 'Millimetre', sans-serif;
     font-size: 16px;
     text-align: center;
-    color: #b8f2e6;
+    color: #B8F2E6;
 }
 
 .status.offline {
@@ -85,7 +86,7 @@
     font-family: 'Millimetre', sans-serif;
     font-size: 16px;
     text-align: center;
-    color: #ffa69e;
+    color: #FFA69E;
 
 }
 
@@ -94,14 +95,15 @@
     height: 325px;
     overflow-y: auto;
     border-radius: 50px;
+    border: 4px solid #ffa69e;
     width: 450px; 
-    background-color: #5e6472;
+    background-color: transparent;
 }
 
 .buttonAdd {
     font-family: 'Millimetre', sans-serif;
     font-size: 16px;
-    color: #e2c1cf;
+    color: #ffa69e;
     margin-right: 15px;
 
 }
@@ -110,11 +112,12 @@
     height: 60px;
     width: 380px;
     border-radius: 50px;
-    border-top: 3px solid #40444c;
-    border-bottom: 3px solid #40444c;
+    border-top: 2px solid #FAF3DD;
+    border-bottom: 2px solid #FAF3DD;
+    border-left: 2px solid #FAF3DD;
+    border-right: 2px solid #FAF3DD;;
 
-    /* border: 3px solid #40444c; */
-    background-color: #363a45;
+    background-color: transparent;
     padding: 10px;
     margin: 5px;
     margin-left: 35px;
@@ -126,7 +129,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #363a45;
     height: 40px;
     width: 90px;
 }
@@ -146,5 +148,5 @@
     font-size: 20px;
     padding-top: 80px;
     padding-left: 115px;
-    color: #f5f5f6;
+    color: #FAF3DD;
 }

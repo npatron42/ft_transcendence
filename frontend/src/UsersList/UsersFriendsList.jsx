@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getAllUsers, getFriendsList } from '../api/api';  // Assurez-vous que les imports sont corrects
+import { getAllUsers, getFriendsList, getNotifs } from '../api/api';  // Assurez-vous que les imports sont corrects
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
-
+import { useWebSocket } from '../provider/WebSocketProvider';
 const UsersFriendsList = ({ myUser }) => {
+
     const [socketMessage, setSocketMessage] = useState({});
     const [usersList, setUsersList] = useState([]);
     const [friendsList, setFriendsList] = useState([]);
@@ -13,46 +14,32 @@ const UsersFriendsList = ({ myUser }) => {
     const [activeList, setActiveList] = useState('users');
     const myJwt = localStorage.getItem('jwt');
 
-    const socketStatus = useRef(null);
-    const socketInvite = useRef(null);
+    const socketUser = useWebSocket();
 
     useEffect(() => {
-        const initSocketStatus = () => {
-            const myUrl = "ws://localhost:8000/ws/status/?token=" + myJwt;
-            socketStatus.current = new WebSocket(myUrl);
+        const handleSocketUser = () => {
 
-            socketStatus.current.onmessage = (event) => {
+            socketUser.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 if (data["friends"]) {
                     changeFriendsList(data);
                 }
-                else if (data["AllUsers"]) {
+                if (data["AllUsers"]) {
                     changeUsersList(data["AllUsers"], friendsList)
                 }
-                else {
-                    setSocketMessage(data);
+                if (data["friendsInvitations"]) {
+                    console.log("socket --> ", data["friendsInvitations"]);
                 }
-            };
-        };
-
-        const initSocketInvite = () => {
-            const myURL = "ws://localhost:8000/ws/inviteFriend/?token=" + myJwt;
-            socketInvite.current = new WebSocket(myURL);
-            
-            socketInvite.current.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data["friends"]) {
-                    changeFriendsList(data);
+                if (data["status"]) {
+                    console.log(data["status"]);
+                    setSocketMessage(data["status"]);
                 }
-                if (data["AllUsers"])
-                    changeUsersList(data["AllUsers"], friendsList)
             };
         };
 
         const changeFriendsList = (data) => {
             console.log(data)
             setFriendsList(data["friends"])
-            console.log("MY FRIENDSLIST REFRESHED --> ", friendsList)
         } 
   
         const changeUsersList = async (usersList, friendsList) => {
@@ -101,25 +88,30 @@ const UsersFriendsList = ({ myUser }) => {
             return (myFriendsList);
         };
         
-        const initMyLists = async () => {
-             const myFriendsList = await defineFriendsList();
-            await defineUsersList(myFriendsList);
+        const defineAllUsersStatus = async () => {
+            const allUsers = await getAllUsers();
+            const myResult = {}
+            for (let i = 0; i < allUsers.length; i++) {
+                const username = allUsers[i].username;
+                const hisStatus = allUsers[i].status;
+                myResult[username] = hisStatus;
+            }
+            console.log("Le result HTTP ---> ", myResult);
+            setSocketMessage(myResult);
         }
 
-        initSocketStatus(); 
-        initSocketInvite();
+        const initMyLists = async () => {
+            const myFriendsList = await defineFriendsList();
+            await defineUsersList(myFriendsList);
+            await defineAllUsersStatus();
+
+        }
+
+        handleSocketUser(); 
         initMyLists();
         
-        return () => {
-            if (socketStatus.current && socketStatus.current.readyState === WebSocket.OPEN) {
-                socketStatus.current.close();
-            }
-            if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
-                socketInvite.current.close();
-            }
-        };
 
-    }, [myJwt, myUser.username]);
+    }, [myJwt, myUser.username, socketUser]);
     
 
     const showUsersList = () => {
@@ -130,7 +122,7 @@ const UsersFriendsList = ({ myUser }) => {
     }
 
     const handleInvitation = (userInvited) => {
-        if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+        if (socketUser) {
             setIsInviting(true);
             const data = {
                 type: "INVITE",
@@ -138,7 +130,7 @@ const UsersFriendsList = ({ myUser }) => {
                 to: userInvited.username,
                 parse: myUser.username + "|" + userInvited.username
             }
-            socketInvite.current.send(JSON.stringify(data));
+            socketUser.send(JSON.stringify(data));
             setIsInviting(false);
         } else {
             console.log("WebSocket for invitations is not open");
@@ -147,14 +139,14 @@ const UsersFriendsList = ({ myUser }) => {
     };
 
     const deleteFriend = (userDeleted) => {
-        if (socketInvite.current && socketInvite.current.readyState === WebSocket.OPEN) {
+        if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
                 type: "DELETE",
                 userWhoDelete: myUser.username,
                 userDeleted: userDeleted.username,
                 parse: myUser.username + "|" + userDeleted.username
             }
-            socketInvite.current.send(JSON.stringify(data));
+            socketUser.send(JSON.stringify(data));
         } else {
             console.log("WebSocket for invitations is not open");
         }
@@ -170,13 +162,26 @@ const UsersFriendsList = ({ myUser }) => {
                 <Loading />
             ) : (
                 <>
-                    <div className="">
-                        <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                            Users List
-                        </h4>
-                        <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                            Friends List
-                        </h4>
+                    <div className="center-container">
+                        {activeList === 'users' ? (
+                        <div>
+                            <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
+                                Users
+                            </h4>
+                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
+                                Friends
+                            </h4>
+                        </div>
+                        ) : (
+                        <div>
+                            <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
+                                Users
+                            </h4>
+                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
+                                Friends
+                            </h4>
+                        </div>
+                        )}
                     </div>
                     {activeList === 'users' ? (
                         <div className="users-list">

@@ -28,11 +28,15 @@ const Home = () => {
     }, []);
 
     if (loading) {
-        return <Loading/>;
+        return (
+        <div id="background-container">
+             <Loading/>
+        </div>
+        )
     }
-
     return (
         <div id="background-container">
+            <NavbarBS myUser={myUser}/>
             <div className="card-users" >
                 <UsersFriendsList myUser={myUser} />
             </div>

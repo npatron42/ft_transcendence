@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Button from 'react-bootstrap/Button';
 import './css/chooseGame.css';
@@ -33,7 +33,6 @@ const ChooseGame = () => {
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
             <div className="row">
-                {/* Carte Solo */}
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
                         <div className="flip-card-inner">

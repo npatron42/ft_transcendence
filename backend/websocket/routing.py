@@ -7,8 +7,7 @@ from tournaments.consumers import WaitingConsumer
 
 
 websocket_urlpatterns = [
-    path('ws/status/', middleware.JWTAuthMiddleware(consumers.StatusConsumer.as_asgi())),
     path('ws/pong/<str:room_id>', middleware.JWTAuthMiddleware(PongConsumer.as_asgi())),
     path('ws/waitTournaments/<str:room_id>', middleware.JWTAuthMiddleware(WaitingConsumer.as_asgi())),
-    path('ws/inviteFriend/', middleware.JWTAuthMiddleware(consumers.InviteFriendConsumer.as_asgi())),
+    path('ws/socketUser/', middleware.JWTAuthMiddleware(consumers.handleSocketConsumer.as_asgi())),
 ]

@@ -16,7 +16,8 @@ body, html, #root {
   width: 100%;
   overflow-x: hidden;
 } 
- #background-container {
+
+#background-container {
   height: 100vh;
   width: 100vw;
   margin: 0;
