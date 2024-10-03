@@ -1,20 +1,37 @@
 import { Navbar, Nav } from 'react-bootstrap';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { useWebSocket } from '../provider/WebSocketProvider';
+import React, { useEffect, useState } from 'react';
+
 import "./components.css"
 
 
 function NavbarBS({ myUser }) {
+
+  const { subscribeToNotifs } = useWebSocket();
+
   const navigate = useNavigate();
-
   const location = useLocation();
-
   const isHomePage = location.pathname === "/home";
+
 
   const handleHome = () => {
     navigate("/home")
     console.log("NAVBAR USER ---> ", myUser)
   };
+
+  useEffect(() => {
+    const handleNotif = (data) => {
+      console.log("NOTIF HERE --> ", data);
+    };
+
+    const unsubscribe = subscribeToNotifs(handleNotif);
+
+    return () => {
+        unsubscribe(); 
+    };
+}, [subscribeToNotifs]);
 
   return (
     <>

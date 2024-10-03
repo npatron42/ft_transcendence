@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import './css/chooseGame.css';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import './css/chooseGame.css';
+
+import Button from 'react-bootstrap/Button';
+import { useWebSocket } from '../provider/WebSocketProvider';
 
 const ChooseGame = () => {
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]);
-
+    const socketUser = useWebSocket()
+    
     //setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
 
     const handleSoloClick = () => {
@@ -28,6 +32,19 @@ const ChooseGame = () => {
     const handleScoreChange = (event) => {
         setMaxScore(Number(event.target.value));
     };
+
+
+  
+    useEffect(() => {
+      if (socketUser) {
+        const handleMessage = () => {
+            socketUser.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                console.log("CHOOSEGAME RECEIVED")
+            }
+        };
+      }
+    }, [socketUser]);
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">

@@ -6,6 +6,8 @@ import Loading from '../loading_page/Loading';
 import { useWebSocket } from '../provider/WebSocketProvider';
 const UsersFriendsList = ({ myUser }) => {
 
+    const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
+
     const [socketMessage, setSocketMessage] = useState({});
     const [usersList, setUsersList] = useState([]);
     const [friendsList, setFriendsList] = useState([]);
@@ -14,104 +16,104 @@ const UsersFriendsList = ({ myUser }) => {
     const [activeList, setActiveList] = useState('users');
     const myJwt = localStorage.getItem('jwt');
 
-    const socketUser = useWebSocket();
+    useEffect(() => {
+        const handleSocketUser = (data) => {
+            if (data["friends"]) {
+                changeFriendsList(data);
+            }
+            if (data["AllUsers"]) {
+                changeUsersList(data["AllUsers"], friendsList);
+            }
+            if (data["friendsInvitations"]) {
+                console.log("socket --> ", data["friendsInvitations"]);
+            }
+        };
+
+        const handleStatus = (data) => {
+                setSocketMessage(data["status"]);
+            }
+
+        const unsubscribeMess = subscribeToMessages(handleSocketUser);
+        const unsubscribeStatus = subscribeToStatus(handleStatus);
+
+        return () => {
+            unsubscribeMess(); 
+            unsubscribeStatus();
+        };
+    }, [subscribeToMessages, subscribeToStatus, socketUser]);
+
+    const changeFriendsList = (data) => {
+        console.log(data)
+        setFriendsList(data["friends"])
+    } 
+
+    const changeUsersList = async (usersList, friendsList) => {
+        const allUsers = usersList
+        const filteredList = allUsers.filter(user => user.username !== myUser.username);
+        const withoutFriends = [];
+        for (let i = 0; i < filteredList.length; i++) {
+            let isFriend = false;
+            const tmpName = filteredList[i].username;
+            for (let i = 0; i < friendsList.length; i++) {
+                if (tmpName === friendsList[i].username) {
+                    isFriend = true;
+                }
+            }
+            if (isFriend == false)
+                withoutFriends.push(filteredList[i])
+        }
+        setUsersList(withoutFriends);
+    };
+
+    const defineUsersList = async (friendsList) => {
+        setIsLoading(true);
+        const myList = await getAllUsers();
+        const filteredList = myList.filter(user => user.username !== myUser.username);
+        const withoutFriends = [];
+        for (let i = 0; i < filteredList.length; i++) {
+            let isFriend = false;
+            const tmpName = filteredList[i].username;
+            for (let i = 0; i < friendsList.length; i++) {
+                if (tmpName === friendsList[i].username) {
+                    isFriend = true;
+                }
+            }
+            if (isFriend == false)
+                withoutFriends.push(filteredList[i])
+        }
+        setUsersList(withoutFriends);
+        setIsLoading(false);
+    };
+
+    const defineFriendsList = async () => {
+        setIsLoading(true);
+        const myFriendsList = await getFriendsList();
+        setFriendsList(myFriendsList);
+        setIsLoading(false);
+        return (myFriendsList);
+    };
+    
+    const defineAllUsersStatus = async () => {
+        const allUsers = await getAllUsers();
+        const myResult = {}
+        for (let i = 0; i < allUsers.length; i++) {
+            const username = allUsers[i].username;
+            const hisStatus = allUsers[i].status;
+            myResult[username] = hisStatus;
+        }
+        console.log("Le result HTTP ---> ", myResult);
+        setSocketMessage(myResult);
+    }
+
+    const initMyLists = async () => {
+        const myFriendsList = await defineFriendsList();
+        await defineUsersList(myFriendsList);
+        await defineAllUsersStatus();
+    };
 
     useEffect(() => {
-        const handleSocketUser = () => {
-
-            socketUser.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data["friends"]) {
-                    changeFriendsList(data);
-                }
-                if (data["AllUsers"]) {
-                    changeUsersList(data["AllUsers"], friendsList)
-                }
-                if (data["friendsInvitations"]) {
-                    console.log("socket --> ", data["friendsInvitations"]);
-                }
-                if (data["status"]) {
-                    console.log(data["status"]);
-                    setSocketMessage(data["status"]);
-                }
-            };
-        };
-
-        const changeFriendsList = (data) => {
-            console.log(data)
-            setFriendsList(data["friends"])
-        } 
-  
-        const changeUsersList = async (usersList, friendsList) => {
-            const allUsers = usersList
-            const filteredList = allUsers.filter(user => user.username !== myUser.username);
-            const withoutFriends = [];
-            for (let i = 0; i < filteredList.length; i++) {
-                let isFriend = false;
-                const tmpName = filteredList[i].username;
-                for (let i = 0; i < friendsList.length; i++) {
-                    if (tmpName === friendsList[i].username) {
-                        isFriend = true;
-                    }
-                }
-                if (isFriend == false)
-                    withoutFriends.push(filteredList[i])
-            }
-            setUsersList(withoutFriends);
-        };
-
-        const defineUsersList = async (friendsList) => {
-            setIsLoading(true);
-            const myList = await getAllUsers();
-            const filteredList = myList.filter(user => user.username !== myUser.username);
-            const withoutFriends = [];
-            for (let i = 0; i < filteredList.length; i++) {
-                let isFriend = false;
-                const tmpName = filteredList[i].username;
-                for (let i = 0; i < friendsList.length; i++) {
-                    if (tmpName === friendsList[i].username) {
-                        isFriend = true;
-                    }
-                }
-                if (isFriend == false)
-                    withoutFriends.push(filteredList[i])
-            }
-            setUsersList(withoutFriends);
-            setIsLoading(false);
-        };
-
-        const defineFriendsList = async () => {
-            setIsLoading(true);
-            const myFriendsList = await getFriendsList();
-            setFriendsList(myFriendsList);
-            setIsLoading(false);
-            return (myFriendsList);
-        };
-        
-        const defineAllUsersStatus = async () => {
-            const allUsers = await getAllUsers();
-            const myResult = {}
-            for (let i = 0; i < allUsers.length; i++) {
-                const username = allUsers[i].username;
-                const hisStatus = allUsers[i].status;
-                myResult[username] = hisStatus;
-            }
-            console.log("Le result HTTP ---> ", myResult);
-            setSocketMessage(myResult);
-        }
-
-        const initMyLists = async () => {
-            const myFriendsList = await defineFriendsList();
-            await defineUsersList(myFriendsList);
-            await defineAllUsersStatus();
-
-        }
-
-        handleSocketUser(); 
         initMyLists();
-        
-
-    }, [myJwt, myUser.username, socketUser]);
+    },[myUser.username])
     
 
     const showUsersList = () => {
@@ -122,22 +124,21 @@ const UsersFriendsList = ({ myUser }) => {
     }
 
     const handleInvitation = (userInvited) => {
-        if (socketUser) {
+        if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             setIsInviting(true);
             const data = {
                 type: "INVITE",
                 invitationFrom: myUser.username,
                 to: userInvited.username,
                 parse: myUser.username + "|" + userInvited.username
-            }
+            };
             socketUser.send(JSON.stringify(data));
             setIsInviting(false);
         } else {
             console.log("WebSocket for invitations is not open");
         }
-        
     };
-
+    
     const deleteFriend = (userDeleted) => {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
@@ -145,7 +146,7 @@ const UsersFriendsList = ({ myUser }) => {
                 userWhoDelete: myUser.username,
                 userDeleted: userDeleted.username,
                 parse: myUser.username + "|" + userDeleted.username
-            }
+            };
             socketUser.send(JSON.stringify(data));
         } else {
             console.log("WebSocket for invitations is not open");

@@ -32,13 +32,15 @@ const App = () => {
   return (
     <>
       
-      <WebSocketProvider>
-      {!hideNavbarPaths.includes(location.pathname) && <NavbarBS myUser={user} />}
       <Routes>
 
         <Route path="/" element={<LoginPage />} />
-        <Route path="/home" element={<HomePage />} />
         <Route path="/register" element={<RegisterPage />} />
+      </Routes>
+      <WebSocketProvider>
+      {!hideNavbarPaths.includes(location.pathname) && <NavbarBS myUser={user} />}
+      <Routes>
+        <Route path="/home" element={<HomePage />} />
         <Route path="/ChooseGame" element={<ChooseGame />} />
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
