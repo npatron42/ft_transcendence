@@ -1,0 +1,20 @@
+.custom-2fA {
+	position:absolute;
+	top: 75vh;
+	left: 41vw; 
+	background-color:  #FDCDBE;
+	padding: 15px;
+	border: 2px solid #5E6472 !important;
+	color:  #5E6472 !important; 
+	box-shadow: 0px 1vw 2vw rgba(0, 2, 10, 0.5);
+	font-size: 1.1vw; 
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold ;
+	border-radius: 25px; 
+}
+
+.custom-upload{
+	position:absolute;
+	top: 70vh;
+	left: 41vw; 
+}

@@ -30,5 +30,9 @@
       "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale.",
       "userPris": "Utente già in uso",
       "mailPris": "Email già in uso"
+    },
+
+    "profilPage" : {
+      "2fa" : "Abilitare l'autenticazione a due fattori"
     }
   }

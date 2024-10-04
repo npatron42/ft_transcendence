@@ -31,5 +31,9 @@
       "passwordInvalid": "Le mot de passe doit comporter au moins 8 caractères, incluant une majuscule,\nune minuscule, un chiffre et un caractère spécial.",
       "userPris": "Identifiant déja utilisé",
       "mailPris": "Email déja utilisé"
+    },
+
+    "profilPage" : {
+      "2fa" : "Activer la double authentification"
     }
   }
