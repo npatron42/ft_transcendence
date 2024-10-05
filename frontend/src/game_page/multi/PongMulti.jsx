@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
+import { getUser } from '../../api/api';
 
 const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({});
@@ -33,7 +34,7 @@ const usePaddleMovement = (webSocket, playerId) => {
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId}));
             }
             if (keysPressed['s'] || keysPressed['S']) {
                 webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
@@ -50,6 +51,7 @@ const usePaddleMovement = (webSocket, playerId) => {
     }, [keysPressed, webSocket, playerId]);
 };
 
+
 const PongMulti = ({ roomId, maxScore }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
@@ -62,6 +64,20 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
+    const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const fetchedUser = await getUser();
+                setUser(fetchedUser);
+            } catch (error) {
+                console.error('Erreur lors de la récupération de l\'utilisateur:', error);
+            }
+        };
+        fetchUser();
+    }, []);
+    console.log('super nickel', user);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
@@ -128,6 +144,12 @@ const PongMulti = ({ roomId, maxScore }) => {
     }, [roomId, maxScore]);
 
     usePaddleMovement(webSocket, playerId, roomPlayers);
+    useEffect(() => {
+        if (webSocket && webSocket.readyState === WebSocket.OPEN && user) {
+            webSocket.send(JSON.stringify({ name: user.username }));
+            console.log("Nom d'utilisateur envoyé via WebSocket :", user.username);
+        }
+    }, [webSocket, user]);
 
     return (
         <div className="pong-container">
