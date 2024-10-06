@@ -175,11 +175,11 @@
 
 .underNavbar {
     position: fixed;
-    width: 50px;
+    width: 60px;
     background-color: #5e6472;
     border-bottom: solid 3px #000000;
     border-radius: 20px;
-    bottom: 88%;
+    bottom: 90%;
     left: 85%;
     transform: translateX(-50%);
     height: 35px;
