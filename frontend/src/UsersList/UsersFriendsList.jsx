@@ -100,7 +100,6 @@ const UsersFriendsList = ({ myUser }) => {
             const hisStatus = allUsers[i].status;
             myResult[username] = hisStatus;
         }
-        console.log("Le result HTTP ---> ", myResult);
         setSocketMessage(myResult);
     }
 

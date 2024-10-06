@@ -122,7 +122,6 @@
     object-fit: cover;
 }
 
-
 .navbar-nav-profile {
     background-color: #5e6472;
     border-bottom: solid 3px #000000;;
@@ -144,7 +143,9 @@
     height: 40px;
 }
 
+
 .notif {
+    position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -153,6 +154,81 @@
     color: #fdf0d5;
 }
 
+.notif:hover {
+    font-size: 19px;
+    color:#ffa69e;
+}
+
+
+.notifFull {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 10px;
+    font-size: 18px;
+    color: #fdf0d5;
+}
+.notifFull:hover {
+    font-size: 19px;
+}
+  .notifFull::after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    right: 7px;
+    width: 10px;
+    height: 10px;
+    background-color: #ffa69e;
+    border-radius: 50%;
+    animation: blink 2s infinite;
+    opacity: 1;
+  }
+
+  @keyframes blink {
+    from, to {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  @-moz-keyframes blink {
+    from, to {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  @-webkit-keyframes blink {
+    from, to {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  @-ms-keyframes blink {
+    from, to {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  @-o-keyframes blink {
+    from, to {
+      opacity: 0;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
 
 .underNavbar-tr {
     display: flex;

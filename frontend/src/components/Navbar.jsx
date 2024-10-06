@@ -4,13 +4,18 @@ import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 import React, { useEffect, useState } from 'react';
-import Logout from '../logout/Logout';
 import UnderNavbar from './UnderNavbar';
+import Notifications from '../../notifications/Notifications';
+import { getNotifs } from '../api/api';
 import "./components.css"
 
 
 function NavbarBS() {
   const { myUser } = useAuth();
+  const [nbNotifs, setNbNotifs] = useState(0);
+  const [notifIsClicked, setNotifClicked] = useState(false);
+
+
   const { subscribeToNotifs } = useWebSocket();
   const [profileShown, setProfile] = useState(false);
   const navigate = useNavigate();
@@ -23,24 +28,43 @@ function NavbarBS() {
 
   useEffect(() => {
     const handleNotif = (data) => {
-      console.log("NOTIF HERE --> ", data);
+      const nbNotifsTmp = data["friendsInvitations"].length;
+      setNbNotifs(nbNotifsTmp);
     };
 
     const unsubscribe = subscribeToNotifs(handleNotif);
 
+    
+    const initNotifs = async () => {
+      const myData = await getNotifs();
+      const nbNotifsTmp = myData.length;
+      setNbNotifs(nbNotifsTmp);
+    }
+    
+    initNotifs();
+    
     return () => {
       unsubscribe();
     };
-  }, [subscribeToNotifs]);
 
-  const handleDisconnect = () => {
-    localStorage.removeItem("jwt");
-    navigate("/");
-  };
+  }, [subscribeToNotifs, nbNotifs]);
+
+
 
   const handleProfile = () => {
     setProfile(!profileShown);
+    if (notifIsClicked === true)
+      setNotifClicked(!notifIsClicked);
+
   };
+
+  const handleNotif = () => {
+    setNotifClicked(!notifIsClicked);
+    if (profileShown === true)
+      setProfile(!profileShown);
+  };
+
+
 
   return (
     <>
@@ -57,9 +81,13 @@ function NavbarBS() {
         </Nav>
 
         <Nav className="navbar-nav-profile">
-          <div className="notif-placement">
-            <i className="bi bi-bell-fill notif"></i>
-          </div>
+        <div className="notif-placement">
+          {nbNotifs === 0 ? (
+            <i onClick={() => handleNotif()} className="bi bi-bell-fill notif"></i>
+          ) : (
+            <i onClick={() => handleNotif()} className="bi bi-bell-fill notifFull"></i>
+          )}
+        </div>
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
@@ -73,6 +101,9 @@ function NavbarBS() {
             </Nav>
           {profileShown && (
               <UnderNavbar/>
+          )}
+          {notifIsClicked && (
+            <Notifications/>
           )}
       </Navbar>
     </>

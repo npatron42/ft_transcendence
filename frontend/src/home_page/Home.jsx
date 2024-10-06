@@ -14,8 +14,8 @@ const Home = () => {
     const [myUser, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
     const myJwt = localStorage.getItem("jwt");
+
     useEffect(() => {
         if (!myJwt) {
             navigate('/');

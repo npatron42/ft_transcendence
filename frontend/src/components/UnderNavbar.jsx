@@ -1,11 +1,8 @@
 import { useNavigate, useLocation, } from 'react-router-dom';
-import { useAuth } from '../provider/UserAuthProvider';
-import Logout from '../logout/Logout';
 import "./components.css"
 
 
 function UnderNavbar() {
-  const { myUser } = useAuth();
   const navigate = useNavigate();
 
 	const handleProfile = () => {

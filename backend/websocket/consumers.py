@@ -438,6 +438,12 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 }
 
 
+                friendsInvitationsToReceiver = await getAllNotifications(myReceiverUsername)
+                await sendToClient2(self, socketReceiver, friendsInvitationsToReceiver)
+
+                friendsInvitationsToExpeditor = await getAllNotifications(myExpeditor.username)
+                await self.send(text_data=json.dumps(friendsInvitationsToExpeditor))                
+
                 await self.send(text_data=json.dumps(allUsersToSendExpeditor))
                 await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
 
