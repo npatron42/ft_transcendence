@@ -1,27 +1,27 @@
 import React, { useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import Button from 'react-bootstrap/Button';
 import "./button.css";
 
 function Upload() {
+
+  const { t } = useTranslation();
+
+
   const fileInputRef = useRef(null);
 
   const handleButtonClick = () => {
-    // Ouvre le dialogue de sélection de fichier lorsque le bouton est cliqué
     fileInputRef.current.click();
   };
 
   return (
     <div>
-      {/* Bouton personnalisé pour uploader un fichier */}
-      <Button className="custom-upload" onClick={handleButtonClick}>
-        Click to upload image
-      </Button>
-      
-      {/* Champ de fichier masqué */}
+      <Button size="sm" variant="outline-dark" className="custom-upload" onClick={handleButtonClick}>
+      {t('profilPage.upload')}</Button>
       <input
         type="file"
         ref={fileInputRef}
-        style={{ display: 'none' }} // Masquer complètement l'input
+        style={{ display: 'none' }}
       />
     </div>
   );

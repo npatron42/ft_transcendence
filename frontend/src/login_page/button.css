@@ -55,7 +55,7 @@
 		left: 57vw;
 		border: 1px solid #FDCDBE !important;
 		background-color:#5E6472;
-		color:#FDCDBE;
+		color:#FDCDBE !important;
 		box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 		padding: 0.2vw 0.8vw;
 		font-size: 1vw;
@@ -64,8 +64,7 @@
 		border-radius: 20px; 
 		transition: transform 0.2s ease;
 	}
-
-
+	
 		.custom-button:hover,
 		.custom-42:hover,
 		.custom-log:hover {

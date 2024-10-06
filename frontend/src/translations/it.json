@@ -33,6 +33,8 @@
     },
 
     "profilPage" : {
-      "2fa" : "Abilitare l'autenticazione a due fattori"
+      "2fa" : "Abilitare l'autenticazione a due fattori",
+      "upload" : "Clicca per scaricare",
+      "delete" : "Sopprimere"
     }
   }

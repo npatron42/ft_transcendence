@@ -15,6 +15,16 @@
 
 .custom-upload{
 	position:absolute;
-	top: 70vh;
-	left: 41vw; 
+	top: 16vh;
+	left: 50.5vw;
+	width: 7vw;
+    height: 3.5vw;
+	font-size: 1vw; 
+	font-weight: bold ;
+	color: #FDCDBE !important;
+    background-color: #5E6472;
+	border: 0.8px solid #FDCDBE !important;
+	border-radius: 6px; 
+	font-size: 1vw; 
+	font-family: 'Millimetre', sans-serif;
 }
