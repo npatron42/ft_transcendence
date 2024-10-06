@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // GET METHODS
 
-export const fetchData = async (codeFromUrl) => {
+export const setJwt = async (codeFromUrl) => {
 	try {
 		const response = await axios.post("http://localhost:8000/oauth2/login/", {
 			code: codeFromUrl,
@@ -12,7 +12,6 @@ export const fetchData = async (codeFromUrl) => {
 			return ;
 
 		const myJWT = localStorage.setItem("jwt", response.data.jwt);
-		console.log(myJWT)
 	} catch (error) {
 		console.error("Error during login:", error);
 	}

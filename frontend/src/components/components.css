@@ -120,7 +120,6 @@
     height: 35px;
     border-radius: 50%;
     object-fit: cover;
-    padding-bottom: 10px;
 }
 
 
@@ -153,3 +152,38 @@
     font-size: 18px;
     color: #fdf0d5;
 }
+
+
+.underNavbar-tr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: Millimetre;
+    color: #fdf0d5;
+    font-size: 17px;
+}
+
+.profileBS {
+    color: #fdf0d5;
+    margin: 0 4px;
+}
+    
+.profileBS:hover{
+        color: #ffa69e;  
+        font-size: 18px;
+}
+
+.underNavbar {
+    position: fixed;
+    width: 50px;
+    background-color: #5e6472;
+    border-bottom: solid 3px #000000;
+    border-radius: 20px;
+    bottom: 88%;
+    left: 85%;
+    transform: translateX(-50%);
+    height: 35px;
+    padding: 5px 20px;
+    margin-top: 10px;
+}
+

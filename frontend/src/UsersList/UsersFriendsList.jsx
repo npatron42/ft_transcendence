@@ -14,7 +14,6 @@ const UsersFriendsList = ({ myUser }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [isInviting, setIsInviting] = useState(false);
     const [activeList, setActiveList] = useState('users');
-    const myJwt = localStorage.getItem('jwt');
 
     useEffect(() => {
         const handleSocketUser = (data) => {

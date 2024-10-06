@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
-
 const WebSocketContext = createContext(null);
 
 export const useWebSocket = () => {
@@ -15,7 +14,7 @@ export const WebSocketProvider = ({ children }) => {
 	const listenersNotifs = useRef([]);
 
     const myJwt = localStorage.getItem("jwt");
-
+    
     useEffect(() => {
         if (!myJwt) {
             return;
