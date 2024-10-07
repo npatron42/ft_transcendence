@@ -528,6 +528,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await sendToClient2(self, socketUserDeleted, friendsListDeletedUserToSend)
 
             await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
-            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)  
+            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)
+        elif type == "DECLINE":
+            parse = data.get("parse")
+            logger.info("Mon parse recu ---> %s", parse)
 
 

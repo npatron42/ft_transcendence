@@ -39,15 +39,14 @@
     border-bottom: solid 3px #000000;;
     border-radius: 20px;
     position: fixed; 
-    top: 0; 
+    top: 30px; 
     left: 50%;
     transform: translateX(-50%);
-	height: 50px;
+	  height: 50px;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 5px;
     padding-bottom: 5px;
-    margin-top: 10px;
 }
 
 .nav-link-2 {
@@ -89,7 +88,7 @@
     font-family: Millimetre;
     font-size: 18px;
     color: #ffa69e !important;
-    width: 60px;
+    width: 65px;
 }
 
 .profile-navbar {
@@ -103,11 +102,6 @@
 
 }
 
-.logo-navbar2{
-    font-family: Millimetre;
-	font-size: 32px;
-	color: #ffa69e !important;
-}
 
 .logo-navbar {
   font-family: Millimetre;
@@ -130,7 +124,7 @@
     top: 0; 
     left: 85%;
     transform: translateX(-50%);
-	height: 50px;
+	  height: 50px;
     padding-left: 20px;
     padding-right: 20px;
     padding-top: 5px;
@@ -158,6 +152,14 @@
 .notif:hover {
     font-size: 19px;
     color:#ffa69e;
+}
+
+
+.logo-transcendence {
+  height: 300px;
+  width: 300px;
+  position: relative;
+  top: -30px;
 }
 
 
@@ -246,8 +248,8 @@
 }
     
 .profileBS:hover{
-        color: #ffa69e;  
-        font-size: 18px;
+    color: #ffa69e;  
+    font-size: 18px;
 }
 
 .underNavbar {

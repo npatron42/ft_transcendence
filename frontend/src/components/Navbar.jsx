@@ -7,8 +7,10 @@ import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
 import Notifications from '../../notifications/Notifications';
 import { getNotifs } from '../api/api';
-import "./components.css"
+import logo from "../assets/logos/transcendence-logo.png"
+import logoActive from "../assets/logos/transcendence-logo-active.png"
 
+import "./components.css"
 
 function NavbarBS() {
   const { myUser } = useAuth();
@@ -18,11 +20,23 @@ function NavbarBS() {
 
   const { subscribeToNotifs } = useWebSocket();
   const [profileShown, setProfile] = useState(false);
+  const [homeShown, setHomeShown] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
 
+
+  useEffect(() => {
+    if (location.pathname === "/home") {
+      setHomeShown(true);
+    } else {
+      setHomeShown(false);
+    }
+  }, [location.pathname]);
+
   const handleHome = () => {
+    if (location.pathname !== "/home")
+      setHomeShown(prevHomeShown => !prevHomeShown);
     navigate("/home");
   };
 
@@ -64,20 +78,23 @@ function NavbarBS() {
       setProfile(!profileShown);
   };
 
+  const handleOtherLocations = () => {
+    if (homeShown === true)
+      setHomeShown(!homeShown);
+  }
 
 
   return (
     <>
       <Navbar>
         <Nav>
-          <Nav.Link as={NavLink} to="/ChooseGame">PONG</Nav.Link>
-          <h1
-            className={isHomePage ? "logo-navbar2" : "logo-navbar"}
-            onClick={handleHome}
-          >
-            TRANSCENDENCE
-          </h1>
-          <Nav.Link as={NavLink} to="/chat">CHAT</Nav.Link>
+          <Nav.Link onClick={handleOtherLocations} as={NavLink} to="/ChooseGame">PONG</Nav.Link>
+          {homeShown ? (
+            <img src={logoActive} className="logo-transcendence" onClick={handleHome}/>
+          ) : (
+            <img src={logo} className="logo-transcendence" onClick={handleHome}/>  
+          )}
+          <Nav.Link onClick={handleOtherLocations} as={NavLink} to="/chat">CHAT</Nav.Link>
         </Nav>
 
         <Nav className="navbar-nav-profile">
