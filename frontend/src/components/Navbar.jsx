@@ -37,8 +37,8 @@ function NavbarBS() {
     
     const initNotifs = async () => {
       const myData = await getNotifs();
-      const nbNotifsTmp = myData.length;
-      setNbNotifs(nbNotifsTmp);
+      const realNbNotifs = myData["friendsInvitations"].length + myData["gameInvitations"].length;
+      setNbNotifs(realNbNotifs);
     }
     
     initNotifs();

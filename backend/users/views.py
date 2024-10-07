@@ -44,7 +44,13 @@ def getAllNotifs(request):
         if (idInvitation == id):
             userToAdd = getUserById(invitation.get("expeditor"))
             result.append(userToAdd)
-    return JsonResponse(result, safe=False)
+    waitingFabioPart = []
+    dataToSend = {
+        "friendsInvitations": result,
+        "gameInvitations": waitingFabioPart
+
+    }
+    return JsonResponse(dataToSend, safe=False)
 
 
 # FRIENDS LIST 

@@ -113,7 +113,6 @@ const UsersFriendsList = ({ myUser }) => {
         initMyLists();
     },[myUser.username])
     
-
     const showUsersList = () => {
         setActiveList('users');
     }
@@ -183,59 +182,51 @@ const UsersFriendsList = ({ myUser }) => {
                         )}
                     </div>
                     {activeList === 'users' ? (
-                        <div className="users-list">
-                            <table className="">
-                                <tbody className="bodyUsers">
-                                    {Array.isArray(usersList) ? (
-                                        usersList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="noUsers">No users found</td>
-                                            </tr>
-                                        ) : (
-                                            usersList.map((user) => (
-                                                <UserItem 
-                                                    key={user.id} 
-                                                    user={user} 
-                                                    handleInvitation={handleInvitation} 
-                                                    isInviting={isInviting}
-                                                    chooseStatus={chooseStatus}
-                                                />
-                                            ))
-                                        )
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="noUsers">Invalid user list</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                        <div>
+                            {Array.isArray(usersList) ? (
+                                usersList.length === 0 ? (
+                                        <div className="noUsers">No users found</div>
+                                ) : (
+                                    <div className={`users-list ${usersList.length >= 4 ? 'scroll' : ''}`}>
+                                    {usersList.map((user) => (
+                                        <UserItem 
+                                            key={user.id} 
+                                            user={user} 
+                                            handleInvitation={handleInvitation} 
+                                            isInviting={isInviting}
+                                            chooseStatus={chooseStatus}
+                                        />
+                                    ))}
+                                    </div>
+                                )
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="noUsers">Invalid user list</td>
+                                </tr>
+                            )}
                         </div>
                     ) : (
-                        <div className="users-list">
-                            <table className="">
-                                <tbody className="bodyUsers">
-                                    {Array.isArray(friendsList) ? (
-                                        friendsList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="noUsers">You don't have friends...</td>
-                                            </tr>
-                                        ) : (
-                                            friendsList.map((user) => (
-                                                <FriendItem 
-                                                    key={user.id} 
-                                                    user={user} 
-                                                    chooseStatus={chooseStatus}
-                                                    deleteFriend={deleteFriend}
-                                                />
-                                            ))
-                                        )
-                                    ) : (
-                                        <tr>
-                                            <td colSpan="4" className="noUsers">Invalid friends list</td>
-                                        </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                        <div>
+                            {Array.isArray(friendsList) ? (
+                                friendsList.length === 0 ? (
+                                        <div className="noUsers">No friends found</div>
+                                ) : (
+                                    <div className={`users-list ${friendsList.length >= 4 ? 'scroll' : ''}`}>
+                                    {friendsList.map((user) => (
+                                        <FriendItem 
+                                            key={user.id} 
+                                            user={user} 
+                                            chooseStatus={chooseStatus}
+                                            deleteFriend={deleteFriend}
+                                        />
+                                    ))}
+                                    </div>
+                                )
+                            ) : (
+                                <tr>
+                                    <td colSpan="4" className="noUsers">Invalid user list</td>
+                                </tr>
+                            )}
                         </div>
                     )}
                 </>

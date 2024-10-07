@@ -1,11 +1,143 @@
 .notifications {
-	background-color: #5e6472;
-	width: 300px;
+	background-color: transparent;
+	width: 400px;
 	height: 200px;
-	border-bottom: solid 3px #000000;;
+	border-top: solid 2px #FFA69E;
+	border-left: solid 2px #FFA69E;
+	border-right: solid 2px #FFA69E;
+	border-bottom: solid 2px #FFA69E;
     border-radius: 20px;
     position: fixed; 
 	bottom: 70%;
     left: 85%;
     transform: translateX(-50%);
+	z-index: 1;
 }
+
+
+.noNotif {
+	font-family: 'Millimetre', sans-serif;
+	color: #FAF3DD;
+	font-size: 18px;
+	text-align: center;
+	margin-top: 35px;
+}
+
+.ButtonNotif {
+	font-family: 'Millimetre', sans-serif;
+	font-size: 15px;
+	text-align: center;
+	color: #FAF3DD;
+	border: 0.5px solid #AED9E0;
+	padding: 8px;
+	padding-bottom: 3px;
+	width: 85px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.ButtonNotif.active {
+	font-family: 'Millimetre', sans-serif;
+	font-size: 15px;
+	text-align: center;
+	color: #AED9E0 !important;
+	border: 1px solid #AED9E0;
+	padding: 8px;
+	padding-bottom: 3px;
+	width: 85px;
+	margin-top: 10px;
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+.center-div {
+	text-align: center;
+}
+
+
+.invite-item {
+    height: 50px;
+    width: 80%;
+    border-radius: 50px;
+    border-top: 2px solid #FAF3DD;
+    border-bottom: 2px solid #FAF3DD;
+    border-left: 2px solid #FAF3DD;
+    border-right: 2px solid #FAF3DD;;
+
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+	margin-left: 35px;
+	margin-top: 5px;
+}
+
+.invite-item td {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 90px;
+}
+
+.buttonAccept {
+	color:#B8F2E6;
+	font-size: 25px;
+	margin-left: 15px;
+}
+
+.buttonDecline {
+	color:#FFA69E;
+	font-size: 25px;
+	margin-right: 15px;
+}
+
+.profile-picture-notif {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.username-friendNotif {
+	font-family: Millimetre;
+	color:#FAF3DD;
+	font-size: 16px;
+}
+
+.inviteList {
+	max-height: 130px;
+	overflow-y: hidden;
+  }
+  
+  .inviteList.scroll {
+	overflow-y: auto;
+	margin-right: 18px;
+  }
+  
+  .inviteList.scroll::-webkit-scrollbar
+  {
+	  width: 10px;
+	  background-color: #2a2c31;
+  }
+  
+  .inviteList.scroll::-webkit-scrollbar-thumb
+  {
+	border: 2px solid #000000;
+	border-radius: 20px;
+	background-color: #AED9E0;
+  }
+
+.noNotif {
+	font-family: 'Millimetre', sans-serif;
+	color: #FAF3DD;
+	font-size: 18px;
+	text-align: center;
+  }
+  
+  .inviteItem {
+	margin-bottom: 10px;
+  }
