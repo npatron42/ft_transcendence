@@ -372,6 +372,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
         data = json.loads(text_data);
         type = data["type"]
+        myUser = self.scope["user"]
 
         # INVITE METHODE
         if (type == "INVITE"):
@@ -531,6 +532,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)
         elif type == "DECLINE":
             parse = data.get("parse")
-            logger.info("Mon parse recu ---> %s", parse)
+            await eraseInvitation(parse)
+            dataToSend = await getAllNotifications(myUser.username)
+            await sendToClient2(self, socketsUsers[myUser.username], dataToSend)
+            
 
 

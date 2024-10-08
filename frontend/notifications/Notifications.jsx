@@ -54,15 +54,22 @@ function Notifications() {
 			setInviteNotifShown(false);
 	}
 
-	const declineInvitation = (myUser) => {
-		console.log("DECLINE")
-	}
+    const declineInvitation = (senderUser) => {
+        if (socketUser && socketUser.readyState === WebSocket.OPEN) {
+            const data = {
+                type: "DECLINE",
+                invitationFrom: senderUser,
+                to: myUser.username,
+                parse: senderUser.username + "|" + myUser.username
+            };
+            socketUser.send(JSON.stringify(data));
+        } else {
+            console.log("WebSocket for invitations is not open");
+        }
+    };
 
     const acceptInvitation = (userInvited) => {
-		console.log(socketUser)
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
-			console.log("MyUser.username --> ", myUser.username);
-			console.log("userInvited --> ", userInvited);
             const data = {
                 type: "INVITE",
                 invitationFrom: myUser.username,
