@@ -3,12 +3,13 @@ import { useNavigate, useLocation, } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
+import { getNotifs } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
 import Notifications from '../notifications/Notifications';
-import { getNotifs } from '../api/api';
 import logo from "../assets/logos/transcendence-logo.png"
 import logoActive from "../assets/logos/transcendence-logo-active.png"
+import Chat from './Chat';
 
 import "./components.css"
 
@@ -17,10 +18,10 @@ function NavbarBS() {
   const [nbNotifs, setNbNotifs] = useState(0);
   const [notifIsClicked, setNotifClicked] = useState(false);
 
-
   const { subscribeToNotifs } = useWebSocket();
   const [profileShown, setProfile] = useState(false);
   const [homeShown, setHomeShown] = useState(true);
+  const [chatShown, setChatShown] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
@@ -83,6 +84,12 @@ function NavbarBS() {
       setHomeShown(!homeShown);
   }
 
+  const handleChat = () => {
+    console.log(setChatShown(!chatShown));
+    if (profileShown === true)
+      setProfile(!profileShown);
+  }
+
 
   return (
     <>
@@ -94,7 +101,7 @@ function NavbarBS() {
           ) : (
             <img src={logo} className="logo-transcendence" onClick={handleHome}/>  
           )}
-          <Nav.Link onClick={handleOtherLocations} as={NavLink} to="/chat">CHAT</Nav.Link>
+          <Nav.Link onClick={() => handleChat()}>CHAT</Nav.Link>
         </Nav>
 
         <Nav className="navbar-nav-profile">
@@ -121,6 +128,9 @@ function NavbarBS() {
           )}
           {notifIsClicked && (
             <Notifications/>
+          )}
+          {chatShown === true && (
+            <Chat/>
           )}
       </Navbar>
     </>
