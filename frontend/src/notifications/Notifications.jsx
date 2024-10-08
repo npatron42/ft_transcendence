@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import "./notifs.css"
-import { getNotifs } from '../src/api/api';
-import { useWebSocket } from '../src/provider/WebSocketProvider';
-import { useAuth } from '../src/provider/UserAuthProvider';
-import Loading from '../src/loading_page/Loading';
+import { getNotifs } from '../api/api';
+import { useWebSocket } from '../provider/WebSocketProvider';
+import { useAuth } from '../provider/UserAuthProvider';
+import Loading from '../loading_page/Loading';
 import InviteItem from './InviteNotif';
 import GameNotif from './GameNotif';
 

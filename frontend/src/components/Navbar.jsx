@@ -5,7 +5,7 @@ import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
-import Notifications from '../../notifications/Notifications';
+import Notifications from '../notifications/Notifications';
 import { getNotifs } from '../api/api';
 import logo from "../assets/logos/transcendence-logo.png"
 import logoActive from "../assets/logos/transcendence-logo-active.png"
