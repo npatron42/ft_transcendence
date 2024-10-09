@@ -1,3 +1,11 @@
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
 .chat {
     width: 500px;
     height: 600px;
@@ -5,7 +13,7 @@
     background-color: #2A2C31;
     position: fixed;
     border-radius: 30px;
-    border: 3px solid #FAF3DD;
+    border: 4px solid #ffa69e;
     display: flex;
 }
 
@@ -37,7 +45,8 @@
     left: 0;
     width: 100%;
     height: 50px;
-    background-color: #5E6472;
+    background: rgb(94,100,114);
+    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%);
     border-top-left-radius: 25px;
     border-top-right-radius: 0;
     border-bottom: 2px solid #FAF3DD;
@@ -58,3 +67,27 @@
     position: relative;
 }
 
+.place-button {
+    display: flex;
+    gap: 10px;
+}
+
+.choiceButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 60px;
+}
+
+.choiceButton-custom {
+    align-items: center;
+    width: 90px;
+    padding: 2px;
+    color: #FAF3DD;
+    font-family: Millimetre;
+}
+
+.welcomeMessage {
+    font-family: Millimetre;
+    color: #FAF3DD;
+}

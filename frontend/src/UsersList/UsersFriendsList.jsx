@@ -167,19 +167,19 @@ const UsersFriendsList = ({ myUser }) => {
                         {activeList === 'users' ? (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
-                                    Users
+                                    USERS
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                                    Friends
+                                    FRIENDS
                                 </h4>
                             </div>
                         ) : (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                                    Users
+                                    USERS
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
-                                    Friends
+                                    FRIENDS
                                 </h4>
                             </div>
                         )}
