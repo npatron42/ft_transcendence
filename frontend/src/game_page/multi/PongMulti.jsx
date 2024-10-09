@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
-import { getUser } from '../../api/api';
+import { useAuth } from '../../provider/UserAuthProvider';
 
 const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({});
@@ -34,7 +34,7 @@ const usePaddleMovement = (webSocket, playerId) => {
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId}));
+                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
             }
             if (keysPressed['s'] || keysPressed['S']) {
                 webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
@@ -64,74 +64,65 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
-    const [user, setUser] = useState(null);
-
-    useEffect(() => {
-        const fetchUser = async () => {
-            try {
-                const fetchedUser = await getUser();
-                setUser(fetchedUser);
-            } catch (error) {
-                console.error('Erreur lors de la récupération de l\'utilisateur:', error);
-            }
-        };
-        fetchUser();
-    }, []);
-    console.log('super nickel', user);
+    const { myUser } = useAuth();
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
+    
+        if (myUser) {
+            ws.onopen = () => {
+                console.log(myUser);
+                console.log('WebSocket connecté à la room:', roomId);
+                const maxScoreNum = Number(maxScore);
+                ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
+                ws.send(JSON.stringify({ name: myUser.username }));
+            };
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
 
-        ws.onopen = () => {
-            console.log('WebSocket connecté à la room:', roomId);
-            const maxScoreNum = Number(maxScore);
-            ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
-        };
-
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
-
-            if (data.id) {
-                setPlayerId(data.id);
-            }
-            if (data.players) {
-                setRoomPlayers(data.players);
-            }
-            if (data.paddles) {
-                setPaddleLeftPos(data.paddles.left);
-                setPaddleRightPos(data.paddles.right);
-            }
-            if (data.ball) {
-                setBallPos(data.ball);
-            }
-            if (data.score) {
-                setScore1(data.score.player1);
-                setScore2(data.score.player2);
-            }
-            if (data.max_score !== undefined) {
-                setMaxScoreToUse(data.max_score);
-            }
-            if (data.players && data.players.length >= 2) {
-                const maxScore2 = data.max_score;
-                if (data.score.player1 >= maxScore2) {
-                    console.log("Gagnant :", data.players[0]);
-                    setWinner(data.players[0]);
-                    setIsGameOver(true);
-                } else if (data.score.player2 >= maxScore2) {
-                    console.log("Gagnant :", data.players[1]);
-                    setWinner(data.players[1]);
-                    setIsGameOver(true);
+                if (data.id) {
+                    setPlayerId(data.id);
                 }
-            }
-        };
+                if (data.players) {
+                    setRoomPlayers(data.players);
+                }
+                if (data.paddles) {
+                    setPaddleLeftPos(data.paddles.left);
+                    setPaddleRightPos(data.paddles.right);
+                }
+                if (data.ball) {
+                    setBallPos(data.ball);
+                }
+                if (data.score) {
+                    setScore1(data.score.player1);
+                    setScore2(data.score.player2);
+                }
+                if (data.max_score !== undefined) {
+                    setMaxScoreToUse(data.max_score);
+                }
 
-        ws.onclose = (event) => {
-            console.log('WebSocket fermé, code :', event.code);
-        };
+                if (data.players && data.players.length >= 2) {
+                    const maxScore2 = data.max_score;
+                    if (data.score.player1 >= maxScore2) {
+                        console.log("Gagnant :", data.players[0]);
+                        setWinner(data.players[0]);
+                        setIsGameOver(true);
+                    } else if (data.score.player2 >= maxScore2) {
+                        console.log("Gagnant :", data.players[1]);
+                        setWinner(data.players[1]);
+                        setIsGameOver(true);
+                    }
+                }
+            };
 
-        ws.onerror = (error) => {
-            console.error('Erreur WebbalGameMulti/a2ff89a8-ff76-4128-8deb-114108418c63Socket :', error);
-        };
+            ws.onclose = (event) => {
+                console.log('WebSocket fermé, code :', event.code);
+            };
+
+            ws.onerror = (error) => {
+                console.error('Erreur WebbalGameMulti/a2ff89a8-ff76-4128-8deb-114108418c63Socket :', error);
+            };
+        }
 
         setWebSocket(ws);
 
@@ -143,12 +134,6 @@ const PongMulti = ({ roomId, maxScore }) => {
     }, [roomId, maxScore]);
 
     usePaddleMovement(webSocket, playerId, roomPlayers);
-    useEffect(() => {
-        if (webSocket && webSocket.readyState === WebSocket.OPEN && user) {
-            webSocket.send(JSON.stringify({ name: user.username }));
-            console.log("Nom d'utilisateur envoyé via WebSocket :", user.username);
-        }
-    }, [webSocket, user]);
 
     return (
         <div className="pong-container">
