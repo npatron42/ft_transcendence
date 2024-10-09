@@ -95,18 +95,27 @@
     padding-left: 20px;
 }
 
-.welcomeMessage-username {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60%;
-    padding-left: 20px;
-}
-
-.welcomeMessage-span {
+.welcomeMessage-span-username {
     font-family: Millimetre;
     color: #FAF3DD;
     font-size: 22px;
+    padding-left: 8px;
+    border-bottom: 2px solid #ffa69e;
+}
+
+.welcomeMessage-span {
+    border-top: 2px solid #ffa69e;
+    font-family: Millimetre;
+    color: #FAF3DD;
+    font-size: 22px;
+}
+
+.welcomeMessage-span:hover,
+.welcomeMessage-span-username:hover {
+
+    font-family: Millimetre;
+    color: #FAF3DD;
+    font-size: 23px;   
 }
 
 
