@@ -3,10 +3,12 @@ import "./chat.css"
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../provider/UserAuthProvider";
 
-
 function Chat() {
 
-    const {myUser} = useAuth()
+    const {myUser} = useAuth();
+    const [friendsList, setFriendsList] = useState([]);
+    const [allUsers, setAllUsers] = useState([])
+
     const [friendsMessagesClicked, setFriendsMessagesClicked] = useState(false)
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
 
