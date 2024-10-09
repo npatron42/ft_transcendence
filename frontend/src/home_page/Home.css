@@ -87,13 +87,10 @@
     font-size: 16px;
     text-align: center;
     color: #FFA69E;
-
 }
 
-
 .friends-list {
-    height: 325px;
-    overflow-y: auto;
+    height: 300px;
     border-radius: 50px;
     border: 4px solid #ffa69e;
     width: 450px; 
@@ -146,7 +143,30 @@
 .noUsers {
     font-family: 'Millimetre', sans-serif;
     font-size: 20px;
-    padding-top: 80px;
-    padding-left: 115px;
+    text-align: center;
+    margin-top: 60px;
     color: #FAF3DD;
 }
+
+.users-list {
+	max-height: 200px;
+	overflow-x: hidden;
+    margin-right: 5px;
+}
+  
+  .users-list.scroll {
+	overflow-y: auto;
+  }
+  
+  .users-list.scroll::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #2a2c31;
+  }
+  
+  .users-list.scroll::-webkit-scrollbar-thumb
+  {
+	border: 2px solid #000000;
+	border-radius: 20px;
+	background-color: #AED9E0;
+  }

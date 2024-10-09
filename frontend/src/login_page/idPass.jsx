@@ -32,6 +32,7 @@ function idPass() {
    			 	password
 			});
 				if (response.data.success) {
+					console.log("JE PASSE AL AVEC 42")
                 	localStorage.setItem('jwt', response.data.token);
 					// console.log('Essai de connexion avec:', { username, password });
                 	navigate('/home');

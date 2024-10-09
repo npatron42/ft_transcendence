@@ -1,4 +1,4 @@
-function UserItem({ user, handleInvitation, isInviting, chooseStatus}) {
+function UserItem({ user, handleInvitation, chooseStatus}) {
     return (
         <tr className="friend-item">
             <td className="friend-item.td">

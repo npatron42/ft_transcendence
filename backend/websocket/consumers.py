@@ -372,6 +372,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
         data = json.loads(text_data);
         type = data["type"]
+        myUser = self.scope["user"]
 
         # INVITE METHODE
         if (type == "INVITE"):
@@ -437,6 +438,12 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                     "AllUsers": serializerAllUsersReceiver.data
                 }
 
+
+                friendsInvitationsToReceiver = await getAllNotifications(myReceiverUsername)
+                await sendToClient2(self, socketReceiver, friendsInvitationsToReceiver)
+
+                friendsInvitationsToExpeditor = await getAllNotifications(myExpeditor.username)
+                await self.send(text_data=json.dumps(friendsInvitationsToExpeditor))                
 
                 await self.send(text_data=json.dumps(allUsersToSendExpeditor))
                 await sendToClient2(self, socketReceiver, allUsersToSendReceiver)
@@ -522,6 +529,12 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await sendToClient2(self, socketUserDeleted, friendsListDeletedUserToSend)
 
             await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
-            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)  
+            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)
+        elif type == "DECLINE":
+            parse = data.get("parse")
+            await eraseInvitation(parse)
+            dataToSend = await getAllNotifications(myUser.username)
+            await sendToClient2(self, socketsUsers[myUser.username], dataToSend)
+            
 
 

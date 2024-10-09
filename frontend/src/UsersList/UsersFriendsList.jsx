@@ -6,114 +6,114 @@ import Loading from '../loading_page/Loading';
 import { useWebSocket } from '../provider/WebSocketProvider';
 const UsersFriendsList = ({ myUser }) => {
 
-    const [socketMessage, setSocketMessage] = useState({});
+    const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
+
+    const [socketMessage, setSocketMessage] = useState([]);
     const [usersList, setUsersList] = useState([]);
     const [friendsList, setFriendsList] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [isInviting, setIsInviting] = useState(false);
     const [activeList, setActiveList] = useState('users');
-    const myJwt = localStorage.getItem('jwt');
-
-    const socketUser = useWebSocket();
 
     useEffect(() => {
-        const handleSocketUser = () => {
-
-            socketUser.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                if (data["friends"]) {
-                    changeFriendsList(data);
-                }
-                if (data["AllUsers"]) {
-                    changeUsersList(data["AllUsers"], friendsList)
-                }
-                if (data["friendsInvitations"]) {
-                    console.log("socket --> ", data["friendsInvitations"]);
-                }
-                if (data["status"]) {
-                    console.log(data["status"]);
-                    setSocketMessage(data["status"]);
-                }
-            };
-        };
-
-        const changeFriendsList = (data) => {
-            console.log(data)
-            setFriendsList(data["friends"])
-        } 
-  
-        const changeUsersList = async (usersList, friendsList) => {
-            const allUsers = usersList
-            const filteredList = allUsers.filter(user => user.username !== myUser.username);
-            const withoutFriends = [];
-            for (let i = 0; i < filteredList.length; i++) {
-                let isFriend = false;
-                const tmpName = filteredList[i].username;
-                for (let i = 0; i < friendsList.length; i++) {
-                    if (tmpName === friendsList[i].username) {
-                        isFriend = true;
-                    }
-                }
-                if (isFriend == false)
-                    withoutFriends.push(filteredList[i])
+        const handleSocketUser = (data) => {
+            if (data["friends"]) {
+                changeFriendsList(data);
             }
-            setUsersList(withoutFriends);
+            if (data["AllUsers"]) {
+                changeUsersList(data["AllUsers"], friendsList);
+            }
         };
 
-        const defineUsersList = async (friendsList) => {
-            setIsLoading(true);
-            const myList = await getAllUsers();
-            const filteredList = myList.filter(user => user.username !== myUser.username);
-            const withoutFriends = [];
-            for (let i = 0; i < filteredList.length; i++) {
-                let isFriend = false;
-                const tmpName = filteredList[i].username;
-                for (let i = 0; i < friendsList.length; i++) {
-                    if (tmpName === friendsList[i].username) {
-                        isFriend = true;
-                    }
-                }
-                if (isFriend == false)
-                    withoutFriends.push(filteredList[i])
-            }
-            setUsersList(withoutFriends);
-            setIsLoading(false);
-        };
-
-        const defineFriendsList = async () => {
-            setIsLoading(true);
-            const myFriendsList = await getFriendsList();
-            setFriendsList(myFriendsList);
-            setIsLoading(false);
-            return (myFriendsList);
-        };
-        
-        const defineAllUsersStatus = async () => {
-            const allUsers = await getAllUsers();
-            const myResult = {}
-            for (let i = 0; i < allUsers.length; i++) {
-                const username = allUsers[i].username;
-                const hisStatus = allUsers[i].status;
-                myResult[username] = hisStatus;
-            }
-            console.log("Le result HTTP ---> ", myResult);
-            setSocketMessage(myResult);
+        const handleStatus = (data) => {
+            setSocketMessage(data["status"]);
         }
 
-        const initMyLists = async () => {
-            const myFriendsList = await defineFriendsList();
-            await defineUsersList(myFriendsList);
-            await defineAllUsersStatus();
+        const unsubscribeMess = subscribeToMessages(handleSocketUser);
+        const unsubscribeStatus = subscribeToStatus(handleStatus);
+        return () => {
+            unsubscribeMess(); 
+            unsubscribeStatus();
+        };
+    }, [subscribeToMessages, subscribeToStatus, socketUser]);
 
+    const changeFriendsList = (data) => {
+        setFriendsList(data["friends"])
+    } 
+
+    const changeUsersList = async (usersList, friendsList) => {
+        const allUsers = usersList
+        const filteredList = allUsers.filter(user => user.username !== myUser.username);
+        const withoutFriends = [];
+        for (let i = 0; i < filteredList.length; i++) {
+            let isFriend = false;
+            const tmpName = filteredList[i].username;
+            for (let i = 0; i < friendsList.length; i++) {
+                if (tmpName === friendsList[i].username) {
+                    isFriend = true;
+                }
+            }
+            if (isFriend == false)
+                withoutFriends.push(filteredList[i])
         }
+        setUsersList(withoutFriends);
+    };
 
-        handleSocketUser(); 
-        initMyLists();
-        
+    const defineUsersList = async (friendsList) => {
+        setIsLoading(true);
+        const myList = await getAllUsers();
+        const filteredList = myList.filter(user => user.username !== myUser.username);
+        const withoutFriends = [];
+        for (let i = 0; i < filteredList.length; i++) {
+            let isFriend = false;
+            const tmpName = filteredList[i].username;
+            for (let i = 0; i < friendsList.length; i++) {
+                if (tmpName === friendsList[i].username) {
+                    isFriend = true;
+                }
+            }
+            if (isFriend == false)
+                withoutFriends.push(filteredList[i])
+        }
+        setUsersList(withoutFriends);
+        setIsLoading(false);
+    };
 
-    }, [myJwt, myUser.username, socketUser]);
+    const defineFriendsList = async () => {
+        setIsLoading(true);
+        const myFriendsList = await getFriendsList();
+        setFriendsList(myFriendsList);
+        setIsLoading(false);
+        return (myFriendsList);
+    };
     
+    const defineAllUsersStatus = async () => {
+        const allUsers = await getAllUsers();
+        const myResult = []
+        for (let i = 0; i < allUsers.length; i++) {
+            const username = allUsers[i].username;
+            const hisStatus = allUsers[i].status;
+            let hisStatusTmp;
 
+            if (hisStatus === "online")
+                hisStatusTmp = true
+            else
+                hisStatusTmp = false
+            myResult[username] = hisStatusTmp;
+        }
+        setSocketMessage(myResult);
+    }
+
+    const initMyLists = async () => {
+        const myFriendsList = await defineFriendsList();
+        await defineUsersList(myFriendsList);
+        await defineAllUsersStatus();
+    };
+
+    useEffect(() => {
+        initMyLists();
+    },[myUser.username])
+    
     const showUsersList = () => {
         setActiveList('users');
     }
@@ -122,22 +122,21 @@ const UsersFriendsList = ({ myUser }) => {
     }
 
     const handleInvitation = (userInvited) => {
-        if (socketUser) {
+        if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             setIsInviting(true);
             const data = {
                 type: "INVITE",
                 invitationFrom: myUser.username,
                 to: userInvited.username,
                 parse: myUser.username + "|" + userInvited.username
-            }
+            };
             socketUser.send(JSON.stringify(data));
             setIsInviting(false);
         } else {
             console.log("WebSocket for invitations is not open");
         }
-        
     };
-
+    
     const deleteFriend = (userDeleted) => {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
@@ -145,7 +144,7 @@ const UsersFriendsList = ({ myUser }) => {
                 userWhoDelete: myUser.username,
                 userDeleted: userDeleted.username,
                 parse: myUser.username + "|" + userDeleted.username
-            }
+            };
             socketUser.send(JSON.stringify(data));
         } else {
             console.log("WebSocket for invitations is not open");
@@ -153,7 +152,9 @@ const UsersFriendsList = ({ myUser }) => {
     };
 
     const chooseStatus = (username) => {
-        return socketMessage[username] ? "online" : "offline";
+        if (socketMessage[username] === true)
+            return ("online")
+        return ("offline")
     };
 
     return (
@@ -164,36 +165,35 @@ const UsersFriendsList = ({ myUser }) => {
                 <>
                     <div className="center-container">
                         {activeList === 'users' ? (
-                        <div>
-                            <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
-                                Users
-                            </h4>
-                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                                Friends
-                            </h4>
-                        </div>
+                            <div>
+                                <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
+                                    Users
+                                </h4>
+                                <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
+                                    Friends
+                                </h4>
+                            </div>
                         ) : (
-                        <div>
-                            <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                                Users
-                            </h4>
-                            <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
-                                Friends
-                            </h4>
-                        </div>
+                            <div>
+                                <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
+                                    Users
+                                </h4>
+                                <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
+                                    Friends
+                                </h4>
+                            </div>
                         )}
                     </div>
+                    
                     {activeList === 'users' ? (
-                        <div className="users-list">
-                            <table className="">
-                                <tbody className="bodyUsers">
-                                    {Array.isArray(usersList) ? (
-                                        usersList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="noUsers">No users found</td>
-                                            </tr>
-                                        ) : (
-                                            usersList.map((user) => (
+                        <div>
+                            {Array.isArray(usersList) ? (
+                                usersList.length === 0 ? (
+                                    <div className="noUsers">No users found</div>
+                                ) : (
+                                    <table className={`users-list ${usersList.length >= 4 ? 'scroll' : ''}`}>
+                                        <tbody>
+                                            {usersList.map((user) => (
                                                 <UserItem 
                                                     key={user.id} 
                                                     user={user} 
@@ -201,48 +201,54 @@ const UsersFriendsList = ({ myUser }) => {
                                                     isInviting={isInviting}
                                                     chooseStatus={chooseStatus}
                                                 />
-                                            ))
-                                        )
-                                    ) : (
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
+                            ) : (
+                                <table>
+                                    <tbody>
                                         <tr>
                                             <td colSpan="4" className="noUsers">Invalid user list</td>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     ) : (
-                        <div className="users-list">
-                            <table className="">
-                                <tbody className="bodyUsers">
-                                    {Array.isArray(friendsList) ? (
-                                        friendsList.length === 0 ? (
-                                            <tr>
-                                                <td colSpan="4" className="noUsers">You don't have friends...</td>
-                                            </tr>
-                                        ) : (
-                                            friendsList.map((user) => (
+                        <div>
+                            {Array.isArray(friendsList) ? (
+                                friendsList.length === 0 ? (
+                                    <div className="noUsers">No friends found</div>
+                                ) : (
+                                    <table className={`users-list ${friendsList.length >= 4 ? 'scroll' : ''}`}>
+                                        <tbody>
+                                            {friendsList.map((user) => (
                                                 <FriendItem 
                                                     key={user.id} 
                                                     user={user} 
                                                     chooseStatus={chooseStatus}
                                                     deleteFriend={deleteFriend}
                                                 />
-                                            ))
-                                        )
-                                    ) : (
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                )
+                            ) : (
+                                <table>
+                                    <tbody>
                                         <tr>
-                                            <td colSpan="4" className="noUsers">Invalid friends list</td>
+                                            <td colSpan="4" className="noUsers">Invalid user list</td>
                                         </tr>
-                                    )}
-                                </tbody>
-                            </table>
+                                    </tbody>
+                                </table>
+                            )}
                         </div>
                     )}
                 </>
             )}
         </div>
     );
-}
+}    
 
 export default UsersFriendsList;
