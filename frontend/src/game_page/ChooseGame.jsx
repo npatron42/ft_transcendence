@@ -35,16 +35,16 @@ const ChooseGame = () => {
 
 
   
-    useEffect(() => {
-      if (socketUser) {
-        const handleMessage = () => {
-            socketUser.onmessage = (event) => {
-                const data = JSON.parse(event.data);
-                console.log("CHOOSEGAME RECEIVED")
-            }
-        };
-      }
-    }, [socketUser]);
+    // useEffect(() => {
+    //   if (socketUser) {
+    //     const handleMessage = () => {
+    //         socketUser.onmessage = (event) => {
+    //             const data = JSON.parse(event.data);
+    //             console.log("CHOOSEGAME RECEIVED")
+    //         }
+    //     };
+    //   }
+    // }, [socketUser]);
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">

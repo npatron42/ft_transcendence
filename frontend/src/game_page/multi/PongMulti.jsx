@@ -111,7 +111,6 @@ const PongMulti = ({ roomId, maxScore }) => {
             if (data.max_score !== undefined) {
                 setMaxScoreToUse(data.max_score);
             }
-
             if (data.players && data.players.length >= 2) {
                 const maxScore2 = data.max_score;
                 if (data.score.player1 >= maxScore2) {

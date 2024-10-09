@@ -1,14 +1,9 @@
 import './App.css';
 import './i18n';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
 import { Routes, Route } from 'react-router-dom';
-import { getUser } from './api/api.js';
-import { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
 import { WebSocketProvider } from './provider/WebSocketProvider.jsx';
 import { UserAuthProvider } from './provider/UserAuthProvider.jsx';
-
 import NavbarBS from './components/Navbar.jsx';
 import GlobalGameSolo from './game_page/solo/GlobalGameSolo';
 import LoginPage from './login_page/loginPage';
@@ -21,7 +16,8 @@ import { getUser } from './api/api.js';
 import './i18n';
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
-import { WebSocketProvider } from './provider/WebSocketProvider.jsx';
+import Check42User from './check42user/Check42User.jsx';
+import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
 
 const App = () => {
   const location = useLocation();
@@ -43,7 +39,7 @@ const App = () => {
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
-
+        <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
       </Routes>
       </WebSocketProvider>
     )}
