@@ -30,7 +30,9 @@ INSTALLED_APPS = [
 ]
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
+ALLOWED_HOSTS = ['*']
+
 
 
 AUTH_USER_MODEL = 'users.User'
@@ -38,11 +40,15 @@ AUTH_USER_MODEL = 'users.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
+    'http://192.168.1.25:5173',
+    'http://192.168.1.25:8000', 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
+    'http://192.168.1.25:5173',
+    'http://192.168.1.25:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

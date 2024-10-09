@@ -26,6 +26,14 @@
       "emailRequired": "Email is required",
       "emailInvalid": "Email is not valid",
       "passwordRequired": "Password is required",
-      "passwordInvalid": "Password must be at least 8 characters, including an uppercase letter,\na lowercase letter, a number, and a special character."
+      "passwordInvalid": "Password must be at least 8 characters, including an uppercase letter,\na lowercase letter, a number, and a special character.",
+      "userPris": "Username already used",
+      "mailPris": "Email already used"
+    },
+
+    "profilPage" : {
+      "2fa" : "Enable two-factor authentication",
+      "upload" : "Click to upload",
+      "delete" : "Delete"
     }
   }

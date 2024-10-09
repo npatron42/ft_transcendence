@@ -46,7 +46,7 @@ def registerPage(request):
     if request.method == 'POST':
         data = json.loads(request.body)
         logger.info(f'Received data: {data}')
-        
+                
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')

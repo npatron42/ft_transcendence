@@ -1,0 +1,30 @@
+.custom-2fA {
+	position:absolute;
+	top: 75vh;
+	left: 41vw; 
+	background-color:  #FDCDBE;
+	padding: 15px;
+	border: 2px solid #5E6472 !important;
+	color:  #5E6472 !important; 
+	box-shadow: 0px 1vw 2vw rgba(0, 2, 10, 0.5);
+	font-size: 1.1vw; 
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold ;
+	border-radius: 25px; 
+}
+
+.custom-upload{
+	position:absolute;
+	top: 16vh;
+	left: 50.5vw;
+	width: 7vw;
+    height: 3.5vw;
+	font-size: 1vw; 
+	font-weight: bold ;
+	color: #FDCDBE !important;
+    background-color: #5E6472;
+	border: 0.8px solid #FDCDBE !important;
+	border-radius: 6px; 
+	font-size: 1vw; 
+	font-family: 'Millimetre', sans-serif;
+}

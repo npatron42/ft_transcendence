@@ -52,15 +52,15 @@ function idRegister() {
 			password
 		});
 			if (response.data.success) {
-				console.log('Essai de connexion avec:', { username: response.data.user.username, email: response.data.user.email, password: response.data.user.password })
+				// console.log('Essai de connexion avec:', { username: response.data.user.username, email: response.data.user.email, password: response.data.user.password })
 				navigate('/');
 			}
 			else {
 				if (response.data.username === false){
-					newErrors.username = ('user deja pris poto');
+					newErrors.username = ("registerPage.userPris");
 				}
 				if (response.data.email === false){
-					newErrors.password =('eamil deja pris poto');
+					newErrors.email =("registerPage.mailPris");
 				}
 				if(Object.keys(newErrors).length > 0){
 					setErrors(newErrors);
@@ -81,7 +81,8 @@ function idRegister() {
 					type="text"
 					placeholder= {t("registerPage.champ1")}
 					value={username}
-					onChange={(e) => setUsername(e.target.value)}/>
+					onChange={(e) => setUsername(e.target.value)}
+					className="form-test"/>
 				</Form.Group>
 
 				<p className="mail"> {t("registerPage.mail")}</p> 
@@ -90,7 +91,8 @@ function idRegister() {
 					type="email"
 					placeholder= {t("registerPage.champ2")}
 					value={email}
-					onChange={(e) => setEmail(e.target.value)}/>
+					onChange={(e) => setEmail(e.target.value)}
+					className="form-test"/>
 				</Form.Group>
 				 
 				<p className="pass">{t("registerPage.mdp")}</p> 
@@ -99,7 +101,8 @@ function idRegister() {
 					type="password"
 					placeholder= {t("registerPage.champ3")}
 					value={password}
-					onChange={(e) => setPassword(e.target.value)}/>
+					onChange={(e) => setPassword(e.target.value)}
+					className="form-test"/>
 				</Form.Group>
 					
 					{errors.username && <p className="error-user">{t(errors.username)}</p>}

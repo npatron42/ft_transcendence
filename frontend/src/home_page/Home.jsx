@@ -3,7 +3,7 @@ import "./Home.css";
 import "../App.css";
 import { getUser } from '../api/api'
 import { useNavigate } from 'react-router-dom';
-
+import Languages from "../login_page/languages";
 import NavbarBS from "../components/Navbar";
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -47,6 +47,7 @@ const Home = () => {
 
     return (
         <div id="background-container">
+            <Languages></Languages>
             <NavbarBS myUser={myUser} />
             <div className="card-users">
                 <UsersFriendsList myUser={myUser} />
