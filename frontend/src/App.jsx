@@ -31,7 +31,7 @@ const App = () => {
       </Routes>
       <UserAuthProvider>
       {!["/", "/register", "check42user"].includes(location.pathname) && (
-        <WebSocketProvider>
+      <WebSocketProvider>
       <NavbarBS/>
       <Routes>
         <Route path="/profile" element={<ProfilPage/>} />
