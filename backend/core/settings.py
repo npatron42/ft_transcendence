@@ -47,8 +47,8 @@ CORS_ALLOWED_ORIGINS = [
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
-    'http://10.11.1.5:5173'
-    'http://10.11.1.5:8000,
+    'http://10.11.1.5:5173',
+    'http://10.11.1.5:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

@@ -164,10 +164,10 @@
 
 
 .form-test:focus {
-    outline: none; /* Supprime le contour par défaut */
-    box-shadow: none; /* Supprime l'ombre */
-    background-color: inherit; /* Couleur de fond d'origine */
-    color: inherit; /* Couleur du texte d'origine */
+    outline: none;
+    box-shadow: none;
+    background-color: inherit;
+    color: inherit; 
 	border: 0.8px solid #869fa941 !important;
 }
 
