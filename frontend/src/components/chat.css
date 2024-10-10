@@ -44,7 +44,7 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 70px;
+    height: 12%;
     background: rgb(94,100,114);
     background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%);
     border-top-left-radius: 25px;
@@ -119,11 +119,67 @@
 }
 
 
-
-
 .createChannel {
     width: 150px;
     height: 150px;
     border: 2px solid #FAF3DD;
     border-radius: 25px;
 }
+
+
+.chat-discussions-friends {
+    height: 88%;
+    width: 100%;
+    margin-top: 40%;
+}
+
+.friend-presentation:hover .friend-name-center {
+    color: #ffa69e !important;
+    padding-top: 2px;
+}
+
+.friend-presentation:hover .profile-picture-discuss {
+    border: 2px solid #ffa69e;
+}
+
+.friend-presentation {
+    margin-top: 2px;
+    width: 100%;
+    height: 10%;
+    border-bottom: 2px solid #FAF3DD;
+    display: flex;
+}
+
+.friend-separate {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-name {
+    width: 70%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.friend-name-center {
+    font-family: Millimetre;
+    font-size: 16px;
+    color: #FAF3DD;
+}
+
+.profile-picture-discuss {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FAF3DD;
+}
+

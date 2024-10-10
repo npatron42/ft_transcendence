@@ -3,7 +3,11 @@ import { getAllUsers, getFriendsList, getNotifs } from '../api/api';  // Assurez
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
+
 import { useWebSocket } from '../provider/WebSocketProvider';
+import { defineUsersFriendsList } from './utilsUsersFunctions';
+import { useAuth } from '../provider/UserAuthProvider';
+
 const UsersFriendsList = ({ myUser }) => {
 
     const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
@@ -58,34 +62,6 @@ const UsersFriendsList = ({ myUser }) => {
         }
         setUsersList(withoutFriends);
     };
-
-    const defineUsersList = async (friendsList) => {
-        setIsLoading(true);
-        const myList = await getAllUsers();
-        const filteredList = myList.filter(user => user.username !== myUser.username);
-        const withoutFriends = [];
-        for (let i = 0; i < filteredList.length; i++) {
-            let isFriend = false;
-            const tmpName = filteredList[i].username;
-            for (let i = 0; i < friendsList.length; i++) {
-                if (tmpName === friendsList[i].username) {
-                    isFriend = true;
-                }
-            }
-            if (isFriend == false)
-                withoutFriends.push(filteredList[i])
-        }
-        setUsersList(withoutFriends);
-        setIsLoading(false);
-    };
-
-    const defineFriendsList = async () => {
-        setIsLoading(true);
-        const myFriendsList = await getFriendsList();
-        setFriendsList(myFriendsList);
-        setIsLoading(false);
-        return (myFriendsList);
-    };
     
     const defineAllUsersStatus = async () => {
         const allUsers = await getAllUsers();
@@ -105,13 +81,18 @@ const UsersFriendsList = ({ myUser }) => {
     }
 
     const initMyLists = async () => {
-        const myFriendsList = await defineFriendsList();
-        await defineUsersList(myFriendsList);
+
+        const [myFriendsList, myUsersList] = await defineUsersFriendsList(myUser);
+        setFriendsList(myFriendsList);
+        setUsersList(myUsersList);
         await defineAllUsersStatus();
     };
 
     useEffect(() => {
+        setIsLoading(true)
         initMyLists();
+        setIsLoading(false)
+
     },[myUser.username])
     
     const showUsersList = () => {
