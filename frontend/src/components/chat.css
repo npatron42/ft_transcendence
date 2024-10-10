@@ -6,6 +6,13 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Millimetre-Light'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Light.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
 .chat {
     width: 500px;
     height: 600px;
@@ -183,3 +190,101 @@
     border: 2px solid #FAF3DD;
 }
 
+.header-discuss {
+    width: 100%;
+    height: 12%;
+    display: flex;
+}
+
+
+.header-discuss-name-custom {
+    font-family: Millimetre;
+    font-size: 17px;
+    color: #FAF3DD;
+    padding-left: 100px;
+}
+
+.header-discuss-name-custom:hover {
+    font-family: Millimetre;
+    font-size: 17px;
+    color: #FFA69E;
+    padding-left: 100px;
+    padding-bottom: 5px;
+}
+
+
+.header-discuss-name {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-status {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+
+.header-status-custom-online {
+    font-size: 15px;
+    color: #B8F2E6;
+}
+
+.header-status-custom-offline {
+    font-size: 15px;
+    color: #FFA69E;
+}
+
+
+.come-back {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.come-back-custom {
+    font-size: 25px;
+    color: #FAF3DD;
+}
+
+.come-back-custom:hover {
+    font-size: 27px;
+    color: #FFA69E;
+    padding-bottom: 3px;
+}
+
+.principal-discussion {
+    padding-left: 20px;
+    width: 60%;
+    height: 100%;
+}
+
+.core-discussion {
+    width: 100%;
+    height: 72%;
+}
+
+.form-custom {
+    width: 100%;
+    height: 10%;
+    border-radius: 10px;
+    border: 1px solid #FAF3DD;
+    background: transparent;
+}
+
+.typing-text-custom {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px solid #FAF3DD;
+    background: transparent;
+    font-family: Millimetre;
+    padding-bottom: 20px;
+}

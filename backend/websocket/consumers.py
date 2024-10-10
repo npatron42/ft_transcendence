@@ -371,9 +371,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
 
         data = json.loads(text_data);
+
         type = data["type"]
         myUser = self.scope["user"]
-
         # INVITE METHODE
         if (type == "INVITE"):
             myReceiverUsername = data.get('to')
@@ -535,6 +535,12 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await eraseInvitation(parse)
             dataToSend = await getAllNotifications(myUser.username)
             await sendToClient2(self, socketsUsers[myUser.username], dataToSend)
+
+        # HANDLE CHAT
+
+        # elif type == "MESSAGE":
+            
+
             
 
 

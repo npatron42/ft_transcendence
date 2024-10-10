@@ -5,22 +5,51 @@ import { useAuth } from "../provider/UserAuthProvider";
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { defineUsersFriendsList } from "../UsersList/utilsUsersFunctions";
 import { getAllUsers } from "../api/api";
+import { useNavigate } from 'react-router-dom';
+
 
 
 import Loading from "../loading_page/Loading";
 
 function Chat() {
 
-    const [isLoading, setIsLoading] = useState(true);
+    
+    const navigate = useNavigate()
     const {myUser} = useAuth();
+    
+    
+    const [isLoading, setIsLoading] = useState(true);
     const [friendsList, setFriendsList] = useState([]);
     const [usersList, setUsersList] = useState([]);
+    const [userSelected, setUserSelected] = useState(null);
 
     const [usersStatus, setUsersStatus] = useState([]);
 
     const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
     const [friendsMessagesClicked, setFriendsMessagesClicked] = useState(false)
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
+
+    const [inputMessage, setInputMessage] = useState('');
+
+
+    const handleWriting = (event) => {
+        if (event.key === 'Enter') { 
+            event.preventDefault();
+            setInputMessage('')
+            const myData = {
+                "type": "MESSAGE",
+                "sender": myUser,
+                "receiver": userSelected,
+                "message": inputMessage
+            }
+            socketUser.send(JSON.stringify(myData));
+        }
+    };
+
+    const handleChange = (event) => {
+        setInputMessage(event.target.value);
+    };
+
 
     const handleFriendsMessages = () => {
         if (friendsMessagesClicked === true) {
@@ -59,7 +88,6 @@ function Chat() {
 
         const handleStatus = (data) => {
             setUsersStatus(data["status"]);
-            console.log(data["status"])
         }
 
         const unsubscribeMess = subscribeToMessages(handleSocketUser);
@@ -72,6 +100,11 @@ function Chat() {
     }, [subscribeToMessages, subscribeToStatus, socketUser]);
 
 
+    const chooseStatus = (username) => {
+        if (usersStatus[username] === true)
+            return ("online")
+        return ("offline")
+    };
 
     // SOCKET FRIENDSLIST
 
@@ -115,7 +148,6 @@ function Chat() {
                 status[username] = hisStatusTmp;
         }
         setUsersStatus(status);
-        console.log("status --> ", status)
     }
 
 
@@ -126,8 +158,6 @@ function Chat() {
         const [myFriendsList, myUsersList] = await defineUsersFriendsList(myUser);
         setFriendsList(myFriendsList);
         setUsersList(myUsersList);
-        console.log("Ma UsersList into chat ---> ", myUsersList);
-        console.log("Ma FriendsList into chat ---> ", myFriendsList);
         await defineAllUsersStatus();
     };
 
@@ -138,6 +168,22 @@ function Chat() {
 
     },[myUser.username])
 
+
+    const handleClickDiscuss = (myUser) => {
+        setUserSelected(myUser)
+        return ;
+    }
+
+    const handleComeBack = () => {
+        setUserSelected(null)
+        return ;
+    }
+
+    const handleProfile = (myUser) => {
+        const link = "/profile/" + myUser.username
+        navigate(link)
+        return ;
+    }
 
 
     return (
@@ -161,11 +207,10 @@ function Chat() {
                             </div>
                         )}
 
-
                         {friendsMessagesClicked && !usersMessagesClicked && (
                             <div className="chat-discussions-friends">
                                 {friendsList && friendsList.map((user) => (
-                                    <div key={user.username} className="friend-presentation">
+                                    <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
                                             <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss" />
                                         </div>
@@ -176,28 +221,101 @@ function Chat() {
                                 ))}
                             </div>
                         )}
+
+
+
                         {usersMessagesClicked && !friendsMessagesClicked && (
                             <div className="welcomeMessage">
                             </div>
                         )}
                     </div>
     
+
+
+                        {/* FRIENDS CLICKED ---> NO FRIENDS */}
+                    
+
+
+                    {friendsMessagesClicked && !usersMessagesClicked && friendsList.length === 0 && (
+                        <div className="welcomeMessage">
+                            <span className="welcomeMessage-span-username">Add some friends..</span>
+                        </div>
+                    )}
+
+
+
+                        {/* FRIENDS CLICKED ---> THERE IS FRIENDS */}
+
+                    {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected === null && (
+                        <div className="welcomeMessage">
+                            <span className="welcomeMessage-span-username">Choose a discuss</span>
+                        </div>
+                    )}
+
+
+                        {/* FRIENDS CLICKED ---> FRIEND DISCUSS SELECTED */}
+
+
+                    {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected !== null && (
+                        
+                        <div className="principal-discussion">
+                            <div className="header-discuss">
+                                <div className="come-back">
+                                    <i onClick={handleComeBack} className="bi bi-arrow-left come-back-custom"></i>
+                                </div>
+                                <div className="header-discuss-name">
+                                    <span onClick={() => handleProfile(userSelected)} className="header-discuss-name-custom">{userSelected.username}</span>
+                                </div>
+                                <div className="header-status">
+                                    <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
+                                </div>
+                            </div>
+                            <div className="core-discussion">
+                                TEST
+                            </div>
+                            <form className="form-custom">
+                                <input
+                                    className="typing-text-custom"
+                                    type="text"
+                                    value={inputMessage}
+                                    onKeyDown={handleWriting}
+                                    onChange={handleChange}
+                                    placeHolder="Write here"
+                                />
+                            </form>
+                        </div>
+                    )}
+
+
+                        {/* MENU PAGE CHAT */}
+
                     {!friendsMessagesClicked && !usersMessagesClicked && (
                         <div className="welcomeMessage">
                             <span className="welcomeMessage-span">Welcome</span>
                             <span className="welcomeMessage-span-username">{myUser.username}</span>
                         </div>
                     )}
-                    {friendsMessagesClicked && !usersMessagesClicked && (
+
+
+                        {/* USERS CLICKED ---> NO USERS */}
+
+
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length === 0 && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span">Friends</span>
+                            <span className="welcomeMessage-span-username">There is no Users...</span>
                         </div>
                     )}
-                    {usersMessagesClicked && !friendsMessagesClicked && (
+
+
+                        {/* USERS CLICKED ---> THERE IS USERS */}
+
+
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && (
                         <div className="welcomeMessage">
                             <span className="welcomeMessage-span">USERS</span>
                         </div>
                     )}
+
                 </>
             )}
         </div>
