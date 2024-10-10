@@ -34,21 +34,21 @@ const usePaddleMovement = (webSocket, playerId) => {
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddleup'}));
             }
             if (keysPressed['s'] || keysPressed['S']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddledown'}));
             }
             if (keysPressed['ArrowUp']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddleup'}));
             }
             if (keysPressed['ArrowDown']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddledown'}));
             }
         }, 11);
 
         return () => clearInterval(interval);
-    }, [keysPressed, webSocket, playerId]);
+    }, [keysPressed, webSocket]);
 };
 
 
@@ -59,7 +59,6 @@ const PongMulti = ({ roomId, maxScore }) => {
     const [webSocket, setWebSocket] = useState(null);
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
-    const [playerId, setPlayerId] = useState(null);
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [score1, setScore1] = useState(0);
     const [score2, setScore2] = useState(0);
@@ -79,10 +78,8 @@ const PongMulti = ({ roomId, maxScore }) => {
             };
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
+                console.log("data recue front : ", data);
 
-                if (data.id) {
-                    setPlayerId(data.id);
-                }
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
@@ -101,17 +98,10 @@ const PongMulti = ({ roomId, maxScore }) => {
                     setMaxScoreToUse(data.max_score);
                 }
 
-                if (data.players && data.players.length >= 2) {
-                    const maxScore2 = data.max_score;
-                    if (data.score.player1 >= maxScore2) {
-                        console.log("Gagnant :", data.players[0]);
-                        setWinner(data.players[0]);
-                        setIsGameOver(true);
-                    } else if (data.score.player2 >= maxScore2) {
-                        console.log("Gagnant :", data.players[1]);
-                        setWinner(data.players[1]);
-                        setIsGameOver(true);
-                    }
+                if (data.winner) {
+                    setIsGameOver(true);
+                    setWinner(data.winner);
+                    console.log(`winner is ${data.winner}`);
                 }
             };
 
@@ -133,7 +123,7 @@ const PongMulti = ({ roomId, maxScore }) => {
         };
     }, [roomId, maxScore]);
 
-    usePaddleMovement(webSocket, playerId, roomPlayers);
+    usePaddleMovement(webSocket, roomPlayers);
 
     return (
         <div className="pong-container">
