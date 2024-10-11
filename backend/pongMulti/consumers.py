@@ -1,10 +1,29 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
+from asgiref.sync import sync_to_async
 import json
 import logging
 import asyncio
 from .models import MatchHistory
+from users.models import Invitation, User, FriendsList
 
 logger = logging.getLogger(__name__)
+
+async def save_match(winner, player1, player2, player2_score, player1_score, complete_game):
+	try:
+		await sync_to_async(MatchHistory.objects.create)(
+		player1=player1,
+		player2=player2,
+		player1_score=player1_score,
+		player2_score=player2_score,
+		winner=winner,
+		completeGame=complete_game
+	)
+		logger.info("Match sauvegardé")
+	except Exception as e:
+		logger.error("Erreur lors de la sauvegarde du match: %s", e)
+
+async def getUserByUsername(name):
+	return await sync_to_async(User.objects.get)(username=name)
 
 class PongConsumer(AsyncWebsocketConsumer):
 	paddles = {}
@@ -67,6 +86,31 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			self.channel_name
 		)
+
+		if len(PongConsumer.players[self.room_id]) == 2:
+			disconnected = self.username
+			logger.info("il est parti %s", disconnected)
+			player1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
+			player2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
+
+			if disconnected == PongConsumer.players[self.room_id][0]:
+				winner = PongConsumer.players[self.room_id][1]
+				winnerdb = player2
+			else:
+				winner = PongConsumer.players[self.room_id][0]
+				winnerdb = player1
+			
+			await save_match(winnerdb, player1, player2, 0, 0, False)
+
+			await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'game_over',
+                    'winner': winner,
+                    'score': PongConsumer.score[self.room_id]
+                }
+            )
+		
 		
 		###########
 		# RECEIVE #
@@ -208,12 +252,17 @@ class PongConsumer(AsyncWebsocketConsumer):
 		ball_radius = 15
 
 		while True:
+
+			#Win condition#
+
 			if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
 
 				if PongConsumer.score[self.room_id]['player1'] >= max_score:
 					winner = PongConsumer.players[self.room_id][0]
+					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
 				else:
 					winner = PongConsumer.players[self.room_id][1]
+					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
 
 				await self.channel_layer.group_send(
 					self.room_group_name,
@@ -223,16 +272,19 @@ class PongConsumer(AsyncWebsocketConsumer):
 						'score': PongConsumer.score[self.room_id]
 					}
 				)
-				# p1 = PongConsumer.players[self.room_id][0]
-				# p2 = PongConsumer.players[self.room_id][1]
-				# p1_score = PongConsumer.score[self.room_id]['player1']
-				# p2_score = PongConsumer.score[self.room_id]['player2']
+				p1_score = PongConsumer.score[self.room_id]['player1']
+				p2_score = PongConsumer.score[self.room_id]['player2']
+				p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
+				p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
 
-				logger.info(f'je passe par ici')
-				# await self.save_match(winner)
+				logger.info("mon p1 --> %s", p1)
+				logger.info("mon p1.username --> %s", p1.id)
+				await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
 				logger.info(f'je passe la')
 				break
 
+			#Gestion Ball#
+			
 			ball = PongConsumer.ball_pos[self.room_id]
 			direction = PongConsumer.ball_dir[self.room_id]
 
@@ -285,19 +337,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 					'max_score': max_score
 				}
 			)
-			await asyncio.sleep(0.01)
+			await asyncio.sleep(1 / 60)
 
-	def save_match(winner):
-		logger.info(f'Sauvegarde du match:', winner)
-		# try:
-		# 	match = MatchHistory.objects.create(
-		# 	player1=player1,
-		# 	player2=player2,
-		# 	player1_score=player1_score,
-		# 	player2_score=player2_score,
-		# 	winner=winner
-		# )
-		# 	match.save()
-		# 	logger.info(f'Match sauvegardé: {match}')
-		# except Exception as e:
-		# 	logger.error(f"Erreur lors de la sauvegarde du match: {e}")
+
