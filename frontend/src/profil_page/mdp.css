@@ -1,4 +1,4 @@
-.para1 {
+.para3 {
 	position: absolute;
 	left: 40.5vw;
 	top: 55.5vh;
@@ -59,7 +59,96 @@
 	border-radius: 10px; 
 	transition: transform 0.2s ease;
 }
+
 	.custom-:hover {
 		transform: translateY(-0.2vw);
 	}
 
+	.custom-click2 {
+		background-color:#5E6472;
+		color:#FDCDBE !important;
+		padding: 0.2vw 0.8vw;
+		font-size: 1vw;
+		font-family: 'Millimetre', sans-serif;
+		font-weight: bold;
+		border-radius: 10px; 
+	}
+	.custom-click3 {
+		/* background-color:#000000; */
+		background-color:rgb(255, 69, 69) ;
+		/* color:#9b5743 !important; */
+		color:#FDCDBE !important;
+		border: 1px solid #FDCDBE!important;
+		/* border :1px solid #9b5743!important; */
+		padding: 0.2vw 0.8vw;
+		font-size: 1vw;
+		font-family: 'Millimetre', sans-serif;
+		font-weight: bold;
+		border-radius: 10px; 
+	}
+  /* mdp.css */
+
+.modal-custom {
+	position: center;
+	left: 2.5vw;
+	top : 50vh;
+	padding: 0;
+}
+
+.modal-content-custom {
+	background-color: #2a2c31; 
+	padding: 5px;
+	width: 20vw!important;
+	max-width: 20vw !important;
+	margin-top: 0; 
+	margin-bottom: 0; 
+	border: none;
+	display: flex;
+    justify-content: center; /* Aligne le contenu à gauche */
+    gap: 1vw;
+  }
+  
+.txt-label {
+	color: #FAF3DD;
+	font-size: 1.1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 600;
+}
+
+.input-check {
+	font-size: 1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 600;
+	background-color: #2a2c31;
+}
+
+.input-check input {
+	width: 15vw;
+	color: #869FA9;
+	padding: 0.9vw;
+	border-radius: 0.58vw;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 0.1vw solid #222222;
+	transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.input-check input:focus {
+	color: #869FA9;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 0.1vw solid #222222;
+	box-shadow: none;
+	outline: none;
+}
+
+.modal-content {
+    background-color: #2a2c31; /* Couleur de fond */
+    padding: 2vw; /* Ajoute de l'espace à l'intérieur du modal */
+    border-radius: 3vw; /* Bords arrondis */
+    color: #FAF3DD; /* Couleur du texte */
+    font-family: 'Millimetre', sans-serif; /* Police du texte */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Ombre pour donner de la profondeur */
+    width: 30vw; /* Largeur du modal, ajustable */
+    max-width: 90%; /* Limite la largeur maximale */
+    transition: all 0.3s ease; /* Animation pour les changements */
+	justify-content: center;
+}
