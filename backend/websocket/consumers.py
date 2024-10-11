@@ -3,8 +3,8 @@ import json
 import logging
 from asgiref.sync import sync_to_async
 from django.core.exceptions import ObjectDoesNotExist
-from users.serializers import UserSerializer, InvitationSerializer, FriendsListSerializer
-from users.models import Invitation, User, FriendsList
+from users.serializers import UserSerializer, InvitationSerializer, FriendsListSerializer, MessageSerializer
+from users.models import Invitation, User, FriendsList, Message
 logger = logging.getLogger(__name__)
 import asyncio
 from channels.generic.websocket import AsyncWebsocketConsumer
@@ -81,6 +81,9 @@ async def getAllUser():
 
 async def saveInvitation(myInvitation):
     await sync_to_async(myInvitation.save)()
+
+async def saveMessage(myMessage):
+    await sync_to_async(myMessage.save)()
 
 async def saveRelationship(myFriendsList):
     await sync_to_async(myFriendsList.save)()
@@ -253,6 +256,32 @@ async def getAllNotifications(username):
     return dataToSend
 
 
+
+
+
+async def sendDiscussionToBothClient(self, userOne, userTwo):
+    messages = await sync_to_async(list)(
+        Message.objects.filter(
+            (Q(sender=userOne) & Q(receiver=userTwo) |
+            (Q(sender=userTwo) & Q(receiver=userOne))
+        ))
+    )
+
+    serializedMessages = await sync_to_async(MessageSerializer)(messages, many=True)
+
+    dataToSend = {
+        "messages": serializedMessages.data
+    }
+
+    if userOne.username in socketsUsers:
+        logger.info("OUI")
+        socketUserOne = socketsUsers.get(userOne.username)
+        await sendToClient2(self, socketUserOne, dataToSend)
+    
+    if userTwo.username in socketsUsers:
+        logger.info("OUI")
+        socketUserTwo = socketsUsers.get(userTwo.username)
+        await sendToClient2(self, socketUserTwo, dataToSend)
 
 
 
@@ -530,6 +559,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
             await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)
+
         elif type == "DECLINE":
             parse = data.get("parse")
             await eraseInvitation(parse)
@@ -538,8 +568,19 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
         # HANDLE CHAT
 
-        # elif type == "MESSAGE":
-            
+        elif type == "MESSAGE":
+
+            sender = data.get("sender")
+            receiver = data.get("receiver")
+
+            myUserSender = await getUserByUsername(sender.get("username"))
+            myUserReceiver = await getUserByUsername(receiver.get("username"))
+
+            dataToDb = Message(sender=myUserSender, receiver=myUserReceiver, message=data.get("message"))
+            await saveMessage(dataToDb)
+            await sendDiscussionToBothClient(self, myUserSender, myUserReceiver)
+
+
 
             
 

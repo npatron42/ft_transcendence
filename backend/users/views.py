@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from django.db.models import Q
-from users.models import User, FriendsList, Invitation
-from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer
+from users.models import User, FriendsList, Invitation, Message
+from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer
 from django.http import JsonResponse
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
@@ -54,6 +54,28 @@ def getAllNotifs(request):
 
 
 # FRIENDS LIST 
+
+
+def getDiscussions(request):
+    payload = middleWareAuthentication(request)
+    myUser = User.objects.filter(id = payload['id']).first()
+    
+    idSelected = request.GET.get("selectedUser")
+    myUserSelectedTmp = getUserById(idSelected)
+
+    myUserSelected = User.objects.filter(id = myUserSelectedTmp.get("id")).first()
+
+    discussionTmp = Message.objects.filter(
+        (Q(sender=myUser) & Q(receiver=myUserSelected)) | 
+        (Q(sender=myUserSelected) & Q(receiver=myUser))
+    )
+
+    discussion = MessageSerializer(discussionTmp, many=True)
+
+    dataToSend = {
+        "allDiscussion": discussion.data
+    }
+    return JsonResponse(dataToSend, safe=False)
 
 def getFriendsFromUser(user):
     friendsRelationships = FriendsList.objects.filter(Q(user1=user) | Q(user2=user))

@@ -6,9 +6,9 @@ import { useWebSocket } from '../provider/WebSocketProvider';
 import { defineUsersFriendsList } from "../UsersList/utilsUsersFunctions";
 import { getAllUsers } from "../api/api";
 import { useNavigate } from 'react-router-dom';
+import { getDiscussions } from "../api/api";
 
-
-
+import Message from "./Message";
 import Loading from "../loading_page/Loading";
 
 function Chat() {
@@ -17,8 +17,9 @@ function Chat() {
     const navigate = useNavigate()
     const {myUser} = useAuth();
     
-    
+    const [myDiscuss, setDiscuss] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
     const [friendsList, setFriendsList] = useState([]);
     const [usersList, setUsersList] = useState([]);
     const [userSelected, setUserSelected] = useState(null);
@@ -30,7 +31,6 @@ function Chat() {
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
 
     const [inputMessage, setInputMessage] = useState('');
-
 
     const handleWriting = (event) => {
         if (event.key === 'Enter') { 
@@ -83,11 +83,28 @@ function Chat() {
             }
             if (data["AllUsers"]) {
                 changeUsersList(data["AllUsers"], friendsList);
+                console.log("OUI")
+            }
+            if (data["messages"]) {
+
+                const dataSize = data["messages"].length;
+                const sender = data["messages"][dataSize - 1].sender;
+                const receiver = data["messages"][dataSize - 1].receiver;
+                
+                console.log(data["messages"][dataSize - 1].sender)
+                console.log("userSelected && sender --> ", userSelected.username, sender);
+                console.log("receiver && myUser --> ", receiver, myUser.username);
+                if (userSelected === sender || receiver === myUser) {
+                    setDiscuss(data["messages"]);
+                    console.log("GOOD")
+                }
+                console.log(data["messages"])
             }
         };
 
         const handleStatus = (data) => {
             setUsersStatus(data["status"]);
+            console.log("OUI")
         }
 
         const unsubscribeMess = subscribeToMessages(handleSocketUser);
@@ -97,7 +114,7 @@ function Chat() {
             unsubscribeMess(); 
             unsubscribeStatus();
         };
-    }, [subscribeToMessages, subscribeToStatus, socketUser]);
+    }, [subscribeToMessages, subscribeToStatus, socketUser, userSelected]);
 
 
     const chooseStatus = (username) => {
@@ -185,6 +202,25 @@ function Chat() {
         return ;
     }
 
+    useEffect(() => {
+
+        const getMessages = async () => {
+            if ( userSelected !== null) {
+                const myData = {
+                    "selectedUser": userSelected.id
+                }
+                try {
+                    const response = await getDiscussions(myData);
+                    console.log("HTTP DISCUSS --> ", myDiscuss)
+                    setDiscuss(response["allDiscussion"]);
+                } catch (error) {
+                    console.error("Erreur lors de la récupération des messages:", error);
+                }
+            };
+        } 
+
+        getMessages();
+    }, [userSelected]);
 
     return (
         <div className="chat">
@@ -259,35 +295,32 @@ function Chat() {
                     {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected !== null && (
                         
                         <div className="principal-discussion">
-                            <div className="header-discuss">
-                                <div className="come-back">
-                                    <i onClick={handleComeBack} className="bi bi-arrow-left come-back-custom"></i>
-                                </div>
-                                <div className="header-discuss-name">
-                                    <span onClick={() => handleProfile(userSelected)} className="header-discuss-name-custom">{userSelected.username}</span>
-                                </div>
-                                <div className="header-status">
-                                    <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
-                                </div>
+                        <div className="header-discuss">
+                            <div className="come-back">
+                                <i onClick={handleComeBack} className="bi bi-arrow-left come-back-custom"></i>
                             </div>
-                            <div className="core-discussion">
-                                TEST
+                            <div className="header-discuss-name">
+                                <span onClick={() => handleProfile(userSelected)} className="header-discuss-name-custom">{userSelected.username}</span>
                             </div>
-                            <form className="form-custom">
-                                <input
-                                    className="typing-text-custom"
-                                    type="text"
-                                    value={inputMessage}
-                                    onKeyDown={handleWriting}
-                                    onChange={handleChange}
-                                    placeHolder="Write here"
-                                />
-                            </form>
+                            <div className="header-status">
+                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
+                            </div>
                         </div>
+                        <div className="core-discussion">
+                            <Message myDiscuss={myDiscuss} myUser={myUser} userSelected={userSelected}/>
+                        </div>
+                        <form className="form-custom" onSubmit={e => e.preventDefault()}>
+                            <input
+                                className="typing-text-custom"
+                                type="text"
+                                value={inputMessage}
+                                onKeyDown={handleWriting}
+                                onChange={handleChange}
+                                placeholder="Write here"
+                            />
+                        </form>
+                    </div>
                     )}
-
-
-                        {/* MENU PAGE CHAT */}
 
                     {!friendsMessagesClicked && !usersMessagesClicked && (
                         <div className="welcomeMessage">
