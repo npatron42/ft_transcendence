@@ -60,8 +60,8 @@
 @keyframes pulse {
     0% {
         box-shadow: 
-            0 0 20px rgba(184, 242, 230, 0.6), /* Couleur #B8F2E6 */
-            0 0 40px rgba(179, 230, 227, 0.4), /* Couleur #B3E6E3 */
+            0 0 20px rgba(184, 242, 230, 0.6),
+            0 0 40px rgba(179, 230, 227, 0.4),
             0 10px 20px rgba(0, 0, 0, 0.5),
             inset 0 0 15px rgba(255, 255, 255, 0.1);
         border-color: #869FA9; /* Couleur initiale de la bordure */

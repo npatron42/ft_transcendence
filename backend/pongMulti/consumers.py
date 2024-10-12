@@ -32,6 +32,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	score = {}
 	max_scores = {}
 	players = {}
+	end = False
 
 		###########
 		# CONNECT #
@@ -222,6 +223,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def game_over(self, event):
 		winner = event['winner']
 		score = event['score']
+		PongConsumer.end = True
 		await self.send(text_data=json.dumps({'winner': winner, 'score': score}))
 		
 		##########
@@ -229,16 +231,18 @@ class PongConsumer(AsyncWebsocketConsumer):
 		##########
 
 	def move_paddle(self, direction, side):
-		if side == 'left':
-			if direction == 'paddleup':
-				PongConsumer.paddles[self.room_id]['left'] = max(PongConsumer.paddles[self.room_id]['left'] - 10, 45)
-			elif direction == 'paddledown':
-				PongConsumer.paddles[self.room_id]['left'] = min(PongConsumer.paddles[self.room_id]['left'] + 10, 600 - 45)
-		elif side == 'right':
-			if direction == 'paddleup':
-				PongConsumer.paddles[self.room_id]['right'] = max(PongConsumer.paddles[self.room_id]['right'] - 10, 45)
-			elif direction == 'paddledown':
-				PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 45)
+		
+		if PongConsumer.end != True:
+			if side == 'left':
+				if direction == 'paddleup':
+					PongConsumer.paddles[self.room_id]['left'] = max(PongConsumer.paddles[self.room_id]['left'] - 10, 45)
+				elif direction == 'paddledown':
+					PongConsumer.paddles[self.room_id]['left'] = min(PongConsumer.paddles[self.room_id]['left'] + 10, 600 - 45)
+			elif side == 'right':
+				if direction == 'paddleup':
+					PongConsumer.paddles[self.room_id]['right'] = max(PongConsumer.paddles[self.room_id]['right'] - 10, 45)
+				elif direction == 'paddledown':
+					PongConsumer.paddles[self.room_id]['right'] = min(PongConsumer.paddles[self.room_id]['right'] + 10, 600 - 45)
 				
 		########
 		# BALL #
