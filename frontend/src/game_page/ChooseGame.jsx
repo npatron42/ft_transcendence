@@ -54,13 +54,13 @@ const ChooseGame = () => {
                         <div className="flip-card-inner">
                             <div className="flip-card-front">
                                 <div className="flip-card-content">
-                                    <p className="title">Solo</p>
+                                    <p className="title2">Solo</p>
                                     <p>Play Alone</p>
                                 </div>
                             </div>
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
-                                    <p className="title">Settings</p>
+                                    <p className="title2">Settings</p>
                                     <Button type="button" variant="outline-dark" >Power Up</Button>
                                     <Button type="button" variant="outline-dark" >VS IA</Button>
                                     <div className="slider-container">
@@ -89,13 +89,13 @@ const ChooseGame = () => {
                         <div className="flip-card-inner">
                             <div className="flip-card-front">
                                 <div className="flip-card-content">
-                                    <p className="title">Multi</p>
+                                    <p className="title2">Multi</p>
                                     <p>Play with Others</p>
                                 </div>
                             </div>
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
-                                    <p className="title">Settings</p>
+                                    <p className="title2">Settings</p>
                                     <button className="btn btn-primary mb-2">Power Up</button>
                                     <div className="slider-container">
                                         <label htmlFor="maxScoreMulti">Max Score: {maxScore}</label>
@@ -122,13 +122,13 @@ const ChooseGame = () => {
                         <div className="flip-card-inner">
                             <div className="flip-card-front">
                                 <div className="flip-card-content">
-                                    <p className="title">Tournament</p>
+                                    <p className="title2">Tournament</p>
                                     <p>Create a Tournament</p>
                                 </div>
                             </div>
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
-                                    <p className="title">Settings</p>
+                                    <p className="title2">Settings</p>
                                     <button className="btn btn-primary mb-2">Power Up</button>
                                     <div className="slider-container">
                                         <label htmlFor="maxScoreTournaments">Max Score: {maxScore}</label>
