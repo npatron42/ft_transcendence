@@ -85,7 +85,7 @@ function NavbarBS() {
   }
 
   const handleChat = () => {
-    console.log(setChatShown(!chatShown));
+    setChatShown(!chatShown);
     if (profileShown === true)
       setProfile(!profileShown);
   }

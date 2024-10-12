@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone
+
 
 class User(AbstractUser):
 	status = models.CharField(max_length=15, default="Disconnected")
@@ -16,5 +18,15 @@ class Invitation(models.Model):
 class FriendsList(models.Model):
     user1 = models.ForeignKey(User, related_name="user1", on_delete=models.CASCADE, default=None)
     user2 = models.ForeignKey(User, related_name="user2", on_delete=models.CASCADE, default=None)
-    parse = models.CharField(max_length=125, default=None)    
+    parse = models.CharField(max_length=125, default=None)
+
+class Message(models.Model):
+    sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
+    receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, default=None)
+    message = models.CharField(max_length=125, default=None)
+    date = models.DateTimeField(default=timezone.now)
+
+    class Meta:
+        ordering = ['date']
+
 

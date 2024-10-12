@@ -1,3 +1,18 @@
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Millimetre-Light'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Light.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
 .chat {
     width: 500px;
     height: 600px;
@@ -5,7 +20,7 @@
     background-color: #2A2C31;
     position: fixed;
     border-radius: 30px;
-    border: 3px solid #FAF3DD;
+    border: 4px solid #ffa69e;
     display: flex;
 }
 
@@ -21,7 +36,7 @@
 }
 
 .header-logo {
-    width: 33%;
+    width: 50%;
     height: 100%;
     background-position: center;
     align-items: center;
@@ -36,8 +51,9 @@
     top: 0;
     left: 0;
     width: 100%;
-    height: 50px;
-    background-color: #5E6472;
+    height: 12%;
+    background: rgb(94,100,114);
+    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%);
     border-top-left-radius: 25px;
     border-top-right-radius: 0;
     border-bottom: 2px solid #FAF3DD;
@@ -58,3 +74,242 @@
     position: relative;
 }
 
+.place-button {
+    display: flex;
+    gap: 10px;
+}
+
+.choiceButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 60px;
+}
+
+.choiceButton-custom {
+    align-items: center;
+    width: 90px;
+    padding: 2px;
+    color: #FAF3DD;
+    font-family: Millimetre;
+}
+
+.welcomeMessage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60%;
+    padding-left: 20px;
+}
+
+.welcomeMessage-span-username {
+    font-family: Millimetre;
+    color: #FAF3DD;
+    font-size: 22px;
+    padding-left: 8px;
+    border-bottom: 2px solid #ffa69e;
+}
+
+.welcomeMessage-span {
+    border-top: 2px solid #ffa69e;
+    font-family: Millimetre;
+    color: #FAF3DD;
+    font-size: 22px;
+}
+
+.welcomeMessage-span:hover,
+.welcomeMessage-span-username:hover {
+
+    font-family: Millimetre;
+    color: #FAF3DD;
+    font-size: 23px;   
+}
+
+
+.createChannel {
+    width: 150px;
+    height: 150px;
+    border: 2px solid #FAF3DD;
+    border-radius: 25px;
+}
+
+
+.chat-discussions-friends {
+    height: 88%;
+    width: 100%;
+    margin-top: 40%;
+}
+
+.friend-presentation:hover .friend-name-center {
+    color: #ffa69e !important;
+    padding-top: 2px;
+}
+
+.friend-presentation:hover .profile-picture-discuss {
+    border: 2px solid #ffa69e;
+}
+
+.friend-presentation {
+    margin-top: 2px;
+    width: 100%;
+    height: 10%;
+    border-bottom: 2px solid #FAF3DD;
+    display: flex;
+}
+
+.friend-separate {
+    width: 30%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.friend-name {
+    width: 70%;
+    height: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.friend-name-center {
+    font-family: Millimetre;
+    font-size: 16px;
+    color: #FAF3DD;
+}
+
+.profile-picture-discuss {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #FAF3DD;
+}
+
+.header-discuss {
+    width: 100%;
+    height: 12%;
+    display: flex;
+}
+
+
+.header-discuss-name-custom {
+    font-family: Millimetre;
+    font-size: 17px;
+    color: #FAF3DD;
+    padding-left: 100px;
+}
+
+.header-discuss-name-custom:hover {
+    font-family: Millimetre;
+    font-size: 17px;
+    color: #FFA69E;
+    padding-left: 100px;
+    padding-bottom: 5px;
+}
+
+
+.header-discuss-name {
+    width: 80%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.header-status {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+}
+
+.header-status-custom-online {
+    font-size: 15px;
+    color: #B8F2E6;
+}
+
+.header-status-custom-offline {
+    font-size: 15px;
+    color: #FFA69E;
+}
+
+
+.come-back {
+    width: 20%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.come-back-custom {
+    font-size: 25px;
+    color: #FAF3DD;
+}
+
+.come-back-custom:hover {
+    font-size: 27px;
+    color: #FFA69E;
+    padding-bottom: 3px;
+}
+
+.principal-discussion {
+    padding-left: 20px;
+    width: 60%;
+    height: 100%;
+}
+
+.core-discussion {
+    width: 100%;
+    height: 72%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.form-custom {
+    width: 100%;
+    height: 10%;
+    border-radius: 10px;
+    border: 1px solid #FAF3DD;
+    background: transparent;
+}
+
+.typing-text-custom {
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px solid #FAF3DD;
+    background: transparent;
+    font-family: Millimetre;
+    padding-bottom: 20px;
+}
+
+
+.div-message-myUser {
+    width: 80%;
+    margin-left: 20%;
+    border: 2px solid #869FA9;
+    border-radius: 25px;
+}
+
+.div-message-userSelected {
+    width: 80%;
+    border: 2px solid #5E6472;
+    border-radius: 25px;
+    color: #FAF3DD;
+}
+
+.span-message-myUser {
+    font-family: Millimetre;
+    width: 90%;
+    padding-left: 10px;
+    color: #FAF3DD;
+}

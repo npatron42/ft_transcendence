@@ -9,7 +9,7 @@
 	position: absolute;
 	left: 25vw;
 	top: 30vh;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
@@ -44,7 +44,7 @@
 	position: absolute;
 	top: 41vh;
 	left: 25vw;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
@@ -82,7 +82,7 @@
 	position: absolute;
 	top: 52vh;
 	left: 25vw;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
@@ -120,9 +120,9 @@
 	position: absolute;
 	top: 67vh;
 	left: 25vw;
-	background-color: #1c2e56;
-	border-color: #1c2e56;
-	color: #ffffff;
+	background-color: #5E6472;
+	border: 0.8px solid #FDCDBE !important;
+	color: #FDCDBE !important;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	padding: 0.2vw 0.8vw;
 	font-size: 1vw;
@@ -140,7 +140,7 @@
 	position: absolute;
 	top: 15vh;
 	left: 25vw;
-	color: #ffffff;
+	color: #FAF3DD;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 650;
 	font-size: 2.8vw;
@@ -150,9 +150,9 @@
 	position: absolute;
 	top: 80vh;
 	left: 35vw;
-	background-color: #1c2e56;
-	border-color: #1c2e56;
-	color: #FFFFFF;
+	background-color: #5E6472;
+	border: 0.8px solid #FDCDBE !important;
+	color: #FDCDBE !important;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	padding: 0.2vw 0.8vw;
 	font-size: 1vw;
@@ -162,11 +162,20 @@
 	transition: transform 0.2s ease;
 }
 
+
+.form-test:focus {
+    outline: none; /* Supprime le contour par défaut */
+    box-shadow: none; /* Supprime l'ombre */
+    background-color: inherit; /* Couleur de fond d'origine */
+    color: inherit; /* Couleur du texte d'origine */
+	border: 0.8px solid #869fa941 !important;
+}
+
 .para-I {
 	position: absolute;
 	top: 76.5vh;
 	left: 25vw;
-	color: #FFFFFF;
+	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;

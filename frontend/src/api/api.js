@@ -89,6 +89,30 @@ export const getNotifs = async () => {
 	}
 };
 
+export const getDiscussions = async (myData) => {
+
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		
+
+		console.log("myData GD ---> ", myData)
+		const response = await axios.get("http://localhost:8000/api/user/discussions/", {
+			params: myData,
+			...config
+		});
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
 
 // POST METHODS
 
