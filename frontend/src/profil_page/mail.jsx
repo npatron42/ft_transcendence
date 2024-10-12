@@ -8,9 +8,9 @@ function mail() {
 	const [modif, setModif] = useState(false); 
 	const handleClick = () => {
 		if (modif) {
-			setMail(input); 
-			setInput(''); 
-			setModif(false); 
+				setMail(input); 
+				setInput(''); 
+				setModif(false);
 		} else {
 			setModif(true);
 		}
@@ -27,7 +27,7 @@ function mail() {
 						value={modif ? input : Mail}
 						onChange={(e) => setInput(e.target.value)}
 						readOnly={!modif}
-						className="form-test" 
+						className="form-test"
 					/>
 				</Form.Group>
 			</Form>

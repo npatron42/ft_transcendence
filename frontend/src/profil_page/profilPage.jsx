@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';;
 import Langue from '../login_page/languages.jsx';
 import "./utils.css"
 import Bt2fa from './bt2fa.jsx';
@@ -10,7 +10,8 @@ import Mail from './mail.jsx';
 import Mdp from './mdp.jsx';
 
 function profilPage() {
-  return (
+
+	return (
 	<div id="background-container">
 		{/* <h1 className="title">Mon Profil</h1> */}
 		<Pseudo />
@@ -19,8 +20,8 @@ function profilPage() {
 		<Del />
 		<Upload />
 		<Langue />
-		<Mail/>
-		<Mdp/>
+		<Mail />
+		<Mdp  />
 	</div>
   )
 }

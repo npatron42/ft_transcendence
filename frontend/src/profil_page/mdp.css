@@ -60,7 +60,7 @@
 	transition: transform 0.2s ease;
 }
 
-	.custom-:hover {
+	.custom-click1:hover {
 		transform: translateY(-0.2vw);
 	}
 

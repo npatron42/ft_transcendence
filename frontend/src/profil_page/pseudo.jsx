@@ -5,16 +5,32 @@ import './pseudo.css'
 function Pseudo() {
 	const [pseudo, setPseudo] = useState('Mon profil');
 	const [input, setInput] = useState('');
-	const [modif, setModif] = useState(false); 
+	const [modif, setModif] = useState(false);
+	const [errorMessage, setErrorMessage] = useState("");
+
 	const handleClick = () => {
+		
 		if (modif) {
-			setPseudo(input); 
-			setInput(''); 
-			setModif(false); 
-		} else {
+			const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
+			
+			if (input === '') {
+				setErrorMessage('stop');
+				return;
+			}
+	
+			else if (!usernameRegex.test(input)) {
+				setErrorMessage( "registerPage.idCara");
+				return;
+			}
+				setPseudo(input); 
+				setInput(''); 
+				setModif(false);
+				setErrorMessage('');
+			} else {
 			setModif(true);
 		}
 	}
+
 
 	return (
 		<div>
@@ -31,6 +47,9 @@ function Pseudo() {
 					/>
 				</Form.Group>
 			</Form>
+			
+			{errorMessage && <p className="error">{errorMessage}</p>}
+			
 			<Button variant="outline-dark" className="custom-pseudo"   onClick={handleClick}>
 				{modif ? 'Valider' : 'Changer'}
 			</Button>
