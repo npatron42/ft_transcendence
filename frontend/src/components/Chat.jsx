@@ -83,7 +83,6 @@ function Chat() {
             }
             if (data["AllUsers"]) {
                 changeUsersList(data["AllUsers"], friendsList);
-                console.log("OUI")
             }
             if (data["messages"]) {
 
@@ -91,20 +90,16 @@ function Chat() {
                 const sender = data["messages"][dataSize - 1].sender;
                 const receiver = data["messages"][dataSize - 1].receiver;
                 
-                console.log(data["messages"][dataSize - 1].sender)
-                console.log("userSelected && sender --> ", userSelected.username, sender);
-                console.log("receiver && myUser --> ", receiver, myUser.username);
-                if (userSelected === sender || receiver === myUser) {
+                if (sender === myUser.id || (userSelected.id === sender && receiver === myUser.id)) {
                     setDiscuss(data["messages"]);
                     console.log("GOOD")
+                    console.log("myDiscuss --> ", myDiscuss)
                 }
-                console.log(data["messages"])
             }
         };
 
         const handleStatus = (data) => {
             setUsersStatus(data["status"]);
-            console.log("OUI")
         }
 
         const unsubscribeMess = subscribeToMessages(handleSocketUser);
@@ -114,7 +109,7 @@ function Chat() {
             unsubscribeMess(); 
             unsubscribeStatus();
         };
-    }, [subscribeToMessages, subscribeToStatus, socketUser, userSelected]);
+    }, [subscribeToMessages, subscribeToStatus, socketUser, userSelected, myDiscuss]);
 
 
     const chooseStatus = (username) => {
@@ -128,7 +123,6 @@ function Chat() {
     const changeFriendsList = (data) => {
         setFriendsList(data["friends"])
     } 
-
 
     // HTTP --> USERSSTATUS + userslist
 

@@ -269,6 +269,9 @@
 .core-discussion {
     width: 100%;
     height: 72%;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
 }
 
 .form-custom {
@@ -287,4 +290,26 @@
     background: transparent;
     font-family: Millimetre;
     padding-bottom: 20px;
+}
+
+
+.div-message-myUser {
+    width: 80%;
+    margin-left: 20%;
+    border: 2px solid #869FA9;
+    border-radius: 25px;
+}
+
+.div-message-userSelected {
+    width: 80%;
+    border: 2px solid #5E6472;
+    border-radius: 25px;
+    color: #FAF3DD;
+}
+
+.span-message-myUser {
+    font-family: Millimetre;
+    width: 90%;
+    padding-left: 10px;
+    color: #FAF3DD;
 }

@@ -274,12 +274,10 @@ async def sendDiscussionToBothClient(self, userOne, userTwo):
     }
 
     if userOne.username in socketsUsers:
-        logger.info("OUI")
         socketUserOne = socketsUsers.get(userOne.username)
         await sendToClient2(self, socketUserOne, dataToSend)
     
     if userTwo.username in socketsUsers:
-        logger.info("OUI")
         socketUserTwo = socketsUsers.get(userTwo.username)
         await sendToClient2(self, socketUserTwo, dataToSend)
 
