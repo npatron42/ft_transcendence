@@ -293,23 +293,43 @@
 }
 
 
-.div-message-myUser {
+.div-message-sender {
     width: 80%;
     margin-left: 20%;
     border: 2px solid #869FA9;
     border-radius: 25px;
+    max-width: 220px;
+    overflow: hidden; /* Cache le texte qui dépasse */
+    text-overflow: ellipsis; /* Ajoute "..." à la fin si le texte est trop long */
+    white-space: nowrap;
 }
 
-.div-message-userSelected {
+.div-message-receiver {
     width: 80%;
     border: 2px solid #5E6472;
     border-radius: 25px;
     color: #FAF3DD;
+    max-width: 220px;
 }
 
-.span-message-myUser {
+.span-message-sender {
     font-family: Millimetre;
     width: 90%;
     padding-left: 10px;
     color: #FAF3DD;
+}
+
+.message-sender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.message-receiver {
+    font-weight: bold;
+    color: #FFA69E;
+    margin-right: 5px;
+}
+
+.message-text {
+    color: #333;
 }
