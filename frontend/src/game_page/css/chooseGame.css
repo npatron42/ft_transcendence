@@ -197,3 +197,33 @@
 .slider-container input[type="range"]:hover::-moz-range-thumb {
     background-color: #B8F2E6;
 }
+
+
+.btn-success {
+    background-color: #D9F3E2 !important;
+    color: #5E6472 !important;
+}
+
+.btn-success:hover {
+    background-color: #d9f3e28c !important;
+    border-color: #1e7e34 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger {
+    background-color: #FFA69E !important;
+    border-color: #000000 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger:hover {
+    background-color: #ffa69e81 !important;
+    border-color: #bd2130 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger:active {
+    background-color: #ffa69e81 !important;
+    border-color: #2421bd !important;
+    color: #5E6472 !important;
+}

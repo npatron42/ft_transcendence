@@ -7,6 +7,7 @@ const GlobalGameMulti = () => {
     const { roomId } = useParams();
     const location = useLocation();
     const maxScore = location.state?.maxScore || 10;
+    const powerUp = location.state?.powerUp;
 
     return (
         <div className="GlobalGame">
@@ -14,6 +15,7 @@ const GlobalGameMulti = () => {
             <PongMulti
                 roomId={roomId}
                 maxScore={maxScore}
+                powerUp ={powerUp}
             />
         </div>
     );

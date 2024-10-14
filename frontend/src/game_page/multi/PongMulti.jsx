@@ -52,7 +52,7 @@ const usePaddleMovement = (webSocket, playerId) => {
 };
 
 
-const PongMulti = ({ roomId, maxScore }) => {
+const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
     const [paddleRightPos, setPaddleRightPos] = useState(300);
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
@@ -70,14 +70,18 @@ const PongMulti = ({ roomId, maxScore }) => {
     
         if (myUser) {
             ws.onopen = () => {
-                console.log(myUser);
-                console.log('WebSocket connecté à la room:', roomId);
+                const powerUpBool = Boolean(powerUp)
                 const maxScoreNum = Number(maxScore);
+                console.log(myUser);
+                console.log("Poer up : ", powerUp);
+                console.log('WebSocket connecté à la room:', roomId);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
+                ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
             };
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
+
                 console.log("data recue front : ", data);
 
                 if (data.players) {

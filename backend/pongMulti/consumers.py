@@ -32,6 +32,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	score = {}
 	max_scores = {}
 	players = {}
+	power_up = {}
 	end = False
 
 		###########
@@ -163,11 +164,29 @@ class PongConsumer(AsyncWebsocketConsumer):
 						'max_score': max_score
 					}
 				)
-
-				if len(PongConsumer.players[self.room_id]) == 2:
-					logger.info(f"Démarrage du jeu pour la room {self.room_id} avec les joueurs {PongConsumer.players[self.room_id]}")
-					if not hasattr(self, 'game_task'):
-						self.game_task = asyncio.create_task(self.update_ball(max_score))
+			
+		if action == 'set_power_up':
+			logger.info("OH LE POWERUP")
+			if self.room_id in PongConsumer.power_up:
+				logger.info("Le powerup ne peut être réinitialisé %s", self.room_id)
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'sendPowerUp',
+						'power_up': PongConsumer.power_up.get(self.room_id)
+					}
+				)
+			else:
+				tmp_power_up = data.get('powerUp')
+				PongConsumer.power_up[self.room_id] = tmp_power_up
+				logger.info("Power Up défini à  %s", tmp_power_up)
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'sendPowerUp',
+						'power_up': tmp_power_up
+					}
+				)
 
 		if action in ['paddleup', 'paddledown']:
 			if hasattr(self, 'username') and self.username in PongConsumer.players[self.room_id]:
@@ -199,6 +218,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def sendMaxScore(self, event):
 		max_score = event['max_score']
 		await self.send(text_data=json.dumps({'max_score': max_score}))
+
+	async def sendPowerUp(self, event):
+		power_up = event['power_up']
+		await self.send(text_data=json.dumps({'power_up': power_up}))
 
 	async def game_state(self, event):
 		paddles = event['paddles']
