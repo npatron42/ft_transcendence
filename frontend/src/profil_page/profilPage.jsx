@@ -8,6 +8,7 @@ import Upload from './upload.jsx';
 import Pseudo from './pseudo.jsx';
 import Mail from './mail.jsx';
 import Mdp from './mdp.jsx';
+import ButtonDef from './buttonDef.jsx';
 
 function profilPage() {
 
@@ -18,6 +19,7 @@ function profilPage() {
 		<Image />
 		<Bt2fa />
 		<Del />
+		<ButtonDef />
 		<Upload />
 		<Langue />
 		<Mail />
