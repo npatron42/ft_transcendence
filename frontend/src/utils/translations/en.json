@@ -34,6 +34,8 @@
     "profilPage" : {
       "2fa" : "Enable two-factor authentication",
       "upload" : "Click to upload",
-      "delete" : "Delete"
+      "delete" : "Delete",
+      "lg" : "Default language : ",
+      "lg0" : "Default language"
     }
   }

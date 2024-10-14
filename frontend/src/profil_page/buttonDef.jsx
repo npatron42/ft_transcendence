@@ -2,20 +2,20 @@ import { useTranslation } from 'react-i18next';
 import Dropdown from 'react-bootstrap/Dropdown';
 import flagI from '../assets/login_page/italianFlag.svg';
 import flagE from '../assets/login_page/englishFlag.svg';
-import React, { useState , useEffect} from 'react';
 import flagF from '../assets/login_page/frenchFlag.svg';
 
 import './button.css'
 
 function buttonDef() {
-
+	const { t } = useTranslation();
+	
 	const lg = "IT";
 
   return (
 	<div>
     <Dropdown className="custom-dropdown">
       <Dropdown.Toggle variant="secondary">
-        Dropdown Button
+	  {t('profilPage.lg0')}
       </Dropdown.Toggle>
       <Dropdown.Menu>
 	  <Dropdown.Item>
@@ -32,7 +32,7 @@ function buttonDef() {
 		 onClick={() => handleFlagClick('en')}></img></Dropdown.Item>
       </Dropdown.Menu>
     </Dropdown>
-	<p className="def-langue">Langue par defautl: </p>
+	<p className="def-langue">{t('profilPage.lg')} </p>
 	</div>
   );
 }
