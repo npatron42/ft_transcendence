@@ -33,7 +33,7 @@ function Chat() {
     const [inputMessage, setInputMessage] = useState('');
 
     const handleWriting = (event) => {
-        if (event.key === 'Enter') { 
+        if (event.key === 'Enter' && inputMessage.length !== 0) { 
             event.preventDefault();
             setInputMessage('')
             const myData = {
@@ -92,8 +92,6 @@ function Chat() {
                 
                 if (sender === myUser.id || (userSelected.id === sender && receiver === myUser.id)) {
                     setDiscuss(data["messages"]);
-                    console.log("GOOD")
-                    console.log("myDiscuss --> ", myDiscuss)
                 }
             }
         };
@@ -231,7 +229,7 @@ function Chat() {
                                 <i onClick={handleUsersMessages} className="bi bi-chat"></i>
                             </div>
                         </div>
-    
+
                         {!friendsMessagesClicked && !usersMessagesClicked && (
                             <div className="welcomeMessage">
                             </div>
@@ -254,16 +252,16 @@ function Chat() {
 
 
 
-                        {usersMessagesClicked && !friendsMessagesClicked && (
-                            <div className="welcomeMessage">
-                            </div>
-                        )}
-                    </div>
-    
+                            {usersMessagesClicked && !friendsMessagesClicked && (
+                                <div className="welcomeMessage">
+                                </div>
+                            )}
+                        </div>
+
 
 
                         {/* FRIENDS CLICKED ---> NO FRIENDS */}
-                    
+
 
 
                     {friendsMessagesClicked && !usersMessagesClicked && friendsList.length === 0 && (
