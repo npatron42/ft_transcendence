@@ -29,44 +29,54 @@
 	font-family: 'Millimetre', sans-serif;
 }
 
+
 .custom-def {
-	background-color: #6c757d;
-  }
-  
-  .dropdown-menu {
-	background-color: #6c757d;/
-  }
-  
-  .dropdown-item {
+	background-color: #5E6472 !important;
+}
+
+.dropdown-menu {
+	background-color: #5E6472 !important;
+}
+
+.dropdown-item {
 	display: flex;
 	justify-content: center; 
-  }
-  
-  .dropdown-item:hover {
-	background-color: #495057; 
-  }
-  
- 
-  .dropdown-menu.show {
+}
+
+.dropdown-item:hover {
+	background-color: #5E6472 !important; 
+}
+
+
+.dropdown-menu.show {
 	background-color: #33383d !important; 
-  }
-  
-  .dropdown-item.active {
+}
+
+.dropdown-item.active {
 	background-color: #141618 !important; 
-  }
+}
 
-  .custom-dropdown {
+.custom-dropdown {
 	position: absolute;
+	color : #FDCDBE !important;
 	top: 10vh;
-	left: 90vw;
-  }
+	left: 89.5vw;
+}
 
-  .def-langue{
+.def-langue{
 	position: absolute;
 	top: 15vh;
-	left: 90.2vw;
-	color: #FAF3DD;
+	left: 90.4vw;
+	/* color: #FAF3DD; */
+	color: #FDCDBE !important;
 	font-size: 0.8vw;
 	font-family: 'Millimetre', sans-serif;
 	font-weight: bold;
-  }
+}
+
+.dropdown-toggle{
+	color: #FAF3DD !important;
+	background-color: #5E6472 !important;
+	border-radius: 0.5vw;
+	/* color: #FDCDBE !important; */
+}
