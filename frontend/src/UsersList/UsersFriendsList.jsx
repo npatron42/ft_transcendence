@@ -167,12 +167,12 @@ const UsersFriendsList = ({ myUser }) => {
                     </div>
                     
                     {activeList === 'users' ? (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(usersList) ? (
                                 usersList.length === 0 ? (
                                     <div className="noUsers">No users found</div>
                                 ) : (
-                                    <table className={`users-list ${usersList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {usersList.map((user) => (
                                                 <UserItem 
@@ -197,12 +197,12 @@ const UsersFriendsList = ({ myUser }) => {
                             )}
                         </div>
                     ) : (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(friendsList) ? (
                                 friendsList.length === 0 ? (
                                     <div className="noUsers">No friends found</div>
                                 ) : (
-                                    <table className={`users-list ${friendsList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {friendsList.map((user) => (
                                                 <FriendItem 

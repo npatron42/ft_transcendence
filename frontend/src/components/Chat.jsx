@@ -10,6 +10,8 @@ import { getDiscussions } from "../api/api";
 
 import Message from "./Message";
 import Loading from "../loading_page/Loading";
+import ModalUserChat from "./ModalUserChat";
+
 
 function Chat() {
 
@@ -24,6 +26,7 @@ function Chat() {
     const [usersList, setUsersList] = useState([]);
     const [userSelected, setUserSelected] = useState(null);
 
+    const [userIsClicked, setUserIsClicked] = useState(false)
     const [usersStatus, setUsersStatus] = useState([]);
 
     const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
@@ -188,9 +191,20 @@ function Chat() {
         return ;
     }
 
-    const handleProfile = (myUser) => {
-        const link = "/profile/" + myUser.username
-        navigate(link)
+    const handleProfile = () => {
+        // const link = "/profile/" + myUser.username
+        // navigate(link)
+
+        if (userIsClicked === false) {
+            setUserIsClicked(true);
+            console.log(userIsClicked)
+            return ;
+        }
+        if (userIsClicked === true) {
+            setUserIsClicked(false);
+            console.log(userIsClicked)
+            return ;
+        }
         return ;
     }
 
@@ -250,12 +264,21 @@ function Chat() {
                             </div>
                         )}
 
+                        {usersMessagesClicked && !friendsMessagesClicked && (
+                            <div className="chat-discussions-friends">
+                                {usersList && usersList.map((user) => (
+                                    <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
+                                        <div className="friend-separate">
+                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss" />
+                                        </div>
+                                        <div className="friend-name">
+                                            <span className="friend-name-center">{user.username}</span>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-
-                            {usersMessagesClicked && !friendsMessagesClicked && (
-                                <div className="welcomeMessage">
-                                </div>
-                            )}
                         </div>
 
 
@@ -286,13 +309,13 @@ function Chat() {
 
                     {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected !== null && (
                         
-                        <div className="principal-discussion">
+                    <div className="principal-discussion">
                         <div className="header-discuss">
                             <div className="come-back">
                                 <i onClick={handleComeBack} className="bi bi-arrow-left come-back-custom"></i>
                             </div>
                             <div className="header-discuss-name">
-                                <span onClick={() => handleProfile(userSelected)} className="header-discuss-name-custom">{userSelected.username}</span>
+                                <span onClick={() => handleProfile()} className="header-discuss-name-custom">{userSelected.username}</span>
                             </div>
                             <div className="header-status">
                                 <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
@@ -311,6 +334,9 @@ function Chat() {
                                 placeholder="Write here"
                             />
                         </form>
+                        {userIsClicked && (
+                            <ModalUserChat userSelected={userSelected}/>
+                        )}
                     </div>
                     )}
 
@@ -335,10 +361,46 @@ function Chat() {
                         {/* USERS CLICKED ---> THERE IS USERS */}
 
 
-                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && (
+                        {/* NO USER SEELCTED */}
+
+
+                    {usersMessagesClicked && !friendsMessagesClicked && friendsList.length !== 0 && userSelected === null && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span">USERS</span>
+                            <span className="welcomeMessage-span-username">Choose a discuss</span>
                         </div>
+                    )}
+
+
+                        {/* USER SELECTED */}
+
+
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected !== null &&(
+                    <div className="principal-discussion">
+                        <div className="header-discuss">
+                            <div className="come-back">
+                                <i onClick={handleComeBack} className="bi bi-arrow-left come-back-custom"></i>
+                            </div>
+                            <div className="header-discuss-name">
+                                <span onClick={() => handleProfile()} className="header-discuss-name-custom">{userSelected.username}</span>
+                            </div>
+                            <div className="header-status">
+                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
+                            </div>
+                        </div>
+                        <div className="core-discussion">
+                            <Message myDiscuss={myDiscuss} myUser={myUser} userSelected={userSelected}/>
+                        </div>
+                        <form className="form-custom" onSubmit={e => e.preventDefault()}>
+                            <input
+                                className="typing-text-custom"
+                                type="text"
+                                value={inputMessage}
+                                onKeyDown={handleWriting}
+                                onChange={handleChange}
+                                placeholder="Write here"
+                            />
+                        </form>
+                </div>
                     )}
 
                 </>

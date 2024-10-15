@@ -1,0 +1,20 @@
+.custom-modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modal-body-custom {
+	background-color: #5E6472;
+}
+
+.div-custom-modal {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.inside-div-custom-modal {
+	height: 100%;
+	width: 33%;
+}
