@@ -14,7 +14,6 @@ function profilPage() {
 
 	return (
 	<div id="background-container">
-		{/* <h1 className="title">Mon Profil</h1> */}
 		<Pseudo />
 		<Image />
 		<Bt2fa />

@@ -37,6 +37,11 @@
       "upload" : "Clicca per scaricare",
       "delete" : "Sopprimere",
       "lg" : "Lingua predefinita : ",
-      "lg0" : "Lingua predefinita"
+      "lg0" : "Lingua predefinita",
+      "modif": "Modificare",
+      "valide": "Validare",
+      "inco" : "Password errata",
+      "cancel" : "Cancellare",
+      "oldmdp" : "Inserisci la vecchia password"
     }
   }

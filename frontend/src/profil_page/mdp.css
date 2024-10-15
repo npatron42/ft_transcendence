@@ -1,7 +1,7 @@
 .para3 {
 	position: absolute;
 	left: 40.5vw;
-	top: 55.5vh;
+	top: 56.5vh;
 	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
@@ -104,7 +104,7 @@
 	margin-bottom: 0; 
 	border: none;
 	display: flex;
-    justify-content: center; /* Aligne le contenu à gauche */
+    justify-content: center;
     gap: 1vw;
   }
   
@@ -141,14 +141,26 @@
 }
 
 .modal-content {
-    background-color: #2a2c31; /* Couleur de fond */
-    padding: 2vw; /* Ajoute de l'espace à l'intérieur du modal */
-    border-radius: 3vw; /* Bords arrondis */
-    color: #FAF3DD; /* Couleur du texte */
-    font-family: 'Millimetre', sans-serif; /* Police du texte */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); /* Ombre pour donner de la profondeur */
-    width: 30vw; /* Largeur du modal, ajustable */
-    max-width: 90%; /* Limite la largeur maximale */
-    transition: all 0.3s ease; /* Animation pour les changements */
+    background-color: #2a2c31;
+    padding: 2vw; 
+    border-radius: 3vw; 
+    color: #FAF3DD; 
+    font-family: 'Millimetre', sans-serif; 
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    max-width: 90%; 
+    transition: all 0.3s ease;
 	justify-content: center;
+}
+
+
+.error-mdp {
+	position: absolute;
+	top: 64.8vh;
+	left: 40.5vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+	width: 50ch;
 }

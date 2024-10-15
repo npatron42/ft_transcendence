@@ -40,15 +40,15 @@ AUTH_USER_MODEL = 'users.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
-    'http://10.11.1.5:5173',
-    'http://10.11.1.5:8000', 
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000', 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
-    'http://10.11.1.5:5173',
-    'http://10.11.1.5:8000',
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

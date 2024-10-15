@@ -6,6 +6,8 @@ class User(AbstractUser):
 	status = models.CharField(max_length=15, default="Disconnected")
 	profilePicture = models.CharField(max_length=250)
 	isFrom42 = models.BooleanField(default=False)
+	langue = models.CharField(max_length=10, default="fr")
+
 
 class Invitation(models.Model):
     expeditor = models.ForeignKey(User, related_name="send_invitation", on_delete=models.CASCADE, default=None)

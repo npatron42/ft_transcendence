@@ -1,7 +1,7 @@
 .para {
 	position: absolute;
 	left: 40.5vw;
-	top: 44.5vh;
+	top: 45.5vh;
 	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
@@ -62,4 +62,15 @@
 	.custom-click:hover {
 		transform: translateY(-0.2vw);
 	}
+
+.error-mail {
+		position: absolute;
+		top: 53.5vh;
+		left: 40.5vw;
+		color: #fc00008e;
+		font-size: 0.9vw;
+		font-style: italic;
+		font-family: 'Millimetre', sans-serif;
+		font-weight: 200;
+}
 

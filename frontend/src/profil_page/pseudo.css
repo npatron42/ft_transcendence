@@ -1,7 +1,7 @@
 .para-ps {
 	position: absolute;
 	left: 40.5vw;
-	top: 34.5vh;
+	top: 35vh;
 	color: #FAF3DD;
 	font-size: 1.1vw;
 	font-family: 'Millimetre', sans-serif;
@@ -41,7 +41,17 @@
 	color: #5E6472;
 	border: 0.1vw solid #222222;
 	opacity: 1;
-	cursor: default; 
+	cursor: default; .error-pseudo {
+		position: absolute;
+		top: 43vh;
+		left: 40.5vw;
+		color: #fc00008e;
+		font-size: 0.9vw;
+		font-style: italic;
+		font-family: 'Millimetre', sans-serif;
+		font-weight: 200;
+	}
+	
 }
 
 .custom-pseudo {
@@ -63,3 +73,13 @@
 		transform: translateY(-0.2vw);
 	}
 
+.error-pseudo {
+	position: absolute;
+	top: 43vh;
+	left: 40.5vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}

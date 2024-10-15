@@ -1,15 +1,3 @@
-.title {
-	position:absolute;
-	top: 55.5vh;
-	left: 57vw;
-	color: #FAF3DD;
-	font-size: 1.8vw;
-	font-family: 'Millimetre', sans-serif;
-	font-weight: 1000;
-	transform: translateX(1vw) translateY(-38vh);
-	font-family: 'Millimetre', sans-serif;
-}
-
 .image-style {
 	position: absolute;
 	top: 15vh;

@@ -92,5 +92,10 @@ def postInvite(request):
     serializer = UserSerializer(users, many=True)
     return JsonResponse(serializer.data, safe=False)
 
+# #Profil
+
+# def checklangue(request) : 
+
+
 
 

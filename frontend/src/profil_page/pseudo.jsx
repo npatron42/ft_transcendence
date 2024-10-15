@@ -1,8 +1,12 @@
 import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
 import './pseudo.css'
 
 function Pseudo() {
+
+	const { t } = useTranslation();
+
 	const [pseudo, setPseudo] = useState('Mon profil');
 	const [input, setInput] = useState('');
 	const [modif, setModif] = useState(false);
@@ -14,12 +18,12 @@ function Pseudo() {
 			const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
 			
 			if (input === '') {
-				setErrorMessage('stop');
+				setErrorMessage("registerPage.idRequired");
 				return;
 			}
 	
 			else if (!usernameRegex.test(input)) {
-				setErrorMessage( "registerPage.idCara");
+				setErrorMessage("registerPage.idCara");
 				return;
 			}
 				setPseudo(input); 
@@ -31,11 +35,10 @@ function Pseudo() {
 		}
 	}
 
-
 	return (
 		<div>
 			<Form>
-				<p className="para-ps">ok </p>
+				<p className="para-ps">{t("registerPage.id")}</p>
 				<Form.Group className="input-ps" controlId="User">
 					<Form.Control
 						type="text"
@@ -48,10 +51,10 @@ function Pseudo() {
 				</Form.Group>
 			</Form>
 			
-			{errorMessage && <p className="error">{errorMessage}</p>}
+			{errorMessage && <p className="error-pseudo">{t(errorMessage)}</p>}
 			
-			<Button variant="outline-dark" className="custom-pseudo"   onClick={handleClick}>
-				{modif ? 'Valider' : 'Changer'}
+			<Button variant="outline-dark" className="custom-pseudo" onClick={handleClick}>
+				{modif ? t("profilPage.valide") : t('profilPage.modif')}
 			</Button>
 		</div>
 	);
