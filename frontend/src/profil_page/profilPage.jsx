@@ -12,17 +12,18 @@ import ButtonDef from './buttonDef.jsx';
 
 function profilPage() {
 
+	const [Actif, setActif] = useState(false); 
 	return (
 	<div id="background-container">
-		<Pseudo />
+		<Pseudo Actif={Actif} setActif={setActif} />
 		<Image />
 		<Bt2fa />
 		<Del />
 		<ButtonDef />
 		<Upload />
 		<Langue />
-		<Mail />
-		<Mdp  />
+		<Mail Actif={Actif} setActif={setActif} />
+		<Mdp  Actif={Actif} setActif={setActif} />
 	</div>
   )
 }

@@ -3,12 +3,13 @@ import { useTranslation } from 'react-i18next';
 import { Form, Button } from 'react-bootstrap';
 import './mail.css'
 
-function mail() {
+function mail({Actif, setActif}) {
 	const { t } = useTranslation();
 
 	const [Mail, setMail] = useState('mon mail');
 	const [input, setInput] = useState('');
 	const [modif, setModif] = useState(false);
+	const [valide, setValide] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 
 	const handleClick = () => {
@@ -26,8 +27,12 @@ function mail() {
 				setMail(input); 
 				setInput(''); 
 				setModif(false);
+				setActif(false);
+				setValide(false);
 				setErrorMessage('');
 		} else {
+			setValide(true);
+			setActif(true);
 			setModif(true);
 		}
 	}
@@ -50,7 +55,8 @@ function mail() {
 
 			{errorMessage && <p className="error-mail">{t(errorMessage)}</p>}
 
-			<Button variant="outline-dark" className="custom-click" onClick={handleClick}>
+			<Button variant="outline-dark" className="custom-click" 
+			onClick={handleClick}  disabled={Actif && !valide}>
 				{modif ? t("profilPage.valide") : t('profilPage.modif')}
 			</Button>
 		</div>

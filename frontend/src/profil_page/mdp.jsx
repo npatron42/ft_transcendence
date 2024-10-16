@@ -4,7 +4,7 @@ import { Button, Form, Modal } from 'react-bootstrap';
 import './mdp.css';
 import './del.css';
 
-function Mdp() {
+function Mdp({Actif, setActif}) {
   const { t } = useTranslation();
 
   const [Mdp, setMdp] = useState('le boos');
@@ -12,6 +12,7 @@ function Mdp() {
   const [oldPassword, setOldPassword] = useState('');
   const [modif, setModif] = useState(false);
   const [show, setShow] = useState(false);
+  const [valide, setValide] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handleClose = () => {
@@ -38,6 +39,8 @@ function Mdp() {
       setMdp(input); 
       setInput(''); 
       setModif(false);
+      setActif(false);
+      setValide(false);
       setErrorMessage('');
     } else {
       handleShow();
@@ -47,6 +50,8 @@ function Mdp() {
   const handleModalSubmit = () => {
     if (oldPassword === Mdp) {
       setModif(true);
+      setActif(true);
+      setValide(true);
       handleClose();  
     } else {
       alert(t('profilPage.inco'));
@@ -71,7 +76,8 @@ function Mdp() {
 
       {errorMessage && <p className="error-mdp">{t(errorMessage)}</p>}
 
-      <Button variant="outline-dark" className="custom-click1" onClick={handleClick} /*disabled={!modif}*/>
+      <Button variant="outline-dark" className="custom-click1" 
+      onClick={handleClick} disabled={Actif && !valide}>
         {modif ? t("profilPage.valide") : t('profilPage.modif')}
       </Button>
 
