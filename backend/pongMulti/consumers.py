@@ -2,6 +2,8 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
 import json
 import logging
+import random
+import time
 import asyncio
 from .models import MatchHistory
 from users.models import Invitation, User, FriendsList
@@ -33,6 +35,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	max_scores = {}
 	players = {}
 	power_up = {}
+	power_up_position = {}
 	end = False
 
 		###########
@@ -105,13 +108,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 			await save_match(winnerdb, player1, player2, 0, 0, False)
 
 			await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'game_over',
-                    'winner': winner,
-                    'score': PongConsumer.score[self.room_id]
-                }
-            )
+				self.room_group_name,
+				{
+					'type': 'game_over',
+					'winner': winner,
+					'score': PongConsumer.score[self.room_id]
+				}
+			)
 		
 		
 		###########
@@ -141,7 +144,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.max_scores.get(self.room_id):
 					logger.info(f"Démarrage du jeu pour la room {self.room_id} avec les joueurs {PongConsumer.players[self.room_id]}")
 					if not hasattr(self, 'game_task'):
-						self.game_task = asyncio.create_task(self.update_ball(PongConsumer.max_scores[self.room_id]))
+						self.game_task = asyncio.create_task(self.update_ball(PongConsumer.max_scores[self.room_id], PongConsumer.power_up[self.room_id]))
 
 		if action == 'set_max_score':
 			if self.room_id in PongConsumer.max_scores:
@@ -177,14 +180,14 @@ class PongConsumer(AsyncWebsocketConsumer):
 					}
 				)
 			else:
-				tmp_power_up = data.get('powerUp')
-				PongConsumer.power_up[self.room_id] = tmp_power_up
-				logger.info("Power Up défini à  %s", tmp_power_up)
+				power_up = data.get('powerUp')
+				PongConsumer.power_up[self.room_id] = power_up
+				logger.info("Power Up défini à  %s", power_up)
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
 						'type': 'sendPowerUp',
-						'power_up': tmp_power_up
+						'power_up': power_up
 					}
 				)
 
@@ -222,6 +225,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def sendPowerUp(self, event):
 		power_up = event['power_up']
 		await self.send(text_data=json.dumps({'power_up': power_up}))
+	
+	async def new_power_up(self, event):
+		position = event['position']
+		await self.send(text_data=json.dumps({'power_up_position': position}))
 
 	async def game_state(self, event):
 		paddles = event['paddles']
@@ -271,7 +278,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 		# BALL #
 		########
 
-	async def update_ball(self, max_score):
+	async def update_ball(self, max_score, power_up):
 		acceleration = 1.10
 		max_speed = 10
 		paddle_height = 90
@@ -281,6 +288,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 		while True:
 
 			#Win condition#
+			if power_up == True:
+				await self.generate_power_up()
 
 			if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
 
@@ -299,15 +308,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 						'score': PongConsumer.score[self.room_id]
 					}
 				)
+
 				p1_score = PongConsumer.score[self.room_id]['player1']
 				p2_score = PongConsumer.score[self.room_id]['player2']
 				p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
 				p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
 
-				logger.info("mon p1 --> %s", p1)
-				logger.info("mon p1.username --> %s", p1.id)
 				await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
-				logger.info(f'je passe la')
 				break
 
 			#Gestion Ball#
@@ -367,3 +374,18 @@ class PongConsumer(AsyncWebsocketConsumer):
 			await asyncio.sleep(1 / 60)
 
 
+	async def generate_power_up(self):
+		if random.random() < 0.01:
+			PongConsumer.power_up_position[self.room_id] = {
+				'x': random.randint(100, 800),
+				'y': random.randint(100, 500)
+			}
+			logger.info(f"Power-up généré à {PongConsumer.power_up_position[self.room_id]}")
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'new_power_up',
+					'position': PongConsumer.power_up_position[self.room_id]
+				}
+			)
+		

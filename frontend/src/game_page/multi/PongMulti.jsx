@@ -64,6 +64,9 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [score2, setScore2] = useState(0);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
     const { myUser } = useAuth();
+    const [powerUpOption, setPowerUpOption] = useState(false);
+    const [powerUpY, setPowerUpY] = useState(0);
+    const [powerUpX, setPowerUpX] = useState(0);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
@@ -82,7 +85,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
 
-                console.log("data recue front : ", data);
+                // console.log("data recue front : ", data);
 
                 if (data.players) {
                     setRoomPlayers(data.players);
@@ -106,6 +109,18 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                     setIsGameOver(true);
                     setWinner(data.winner);
                     console.log(`winner is ${data.winner}`);
+                }
+                if (data.power_up)
+                {
+                    setPowerUpOption(Boolean(data.power_up));
+                }
+                if (data.power_up_position)
+                {
+                    console.log (data.power_up_position);
+                    setPowerUpX(data.power_up_position.x);
+                    setPowerUpY(data.power_up_position.y);
+                    console.log ("voici le x : ", powerUpX);
+                    console.log ("voici le y : ", powerUpY);
                 }
             };
 
