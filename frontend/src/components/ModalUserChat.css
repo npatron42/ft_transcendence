@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .custom-modal {
 	display: flex;
 	justify-content: center;
@@ -16,5 +23,14 @@
 
 .inside-div-custom-modal {
 	height: 100%;
-	width: 33%;
+	width: 25%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.buttonModal {
+	border: 2px solid #FFA69E !important;
+	color: #FAF3DD;
+	font-family: Millimetre;
 }

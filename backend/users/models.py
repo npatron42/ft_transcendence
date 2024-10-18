@@ -20,6 +20,11 @@ class FriendsList(models.Model):
     user2 = models.ForeignKey(User, related_name="user2", on_delete=models.CASCADE, default=None)
     parse = models.CharField(max_length=125, default=None)
 
+
+class RelationsBlocked(models.Model):
+    userWhoBlocks = models.ForeignKey(User, related_name="userWhoBlocks", on_delete=models.CASCADE, default=None)
+    userBlocked = models.ForeignKey(User, related_name="userBlocked", on_delete=models.CASCADE, default=None)
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
     receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, default=None)
