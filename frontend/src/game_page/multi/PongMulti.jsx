@@ -52,55 +52,49 @@ const usePaddleMovement = (webSocket, playerId) => {
 };
 
 const PongMulti = ({ roomId, maxScore, powerUp }) => {
-    const [paddleLeftPos, setPaddleLeftPos] = useState(300);
-    const [paddleRightPos, setPaddleRightPos] = useState(300);
+    const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
+    const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 }); // Définit la hauteur par défaut
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
-    const [webSocket, setWebSocket] = useState(null);
+    const [scores, setScores] = useState({ player1: 0, player2: 0 });
+    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
     const [roomPlayers, setRoomPlayers] = useState([]);
-    const [score1, setScore1] = useState(0);
-    const [score2, setScore2] = useState(0);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
+    const [webSocket, setWebSocket] = useState(null);
     const { myUser } = useAuth();
-    const [powerUpOption, setPowerUpOption] = useState(false);
-    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
-
-    useEffect(() => {
-        console.log("Position X updated:", powerUpPosition.x);
-        console.log("Position Y updated:", powerUpPosition.y);
-    }, [powerUpPosition]);
-
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
 
         if (myUser) {
             ws.onopen = () => {
-                const powerUpBool = Boolean(powerUp)
+                const powerUpBool = Boolean(powerUp);
                 const maxScoreNum = Number(maxScore);
-                console.log("Power up:", powerUpBool);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
                 ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
             };
+
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                //console.log("Received data:", data);
-
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
-                if (data.paddles) {
-                    setPaddleLeftPos(data.paddles.left);
-                    setPaddleRightPos(data.paddles.right);
+                if (data.paddles_pos) {
+                    setPaddlePos(data.paddles_pos);
+                }
+                if (data.paddle_left_height) {
+                    setPaddleSizes((prev) => ({ ...prev, left: data.paddle_left_height }));
+                }
+                if (data.paddle_right_height) {
+                    setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
                     setBallPos(data.ball);
                 }
                 if (data.score) {
-                    setScore1(data.score.player1);
-                    setScore2(data.score.player2);
+                    setScores(data.score);
                 }
                 if (data.max_score !== undefined) {
                     setMaxScoreToUse(data.max_score);
@@ -109,15 +103,10 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                     setIsGameOver(true);
                     setWinner(data.winner);
                 }
-                if (data.status == "add") {
-                    console.log("data.add", data)
-                    if (data.power_up_position) {
-                        setPowerUpPosition(data.power_up_position);
-                    }
+                if (data.status === "add" && data.power_up_position) {
+                    setPowerUpPosition(data.power_up_position);
                 }
-
-                if (data.status == "erase") {
-                    console.log("adios");
+                if (data.status === "erase") {
                     setPowerUpPosition({ x: 0, y: 0 });
                 }
             };
@@ -145,12 +134,16 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     return (
         <div className="pong-container">
             <div className="board">
-                <ScoreBoard score1={score1} score2={score2} maxScoreToUse={maxScoreToUse} />
+                <ScoreBoard 
+                    score1={scores.player1} 
+                    score2={scores.player2} 
+                    maxScoreToUse={maxScoreToUse} 
+                />
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
-                <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
-                <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
+                <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
+                <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
                 {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
                     <div className="power-up" style={{ left: `${powerUpPosition.x}px`, top: `${powerUpPosition.y}px` }}>
                         🍆
