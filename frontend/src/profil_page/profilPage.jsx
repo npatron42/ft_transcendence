@@ -1,20 +1,29 @@
-import { useTranslation } from 'react-i18next';
+import { useState } from 'react';;
 import Langue from '../login_page/languages.jsx';
 import "./utils.css"
 import Bt2fa from './bt2fa.jsx';
 import Image from './image.jsx';
 import Del from './del.jsx';
 import Upload from './upload.jsx';
+import Pseudo from './pseudo.jsx';
+import Mail from './mail.jsx';
+import Mdp from './mdp.jsx';
+import ButtonDef from './buttonDef.jsx';
 
 function profilPage() {
-  return (
+
+	const [Actif, setActif] = useState(false); 
+	return (
 	<div id="background-container">
-		{/* <h1 className="title">Mon Profil</h1> */}
+		<Pseudo Actif={Actif} setActif={setActif} />
 		<Image />
 		<Bt2fa />
 		<Del />
+		<ButtonDef />
 		<Upload />
 		<Langue />
+		<Mail Actif={Actif} setActif={setActif} />
+		<Mdp  Actif={Actif} setActif={setActif} />
 	</div>
   )
 }

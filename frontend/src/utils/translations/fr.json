@@ -36,6 +36,13 @@
     "profilPage" : {
       "2fa" : "Activez la double authentification",
       "upload" : "Cliquez pour télécharger",
-      "delete" : "Supprimer"
+      "delete" : "Supprimer",
+      "lg" : "Langue par défaut : ",
+      "lg0" : "Langue par défaut",
+      "modif": "Modifier",
+      "valide": "Valider",
+      "inco" : "Mot de passe incorrect",
+      "cancel" : "Annuler",
+      "oldmdp" : "Entrez l'ancien mot de passe"
     }
   }

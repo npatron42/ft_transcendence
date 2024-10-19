@@ -16,15 +16,67 @@
 .custom-upload{
 	position:absolute;
 	top: 16vh;
-	left: 50.5vw;
+	left: 52vw;
 	width: 7vw;
     height: 3.5vw;
-	font-size: 1vw; 
+	font-size: 1vw;
 	font-weight: bold ;
 	color: #FDCDBE !important;
     background-color: #5E6472;
 	border: 0.8px solid #FDCDBE !important;
-	border-radius: 6px; 
-	font-size: 1vw; 
+	border-radius: 6px;
+	font-size: 1vw;
 	font-family: 'Millimetre', sans-serif;
+}
+
+
+.custom-def {
+	background-color: #5E6472 !important;
+}
+
+.dropdown-menu {
+	background-color: #5E6472 !important;
+}
+
+.dropdown-item {
+	display: flex;
+	justify-content: center; 
+}
+
+.dropdown-item:hover {
+	background-color: #5E6472 !important; 
+}
+
+
+.dropdown-menu.show {
+	background-color: #33383d !important; 
+}
+
+.dropdown-item.active {
+	background-color: #141618 !important; 
+}
+
+.custom-dropdown {
+	position: absolute;
+	color : #FDCDBE !important;
+	top: 10vh;
+	left: 89.5vw;
+}
+
+.def-langue{
+	position: absolute;
+	top: 15vh;
+	left: 90.4vw;
+	/* color: #FAF3DD; */
+	color: #FDCDBE !important;
+	font-size: 0.8vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold;
+}
+
+.dropdown-toggle{
+	color: #FAF3DD !important;
+	background-color: #5E6472 !important;
+	border-radius: 0.5vw;
+	/* color: #FDCDBE !important; */
 }

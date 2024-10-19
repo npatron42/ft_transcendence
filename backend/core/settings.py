@@ -4,6 +4,10 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
@@ -40,15 +44,15 @@ AUTH_USER_MODEL = 'users.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
-    'http://192.168.1.25:5173',
-    'http://192.168.1.25:8000', 
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000', 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
-    'http://192.168.1.25:5173',
-    'http://192.168.1.25:8000',
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'
