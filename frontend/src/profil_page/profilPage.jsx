@@ -12,7 +12,8 @@ import ButtonDef from './buttonDef.jsx';
 
 function profilPage() {
 
-	const [Actif, setActif] = useState(false); 
+	const [Actif, setActif] = useState(false);
+	
 	return (
 	<div id="background-container">
 		<Pseudo Actif={Actif} setActif={setActif} />

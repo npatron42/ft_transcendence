@@ -4,7 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 
 class User(AbstractUser):
 	status = models.CharField(max_length=15, default="Disconnected")
-	profilePicture = models.CharField(max_length=250)
+	profilePicture = models.CharField(max_length=250, default="default.jpg")
 	isFrom42 = models.BooleanField(default=False)
 	langue = models.CharField(max_length=10, default="fr")
 
