@@ -34,23 +34,22 @@ const usePaddleMovement = (webSocket, playerId) => {
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup'}));
+                webSocket.send(JSON.stringify({ action: 'paddleup' }));
             }
             if (keysPressed['s'] || keysPressed['S']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown'}));
+                webSocket.send(JSON.stringify({ action: 'paddledown' }));
             }
             if (keysPressed['ArrowUp']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup'}));
+                webSocket.send(JSON.stringify({ action: 'paddleup' }));
             }
             if (keysPressed['ArrowDown']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown'}));
+                webSocket.send(JSON.stringify({ action: 'paddledown' }));
             }
         }, 11);
 
         return () => clearInterval(interval);
     }, [keysPressed, webSocket]);
 };
-
 
 const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(300);
@@ -65,27 +64,29 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
     const { myUser } = useAuth();
     const [powerUpOption, setPowerUpOption] = useState(false);
-    const [powerUpY, setPowerUpY] = useState(0);
-    const [powerUpX, setPowerUpX] = useState(0);
+    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
+
+    useEffect(() => {
+        console.log("Position X updated:", powerUpPosition.x);
+        console.log("Position Y updated:", powerUpPosition.y);
+    }, [powerUpPosition]);
+
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
-    
+
         if (myUser) {
             ws.onopen = () => {
                 const powerUpBool = Boolean(powerUp)
                 const maxScoreNum = Number(maxScore);
-                console.log(myUser);
-                console.log("Poer up : ", powerUp);
-                console.log('WebSocket connecté à la room:', roomId);
+                console.log("Power up:", powerUpBool);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
                 ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
             };
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-
-                // console.log("data recue front : ", data);
+                //console.log("Received data:", data);
 
                 if (data.players) {
                     setRoomPlayers(data.players);
@@ -104,32 +105,29 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 if (data.max_score !== undefined) {
                     setMaxScoreToUse(data.max_score);
                 }
-
                 if (data.winner) {
                     setIsGameOver(true);
                     setWinner(data.winner);
-                    console.log(`winner is ${data.winner}`);
                 }
-                if (data.power_up)
-                {
-                    setPowerUpOption(Boolean(data.power_up));
+                if (data.status == "add") {
+                    console.log("data.add", data)
+                    if (data.power_up_position) {
+                        setPowerUpPosition(data.power_up_position);
+                    }
                 }
-                if (data.power_up_position)
-                {
-                    console.log (data.power_up_position);
-                    setPowerUpX(data.power_up_position.x);
-                    setPowerUpY(data.power_up_position.y);
-                    console.log ("voici le x : ", powerUpX);
-                    console.log ("voici le y : ", powerUpY);
+
+                if (data.status == "erase") {
+                    console.log("adios");
+                    setPowerUpPosition({ x: 0, y: 0 });
                 }
             };
 
             ws.onclose = (event) => {
-                console.log('WebSocket fermé, code :', event.code);
+                console.log('WebSocket closed, code:', event.code);
             };
 
             ws.onerror = (error) => {
-                console.error('Erreur WebbalGameMulti/a2ff89a8-ff76-4128-8deb-114108418c63Socket :', error);
+                console.error('WebSocket error:', error);
             };
         }
 
@@ -153,10 +151,14 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
+                {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
+                    <div className="power-up" style={{ left: `${powerUpPosition.x}px`, top: `${powerUpPosition.y}px` }}>
+                        🍆
+                    </div>
+                )}
             </div>
         </div>
     );
 };
-
 
 export default PongMulti;

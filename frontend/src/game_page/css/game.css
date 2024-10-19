@@ -150,3 +150,13 @@
     box-shadow: 0 0 10px #d9f3e279, 
                 0 0 10px #d9f3e279;
 }
+
+.power-up {
+    position: absolute;
+    width: 25px;
+    height: 25px;
+    left: 0;
+    top: 0;
+    z-index: 10;
+}
+

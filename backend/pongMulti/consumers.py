@@ -10,6 +10,11 @@ from users.models import Invitation, User, FriendsList
 
 logger = logging.getLogger(__name__)
 
+
+	###############
+	# MATCH IN DB #
+	###############
+
 async def save_match(winner, player1, player2, player2_score, player1_score, complete_game):
 	try:
 		await sync_to_async(MatchHistory.objects.create)(
@@ -27,6 +32,10 @@ async def save_match(winner, player1, player2, player2_score, player1_score, com
 async def getUserByUsername(name):
 	return await sync_to_async(User.objects.get)(username=name)
 
+	########
+	# GAME #
+	########
+
 class PongConsumer(AsyncWebsocketConsumer):
 	paddles = {}
 	ball_pos = {}
@@ -36,6 +45,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 	players = {}
 	power_up = {}
 	power_up_position = {}
+	power_up_visible = {}
+	power_up_timeout = {}
+	power_up_cooldown = {}
 	end = False
 
 		###########
@@ -228,7 +240,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 	
 	async def new_power_up(self, event):
 		position = event['position']
-		await self.send(text_data=json.dumps({'power_up_position': position}))
+		status = event['status']
+		await self.send(text_data=json.dumps({'power_up_position': position, "status": status}))
 
 	async def game_state(self, event):
 		paddles = event['paddles']
@@ -289,7 +302,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			#Win condition#
 			if power_up == True:
-				await self.generate_power_up()
+				asyncio.create_task(self.generate_power_up())
 
 			if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
 
@@ -371,21 +384,54 @@ class PongConsumer(AsyncWebsocketConsumer):
 					'max_score': max_score
 				}
 			)
-			await asyncio.sleep(1 / 60)
+			await asyncio.sleep(1 / 120)
 
+
+		############
+		# POWER UP #
+		############
+
+	async def manage_power_up(self):
+
+		await asyncio.sleep(5)
+		PongConsumer.power_up_visible[self.room_id] = False
+		logger.info("cest ciao")
+		
+		await self.channel_layer.group_send(
+			self.room_group_name,
+			{
+				'type': 'new_power_up',
+				'position': None,
+				'status' : "erase"
+			}
+		)
+		
+		cooldown_duration = random.randint(15, 30)
+		PongConsumer.power_up_cooldown[self.room_id] = cooldown_duration
+		logger.info("minute papillion")
+		await asyncio.sleep(25)
+		await self.generate_power_up()
 
 	async def generate_power_up(self):
+		if self.room_id in PongConsumer.power_up_visible and PongConsumer.power_up_visible[self.room_id]:
+			return
+		
+		if not hasattr(self, 'power_up_task') or self.power_up_task.done():
+			self.power_up_task = asyncio.create_task(self.manage_power_up())
 		if random.random() < 0.01:
 			PongConsumer.power_up_position[self.room_id] = {
 				'x': random.randint(100, 800),
 				'y': random.randint(100, 500)
 			}
-			logger.info(f"Power-up généré à {PongConsumer.power_up_position[self.room_id]}")
+			logger.info("Power-up généré")
+			PongConsumer.power_up_visible[self.room_id] = True
+
 			await self.channel_layer.group_send(
 				self.room_group_name,
 				{
 					'type': 'new_power_up',
-					'position': PongConsumer.power_up_position[self.room_id]
+					'position': PongConsumer.power_up_position[self.room_id],
+					'status': "add"
 				}
 			)
-		
+
