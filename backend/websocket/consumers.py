@@ -598,19 +598,19 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserBlockedUsersList, myUserBlockedFriendsList = await getFinalUsersListAndFriendsList(myUserBlocked)
 
             friendsListToMyUser = {
-                "friendsList": myUserFriendsList
+                "friends": myUserFriendsList
             }
 
             friendsListToMyBlockedUser = {
-                "friendsList": myUserBlockedFriendsList
+                "friends": myUserBlockedFriendsList
             }
 
             usersListToMyUser = {
-                "allUsers": myUserUsersList
+                "AllUsers": myUserUsersList
             }
 
             usersListToMyBlockedUser = {
-                "allUsers": myUserBlockedUsersList
+                "AllUsers": myUserBlockedUsersList
             }
 
             await sendToClient2(self, socketsUsers[myUser.username], friendsListToMyUser)
