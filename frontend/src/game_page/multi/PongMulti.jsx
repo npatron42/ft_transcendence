@@ -53,7 +53,7 @@ const usePaddleMovement = (webSocket, playerId) => {
 
 const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
-    const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 }); // Définit la hauteur par défaut
+    const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [scores, setScores] = useState({ player1: 0, player2: 0 });
     const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
@@ -63,10 +63,16 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
     const [webSocket, setWebSocket] = useState(null);
     const { myUser } = useAuth();
+    const [powerUpType, setPowerUpType] = useState(null);
+
+    useEffect(() => {
+        console.log("le voila", powerUpType);
+        console.log("la pos", powerUpPosition);
+    }, [powerUpType, powerUpPosition]);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
-
+        
         if (myUser) {
             ws.onopen = () => {
                 const powerUpBool = Boolean(powerUp);
@@ -105,9 +111,11 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
+                    setPowerUpType(data.power_up);
                 }
                 if (data.status === "erase") {
                     setPowerUpPosition({ x: 0, y: 0 });
+                    setPowerUpType(null);
                 }
             };
 
@@ -131,6 +139,19 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
 
     usePaddleMovement(webSocket, roomPlayers);
 
+    const renderPowerUp = () => {
+        switch (powerUpType) {
+            case 'increase_paddle':
+                return '📏';
+            case 'inversed_control':
+                return <img src="../../src/assets/game/inversed_control.png" alt="Increase Paddle" style={{ width: '60px', height: '60px' }} />;
+            case 'increase_paddle':
+                return 'la';
+            default:
+                return null;
+        }
+    };
+
     return (
         <div className="pong-container">
             <div className="board">
@@ -146,7 +167,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
                 {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
                     <div className="power-up" style={{ left: `${powerUpPosition.x}px`, top: `${powerUpPosition.y}px` }}>
-                        🍆
+                        {renderPowerUp()}
                     </div>
                 )}
             </div>
