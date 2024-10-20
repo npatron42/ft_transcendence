@@ -1,6 +1,6 @@
 import "./chat.css"
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from "../provider/UserAuthProvider";
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { getAllUsers } from "../api/api";
@@ -14,8 +14,6 @@ import ModalUserChat from "./ModalUserChat";
 
 function Chat() {
 
-    
-    const navigate = useNavigate()
     const {myUser} = useAuth();
     
     const [myDiscuss, setDiscuss] = useState([]);
@@ -31,6 +29,7 @@ function Chat() {
     const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
     const [friendsMessagesClicked, setFriendsMessagesClicked] = useState(false)
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
+    const [blockedUsers, setBlockedUsers] = useState([])
 
     const [inputMessage, setInputMessage] = useState('');
 
@@ -96,6 +95,8 @@ function Chat() {
                     setDiscuss(data["messages"]);
                 }
             }
+            if (data["blocked"])
+                setBlockedUsers(data["blocked"])
         };
 
         const handleStatus = (data) => {
@@ -172,21 +173,28 @@ function Chat() {
     }
 
     const handleProfile = () => {
-        // const link = "/profile/" + myUser.username
-        // navigate(link)
-
         if (userIsClicked === false) {
             setUserIsClicked(true);
-            console.log(userIsClicked)
             return ;
         }
         if (userIsClicked === true) {
             setUserIsClicked(false);
-            console.log(userIsClicked)
             return ;
         }
         return ;
     }
+
+    const isUserBlocked = (userSelected) => {
+        let i = 0;
+        const mySize = blockedUsers.length
+        while (i < mySize) {
+            if (blockedUsers[i]["username"] === userSelected.username)
+                return (true);
+            i++;
+        }
+        return (false)
+    }
+
 
     useEffect(() => {
 
@@ -209,7 +217,7 @@ function Chat() {
     }, [userSelected]);
 
     return (
-        <div className="chat">
+            <div className="chat">
             {isLoading ? (
                 <Loading />
             ) : (
@@ -234,7 +242,7 @@ function Chat() {
                                 {friendsList && friendsList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss" />
+                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
@@ -249,7 +257,7 @@ function Chat() {
                                 {usersList && usersList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss" />
+                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
@@ -287,7 +295,7 @@ function Chat() {
                         {/* FRIENDS CLICKED ---> FRIEND DISCUSS SELECTED */}
 
 
-                    {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected !== null && (
+                    {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected !== null && !isUserBlocked(userSelected) && (
                         
                     <div className="principal-discussion">
                         <div className="header-discuss">
@@ -354,7 +362,7 @@ function Chat() {
                         {/* USER SELECTED */}
 
 
-                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected !== null &&(
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected !== null && !isUserBlocked(userSelected) && (
                     <div className="principal-discussion">
                         <div className="header-discuss">
                             <div className="come-back">

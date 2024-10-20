@@ -22,6 +22,9 @@
     border-radius: 30px;
     border: 4px solid #ffa69e;
     display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .logo-header {

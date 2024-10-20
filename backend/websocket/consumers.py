@@ -529,8 +529,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
-            logger.info("VARIABLE BZARRE ---> %s", myUserBlockedTmp)
-
             myUser = await getUserByUsername(myUserTmp.get("username"))
             myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username")) 
             await eraseBlockedRelationShip(myUser, myUserBlocked)
@@ -699,7 +697,6 @@ async def getFinalUsersListAndFriendsList(myUser):
 
     usersList = removeUsernameFromList(usersToRemove, usersList)
     friendsList = removeUsernameFromList(usersToRemove, friendsList)
-    logger.info("JE RENVOIE CECI --> %s", usersBlocked)
 
     return usersList, friendsList, usersBlocked
 

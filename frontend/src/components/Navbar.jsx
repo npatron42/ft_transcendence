@@ -38,6 +38,8 @@ function NavbarBS() {
   const handleHome = () => {
     if (location.pathname !== "/home")
       setHomeShown(prevHomeShown => !prevHomeShown);
+    if (chatShown === true)
+      setChatShown(!chatShown)
     navigate("/home");
   };
 
@@ -77,11 +79,14 @@ function NavbarBS() {
     setNotifClicked(!notifIsClicked);
     if (profileShown === true)
       setProfile(!profileShown);
+
   };
 
   const handleOtherLocations = () => {
     if (homeShown === true)
       setHomeShown(!homeShown);
+    if (chatShown === true)
+      setChatShown(!chatShown)
   }
 
   const handleChat = () => {
