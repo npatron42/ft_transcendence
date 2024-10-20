@@ -40,26 +40,15 @@ async def sendToEveryClientsUsersList(channel_layer):
     usersConnected = list(socketsUsers.keys())
     sockets = list(socketsUsers.values())
     while i < size:
-        allUsers = await getAllUsers()
-
         myUser = await getUserByUsername(usersConnected[i])
-
-        myUserFriendsList = await getFriendsListByUsername(myUser.username)
-        friendsListSerializer = FriendsListSerializer(myUserFriendsList, many=True)
-
-        friendsNames = giveOnlyFriendsName(friendsListSerializer.data, myUser.username)
-
-        final = await finalFriendsList(friendsNames)
-        serializerFinal = UserSerializer(final, many=True)
-
-        myUserList = await usersListWithoutFriends(serializerFinal.data, allUsers, myUser.username)
+        myUsersList, myFriendsList, blockedUsers = await getFinalUsersListAndFriendsList(myUser)
 
         dataToSend = {
-            "AllUsers": myUserList
+            "AllUsers": myUsersList
         }
 
         friendsToSend = {
-            "friends": serializerFinal.data
+            "friends": myFriendsList
         }
         await sendToClient(channel_layer, sockets[i], friendsToSend)
         await sendToClient(channel_layer, sockets[i], dataToSend)
@@ -144,6 +133,24 @@ async def eraseInvitation(parse_value):
         await sync_to_async(myInvitation.delete)()
         pass
 
+async def eraseFriendRelationShip(parse_value):
+    key1, key2 = parse_value.split("|", 1)
+    other_value = key2 + "|" + key1
+    try:
+        myInvitation = await sync_to_async(FriendsList.objects.get)(parse=parse_value)
+        await sync_to_async(myInvitation.delete)()
+    except:
+        myInvitation = await sync_to_async(FriendsList.objects.get)(parse=other_value)
+        await sync_to_async(myInvitation.delete)()
+        pass
+
+async def eraseBlockedRelationShip(myUser, myUserBlocked):
+    try:
+        myRelation = await sync_to_async(RelationsBlocked.objects.get)(userWhoBlocks=myUser, userBlocked=myUserBlocked)
+        await sync_to_async(myRelation.delete)()
+    except:
+        pass
+
 
 async def removeFriend(parse_value):
     key1, key2 = parse_value.split("|", 1)
@@ -154,7 +161,8 @@ async def removeFriend(parse_value):
     except:
         myRelationShip = await sync_to_async(FriendsList.objects.get)(parse=other_value)
         await sync_to_async(myRelationShip.delete)()
-        pass   
+        pass
+
 
 async def getFriendsListByUsername(username):
     user = await sync_to_async(User.objects.get)(username=username)
@@ -242,11 +250,13 @@ async def deleteRelationShip(parseLine):
 
     await sync_to_async(myRelation.delete)()
 
-async def sendToClient2(self, socket, message):
-    await self.channel_layer.send(socket, {
-        "type": "notification_to_client",
-        "message": message,
-    })
+async def sendToClient2(self, message, username):
+    if username in socketsUsers:
+        socket = socketsUsers.get(username)
+        await self.channel_layer.send(socket, {
+            "type": "notification_to_client",
+            "message": message,
+        })
 
 
 async def getAllNotifications(username):
@@ -291,11 +301,11 @@ async def sendDiscussionToBothClient(self, userOne, userTwo):
 
     if userOne.username in socketsUsers:
         socketUserOne = socketsUsers.get(userOne.username)
-        await sendToClient2(self, socketUserOne, dataToSend)
+        await sendToClient2(self, dataToSend, userOne.username)
     
     if userTwo.username in socketsUsers:
         socketUserTwo = socketsUsers.get(userTwo.username)
-        await sendToClient2(self, socketUserTwo, dataToSend)
+        await sendToClient2(self, dataToSend, userTwo.username)
 
 
 async def changeUserStatus(key, isConnected: bool):
@@ -434,60 +444,14 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 friendsList = FriendsList(user1=myExpeditor, user2=myReceiver, parse=parse)
                 await saveRelationship(friendsList)
                 await eraseInvitation(parse)
-
-                friendsListExpeditor = await getFriendsListByUsername(myExpeditor.username)
-                serializerExpeditor = FriendsListSerializer(friendsListExpeditor, many=True)
-
-                friendsListReceiver = await getFriendsListByUsername(myReceiver.username)
-                serializerReceiver = FriendsListSerializer(friendsListReceiver, many=True)
-
-
-                AllUsers = await getAllUsers()
-                friendsNamesExpeditor = giveOnlyFriendsName(serializerExpeditor.data, myExpeditor.username)
-                friendsNamesReceiver = giveOnlyFriendsName(serializerReceiver.data, myReceiverUsername)
-
-
-                finalFriendsListExpeditor = await finalFriendsList(friendsNamesExpeditor)
-                serializerFinalExpeditor = UserSerializer(finalFriendsListExpeditor, many=True)
-
-                finalFriendsListReceiver = await finalFriendsList(friendsNamesReceiver)
-                serializerFinalReceiver = UserSerializer(finalFriendsListReceiver, many=True)
-
-                friendsListReceiverToSend = {
-                    "friends": serializerFinalReceiver.data
-                }
-
-                friendsListExpeditorToSend = {
-                    "friends": serializerFinalExpeditor.data
-                }
-
-
-                usersListExpeditor = await usersListWithoutFriends(serializerFinalExpeditor.data, AllUsers, myExpeditor.username)
-                usersListReceiver = await usersListWithoutFriends(serializerFinalReceiver.data, AllUsers, myReceiverUsername)
-
-                usersListExpeditor = {
-                    "AllUsers": usersListExpeditor
-                }
-
-                usersListReceiver = {
-                    "AllUsers": usersListReceiver
-                }
+                await sendToBothClientUsersAndFriendsListAndBlocked(self, myExpeditor, myReceiver)
 
 
                 friendsInvitationsToReceiver = await getAllNotifications(myReceiverUsername)
-                await sendToClient2(self, socketReceiver, friendsInvitationsToReceiver)
+                await sendToClient2(self, friendsInvitationsToReceiver, myReceiverUsername)
 
                 friendsInvitationsToExpeditor = await getAllNotifications(myExpeditor.username)
                 await self.send(text_data=json.dumps(friendsInvitationsToExpeditor))                
-
-                await self.send(text_data=json.dumps(usersListExpeditor))
-                await sendToClient2(self, socketReceiver, usersListReceiver)
-
-                #friendsList to clients
-
-                await self.send(text_data=json.dumps(friendsListExpeditorToSend))
-                await sendToClient2(self, socketReceiver, friendsListReceiverToSend)
-
 
 
             elif (invitation_exists == "ALREADY FRIENDS"):
@@ -509,63 +473,22 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 userReceiverName = data["to"]
 
                 dataToSend = await getAllNotifications(userReceiverName)
-                await sendToClient2(self, socketReceiver, dataToSend)
+                await sendToClient2(self, dataToSend, userReceiverName)
 
         elif type == "DELETE":
             stringRelation = data["parse"]
             myUser = self.scope["user"]
             userDeleted = await getUserByUsername(data["userDeleted"])
-            socketUserDeleted = socketsUsers.get(userDeleted.username)
 
             await deleteRelationShip(stringRelation)
-            AllUsers = await getAllUsers()
-            
-            myUserFriendsList = await getFriendsListByUsername(myUser.username)
-            userDeletedFriendsList = await getFriendsListByUsername(userDeleted.username)
+            await sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, userDeleted)
 
-            serializerUserFriendsList = FriendsListSerializer(myUserFriendsList, many=True)
-            serializerUserDeletedFriendsList = FriendsListSerializer(userDeletedFriendsList, many=True)
-
-            friendsNamesUser = giveOnlyFriendsName(serializerUserFriendsList.data, myUser.username)
-            friendsNamesDeletedUser = giveOnlyFriendsName(serializerUserDeletedFriendsList.data, userDeleted.username)
-
-            finalFriendsListUser = await finalFriendsList(friendsNamesUser)
-            serializerFinalUser = UserSerializer(finalFriendsListUser, many=True)
-
-            finalFriendsListDeletedUser = await finalFriendsList(friendsNamesDeletedUser)
-            serializerFinalDeletedUser = UserSerializer(finalFriendsListDeletedUser, many=True)
-
-            friendsListDeletedUserToSend = {
-                "friends": serializerFinalDeletedUser.data
-            }
-
-            friendsListUserToSend = {
-                "friends": serializerFinalUser.data
-            }
-
-            usersListExpeditor = await usersListWithoutFriends(serializerFinalUser.data, AllUsers, myUser.username)
-
-            usersListReceiver = await usersListWithoutFriends(serializerFinalDeletedUser.data, AllUsers, userDeleted.username)
-
-            allUsersToSendExpeditor = {
-                "AllUsers": usersListExpeditor
-            }
-
-            allUsersToSendReceiver = {
-                "AllUsers": usersListReceiver
-            }
-
-            await self.send(text_data=json.dumps(friendsListUserToSend))   
-            await sendToClient2(self, socketUserDeleted, friendsListDeletedUserToSend)
-
-            await self.send(text_data=json.dumps(allUsersToSendExpeditor))   
-            await sendToClient2(self, socketUserDeleted, allUsersToSendReceiver)
 
         elif type == "DECLINE":
             parse = data.get("parse")
             await eraseInvitation(parse)
             dataToSend = await getAllNotifications(myUser.username)
-            await sendToClient2(self, socketsUsers[myUser.username], dataToSend)
+            await sendToClient2(self, dataToSend, myUser.username)
 
         # HANDLE CHAT
 
@@ -582,7 +505,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await sendDiscussionToBothClient(self, myUserSender, myUserReceiver)
         
         elif type == "BLOCK":
-            logger.info(data)
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
@@ -592,33 +514,80 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             try:
                 myObj = RelationsBlocked(userWhoBlocks=myUser, userBlocked=myUserBlocked)
                 await saveBlockedRelation(myObj)
+                try:
+                    param = myUser.username + "|" + myUserBlocked.username
+                    theyAreFriend = await RelationshipIsExisting(param)
+                    if theyAreFriend == True:
+                        await eraseFriendRelationShip(param)
+                except:
+                    raise(Exception("PAS AMIS"))
             except:
-                raise(Exception("Wow"))
-            myUserUsersList, myUserFriendsList = await getFinalUsersListAndFriendsList(myUser)
-            myUserBlockedUsersList, myUserBlockedFriendsList = await getFinalUsersListAndFriendsList(myUserBlocked)
+                raise(Exception("BON"))
+            await sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, myUserBlocked)
+        
+        elif type == "UNBLOCK":
+            myUserTmp = data.get("userWhoBlocks")
+            myUserBlockedTmp = data.get("userBlocked")
 
-            friendsListToMyUser = {
-                "friends": myUserFriendsList
+            logger.info("VARIABLE BZARRE ---> %s", myUserBlockedTmp)
+
+            myUser = await getUserByUsername(myUserTmp.get("username"))
+            myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username")) 
+            await eraseBlockedRelationShip(myUser, myUserBlocked)
+            myUserRelationsBlocked = await getRelationsBlocked(myUser)
+            myUserBlockedRelationsBlocked = await getRelationsBlocked(myUser)
+
+            dataToMyUser = {
+                "blocked": myUserRelationsBlocked
             }
 
-            friendsListToMyBlockedUser = {
-                "friends": myUserBlockedFriendsList
+
+            dataToMyBlockedUser = {
+                "blocked": myUserBlockedRelationsBlocked
             }
 
-            usersListToMyUser = {
-                "AllUsers": myUserUsersList
-            }
 
-            usersListToMyBlockedUser = {
-                "AllUsers": myUserBlockedUsersList
-            }
-
-            await sendToClient2(self, socketsUsers[myUser.username], friendsListToMyUser)
-            await sendToClient2(self, socketsUsers[myUser.username], usersListToMyUser)
-            await sendToClient2(self, socketsUsers[myUserBlocked.username], friendsListToMyBlockedUser)
-            await sendToClient2(self, socketsUsers[myUserBlocked.username], usersListToMyBlockedUser)
+            await sendToClient2(self, dataToMyUser, myUser.username)
+            await sendToClient2(self, dataToMyBlockedUser, myUserBlocked.username)
+            await sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, myUserBlocked)
 
 
+
+async def sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, secondUser):
+    myUserUsersList, myUserFriendsList, userRelationsBlocked = await getFinalUsersListAndFriendsList(myUser)
+    myUserBlockedUsersList, myUserBlockedFriendsList, secondUserRelationsBlocked = await getFinalUsersListAndFriendsList(secondUser)
+
+    friendsListToMyUser = {
+        "friends": myUserFriendsList
+    }
+
+    friendsListToMyBlockedUser = {
+        "friends": myUserBlockedFriendsList
+    }
+
+    usersListToMyUser = {
+        "AllUsers": myUserUsersList
+    }
+
+    usersListToMyBlockedUser = {
+        "AllUsers": myUserBlockedUsersList
+    }
+
+    userBlockedRelationsToSend = {
+        "blocked": userRelationsBlocked
+    }
+
+    secondUserBlockedRelationsToSend = {
+        "blocked": secondUserRelationsBlocked
+    }
+
+    await sendToClient2(self, friendsListToMyUser, myUser.username)
+    await sendToClient2(self, usersListToMyUser, myUser.username)
+    await sendToClient2(self, friendsListToMyBlockedUser, secondUser.username)
+    await sendToClient2(self, usersListToMyBlockedUser, secondUser.username)
+
+    await sendToClient2(self, userBlockedRelationsToSend, myUser.username)
+    await sendToClient2(self, secondUserBlockedRelationsToSend, secondUser.username)
 
 
 
@@ -710,24 +679,29 @@ async def getFinalUsersListAndFriendsList(myUser):
 
     myLen = len(relationsBlocked)
     i = 0
+    usersBlocked = []
     usersToRemove = []
     while i < myLen:
         userBlocked = relationsBlocked[i]["userBlocked"]
         userWhoBlocks = relationsBlocked[i]["userWhoBlocks"]
         if myUser.id == userBlocked:
             userToRemove = await getUserById(userWhoBlocks)
+            test = UserSerializer(userToRemove)
+            usersBlocked.append(test.data)
             usersToRemove.append(userToRemove.username)
         elif myUser.id == userWhoBlocks:
             userToRemove = await getUserById(userBlocked)
+            test = UserSerializer(userToRemove)
+            usersBlocked.append(test.data)
             usersToRemove.append(userToRemove.username)
         i += 1
 
+
     usersList = removeUsernameFromList(usersToRemove, usersList)
     friendsList = removeUsernameFromList(usersToRemove, friendsList)
+    logger.info("JE RENVOIE CECI --> %s", usersBlocked)
 
-
-
-    return usersList, friendsList
+    return usersList, friendsList, usersBlocked
 
 
             

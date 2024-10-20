@@ -3,10 +3,9 @@ import "./chat.css"
 import React, { useEffect, useState } from 'react';
 import { useAuth } from "../provider/UserAuthProvider";
 import { useWebSocket } from '../provider/WebSocketProvider';
-import { defineUsersFriendsList } from "../UsersList/utilsUsersFunctions";
 import { getAllUsers } from "../api/api";
 import { useNavigate } from 'react-router-dom';
-import { getDiscussions } from "../api/api";
+import { getDiscussions, getFriendsList, getUsersList } from "../api/api";
 
 import Message from "./Message";
 import Loading from "../loading_page/Loading";
@@ -82,10 +81,10 @@ function Chat() {
     useEffect(() => {
         const handleSocketUser = (data) => {
             if (data["friends"]) {
-                changeFriendsList(data);
+                setFriendsList(data["friends"])
             }
             if (data["AllUsers"]) {
-                changeUsersList(data["AllUsers"], friendsList);
+                setUsersList(data["AllUsers"])
             }
             if (data["messages"]) {
 
@@ -119,31 +118,9 @@ function Chat() {
         return ("offline")
     };
 
-    // SOCKET FRIENDSLIST
-
-    const changeFriendsList = (data) => {
-        setFriendsList(data["friends"])
-    } 
 
     // HTTP --> USERSSTATUS + userslist
 
-    const changeUsersList = async (usersList, friendsList) => {
-        const allUsers = usersList
-        const filteredList = allUsers.filter(user => user.username !== myUser.username);
-        const withoutFriends = [];
-        for (let i = 0; i < filteredList.length; i++) {
-            let isFriend = false;
-            const tmpName = filteredList[i].username;
-            for (let i = 0; i < friendsList.length; i++) {
-                if (tmpName === friendsList[i].username) {
-                    isFriend = true;
-                }
-            }
-            if (isFriend == false)
-                withoutFriends.push(filteredList[i])
-        }
-        setUsersList(withoutFriends);
-    };
     
     const defineAllUsersStatus = async () => {
         const allUsers = await getAllUsers();
@@ -167,9 +144,12 @@ function Chat() {
 
     const initMyLists = async () => {
 
-        const [myFriendsList, myUsersList] = await defineUsersFriendsList(myUser);
+        const myFriendsList = await getFriendsList();
+        const myUsersList = await getUsersList();
+
         setFriendsList(myFriendsList);
         setUsersList(myUsersList);
+        
         await defineAllUsersStatus();
     };
 
@@ -400,7 +380,10 @@ function Chat() {
                                 placeholder="Write here"
                             />
                         </form>
-                </div>
+                        {userIsClicked && (
+                            <ModalUserChat userSelected={userSelected}/>
+                        )}
+                    </div>
                     )}
 
                 </>

@@ -42,6 +42,7 @@
       "valide": "Validare",
       "inco" : "Password errata",
       "cancel" : "Cancellare",
-      "oldmdp" : "Inserisci la vecchia password"
+      "oldmdp" : "Inserisci la vecchia password",
+      "blocked": "Utenti bloccati"
     }
   }

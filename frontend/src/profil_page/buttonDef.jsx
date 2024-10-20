@@ -14,7 +14,7 @@ function buttonDef() {
   return (
 	<div>
     <Dropdown className="custom-dropdown">
-      <Dropdown.Toggle variant="secondary">
+      <Dropdown.Toggle variant="secondary custom-size">
 	  {t('profilPage.lg0')}
       </Dropdown.Toggle>
       <Dropdown.Menu>
