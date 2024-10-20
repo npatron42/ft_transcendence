@@ -142,11 +142,9 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const renderPowerUp = () => {
         switch (powerUpType) {
             case 'increase_paddle':
-                return '📏';
+                return <img src="../../src/assets/game/1.svg" alt="Increase Paddle" style={{ width: '20px', height: '20px'}} />;
             case 'inversed_control':
-                return <img src="../../src/assets/game/inversed_control.png" alt="Increase Paddle" style={{ width: '60px', height: '60px' }} />;
-            case 'increase_paddle':
-                return 'la';
+                return <img src="../../src/assets/game/2.svg" alt="inversed control" style={{ width: '20px', height: '20px'}} />;
             default:
                 return null;
         }
@@ -166,7 +164,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
                 {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
-                    <div className="power-up" style={{ left: `${powerUpPosition.x}px`, top: `${powerUpPosition.y}px` }}>
+                    <div className="power-up" style={{ left: `${powerUpPosition.x - 30}px`, top: `${powerUpPosition.y - 30}px` }}>
                         {renderPowerUp()}
                     </div>
                 )}

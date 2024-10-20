@@ -331,7 +331,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				#active PowerUp if is true#
 			if self.room_id not in PongConsumer.inversed_controls:
 				PongConsumer.inversed_controls[self.room_id] = [False, False]
-				PongConsumer.power_up_size[self.room_id] = {'width': 40, 'height': 40}
+				PongConsumer.power_up_size[self.room_id] = {'width': 90, 'height': 90}
 			if PongConsumer.power_up_bool[self.room_id] == True and PongConsumer.power_up_visible[self.room_id] == False and last_player != None:
 				asyncio.create_task(self.generate_power_up())
 
@@ -485,13 +485,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 			return
 
 		if random.random() < 0.01:
-			power_ups = ['inversed_control']
+			power_ups = ['inversed_control', 'increase_paddle']
 			selected_power_up = random.choice(power_ups)
 			PongConsumer.power_up_position[self.room_id] = {
-				# 'x': random.randint(100, 800),
-				# 'y': random.randint(100, 500)
-				'x': 440,
-				'y': 290
+				'x': random.randint(100, 800),
+				'y': random.randint(100, 500)
+				# 'x': 450,
+				# 'y': 300
 			}
 			PongConsumer.power_up[self.room_id] = selected_power_up
 			PongConsumer.power_up_visible[self.room_id] = True
@@ -521,10 +521,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 				PongConsumer.paddle_left_height[self.room_id] = 150
 			elif last_player == PongConsumer.players[self.room_id][1]:
 				PongConsumer.paddle_right_height[self.room_id] = 150
-		if last_player == PongConsumer.players[self.room_id][0]:
-			PongConsumer.inversed_controls[self.room_id][1] = True
-		elif last_player == PongConsumer.players[self.room_id][1]:
-			PongConsumer.inversed_controls[self.room_id][0] = True
+		elif PongConsumer.power_up[self.room_id] =='inversed_control':
+			if last_player == PongConsumer.players[self.room_id][0]:
+				PongConsumer.inversed_controls[self.room_id][1] = True
+			elif last_player == PongConsumer.players[self.room_id][1]:
+				PongConsumer.inversed_controls[self.room_id][0] = True
+		else:
+			return
 		await asyncio.sleep(15)
 		self.reset_effect()
 	
