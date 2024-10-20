@@ -153,8 +153,29 @@
 
 .power-up {
     position: absolute;
-    border-radius: 60%;
-    background-color: antiquewhite;
+    width: 40px;
+    height: 40px;
+    animation: border-blink 1s infinite alternate;
+    border-radius: 50%;
+    border: 22px solid #FFA69E;
+    
+    /* Ajout pour centrer l'image à l'intérieur */
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
+
+@keyframes border-blink {
+    0% {
+        box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+        border-color: #FFA69E;
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
+        border-color: #FDCDBE;
+    }
+}
+
 
 

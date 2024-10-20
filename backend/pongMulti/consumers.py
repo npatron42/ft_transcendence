@@ -330,8 +330,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 				#active PowerUp if is true#
 			if self.room_id not in PongConsumer.inversed_controls:
-				PongConsumer.inversed_controls[self.room_id] = [False, False]
-				PongConsumer.power_up_size[self.room_id] = {'width': 90, 'height': 90}
+				PongConsumer.inversed_controls[self.room_id] = [False, False]  #a refaire
+				PongConsumer.power_up_size[self.room_id] = {'width': 40, 'height': 40}
 			if PongConsumer.power_up_bool[self.room_id] == True and PongConsumer.power_up_visible[self.room_id] == False and last_player != None:
 				asyncio.create_task(self.generate_power_up())
 
