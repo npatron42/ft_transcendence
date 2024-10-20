@@ -148,23 +148,24 @@
     color: #FAF3DD;
 }
 
-.users-list {
+.userslist {
 	max-height: 200px;
 	overflow-x: hidden;
     margin-right: 5px;
 }
   
-  .users-list.scroll {
+  .userslist.scroll {
 	overflow-y: auto;
+    margin-right: 10px;
   }
   
-  .users-list.scroll::-webkit-scrollbar
+  .userslist.scroll::-webkit-scrollbar
   {
     width: 10px;
     background-color: #2a2c31;
   }
   
-  .users-list.scroll::-webkit-scrollbar-thumb
+  .userslist.scroll::-webkit-scrollbar-thumb
   {
 	border: 2px solid #000000;
 	border-radius: 20px;

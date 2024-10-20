@@ -22,6 +22,9 @@
     border-radius: 30px;
     border: 4px solid #ffa69e;
     display: flex;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .logo-header {
@@ -32,14 +35,12 @@
 .logo-header:hover {
     font-size: 25px;
     color: #ffa69e;
-    padding-bottom: 10px; 
 }
 
 .header-logo {
     width: 50%;
     height: 100%;
     background-position: center;
-    align-items: center;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -198,7 +199,7 @@
 
 
 .header-discuss-name-custom {
-    font-family: Millimetre;
+    font-family: Millimetre-Light;
     font-size: 17px;
     color: #FAF3DD;
     padding-left: 100px;
@@ -261,17 +262,11 @@
 }
 
 .principal-discussion {
+    display: flex;
     padding-left: 20px;
     width: 60%;
-    height: 100%;
-}
-
-.core-discussion {
-    width: 100%;
-    height: 72%;
-    display: flex;
     flex-direction: column;
-    gap: 18px;
+    height: 100%;
 }
 
 .form-custom {
@@ -293,23 +288,71 @@
 }
 
 
-.div-message-myUser {
-    width: 80%;
-    margin-left: 20%;
-    border: 2px solid #869FA9;
-    border-radius: 25px;
+.core-discussion {
+    flex-grow: 1;
+    width: 100%;
+    max-height: 400px;
+    overflow-y: auto;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    scrollbar-width: none;
 }
 
-.div-message-userSelected {
-    width: 80%;
-    border: 2px solid #5E6472;
-    border-radius: 25px;
-    color: #FAF3DD;
+.core-discussion::-webkit-scrollbar {
+    display: none; 
 }
 
-.span-message-myUser {
+.message-wrapper.sender {
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+}
+
+.message-wrapper.receiver {
+    display: flex;
+    justify-content: flex-start;
+    width: 100%;
+}
+
+.div-message-receiver,
+.div-message-sender {
+    display: inline-block;
+    width: fit-content;
+    padding: 5px;
+    margin-bottom: 2px;
+    border-radius: 10px;
+    max-width: 80%;
+    word-wrap: break-word;
+}
+
+.div-message-receiver {
+    background-color: #5E6472;
+}
+
+.div-message-sender {
+    background-color: #869FA9;
+}
+
+.span-message-sender {
     font-family: Millimetre;
     width: 90%;
     padding-left: 10px;
     color: #FAF3DD;
+}
+
+.message-sender {
+    font-weight: bold;
+    margin-right: 5px;
+}
+
+.message-receiver {
+    font-weight: bold;
+    color: #FAF3DD;
+    margin-right: 5px;
+}
+
+.message-text {
+    color: #333;
 }

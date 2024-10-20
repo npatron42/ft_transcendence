@@ -69,7 +69,7 @@ function idRegister() {
 			}
 		
 	// console.log('Username ', username);
-	// console.log('Password ', password);
+	// console.log('Password ', password);registerPage.mail
 	};
 
 	return(

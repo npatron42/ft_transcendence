@@ -1,11 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getAllUsers, getFriendsList, getNotifs } from '../api/api';  // Assurez-vous que les imports sont corrects
+import { getUsersList, getFriendsList, getNotifs, getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
 
 import { useWebSocket } from '../provider/WebSocketProvider';
-import { defineUsersFriendsList } from './utilsUsersFunctions';
 import { useAuth } from '../provider/UserAuthProvider';
 
 const UsersFriendsList = ({ myUser }) => {
@@ -22,10 +21,13 @@ const UsersFriendsList = ({ myUser }) => {
     useEffect(() => {
         const handleSocketUser = (data) => {
             if (data["friends"]) {
-                changeFriendsList(data);
+                setFriendsList(data["friends"]);
             }
             if (data["AllUsers"]) {
-                changeUsersList(data["AllUsers"], friendsList);
+                setUsersList(data["AllUsers"]);
+            }
+            if (data["blocked"]) {
+                console.log("BLOCK")
             }
         };
 
@@ -41,28 +43,7 @@ const UsersFriendsList = ({ myUser }) => {
         };
     }, [subscribeToMessages, subscribeToStatus, socketUser]);
 
-    const changeFriendsList = (data) => {
-        setFriendsList(data["friends"])
-    } 
 
-    const changeUsersList = async (usersList, friendsList) => {
-        const allUsers = usersList
-        const filteredList = allUsers.filter(user => user.username !== myUser.username);
-        const withoutFriends = [];
-        for (let i = 0; i < filteredList.length; i++) {
-            let isFriend = false;
-            const tmpName = filteredList[i].username;
-            for (let i = 0; i < friendsList.length; i++) {
-                if (tmpName === friendsList[i].username) {
-                    isFriend = true;
-                }
-            }
-            if (isFriend == false)
-                withoutFriends.push(filteredList[i])
-        }
-        setUsersList(withoutFriends);
-    };
-    
     const defineAllUsersStatus = async () => {
         const allUsers = await getAllUsers();
         const myResult = []
@@ -82,7 +63,9 @@ const UsersFriendsList = ({ myUser }) => {
 
     const initMyLists = async () => {
 
-        const [myFriendsList, myUsersList] = await defineUsersFriendsList(myUser);
+        const myUsersList = await getUsersList();
+        const myFriendsList = await getFriendsList();
+
         setFriendsList(myFriendsList);
         setUsersList(myUsersList);
         await defineAllUsersStatus();
@@ -167,12 +150,12 @@ const UsersFriendsList = ({ myUser }) => {
                     </div>
                     
                     {activeList === 'users' ? (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(usersList) ? (
                                 usersList.length === 0 ? (
                                     <div className="noUsers">No users found</div>
                                 ) : (
-                                    <table className={`users-list ${usersList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {usersList.map((user) => (
                                                 <UserItem 
@@ -197,12 +180,12 @@ const UsersFriendsList = ({ myUser }) => {
                             )}
                         </div>
                     ) : (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(friendsList) ? (
                                 friendsList.length === 0 ? (
                                     <div className="noUsers">No friends found</div>
                                 ) : (
-                                    <table className={`users-list ${friendsList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {friendsList.map((user) => (
                                                 <FriendItem 

@@ -34,6 +34,14 @@
     "profilPage" : {
       "2fa" : "Enable two-factor authentication",
       "upload" : "Click to upload",
-      "delete" : "Delete"
+      "delete" : "Delete",
+      "lg" : "Default language : ",
+      "lg0" : "Default language",
+      "modif": "Modify",
+      "valide": "Validate",
+      "inco" : "Incorrect password",
+      "cancel" : "Cancel",
+      "oldmdp" : "Enter the old password",
+      "blocked": "Blocked users"
     }
   }
