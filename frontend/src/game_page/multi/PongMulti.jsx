@@ -72,7 +72,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
-        
+
         if (myUser) {
             ws.onopen = () => {
                 const powerUpBool = Boolean(powerUp);
@@ -142,9 +142,11 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     const renderPowerUp = () => {
         switch (powerUpType) {
             case 'increase_paddle':
-                return <img src="../../src/assets/game/1.svg" alt="Increase Paddle" style={{ width: '40px', height: '40px'}} />;
+                return <img src="../../src/assets/game/increase_paddle.svg" alt="Increase Paddle" style={{ width: '40px', height: '40px' }} />;
             case 'inversed_control':
-                return <img src="../../src/assets/game/2.svg" alt="inversed control" style={{ width: '40px', height: '40px'}} />;
+                return <img src="../../src/assets/game/inversed_control.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'decrease_paddle':
+                return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
             default:
                 return null;
         }
@@ -153,10 +155,10 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     return (
         <div className="pong-container">
             <div className="board">
-                <ScoreBoard 
-                    score1={scores.player1} 
-                    score2={scores.player2} 
-                    maxScoreToUse={maxScoreToUse} 
+                <ScoreBoard
+                    score1={scores.player1}
+                    score2={scores.player2}
+                    maxScoreToUse={maxScoreToUse}
                 />
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className="center-line"></div>
