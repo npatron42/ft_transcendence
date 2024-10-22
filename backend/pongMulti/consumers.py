@@ -7,6 +7,7 @@ import time
 import asyncio
 from .models import MatchHistory
 from users.models import Invitation, User, FriendsList
+import math
 
 logger = logging.getLogger(__name__)
 
@@ -92,9 +93,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.power_up_visible[self.room_id] = False
 			PongConsumer.power_up_timeout[self.room_id] = False
 
-		if self.room_id not in PongConsumer.end:
-			PongConsumer.end[self.room_id] = False
-
 		await self.channel_layer.group_add(
 			self.room_group_name,
 			self.channel_name
@@ -110,15 +108,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			}
 		)
 
-
-		PongConsumer.end[self.room_id] = False
-		PongConsumer.power_up_visible[self.room_id] = False
-		PongConsumer.power_up_timeout[self.room_id] = False
-		
-		
-		PongConsumer.end[self.room_id] = False
-		PongConsumer.power_up_visible[self.room_id] = False
-		PongConsumer.power_up_timeout[self.room_id] = False
 		
 		##############
 		# DISCONNECT #
@@ -288,9 +277,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 	async def update_ball(self, max_score):
 		PongConsumer.paddle_right_height[self.room_id] = 90
-		PongConsumer.paddle_left_height[self.room_id] = 90		
-		acceleration = 1.10
+		PongConsumer.paddle_left_height[self.room_id] = 90	
+		PongConsumer.ball_dir[self.room_id] = {'x': 2, 'y': 2}
+		acceleration = 1.20
 		max_speed = 10
+		max_angle = 50
 		paddle_width = 10
 		ball_radius = 15
 		last_player = None
@@ -305,60 +296,68 @@ class PongConsumer(AsyncWebsocketConsumer):
 				asyncio.create_task(self.generate_power_up())
 
 
-
 				#Gestion Ball#
-			
 			ball = PongConsumer.ball_pos[self.room_id]
 			direction = PongConsumer.ball_dir[self.room_id]
 
 			ball['x'] += direction['x']
 			ball['y'] += direction['y']
 
+
 			if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
 				direction['y'] *= -1
 
 			left_paddle_y = PongConsumer.paddles_pos[self.room_id]['left']
-			if (ball['x'] <= 15 + paddle_width + ball_radius and 
+			if (ball['x'] <= 10 + paddle_width + ball_radius and 
 				left_paddle_y - PongConsumer.paddle_left_height[self.room_id] // 2 <= ball['y'] <= left_paddle_y + PongConsumer.paddle_left_height[self.room_id] // 2):
-				ball['x'] = 15 + paddle_width + ball_radius
-				direction['x'] *= -1
+				
+				ball['x'] = 10 + paddle_width + ball_radius
 
-				if abs(direction['x']) < max_speed:
-					direction['x'] *= acceleration
-				if abs(direction['y']) < max_speed:
-					direction['y'] *= acceleration
+				relative_intersect_y = (ball['y'] - left_paddle_y) / (PongConsumer.paddle_left_height[self.room_id] // 2)
+
+				reflection_angle = relative_intersect_y * max_angle 
+
+
+				angle_radians = math.radians(reflection_angle)
+
+
+				direction['x'] = abs(direction['x']) * math.cos(angle_radians)
+				direction['y'] = math.sin(angle_radians)
 
 				last_player = PongConsumer.players[self.room_id][0]
 
 			right_paddle_y = PongConsumer.paddles_pos[self.room_id]['right']
-			if (ball['x'] >= 885 - paddle_width - ball_radius and 
+			if (ball['x'] >= 890 - paddle_width - ball_radius and 
 				right_paddle_y - PongConsumer.paddle_right_height[self.room_id] // 2 <= ball['y'] <= right_paddle_y + PongConsumer.paddle_right_height[self.room_id] // 2):
-				ball['x'] = 885 - paddle_width - ball_radius
-				direction['x'] *= -1
+				
+				ball['x'] = 890 - paddle_width - ball_radius 
 
-				if abs(direction['x']) < max_speed:
-					direction['x'] *= acceleration
-				if abs(direction['y']) < max_speed:
-					direction['y'] *= acceleration
+				relative_intersect_y = (ball['y'] - right_paddle_y) / (PongConsumer.paddle_right_height[self.room_id] // 2)
+				reflection_angle = relative_intersect_y * max_angle
+				angle_radians = math.radians(reflection_angle)
+
+				direction['x'] = -abs(direction['x']) * math.cos(angle_radians)
+				direction['y'] = math.sin(angle_radians)
 
 				last_player = PongConsumer.players[self.room_id][1]
 
-				#Colision with power up gestion#
-			if PongConsumer.power_up_visible[self.room_id] == True:
-				if self.check_collision(PongConsumer.ball_pos[self.room_id], PongConsumer.power_up_position[self.room_id], ball_radius):
-					asyncio.create_task(self.apply_effect(last_player))
 
-				#reset ball#
-			if ball['x'] <= 0 or ball['x'] >= 900:
-				if ball['x'] <= 0:
-					PongConsumer.score[self.room_id]['player2'] += 1
-				elif ball['x'] >= 900:
-					PongConsumer.score[self.room_id]['player1'] += 1
+							#Colision with power up gestion#
+				if PongConsumer.power_up_visible[self.room_id] == True:
+					if self.check_collision(PongConsumer.ball_pos[self.room_id], PongConsumer.power_up_position[self.room_id], ball_radius):
+						asyncio.create_task(self.apply_effect(last_player))
 
-				ball['x'] = 450
-				ball['y'] = 300
-				direction['x'] = 1 if ball['x'] <= 0 else -1
-				direction['y'] = 1
+					#reset ball#
+				if ball['x'] <= 0 or ball['x'] >= 900:
+					if ball['x'] <= 0:
+						PongConsumer.score[self.room_id]['player2'] += 1
+					elif ball['x'] >= 900:
+						PongConsumer.score[self.room_id]['player1'] += 1
+
+					ball['x'] = 450
+					ball['y'] = 300
+					direction['x'] = 1 if ball['x'] <= 0 else -1
+					direction['y'] = 1
 
 					#reset powerup#
 				if PongConsumer.power_up_bool[self.room_id] == True:
@@ -422,6 +421,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				}
 			)
 			await asyncio.sleep(1 / 60)
+
 
 		############
 		# POWER UP #
