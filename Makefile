@@ -3,6 +3,7 @@ all:
 
 clean:
 	docker-compose down
+	rm -rf backend/media/*/
 
 fclean:
 	make clean

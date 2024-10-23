@@ -3,10 +3,17 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 
 class User(AbstractUser):
-	status = models.CharField(max_length=15, default="Disconnected")
-	profilePicture = models.CharField(max_length=250, default="default.jpg")
-	isFrom42 = models.BooleanField(default=False)
-	langue = models.CharField(max_length=10, default="fr")
+    status = models.CharField(max_length=15, default="Disconnected")
+    profilePicture = models.CharField(max_length=250, default="default.jpg")
+    isFrom42 = models.BooleanField(default=False)
+    langue = models.CharField(max_length=10, default="fr")
+
+
+    # def __str__
+    # def get_profile_picture_url(self):
+    #     if self.profilePicture == 'default.jpg':
+    #         return f'/media/default.jpg'
+    #     return f'/media/{self.profilePicture}'
 
 
 class Invitation(models.Model):

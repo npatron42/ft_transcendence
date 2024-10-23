@@ -1,3 +1,7 @@
+import shutil
+from django.db import transaction
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from users.models import User, FriendsList, Invitation
@@ -5,17 +9,19 @@ from users.serializers import UserSerializer, FriendsListSerializer, InvitationS
 from django.http import JsonResponse
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
+from django.views.decorators.cache import cache_control
+from django.core.files.storage import FileSystemStorage
 import jwt
 import logging
 import os
 
 logger = logging.getLogger(__name__)
 
-
 def getUser(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
     serializer = UserSerializer(user)
+    logger.info(f"User data retrieved: {serializer.data}")
     return JsonResponse(serializer.data)
 
 def getUserById(myId):
@@ -92,10 +98,30 @@ def postInvite(request):
     serializer = UserSerializer(users, many=True)
     return JsonResponse(serializer.data, safe=False)
 
-# #Profil
 
-# def checklangue(request) : 
+@csrf_exempt
+def uploadProfilePicture(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
 
+    file = request.FILES['profilPicture']
+    upload_directory = f'media/{user.id}/'
 
+    if os.path.exists(upload_directory):
+        shutil.rmtree(upload_directory)
+        os.makedirs(upload_directory, exist_ok=True)
+    else:
+        os.makedirs(upload_directory, exist_ok=True)
 
+    file_path = os.path.join(upload_directory, file.name)
 
+    with open(file_path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+    relative_path = f'{user.id}/{file.name}'
+    user.profilePicture = relative_path
+    user.save()
+
+    return JsonResponse({"message": "Profile picture updated successfully", "path": relative_path})
+    

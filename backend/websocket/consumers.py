@@ -342,6 +342,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await self.send_status_to_all()
             await update_user_status(myUser, "online")
             await sendToEveryClientsUsersList(self.channel_layer)
+            logger.info("User ---> %s", myUser.profilePicture)
         else:
             await self.close()
 
@@ -354,8 +355,10 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
         if myUser.username in socketsUsers:
             del socketsUsers[myUser.username]
-        pass;
-
+        pass
+        
+        myUser = await getUserById(myUser.id)
+        logger.info("User --> %s", myUser)
         await removeFromPool(myUser)
         await changeUserStatus(myUser.username, False)
         await self.channel_layer.group_discard("status_updates", self.channel_name)
@@ -363,6 +366,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         await self.send_status_to_all()
         socketsUsers.pop(myUser.username, None)
         await update_user_status(myUser, "offline")
+
     
 
     ## RECEIVE ##

@@ -7,6 +7,8 @@ function image() {
 	
 	const { myUser } = useAuth();
 
+	console.log(myUser.profilePicture)
+
   return (
 	  <div> 
 		<Image className="image-style"

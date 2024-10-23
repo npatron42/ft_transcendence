@@ -17,6 +17,7 @@ export const setJwt = async (codeFromUrl) => {
 	}
 };
 
+
 export const getUser = async () => {
 	try {
 		const token = localStorage.getItem('jwt');
@@ -27,6 +28,28 @@ export const getUser = async () => {
 		};
 		
 		const response = await axios.get("http://localhost:8000/api/user/", config);
+
+		console.log("Response from getUser :", response.data);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const postPicture = async (myData) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/uploadProfilePicture/", myData, config);
+
+		// console.log(response.data);
 
 		return response.data;
 	} catch (error) {

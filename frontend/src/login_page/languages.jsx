@@ -14,8 +14,6 @@ function Languages() {
 
 	
 	useEffect(() => {
-	
-	const token = localStorage.getItem('jwt');
 
 	const storedLang = sessionStorage.getItem('i18nextLng');
 
