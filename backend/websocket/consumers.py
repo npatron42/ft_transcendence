@@ -60,8 +60,20 @@ async def sendToEveryClientsUsersList(channel_layer):
 async def getUserByUsername(name):
     return await sync_to_async(User.objects.get)(username=name)
 
+async def getUserByUsernameClean(name):
+    userTmp = await sync_to_async(User.objects.get)(username=name)
+    userSer = UserSerializer(userTmp)
+    return userSer.data
+
+async def getUserByIdClean(myId):
+    userTmp = await sync_to_async(User.objects.get)(id=myId)
+    userSer = UserSerializer(userTmp)
+    return userSer.data
+
+
 async def getUserById(myId):
     return await sync_to_async(User.objects.get)(id=myId)
+
 
 async def getAllUsers():
     allUsersTmp = await sync_to_async(list)(User.objects.all())
@@ -368,6 +380,20 @@ async def sendToClient(channel_layer, socket, message):
         "message": message,
     })
 
+
+
+async def findGameInvitationToErase(myUser):
+    try:
+        myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUser)
+        myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
+        myGame = myGameInvitationSer.data
+        userToNotifID = myGame.get("userInvited")
+        await sync_to_async(myGameInvitation.delete)()
+        return userToNotifID
+    except:
+        raise Exception("Game cannot be find")
+
+
 class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def notification_message(self, event):
@@ -375,9 +401,17 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps(message))
 
     async def shareSocket(self, event):
-        message = event['message']
-        logger.info("Le message de l'autre consumer --> %s", message)
-        await self.send(text_data=json.dumps(message))
+        data = event['message']
+        type = data.get("type")
+        if type == "ABORT-MATCH":
+            userAborted = await getUserByUsername(data.get("userAborted"))
+            logger.info("LE user aborted --> %s", userAborted)
+            userToNotifID = await findGameInvitationToErase(userAborted)
+            userToNotif = await getUserByIdClean(userToNotifID)
+            logger.info("user -----------> %s", userToNotif)
+            gamesInvitations = await getGamesInvitations(userToNotif.get("username"))
+            logger.info(gamesInvitations)
+
 
     async def notification_to_client(self, event):
         message = event['message']
