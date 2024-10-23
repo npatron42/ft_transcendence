@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import "./notifs.css"
-import { getNotifs } from '../api/api';
+import { getFriendsInvitations, getGamesInvitations } from '../api/api';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 import Loading from '../loading_page/Loading';
@@ -14,24 +14,30 @@ function Notifications() {
 	const [isLoading, setIsLoading] = useState(true);
 	const [gameNotifShown, setGameNotifShown] = useState(false);
 
-	const [myInviteNotifs, setInviteNotifs] = useState(null);
-	const [myGameNotifs, setGameNotifs] = useState(null);
+	const [myInviteNotifs, setFriendsNotifs] = useState([null]);
+	const [myGameNotifs, setGameNotifs] = useState([null]);
 
 	const { subscribeToNotifs } = useWebSocket();
 
 	useEffect(() => {
 		const handleNotif = (data) => {
 			const InviteNotifTmp = data["friendsInvitations"];
-			setInviteNotifs(InviteNotifTmp);
+			const gameNotifTMp = data["gamesInvitations"];
+			console.log("JE RECOIS")
+			setGameNotifs(gameNotifTMp)
+			setFriendsNotifs(InviteNotifTmp);
 		};
 
 		const unsubscribe = subscribeToNotifs(handleNotif);
 
 		const initNotifs = async () => {
 			setIsLoading(true)
-			const myData = await getNotifs();
-			setInviteNotifs(myData["friendsInvitations"]);
-			setGameNotifs(myData["gameInvitations"]);
+			const myFriendData = await getFriendsInvitations();
+			const myGameData = await getGamesInvitations();
+			console.log("friendInvitations --> ", myFriendData);
+			console.log("gameInvitations --> ", myGameData);
+			setFriendsNotifs(myFriendData);
+			setGameNotifs(myGameData);
 			setIsLoading(false)
 		};
 
@@ -102,7 +108,7 @@ function Notifications() {
 			</div>
 			{inviteNotifShown ? (
 			<div>
-			{myInviteNotifs.length === 0 ? (
+			{myInviteNotifs && myInviteNotifs.length === 0 ? (
 			  <div className="noNotif">No invitations...</div>
 			) : (
 				<div className={`inviteList ${myInviteNotifs.length >= 3 ? 'scroll' : ''}`}>
@@ -122,14 +128,16 @@ function Notifications() {
 				{myGameNotifs.length === 0 ? (
 					<div colSpan="4" className="noNotif">No invitations...</div>
 				) : (
-				myGameNotifs.map((user) => (
+				<div className={`inviteList ${myInviteNotifs.length >= 3 ? 'scroll' : ''}`}>
+				{myGameNotifs.map((user) => (
 					<GameNotif
 					key={user.id}
 					myUser={user}
 					declineInvitation={declineInvitation}
 					acceptInvitation={acceptInvitation}
 					/>
-				))
+				))}
+				</div>
 				)}
 			</div>
 			)}

@@ -3,7 +3,7 @@ import { useNavigate, useLocation, } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
-import { getNotifs } from '../api/api';
+import { getGamesInvitations, getFriendsInvitations } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
 import Notifications from '../notifications/Notifications';
@@ -15,7 +15,8 @@ import "./components.css"
 
 function NavbarBS() {
   const { myUser } = useAuth();
-  const [nbNotifs, setNbNotifs] = useState(0);
+  const [nbFriendsInvitations, setNbFriendsInvitations] = useState(0);
+  const [nbGamesInvitations, setNbGameInvitations] = useState(0);
   const [notifIsClicked, setNotifClicked] = useState(false);
 
   const { subscribeToNotifs } = useWebSocket();
@@ -45,18 +46,22 @@ function NavbarBS() {
 
   useEffect(() => {
     const handleNotif = (data) => {
-      const nbNotifsTmp = data["friendsInvitations"].length;
-      setNbNotifs(nbNotifsTmp);
+      console.log("data ---> ", data)
+      const nbFriendsInvitationsTmp = data["friendsInvitations"].length;
+      setNbFriendsInvitations(nbFriendsInvitationsTmp);
     };
 
     const unsubscribe = subscribeToNotifs(handleNotif);
 
     
     const initNotifs = async () => {
-      const myData = await getNotifs();
-      const realNbNotifs = myData["friendsInvitations"].length + myData["gameInvitations"].length;
-      setNbNotifs(realNbNotifs);
-    }
+      const myFriendData = await getFriendsInvitations();
+      const myGameData = await getGamesInvitations();
+      const fn = myFriendData.length;
+      const gn = myGameData.length;
+      setNbFriendsInvitations(fn);
+      setNbGameInvitations(gn)
+      }
     
     initNotifs();
     
@@ -64,7 +69,7 @@ function NavbarBS() {
       unsubscribe();
     };
 
-  }, [subscribeToNotifs, nbNotifs]);
+  }, [subscribeToNotifs, nbFriendsInvitations, nbGamesInvitations]);
 
 
 
@@ -111,7 +116,7 @@ function NavbarBS() {
 
         <Nav className="navbar-nav-profile">
         <div className="notif-placement">
-          {nbNotifs === 0 ? (
+          {nbFriendsInvitations === 0 && nbGamesInvitations === 0? (
             <i onClick={() => handleNotif()} className="bi bi-bell-fill notif"></i>
           ) : (
             <i onClick={() => handleNotif()} className="bi bi-bell-fill notifFull"></i>

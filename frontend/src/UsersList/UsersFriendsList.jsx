@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getUsersList, getFriendsList, getNotifs, getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
+import { getUsersList, getFriendsList, getAllUsers } from '../api/api';  // Assurez-vous que les imports sont corrects
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';

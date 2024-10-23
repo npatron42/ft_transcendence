@@ -19,12 +19,12 @@ def splitQueryString(query_string):
 
 class JWTAuthMiddleware(BaseMiddleware):
     async def __call__(self, scope, receive, send):
+        logger.info("mon MiddleWare --> %s", scope)
         query_string = splitQueryString(scope['query_string'])
         token = query_string.get('token')
         if token:
             try:
                 user = await getUserFromJWT(token)
-                logger.info(token)
                 if user:
                     scope['user'] = user
                 else:

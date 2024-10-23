@@ -14,8 +14,6 @@ const ChooseGame = () => {
     const [invitedPlayer, setInvitedPlayer] = useState([]);
     const socketUser = useWebSocket()
     
-    //setInvitedPlayer((prevPlayers) => [...prevPlayers, ]);
-
     const handleSoloClick = () => {
         navigate('/globalGameSolo', { state: { maxScore } });
     };

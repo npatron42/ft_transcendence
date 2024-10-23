@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from django.db.models import Q
-from users.models import User, FriendsList, Invitation, Message, RelationsBlocked
-from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer, RelationsBlockedSerializer
+from users.models import User, FriendsList, Invitation, Message, RelationsBlocked, GameInvitation
+from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer, RelationsBlockedSerializer, GameInvitationSerializer
 from django.http import JsonResponse
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
@@ -51,7 +51,25 @@ def getAllUsers2(request):
 
 
 
-def getAllNotifs(request):
+def getGamesInvitations(request):
+    payload = middleWareAuthentication(request)
+
+    result = []
+    myUser = User.objects.filter(id = payload['id']).first()
+    id = myUser.id
+
+    allInvitationsTmp = GameInvitation.objects.all()
+    allInvitations = GameInvitationSerializer(allInvitationsTmp, many=True)
+
+    for invitation in allInvitations.data:
+        idInvitation = invitation.get("userInvited")
+        if (idInvitation == id):
+            userToAdd = getUserById(invitation.get("leader"))
+            result.append(userToAdd)
+
+    return JsonResponse(result, safe=False)
+
+def getFriendsInvitations(request):
     payload = middleWareAuthentication(request)
 
     result = []
@@ -66,14 +84,7 @@ def getAllNotifs(request):
         if (idInvitation == id):
             userToAdd = getUserById(invitation.get("expeditor"))
             result.append(userToAdd)
-    waitingFabioPart = []
-    dataToSend = {
-        "friendsInvitations": result,
-        "gameInvitations": waitingFabioPart
-
-    }
-    return JsonResponse(dataToSend, safe=False)
-
+    return JsonResponse(result, safe=False)
 
 
 
@@ -161,8 +172,6 @@ def getBlockedUsers2(request):
 
 
     ### DISCUSSIONS ###
-
-
 
 
 def getDiscussions(request):

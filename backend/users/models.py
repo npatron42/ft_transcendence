@@ -27,6 +27,10 @@ class RelationsBlocked(models.Model):
     userWhoBlocks = models.ForeignKey(User, related_name="userWhoBlocks", on_delete=models.CASCADE, default=None)
     userBlocked = models.ForeignKey(User, related_name="userBlocked", on_delete=models.CASCADE, default=None)
 
+class GameInvitation(models.Model):
+    leader = models.ForeignKey(User, related_name="leader", on_delete=models.CASCADE, default=None)
+    userInvited = models.ForeignKey(User, related_name="userInvited", on_delete=models.CASCADE, default=None)
+
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
     receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, default=None)

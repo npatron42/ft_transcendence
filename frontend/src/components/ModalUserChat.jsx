@@ -22,8 +22,9 @@ function ModalUserChat(userSelected) {
     return ;
   }
 
-  const handlePlay = () => {
-    console.log("PLAY IS CLICKED")
+  const handlePlay = (userSelected) => {
+    const user = userSelected["userSelected"]
+    navigate("/game/options", {state: { user }});
     return ;
   }
 
@@ -52,7 +53,7 @@ function ModalUserChat(userSelected) {
           <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleProfile()}>PROFILE</button>
 				</div>
 				<div className="inside-div-custom-modal">
-          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handlePlay()}>PLAY</button>
+          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handlePlay(userSelected)}>PLAY</button>
 				</div>
 				<div className="inside-div-custom-modal">
           <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleBlock()}>BLOCK</button>

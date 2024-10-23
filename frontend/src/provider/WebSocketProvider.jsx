@@ -26,7 +26,7 @@ export const WebSocketProvider = ({ children }) => {
             const data = JSON.parse(event.data);
 			if (data.status)
 				listenersStatus.current.forEach(callback => callback(data));
-			if (data.friendsInvitations)
+			if (data.friendsInvitations || data.gamesInvitations)
 				listenersNotifs.current.forEach(callback => callback(data));
 			else
             	listeners.current.forEach(callback => callback(data));

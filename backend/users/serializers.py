@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Invitation, FriendsList, Message, RelationsBlocked
+from .models import User, Invitation, FriendsList, Message, RelationsBlocked, GameInvitation
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -34,5 +34,9 @@ class RelationsBlockedSerializer(serializers.ModelSerializer):
         model = RelationsBlocked
         fields = ('userWhoBlocks', 'userBlocked')
 
+class GameInvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameInvitation
+        fields = ('leader', 'userInvited')
 
 

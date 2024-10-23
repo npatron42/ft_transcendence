@@ -13,6 +13,7 @@ import HomePage from './home_page/Home.jsx';
 import ChooseGame from './game_page/ChooseGame';
 import GlobalGameMulti from './game_page/multi/GlobalGameMulti';
 import RegisterPage from './register_page/registerPage';
+import GameOptions from './components/GameOptions.jsx';
 import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
 import ProfilPage from './profil_page/profilPage.jsx';
 import './i18n';
@@ -40,6 +41,7 @@ const App = () => {
         <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
+        <Route path="/game/options" element={<GameOptions />} />
       </Routes>
       </WebSocketProvider>
     )}
