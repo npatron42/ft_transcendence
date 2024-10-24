@@ -37,6 +37,6 @@ class RelationsBlockedSerializer(serializers.ModelSerializer):
 class GameInvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameInvitation
-        fields = ('leader', 'userInvited')
+        fields = ('leader', 'userInvited', 'roomId')
 
 

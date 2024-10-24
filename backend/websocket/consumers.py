@@ -312,7 +312,7 @@ async def getGamesInvitations(username):
     myUser = await getUserByUsername(username)
     id = myUser.id
 
-    allInvitationsTmp = await sync_to_async(list)(GameInvitation.objects.filter(receiver=id))
+    allInvitationsTmp = await sync_to_async(list)(GameInvitation.objects.filter(userInvited=id))
 
     allInvitations = await sync_to_async(GameInvitationSerializer)(allInvitationsTmp, many=True)
 
@@ -405,12 +405,10 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         type = data.get("type")
         if type == "ABORT-MATCH":
             userAborted = await getUserByUsername(data.get("userAborted"))
-            logger.info("LE user aborted --> %s", userAborted)
             userToNotifID = await findGameInvitationToErase(userAborted)
             userToNotif = await getUserByIdClean(userToNotifID)
-            logger.info("user -----------> %s", userToNotif)
-            gamesInvitations = await getGamesInvitations(userToNotif.get("username"))
-            logger.info(gamesInvitations)
+            gamesInvitations = await getGamesInvitations(userToNotif["username"])
+            await sendToClient2(self, gamesInvitations, userToNotif.get("username"))
 
 
     async def notification_to_client(self, event):
@@ -627,18 +625,34 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         elif type == "GameInvitation":
             userInvitedTmp = data.get("userInvited")
             myUserInvited = await getUserByUsername(userInvitedTmp["username"])
+            myRoomId = data.get("roomId")
             try:
-                gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited)
+                gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
                 await saveGameInvitation(gameInvitation)
-                gameInvitation = await getGameInvitation(myUserInvited)
-                dataToSend = {
-                    "gameInvitation": gameInvitation
-                }
-                await sendToClient2(self, dataToSend, myUserInvited.username)
+                gameInvitation = await getGamesInvitations(myUserInvited.username)
+                await sendToClient2(self, gameInvitation, myUserInvited.username)
                 
             except:
                 raise (Exception("MOUAIS"))
+        elif type == "ACCEPT-GameInvitation":
+            userWhoInvitesTmp = data.get("userWhoInvites")
+            myUserWhoInvites = await getUserByUsername(userWhoInvitesTmp["username"])
+            try:
+                myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUserWhoInvites)
+                myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
+                myGame = myGameInvitationSer.data
+                logger.info(myGame)
+                roomId = myGame["roomId"]
+                await findGameInvitationToErase(myUserWhoInvites)
+                gamesInvitations = await getGamesInvitations(myUser.username)
+                dataToSend = {
+                    "acceptGameInvitation": roomId
+                }
+                await sendToClient2(self, dataToSend, myUser.username)
+                await sendToClient2(self, gamesInvitations, myUser.username)
 
+            except:
+                raise (Exception("MOUAIS"))
 
 
 async def sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, secondUser):

@@ -163,7 +163,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 				"type": "ABORT-MATCH",
 				"userAborted": myUser.username,
 			}
-			await sendToClient(self, dataToSend)		
+			await sendToClient(self, dataToSend)
+					
 		###########
 		# RECEIVE #
 		###########

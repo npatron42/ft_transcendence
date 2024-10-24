@@ -46,9 +46,16 @@ function NavbarBS() {
 
   useEffect(() => {
     const handleNotif = (data) => {
-      console.log("data ---> ", data)
-      const nbFriendsInvitationsTmp = data["friendsInvitations"].length;
-      setNbFriendsInvitations(nbFriendsInvitationsTmp);
+      console.log("data Navbar ---> ", data)
+      if (data["friendsInvitations"]) {
+        const nbFriendsInvitationsTmp = data["friendsInvitations"].length;
+        setNbFriendsInvitations(nbFriendsInvitationsTmp);
+      }
+
+      if (data["gamesInvitations"]) {
+        const nbGamesInvitationsTmp = data["gamesInvitations"].length;
+        setNbGameInvitations(nbGamesInvitationsTmp);
+      }
     };
 
     const unsubscribe = subscribeToNotifs(handleNotif);

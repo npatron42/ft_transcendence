@@ -23,6 +23,7 @@ function GameOptions() {
 			"type": "GameInvitation",
 			"leader": myUser,
 			"userInvited": userSelected,
+			"roomId": roomId
 		}
 		socketUser.send(JSON.stringify(dataToSend));
 		return ;

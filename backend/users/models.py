@@ -30,6 +30,7 @@ class RelationsBlocked(models.Model):
 class GameInvitation(models.Model):
     leader = models.ForeignKey(User, related_name="leader", on_delete=models.CASCADE, default=None)
     userInvited = models.ForeignKey(User, related_name="userInvited", on_delete=models.CASCADE, default=None)
+    roomId = models.CharField(max_length=125, default=None)
 
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
