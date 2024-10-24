@@ -7,26 +7,44 @@ import './cadre.css';
 
 
 function Languages() {
-	
 	const { i18n } = useTranslation();
-	
 	const [selectedFlag, setSelectedFlag] = useState(null);
-
-	
+  
 	useEffect(() => {
-
-	const storedLang = sessionStorage.getItem('i18nextLng');
-
-	if (storedLang) {
-		setSelectedFlag(storedLang);
-		i18n.changeLanguage(storedLang);
-	 }
+	  const jwt = localStorage.getItem('jwt');
+	  
+	  if (jwt) {
+		const storedLang = localStorage.getItem('i18nextLng');
+		if (storedLang) {
+		  setSelectedFlag(storedLang);
+		  i18n.changeLanguage(storedLang);
+		}
+	  } 
+	  else {
+		const storedLang = sessionStorage.getItem('i18nextLng');
+		if (storedLang){
+		  setSelectedFlag(storedLang);
+		  i18n.changeLanguage(storedLang);
+			} 
+		else {
+		  setSelectedFlag('fr');
+		  i18n.changeLanguage('fr');
+			}
+		}
 	}, [i18n]);
-	
+  
 	const handleFlagClick = (language) => {
-	  setSelectedFlag(language);
-	  i18n.changeLanguage(language);
-	  sessionStorage.setItem('i18nextLng', language);
+	setSelectedFlag(language);
+	i18n.changeLanguage(language);
+	  
+	 
+	const jwt = localStorage.getItem('jwt');
+
+	if (jwt)
+		localStorage.setItem('i18nextLng', language);
+	else
+		sessionStorage.setItem('i18nextLng', language);
+
 	};
 	
 	return (

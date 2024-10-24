@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {Button, Form} from 'react-bootstrap';
+import { getUser } from '../api/api';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
 import '../register_page/registrer.css'
@@ -34,11 +35,13 @@ function idPass() {
 			});
 				if (response.data.success) {
                 	localStorage.setItem('jwt', response.data.token);
-					// console.log('Essai de connexion avec:', { username, password });
+					sessionStorage.removeItem('i18nextLng');
+					const user = await getUser();
+    				const userLangue = user.langue;
+    				localStorage.setItem('i18nextLng', userLangue);
                 	navigate('/home');
             	} else {
                 	setErrorMessage('loginPage.error');
-					// console.log('Essai de connexion avec:', { username, password });
             	}
         	} catch (error) {
             	console.log("Une erreur est survenue lors de la connexion.");

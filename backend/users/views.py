@@ -1,4 +1,6 @@
 import shutil
+import json
+from django.http import JsonResponse
 from django.db import transaction
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -133,3 +135,13 @@ def resetProfilePicture(request):
     user.profilePicture = 'default.jpg'
     user.save()
     return JsonResponse({'success': True})
+
+@csrf_exempt  
+def changeLangue(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.langue = data.get('langue')
+    user.save()
+    return JsonResponse({'success': True, 'langue': user.langue})

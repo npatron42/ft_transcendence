@@ -82,4 +82,3 @@ def registerPage(request):
             }
         })
     return JsonResponse({'success': False, 'message': 'Méthode non autorisée.'})
-

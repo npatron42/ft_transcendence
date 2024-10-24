@@ -9,13 +9,6 @@ class User(AbstractUser):
     langue = models.CharField(max_length=10, default="fr")
 
 
-    # def __str__
-    # def get_profile_picture_url(self):
-    #     if self.profilePicture == 'default.jpg':
-    #         return f'/media/default.jpg'
-    #     return f'/media/{self.profilePicture}'
-
-
 class Invitation(models.Model):
     expeditor = models.ForeignKey(User, related_name="send_invitation", on_delete=models.CASCADE, default=None)
     receiver = models.ForeignKey(User, related_name="receive_invitation", on_delete=models.CASCADE, default=None)

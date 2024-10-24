@@ -18,12 +18,8 @@ function loginPage(){
 	useEffect(() => {
 		const token = localStorage.getItem('jwt');
 		
-		if (token) {
-		  console.log("ok");
+		if (token)
 		  navigate('/home');
-		} else {
-		  console.log("pas ok");
-		}
 	  }, [navigate]);
 	return (
 		<div id="background-container">

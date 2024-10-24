@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
+import { useAuth } from '../provider/UserAuthProvider';
 import { useTranslation } from 'react-i18next';
 import './pseudo.css'
 
@@ -7,7 +8,7 @@ function Pseudo({Actif, setActif}) {
 
 	const { t } = useTranslation();
 
-	const [pseudo, setPseudo] = useState('Mon profil');
+	const {myUser, setUser} = useAuth();
 	const [input, setInput] = useState('');
 	const [modif, setModif] = useState(false);
 	const [valide, setValide] = useState(false);
@@ -47,8 +48,8 @@ function Pseudo({Actif, setActif}) {
 				<Form.Group className="input-ps" controlId="User">
 					<Form.Control
 						type="text"
-						placeholder={pseudo}
-						value={modif ? input : pseudo}
+						placeholder={myUser.username}
+						value={modif ? input : myUser.username}
 						onChange={(e) => setInput(e.target.value)}
 						readOnly={!modif}
 						className="form-test" 

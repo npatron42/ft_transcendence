@@ -48,7 +48,7 @@ function Upload() {
           setErrorMessage(''); 
           const tmpUser = await getUser();
           setUser(tmpUser);
-          console.log(" in response : ", myUser);
+          // console.log(" in response : ", myUser);
           
         }
         
