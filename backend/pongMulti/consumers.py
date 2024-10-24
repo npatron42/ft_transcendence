@@ -296,11 +296,14 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 	async def update_ball(self, max_score):
 		PongConsumer.paddle_right_height[self.room_id] = 90
-		PongConsumer.paddle_left_height[self.room_id] = 90	
-		PongConsumer.ball_dir[self.room_id] = {'x': 2, 'y': 2}
-		acceleration = 1.20
-		max_speed = 10
-		max_angle = 50
+		PongConsumer.paddle_left_height[self.room_id] = 90
+		speed = 3
+		ball = PongConsumer.ball_pos[self.room_id]
+		direction = PongConsumer.ball_dir[self.room_id]
+		PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([speed, -speed])}
+		acceleration = 0.50
+		max_speed = 25
+		max_angle = 65
 		paddle_width = 10
 		ball_radius = 15
 		last_player = None
@@ -314,71 +317,79 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if PongConsumer.power_up_bool[self.room_id] == True and PongConsumer.power_up_visible[self.room_id] == False and last_player != None and PongConsumer.power_up_timeout[self.room_id] == False and PongConsumer.power_up_active[self.room_id] == False:
 				asyncio.create_task(self.generate_power_up())
 
-
 				#Gestion Ball#
-			ball = PongConsumer.ball_pos[self.room_id]
-			direction = PongConsumer.ball_dir[self.room_id]
-
 			ball['x'] += direction['x']
 			ball['y'] += direction['y']
 
-
 			if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
+				# if ball['y'] <= 0 + ball_radius:			#<-- voir comment empecher la balle de rentrerre dans le mur
+				# 	ball['y'] = 15
+				# if ball['y'] <= 600 - ball_radius:
+				# 	ball['y'] = 585
 				direction['y'] *= -1
 
+				#Colision paddle gauche#
 			left_paddle_y = PongConsumer.paddles_pos[self.room_id]['left']
 			if (ball['x'] <= 10 + paddle_width + ball_radius and 
 				left_paddle_y - PongConsumer.paddle_left_height[self.room_id] // 2 <= ball['y'] <= left_paddle_y + PongConsumer.paddle_left_height[self.room_id] // 2):
-				
-				ball['x'] = 10 + paddle_width + ball_radius
 
-				relative_intersect_y = (ball['y'] - left_paddle_y) / (PongConsumer.paddle_left_height[self.room_id] // 2)
+				impact_position = (ball['y'] - left_paddle_y) / (PongConsumer.paddle_left_height[self.room_id] / 2)
+				logger.info(f"Impact gauche : {impact_position}")
 
-				reflection_angle = relative_intersect_y * max_angle 
-
+				reflection_angle = impact_position * max_angle
 
 				angle_radians = math.radians(reflection_angle)
 
+				direction['x'] = abs(speed) * math.cos(angle_radians)
+				direction['y'] = speed * math.sin(angle_radians)
 
-				direction['x'] = abs(direction['x']) * math.cos(angle_radians)
-				direction['y'] = math.sin(angle_radians)
+				speed = min(speed + acceleration, max_speed)
+				
+				logger.info(f"speed : {speed}")
 
 				last_player = PongConsumer.players[self.room_id][0]
 
+				# Colision paddle droite#
 			right_paddle_y = PongConsumer.paddles_pos[self.room_id]['right']
 			if (ball['x'] >= 890 - paddle_width - ball_radius and 
 				right_paddle_y - PongConsumer.paddle_right_height[self.room_id] // 2 <= ball['y'] <= right_paddle_y + PongConsumer.paddle_right_height[self.room_id] // 2):
-				
-				ball['x'] = 890 - paddle_width - ball_radius 
 
-				relative_intersect_y = (ball['y'] - right_paddle_y) / (PongConsumer.paddle_right_height[self.room_id] // 2)
-				reflection_angle = relative_intersect_y * max_angle
+				impact_position = (ball['y'] - right_paddle_y) / (PongConsumer.paddle_right_height[self.room_id] / 2)
+				logger.info(f"Impact droite : {impact_position}")
+
+				reflection_angle = impact_position * max_angle
+
 				angle_radians = math.radians(reflection_angle)
 
-				direction['x'] = -abs(direction['x']) * math.cos(angle_radians)
-				direction['y'] = math.sin(angle_radians)
+				direction['x'] = -abs(speed) * math.cos(angle_radians)
+				direction['y'] = speed * math.sin(angle_radians)
+
+				speed = min(speed + acceleration, max_speed)
+				logger.info(f"speed : {speed}")
+
 
 				last_player = PongConsumer.players[self.room_id][1]
 
+				#Colision power up#
+			if PongConsumer.power_up_visible[self.room_id] == True:
+				if self.check_collision(PongConsumer.ball_pos[self.room_id], PongConsumer.power_up_position[self.room_id], ball_radius):
+					asyncio.create_task(self.apply_effect(last_player))
 
-							#Colision with power up gestion#
-				if PongConsumer.power_up_visible[self.room_id] == True:
-					if self.check_collision(PongConsumer.ball_pos[self.room_id], PongConsumer.power_up_position[self.room_id], ball_radius):
-						asyncio.create_task(self.apply_effect(last_player))
+				#reset ball#
+			if ball['x'] <= 0 or ball['x'] >= 900:
+				speed = self.calculate_speed(max_score)
+				if ball['x'] <= 0:
+					PongConsumer.score[self.room_id]['player2'] += 1
+					direction['x'] = -speed
+					direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
+				elif ball['x'] >= 900:
+					PongConsumer.score[self.room_id]['player1'] += 1
+					direction['x'] = speed
+					direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
+				ball['x'] = 450
+				ball['y'] = 300
 
-					#reset ball#
-				if ball['x'] <= 0 or ball['x'] >= 900:
-					if ball['x'] <= 0:
-						PongConsumer.score[self.room_id]['player2'] += 1
-					elif ball['x'] >= 900:
-						PongConsumer.score[self.room_id]['player1'] += 1
-
-					ball['x'] = 450
-					ball['y'] = 300
-					direction['x'] = 1 if ball['x'] <= 0 else -1
-					direction['y'] = 1
-
-					#reset powerup#
+				#reset powerup#
 				if PongConsumer.power_up_bool[self.room_id] == True:
 					self.reset_effect()
 					PongConsumer.power_up_visible[self.room_id] = False
@@ -441,6 +452,22 @@ class PongConsumer(AsyncWebsocketConsumer):
 			)
 			await asyncio.sleep(1 / 60)
 
+	def calculate_speed(self, max_score):
+
+		total_score = PongConsumer.score[self.room_id]['player1'] + PongConsumer.score[self.room_id]['player2']
+		percent_score = (total_score / 2) * 100 / max_score
+		logger.info(f"pourcent {percent_score}") 
+
+		if percent_score < 10:
+			return 3
+		elif percent_score < 25:
+			return 4
+		elif percent_score < 50:
+			return 5
+		elif percent_score < 75:
+			return 6
+		else: 
+			return 7
 
 		############
 		# POWER UP #
@@ -485,10 +512,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 			power_ups = ['inversed_control', 'increase_paddle', 'decrease_paddle']
 			selected_power_up = random.choice(power_ups)
 			PongConsumer.power_up_position[self.room_id] = {
-				# 'x': random.randint(100, 800),
-				# 'y': random.randint(100, 500)
-				'x': 480,
-				'y': 80
+				'x': random.randint(100, 800),
+				'y': random.randint(100, 500)
 			}
 			PongConsumer.power_up[self.room_id] = selected_power_up
 
@@ -553,7 +578,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		self.reset_effect()
 	
 	def reset_effect(self):
-		logger.info("on reset")
 		PongConsumer.paddle_left_height[self.room_id] = 90
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.inversed_controls[self.room_id] = [False, False]
