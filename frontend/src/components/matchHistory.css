@@ -1,0 +1,72 @@
+
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.matchHistory {
+    height: 300px;
+    border-radius: 50px;
+    border: 3px solid #FFA69E;
+    width: 450px; 
+    background-color: transparent;
+	margin-left: 30px;
+}
+
+.matchHistory-header {
+	height: 58px;
+	width: 100%;
+	border-bottom: 1px solid #FAF3DD;
+	display: flex;
+	align-items: center;
+	text-align: center;
+	justify-content: center;
+
+}
+
+.writeHistory {
+	font-family: 'Millimetre', sans-serif;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #AED9E0;
+}
+
+.matchHistory-content {
+	width: 100%;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+}
+
+.matchHistory {
+	font-family: 'Millimetre', sans-serif;
+    font-size: 20px; 
+    font-weight: bold;
+	color: #FAF3DD;
+}
+
+.historyInfo {
+	margin-top: 62px;
+}
+
+.historyItem {
+    display: flex;               /* Utilise flexbox pour la disposition */
+    justify-content: flex-end;   /* Aligne les enfants à droite */
+    width: 100%;                 /* Prend toute la largeur */
+}
+
+.historyItem-part {
+    flex: 1;                     /* Permet à chaque enfant de prendre toute la largeur disponible */
+    text-align: center;          /* Centrer le texte (optionnel) */
+    padding: 10px;               /* Ajoute un peu d'espacement (optionnel) */
+}
+
+.modifyUsername {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #AED9E0;
+}

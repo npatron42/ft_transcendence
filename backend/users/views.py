@@ -3,6 +3,8 @@ from django.db.models import Q
 from users.models import User, FriendsList, Invitation, Message, RelationsBlocked, GameInvitation
 from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer, RelationsBlockedSerializer, GameInvitationSerializer
 from django.http import JsonResponse
+from pongMulti.models import MatchHistory
+from pongMulti.serializers import MatchHistorySerializer
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
 import jwt
@@ -49,6 +51,38 @@ def getAllUsers2(request):
 
     ### NOTIFICATIONS ###
 
+
+def getMatchHistory(request):
+    payload = middleWareAuthentication(request)
+    myUser = User.objects.filter(id = payload['id']).first()
+
+    matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
+    matchesSer = MatchHistorySerializer(matchesTmp, many=True)
+    matches = matchesSer.data
+
+    i = 0
+    myLen = len(matches)
+    result = []
+    while i < myLen:
+        if myUser.id == matches[i]["player1"]:
+            opponent = getUserById(matches[i]["player2"])
+            score = str(matches[i]["player1_score"]) + " | " + str(matches[i]["player2_score"])
+        else:
+            opponent = getUserById(matches[i]["player1"])
+            score = str(matches[i]["player2_score"]) + " | " + str(matches[i]["player1_score"])
+        if myUser.id == matches[i]["winner"]:
+            win = True
+        else:
+            win = False
+        dataToSend = {
+            "opponent": opponent,
+            "score": score,
+            "win": win
+        }
+        result.append(dataToSend)
+        i += 1
+    logger.info(result)
+    return JsonResponse(result, safe=False)
 
 
 def getGamesInvitations(request):

@@ -92,7 +92,7 @@
 .friends-list {
     height: 300px;
     border-radius: 50px;
-    border: 4px solid #ffa69e;
+    border: 3px solid #FFA69E;
     width: 450px; 
     background-color: transparent;
 }
@@ -144,7 +144,6 @@
     font-family: 'Millimetre', sans-serif;
     font-size: 20px;
     text-align: center;
-    margin-top: 60px;
     color: #FAF3DD;
 }
 
@@ -152,6 +151,9 @@
 	max-height: 200px;
 	overflow-x: hidden;
     margin-right: 5px;
+    align-items: center;
+	text-align: center;
+	justify-content: center;
 }
   
   .userslist.scroll {

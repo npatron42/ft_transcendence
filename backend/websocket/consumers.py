@@ -275,7 +275,6 @@ async def deleteRelationShip(parseLine):
     await sync_to_async(myRelation.delete)()
 
 async def sendToClient2(self, message, username):
-    logger.info("socketsUser -----> %s", socketsUsers)
     if username in socketsUsers:
         socket = socketsUsers.get(username)
         await self.channel_layer.send(socket, {
@@ -525,21 +524,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
                 friendsInvitationsToExpeditor = await getFriendsInvitations(myExpeditor.username)
                 await self.send(text_data=json.dumps(friendsInvitationsToExpeditor))                
-
-
-            elif (invitation_exists == "ALREADY FRIENDS"):
-                sendData = {
-                    "error": "Already friends"
-                }
-                await self.send(text_data=json.dumps(sendData))      
-
-
-            elif (invitation_exists):
-                sendData = {
-                    "error": "Invitation already sent"
-                }
-                await self.send(text_data=json.dumps(sendData))
-
+    
             else:
                 await saveInvitation(myInvitation)
 

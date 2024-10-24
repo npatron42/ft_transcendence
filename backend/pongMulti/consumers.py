@@ -131,7 +131,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if len(PongConsumer.players[self.room_id]) == 2:
 			disconnected = self.username
-			logger.info("il est parti %s", disconnected)
 			player1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
 			player2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
 

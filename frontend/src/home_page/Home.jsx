@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UsersFriendsList  from "../UsersList/UsersFriendsList";
 import Loading from "../loading_page/Loading";
+import MatchHistory from "../components/MatchHistory";
 
 const Home = () => {
     const [myUser, setUser] = useState(null);
@@ -51,6 +52,9 @@ const Home = () => {
             <NavbarBS myUser={myUser} />
             <div className="card-users">
                 <UsersFriendsList myUser={myUser} />
+            </div>
+            <div className="card-users">
+                <MatchHistory/>
             </div>
         </div>
     );

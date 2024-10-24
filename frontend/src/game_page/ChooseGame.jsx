@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import { useWebSocket } from '../provider/WebSocketProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/chooseGame.css';
 import Button from 'react-bootstrap/Button';
