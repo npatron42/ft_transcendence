@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React, { useRef , useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import { useAuth } from '../provider/UserAuthProvider';
 import { postPicture } from '../api/api';
@@ -10,17 +11,29 @@ import "./button.css";
 function Upload() {
 
   const { t } = useTranslation();
-  const {myUser, setUser} = useAuth()
-
+  const {myUser, setUser} = useAuth();
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
   
   const handleButtonClick = () => {
-    console.log(myUser.id);
+    // console.log(myUser.id);
     fileInputRef.current.click();
   };
 
+
   const handleFileChange = (event) => {
-      handleUpload(event.target.files[0]);
+    const selectedFile = event.target.files[0];
+
+    const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
+    if (selectedFile && !validTypes.includes(selectedFile.type)) {
+      setErrorMessage(t('profilPage.errorUpload'));
+      setSuccessMessage('');
+      clearMessages();
+      return;
+    }
+
+    handleUpload(selectedFile);
   };
 
   const handleUpload = async (selectedFile) => {
@@ -31,19 +44,29 @@ function Upload() {
       const response = await postPicture(formData)
       if (response)
         {
-          alert('Upload successful!');
+          setSuccessMessage('profilPage.succesUpload');
+          setErrorMessage(''); 
           const tmpUser = await getUser();
           setUser(tmpUser);
-          console.lg(myUser);
+          console.log(" in response : ", myUser);
+          
         }
         
       } catch (error) {
-        alert('Failed to upload the image.');
+        // alert("tes");
+        setSuccessMessage('');
+        setErrorMessage('profilPage.errorUpload');
+        // alert('Failed to upload the image.');
       }
-
-      return ;
-};
-
+      clearMessages();
+    };
+    
+  const clearMessages = () => {
+      setTimeout(() => {
+        setSuccessMessage('');
+        setErrorMessage('');
+      }, 3000);
+    };
 
   return (
     <div>
@@ -54,9 +77,10 @@ function Upload() {
         ref={fileInputRef}
         style={{ display: 'none' }}
         onChange={handleFileChange}
-        accept="image/*"
-
+        accept=".jpg, .jpeg, .png, .svg"
       />
+       {successMessage && <p className="succes-upload">{t(successMessage)}</p>}
+       {errorMessage && <p className="error-upload">{t(errorMessage)}</p>}
     </div>
   );
 }

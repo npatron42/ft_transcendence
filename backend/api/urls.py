@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
+from users.views import resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
 
 urlpatterns = [
 	path('user/', getUser, name="getUser"),
@@ -7,5 +7,6 @@ urlpatterns = [
 	path('user/notifs/', getAllNotifs, name="getAllNotifs"),
 	path('sendInvite/', postInvite, name="postInvite"),
 	path('userFriendsList/', getFriendsList, name="getFriendsList"),
-	path('uploadProfilePicture/', uploadProfilePicture, name='uploadProfilePicture')
+	path('uploadProfilePicture/', uploadProfilePicture, name='uploadProfilePicture'),
+	path('resetProfilePicture/', resetProfilePicture, name='resetProfilePicture')
 ]

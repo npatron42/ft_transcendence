@@ -43,6 +43,8 @@
       "valide": "Valider",
       "inco" : "Mot de passe incorrect",
       "cancel" : "Annuler",
-      "oldmdp" : "Entrez l'ancien mot de passe"
+      "oldmdp" : "Entrez l'ancien mot de passe",
+      "succesUpload": "Téléchargement réussi",
+      "errorUpload" : "Échec du téléchargement"
     }
   }

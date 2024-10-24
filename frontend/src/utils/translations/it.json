@@ -42,6 +42,8 @@
       "valide": "Validare",
       "inco" : "Password errata",
       "cancel" : "Cancellare",
-      "oldmdp" : "Inserisci la vecchia password"
+      "oldmdp" : "Inserisci la vecchia password",
+      "succesUpload": "Download riuscito",
+      "errorUpload" : "Download non riuscito"
     }
   }

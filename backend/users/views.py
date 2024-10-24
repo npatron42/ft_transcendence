@@ -124,4 +124,12 @@ def uploadProfilePicture(request):
     user.save()
 
     return JsonResponse({"message": "Profile picture updated successfully", "path": relative_path})
-    
+
+@csrf_exempt  
+def resetProfilePicture(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+
+    user.profilePicture = 'default.jpg'
+    user.save()
+    return JsonResponse({'success': True})

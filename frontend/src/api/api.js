@@ -49,9 +49,28 @@ export const postPicture = async (myData) => {
 		};
 		const response = await axios.post("http://localhost:8000/api/uploadProfilePicture/", myData, config);
 
-		// console.log(response.data);
+		console.log(response.data);
 
 		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const resetPicture = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/resetProfilePicture/", {}, config);
+
+		console.log(response.data);
+		return(response.data);
+
 	} catch (error) {
 		console.error("Error fetching user data:", error);
 		throw error;

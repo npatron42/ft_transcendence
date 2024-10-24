@@ -41,6 +41,8 @@
       "valide": "Validate",
       "inco" : "Incorrect password",
       "cancel" : "Cancel",
-      "oldmdp" : "Enter the old password"
+      "oldmdp" : "Enter the old password",
+      "succesUpload": "Upload successful",
+      "errorUpload" : "Upload failed"
     }
   }

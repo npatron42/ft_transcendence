@@ -22,3 +22,25 @@
         transform: translateY(0);
     }
 }
+
+.succes-upload {
+	position: absolute;
+	top: 28vh;
+	left: 41vw;
+	color: #2886038e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}
+
+.error-upload {
+	position: absolute;
+	top: 28vh;
+	left: 41vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}
