@@ -1,8 +1,8 @@
 
 
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
-    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
@@ -22,9 +22,7 @@
 	border-bottom: 1px solid #FAF3DD;
 	display: flex;
 	align-items: center;
-	text-align: center;
 	justify-content: center;
-
 }
 
 .writeHistory {
@@ -41,6 +39,28 @@
 	flex-direction: column;
 }
 
+.scrollable {
+    overflow-y: auto;
+    height: 65%;
+    margin-right: 20px; /* Pousse la scrollbar vers la gauche */
+    /* margin-right: -20px; Ajuste le conteneur pour compenser le padding */
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 10px;
+    background-color: #2a2c31;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    background-color: #AED9E0;
+}
+
+
+  
+
+
 .matchHistory {
 	font-family: 'Millimetre', sans-serif;
     font-size: 20px; 
@@ -53,16 +73,24 @@
 }
 
 .historyItem {
-    display: flex;               /* Utilise flexbox pour la disposition */
-    justify-content: flex-end;   /* Aligne les enfants à droite */
-    width: 100%;                 /* Prend toute la largeur */
+    display: flex;              
+    justify-content: flex-end;  
+    width: 100%;                 
 }
 
 .historyItem-part {
-    flex: 1;                     /* Permet à chaque enfant de prendre toute la largeur disponible */
-    text-align: center;          /* Centrer le texte (optionnel) */
-    padding: 10px;               /* Ajoute un peu d'espacement (optionnel) */
+    flex: 1;                     
+    text-align: center;          
+    padding: 10px;       
 }
+
+.modifyUsername {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #AED9E0;
+}
+
 
 .modifyUsername {
 	font-family: Millimetre;

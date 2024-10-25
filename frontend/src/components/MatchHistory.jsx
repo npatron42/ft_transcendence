@@ -22,18 +22,16 @@ function MatchHistory() {
 		console.log(matchTmp)
 	}
 
-    return (
-        <div className="matchHistory">
+	return (
+		<div className="matchHistory">
 			<div className="matchHistory-header">
 				<span className="writeHistory">Match History</span>
 			</div>
-			<div className="matchHistory-content">
+			<div className={`matchHistory-content ${matchHistory.length >= 5 ? "scrollable" : ""}`}>
 				{matchHistory.length === 0 && (
-					<>
-						<div className="historyInfo">
-							Play some matchs to have history!
-						</div>
-					</>
+					<div className="historyInfo">
+						Play some matches to have history!
+					</div>
 				)}
 				{matchHistory.length !== 0 && (
 					matchHistory.map((match) => (
@@ -44,8 +42,8 @@ function MatchHistory() {
 					))
 				)}
 			</div>
-        </div>
-    );
+		</div>
+	);
 }
 
 export default MatchHistory;
