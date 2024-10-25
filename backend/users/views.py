@@ -74,10 +74,12 @@ def getMatchHistory(request):
             win = True
         else:
             win = False
+        date = matches[i]["date"]
         dataToSend = {
             "opponent": opponent,
             "score": score,
-            "win": win
+            "win": win,
+            "date": date
         }
         result.append(dataToSend)
         i += 1

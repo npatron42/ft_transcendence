@@ -404,12 +404,14 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         type = data.get("type")
 
         if type == "ABORT-MATCH":
-            logger.info("OUI JE PASSE LA BEBE")
             userAborted = await getUserByUsername(data.get("userAborted"))
             userToNotifID = await findGameInvitationToErase(userAborted)
             userToNotif = await getUserByIdClean(userToNotifID)
             gamesInvitations = await getGamesInvitations(userToNotif["username"])
             await sendToClient2(self, gamesInvitations, userToNotif.get("username"))
+
+        elif type == "USERS-STATUS":
+            logger.info("JE RECOIS MON BRAVE ---> %s", data)
 
 
     async def notification_to_client(self, event):
@@ -501,7 +503,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         type = data["type"]
         myUser = self.scope["user"]
         # INVITE METHODE
-        logger.info(data)
         if (type == "INVITE"):
             myReceiverUsername = data.get('to')
             typeMessage = data.get('type')
@@ -629,7 +630,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUserWhoInvites)
                 myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
                 myGame = myGameInvitationSer.data
-                logger.info(myGame)
                 roomId = myGame["roomId"]
                 await findGameInvitationToErase(myUserWhoInvites)
                 gamesInvitations = await getGamesInvitations(myUser.username)
