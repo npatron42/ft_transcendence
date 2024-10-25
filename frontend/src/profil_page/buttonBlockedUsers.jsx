@@ -20,7 +20,12 @@ function buttonBlockedUsers({blockedUsers, myUser, socketUser}) {
 			"userWhoBlocks": myUser,
 			"userBlocked": userBlocked
 		}
-		socketUser.send(JSON.stringify(dataToSend));
+		if (socketUser.OPEN) {
+			socketUser.send(JSON.stringify(dataToSend));
+		}
+		else {
+			console.log("CLOSED BORDEL DE CUL")
+		}
 		return ;
 	}
 

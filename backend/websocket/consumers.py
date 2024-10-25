@@ -402,7 +402,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def shareSocket(self, event):
         data = event['message']
         type = data.get("type")
+
         if type == "ABORT-MATCH":
+            logger.info("OUI JE PASSE LA BEBE")
             userAborted = await getUserByUsername(data.get("userAborted"))
             userToNotifID = await findGameInvitationToErase(userAborted)
             userToNotif = await getUserByIdClean(userToNotifID)
@@ -499,6 +501,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         type = data["type"]
         myUser = self.scope["user"]
         # INVITE METHODE
+        logger.info(data)
         if (type == "INVITE"):
             myReceiverUsername = data.get('to')
             typeMessage = data.get('type')
