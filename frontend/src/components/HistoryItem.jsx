@@ -7,18 +7,16 @@ function HistoryItem({ match }) {
 		win = "win"
 	else
 		win = "lose"
-
-	console.log(match)
     return (
 		<div className="historyItem">
 			<div className="historyItem-part">
 				<span className="modifyUsername">{match.opponent.username}</span>
 			</div>
 			<div className="historyItem-part">
-				<span className="modifyUsername">{match.score}</span>
+				<span className={`modifyScore${win}`}>{match.score}</span>
 			</div>
 			<div className="historyItem-part">
-				<span className="modifyUsername">{win}</span>
+				<span className={`modify${win}`}>{win}</span>
 			</div>
 		</div>
     );
