@@ -55,6 +55,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	power_up_size = {}
 	inversed_controls = {}
 	end = {}
+	send_db = {}
 
 		###########
 		# CONNECT #
@@ -92,6 +93,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.end[self.room_id] = False
 			PongConsumer.power_up_visible[self.room_id] = False
 			PongConsumer.power_up_timeout[self.room_id] = False
+		
+		if self.room_id not in PongConsumer.send_db:
+			PongConsumer.send_db[self.room_id] = False
 
 		await self.channel_layer.group_add(
 			self.room_group_name,
@@ -134,8 +138,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 			else:
 				winner = PongConsumer.players[self.room_id][0]
 				winnerdb = player1
-			
-			await save_match(winnerdb, player1, player2, 0, 0, False)
+			if PongConsumer.send_db[self.room_id] == False:
+				await save_match(winnerdb, player1, player2, 0, 0, False)
+				PongConsumer.send_db[self.room_id] = True
 
 			await self.channel_layer.group_send(
 				self.room_group_name,
@@ -145,6 +150,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 					'score': PongConsumer.score[self.room_id]
 				}
 			)
+		
+		PongConsumer.players[self.room_id].remove(self.username)
 		
 		###########
 		# RECEIVE #
@@ -330,7 +337,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 				last_player = PongConsumer.players[self.room_id][0]
 
-				# Colision paddle droite#
+				# Colision paddle droite
 			right_paddle_y = PongConsumer.paddles_pos[self.room_id]['right']
 			if (ball['x'] >= 890 - paddle_width - ball_radius and 
 				right_paddle_y - PongConsumer.paddle_right_height[self.room_id] // 2 <= ball['y'] <= right_paddle_y + PongConsumer.paddle_right_height[self.room_id] // 2):
@@ -414,8 +421,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 				p2_score = PongConsumer.score[self.room_id]['player2']
 				p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
 				p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
-
-				await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
+				if PongConsumer.send_db[self.room_id] == False:
+					await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
+					PongConsumer.send_db[self.room_id] = True
 				break
 
 				#send game state#
