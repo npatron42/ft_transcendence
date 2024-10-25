@@ -65,6 +65,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	inversed_controls = {}
 	end = {}
 	send_db = {}
+	matchIsPlayed = {}
 
 		###########
 		# CONNECT #
@@ -102,9 +103,14 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.end[self.room_id] = False
 			PongConsumer.power_up_visible[self.room_id] = False
 			PongConsumer.power_up_timeout[self.room_id] = False
+
 		
 		if self.room_id not in PongConsumer.send_db:
 			PongConsumer.send_db[self.room_id] = False
+
+		if self.room_id not in PongConsumer.matchIsPlayed:
+			PongConsumer.matchIsPlayed[self.room_id] = False
+
 
 		await self.channel_layer.group_add(
 			self.room_group_name,
@@ -162,9 +168,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		# DECONNEXION D'UN USER ALORS QUE LAUTRE N'A PAS REJOINT
 
-		if len(PongConsumer.players[self.room_id]) == 1:
+		if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.matchIsPlayed[self.room_id] == False:
 			myUser = data=self.scope['user']
-
+			logger.info("TA GUEULE")
 			dataToSend = {
 				"type": "ABORT-MATCH",
 				"userAborted": myUser.username,
@@ -214,6 +220,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 					logger.info(f"Démarrage du jeu pour la room {self.room_id} avec les joueurs {PongConsumer.players[self.room_id]}")
 					if not hasattr(self, 'game_task'):
 						self.game_task = asyncio.create_task(self.update_ball(PongConsumer.max_scores[self.room_id]))
+						PongConsumer.matchIsPlayed[self.room_id] = True
 
 		if action == 'set_max_score':
 			if self.room_id in PongConsumer.max_scores:
