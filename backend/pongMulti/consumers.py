@@ -14,10 +14,10 @@ logger = logging.getLogger(__name__)
 
 
 async def sendToClient(self, message):
-    await self.channel_layer.group_send("shareSocket", {
-        "type": "shareSocket",
-        "message": message,
-    })
+	await self.channel_layer.group_send("shareSocket", {
+		"type": "shareSocket",
+		"message": message,
+	})
 
 		###############
 		# MATCH IN DB #
@@ -53,6 +53,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	score = {}
 	max_scores = {}
 	players = {}
+	invited_players = {}
 	power_up_bool = {}
 	power_up = {}
 	power_up_active = {}
@@ -72,6 +73,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		self.room_id = self.scope['url_route']['kwargs']['room_id']
 		self.room_group_name = f'game_{self.room_id}'
+
 		if self.room_id not in PongConsumer.players:
 			logger.info(f'ajout joueur pour la room {self.room_id}')
 			PongConsumer.players[self.room_id] = []
@@ -180,14 +182,26 @@ class PongConsumer(AsyncWebsocketConsumer):
 		data = json.loads(text_data)
 		action = data.get('action', '')
 		user_name = data.get('name', None)
-		# logger.info(f"Data reçue back : {data}")
+		userSelected = data.get('userSelected', None)
+		logger.info(f"Data reçue back : {data}")
+
+		if userSelected and self.room_id not in PongConsumer.invited_players:
+			PongConsumer.invited_players[self.room_id] = userSelected
 
 		if user_name:
 			self.username = user_name
+			if self.room_id in PongConsumer.invited_players:
+				invited_player = PongConsumer.invited_players[self.room_id]
+
+				if user_name != invited_player:
+					logger.warning(f"Rejet du joueur {user_name} car il ne correspond pas à l'invité {invited_player}")
+					await self.close()
+					return
+			
+
 			if user_name not in PongConsumer.players[self.room_id]:
 				PongConsumer.players[self.room_id].append(user_name)
 				logger.info(f"Joueur ajouté: {user_name}")
-
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
