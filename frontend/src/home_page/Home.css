@@ -89,6 +89,15 @@
     color: #FFA69E;
 }
 
+.status.in-game {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #28d3f1;
+}
+
+
 .friends-list {
     height: 300px;
     border-radius: 50px;
