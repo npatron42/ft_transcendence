@@ -42,7 +42,7 @@
         font-family: 'Millimetre', sans-serif;
         font-size: 18px;
         text-align: center;
-        color: #AED9E0;
+        color: #FFA69E !important;
         padding: 8px;
         padding-bottom: 3px;
         width: 85px;
@@ -89,14 +89,13 @@
     color: #FFA69E;
 }
 
-.status.in-game {
+.status.in-game{
 
     font-family: 'Millimetre', sans-serif;
     font-size: 16px;
     text-align: center;
-    color: #28d3f1;
+    color: #AED9E0;
 }
-
 
 .friends-list {
     height: 300px;

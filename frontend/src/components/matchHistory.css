@@ -26,7 +26,6 @@
 .matchHistory-header {
 	height: 58px;
 	width: 100%;
-	border-bottom: 1px solid #FAF3DD;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -36,7 +35,7 @@
 	font-family: 'Millimetre', sans-serif;
     font-size: 18px; 
     font-weight: bold;
-	color: #AED9E0;
+	color: #FFA69E;
 }
 
 .matchHistory-content {
