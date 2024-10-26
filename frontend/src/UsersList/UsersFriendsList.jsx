@@ -54,6 +54,8 @@ const UsersFriendsList = ({ myUser }) => {
 
             if (hisStatus === "online")
                 hisStatusTmp = true
+            else if (hisStatus === "in-game")
+                hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
             myResult[username] = hisStatusTmp;
@@ -118,6 +120,8 @@ const UsersFriendsList = ({ myUser }) => {
     const chooseStatus = (username) => {
         if (socketMessage[username] === true)
             return ("online")
+        else if (socketMessage[username] === "in-game")
+            return ("in-game")
         return ("offline")
     };
 

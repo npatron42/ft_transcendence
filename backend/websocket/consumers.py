@@ -403,6 +403,8 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         data = event['message']
         type = data.get("type")
 
+        myUser = self.scope["user"]
+
         if type == "ABORT-MATCH":
             userAborted = await getUserByUsername(data.get("userAborted"))
             userToNotifID = await findGameInvitationToErase(userAborted)
@@ -410,8 +412,26 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             gamesInvitations = await getGamesInvitations(userToNotif["username"])
             await sendToClient2(self, gamesInvitations, userToNotif.get("username"))
 
-        elif type == "USERS-STATUS":
-            logger.info("JE RECOIS MON BRAVE ---> %s", data)
+        elif type == "USERS-STATUS-INGAME":
+            logger.info("BEFORE ---> %s", usersStatus)
+            statusReceived = data["status"]
+            for key in statusReceived:
+                usersStatus[key] = "in-game"
+                userToChange = await getUserByUsername(key)
+            logger.info("AFTER ---> %s", usersStatus)
+            await self.send_status_to_all()
+            await update_user_status(userToChange, "in-game")
+
+
+        elif type == "USERS-STATUS-OUTGAME":
+            logger.info("BEFORE ---> %s", usersStatus)
+            statusReceived = data["status"]
+            for key in statusReceived:
+                usersStatus[key] = True
+            logger.info("AFTER ---> %s", usersStatus)
+            await self.send_status_to_all()
+            logger.info("J AI SEND --> %s", usersStatus)
+            await update_user_status(myUser, "online")
 
 
     async def notification_to_client(self, event):

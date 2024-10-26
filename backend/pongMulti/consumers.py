@@ -27,7 +27,7 @@ async def sendGameStatusToUsers(self):
 		result[usersInGame[i]] = "game"
 		i += 1
 	dataToSend = {
-		"type": "USERS-STATUS",
+		"type": "USERS-STATUS-INGAME",
 		"status": result,
 	}
 	await sendToClient(self, dataToSend)
@@ -40,7 +40,7 @@ async def removeClientFromUsers(self, username):
 		result[usersInGame[i]] = "online"
 		i += 1
 	dataToSend = {
-		"type": "USERS-STATUS",
+		"type": "USERS-STATUS-OUTGAME",
 		"status": result
 	}
 	i = 0
