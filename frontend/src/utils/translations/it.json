@@ -33,7 +33,9 @@
     },
 
     "profilPage" : {
-      "2fa" : "Abilitare l'autenticazione a due fattori",
+      "enable2fa" : "Abilitare l'autenticazione a due fattori",
+      "good2fa" : "Autenticazione a due fattori implementata",
+      "disable2fa" : "Disabilita l'autenticazione a due fattori",
       "upload" : "Clicca per scaricare",
       "delete" : "Sopprimere",
       "lg" : "Lingua predefinita : ",
