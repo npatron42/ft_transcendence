@@ -14,13 +14,22 @@
     font-style: normal;
 }
 
+@font-face {
+    font-family: 'Millimetre-Bold';
+    src: url('../assets/millimetre/Millimetre-Bold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 .matchHistory {
-    height: 300px;
+    height: 250px;
     border-radius: 50px;
-    border: 3px solid #FFA69E;
-    width: 450px; 
-    background-color: transparent;
-	margin-left: 30px;
+    border: 3px solid #161719;
+    width: 450px;
+    background: transparent;
+    /* background: rgb(94,100,114);
+    background: linear-gradient(90deg, rgba(94,100,114,1) 00%, rgba(42,44,49,1) 40%); */
+    margin-left: 30px;
 }
 
 .matchHistory-header {
@@ -32,10 +41,10 @@
 }
 
 .writeHistory {
-	font-family: 'Millimetre', sans-serif;
-    font-size: 18px; 
+	font-family: 'Millimetre-Bold', sans-serif;
+    font-size: 22px; 
     font-weight: bold;
-	color: #FFA69E;
+	color: #FAF3DD;
 }
 
 .matchHistory-content {
@@ -59,7 +68,7 @@
 .scrollable::-webkit-scrollbar-thumb {
     border: 2px solid #000000;
     border-radius: 20px;
-    background-color: #AED9E0;
+    background-color: #FFA69E;
 }
 
 
@@ -87,28 +96,29 @@
 .historyItem-part {
     flex: 1;                     
     text-align: center;          
-    padding: 10px;       
+    padding: 10px;
+
 }
 
 .modifyUsername {
 	font-family: Millimetre;
-    font-size: 18px; 
+    font-size: 22px; 
     font-weight: bold;
 	color: #FAF3DD !important;
 }
 
 .modifyScorewin {
-    font-size: 20px; 
+    font-size: 18px; 
     font-weight: bold;
-	color: #5E6472;
+	color: #FAF3DD;
     font-family: Millimetre;
     border-bottom: 1px solid #5E6472;
 }
 
 .modifyScorelose {
-    font-size: 20px; 
+    font-size: 18px; 
     font-weight: bold;
-	color: #5E6472;
+	color: #FAF3DD;
     font-family: Millimetre;
     border-bottom: 1px solid #5E6472;
 }
@@ -131,7 +141,7 @@
 	font-family: Millimetre;
     font-size: 18px; 
     font-weight: bold;
-	color: #5E6472;    
+	color: #FAF3DD;    
 }
 
 

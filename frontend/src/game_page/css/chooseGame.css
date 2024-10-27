@@ -72,7 +72,7 @@
     backface-visibility: hidden;
     border-radius: 50px;
     overflow: hidden;
-    border: solid 4px #FFA69E;
+    border: solid 3px #161719;
     backdrop-filter: blur(5px);
     display: flex;
     justify-content: center;
