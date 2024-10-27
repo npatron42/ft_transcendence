@@ -11,8 +11,15 @@ function HistoryItem({ match }) {
 	let date = match.date
 	let newDate = "";
 	
+
+
 	for (let i = 5; i <= 9; i++) {
-		newDate += date[i]
+		let days;
+		let month;
+
+		days = (date[8] + date[9])
+		month = (date[5] + date[6])
+		newDate = days + " / " + month
 	}
 
     return (

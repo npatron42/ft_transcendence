@@ -98,11 +98,13 @@
 }
 
 .friends-list {
-    height: 300px;
+    height: 250px;
     border-radius: 50px;
-    border: 3px solid #FFA69E;
-    width: 450px; 
-    background-color: transparent;
+    border: 3px solid #161719;
+    width: 450px;
+    background: transparent;
+    /* background: rgb(94,100,114);
+    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%); */
 }
 
 .buttonAdd {
@@ -117,15 +119,18 @@
     height: 60px;
     width: 380px;
     border-radius: 50px;
-    border-top: 2px solid #FAF3DD;
-    border-bottom: 2px solid #FAF3DD;
-    border-left: 2px solid #FAF3DD;
-    border-right: 2px solid #FAF3DD;;
+    border-top: 1px solid #FCE0CE;
+    border-bottom: 1px solid #FCE0CE;
+    border-left: 1px solid #FCE0CE;
+    border-right: 1px solid #FCE0CE;
+
 
     background-color: transparent;
     padding: 10px;
+    padding-top: 10px;
     margin: 5px;
     margin-left: 35px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
 }
@@ -137,6 +142,7 @@
     height: 40px;
     width: 90px;
 }
+
 
 .profile-picture {
     display: flex;
@@ -156,7 +162,7 @@
 }
 
 .userslist {
-	max-height: 200px;
+	max-height: 170px;
 	overflow-x: hidden;
     margin-right: 5px;
     align-items: center;
@@ -179,5 +185,43 @@
   {
 	border: 2px solid #000000;
 	border-radius: 20px;
-	background-color: #AED9E0;
+	background-color: #FFA69E;
   }
+
+
+.modifyTrash {
+    font-size: 22px;
+    color: #5E6472;
+}
+
+.modifyTrash2 {
+    font-size: 20px;
+    color: #5E6472;
+}
+
+.modifyTrash2:hover {
+    font-size: 22px;
+    color: #AED9E0;
+}
+
+.modifyTrash:hover {
+    font-size: 24px;
+    color: #AED9E0;
+}
+
+.matchHistoryPlacement {
+    position: absolute;
+    margin-left: 740px;
+    margin-top: 300px;
+}
+
+.usersFriendsListPlacement {
+    position: absolute;
+    margin-left: 770px;
+    margin-bottom: 300px;
+}
+
+.playPlacement {
+    position: absolute;
+    margin-right: 700px;
+}
