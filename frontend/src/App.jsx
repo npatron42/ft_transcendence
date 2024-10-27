@@ -44,7 +44,7 @@ const App = () => {
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
         <Route path="/game/options" element={<GameOptions />} />
         <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
-        <Route path="/viewProfile" element={<ViewProfile />} />
+        <Route path="/profile/:username" element={<ViewProfile />} />
       </Routes>
       </WebSocketProvider>
     )}

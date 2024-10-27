@@ -161,6 +161,24 @@ export const getMatchHistory = async () => {
 	}
 };
 
+export const getUserMatchHistory = async (username) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+
+		const response = await axios.get(`http://localhost:8000/api/user/matchHistory/${username}/`, config);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user's match history:", error);
+		throw error;
+	}
+};
+
+
 export const getFriendsInvitations = async () => {
 	try {
 		const token = localStorage.getItem('jwt');
