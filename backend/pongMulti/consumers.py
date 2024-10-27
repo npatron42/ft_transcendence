@@ -200,7 +200,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				invited_player = PongConsumer.invited_players[self.room_id]
 
 				if user_name != invited_player:
-					logger.warning(f"Rejet du joueur {user_name} car il ne correspond pas à l'invité {invited_player}")
+					logger.info(f"Rejet du joueur {user_name} car il ne correspond pas à l'invité {invited_player}")
 					await self.close()
 					return
 			

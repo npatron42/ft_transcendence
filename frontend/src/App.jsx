@@ -19,6 +19,7 @@ import { useState, useEffect } from 'react';
 import ProfilPage from './profil_page/profilPage.jsx';
 import Check42User from './check42user/Check42User.jsx';
 import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
+import ViewProfile from './view_profile/ViewProfile.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
         <Route path="/game/options" element={<GameOptions />} />
         <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
+        <Route path="/viewProfile" element={<ViewProfile />} />
       </Routes>
       </WebSocketProvider>
     )}

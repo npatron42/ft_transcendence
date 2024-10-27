@@ -6,6 +6,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const WaitingTournaments = () => {
     const { waitRoomId } = useParams();
+    const myJwt = localStorage.getItem('jwt');
     const location = useLocation();
     const nbplayer = location.state?.numberInvitedPlayer || 10;
     const maxScore = location.state?.maxScore || 10;
@@ -31,7 +32,7 @@ const WaitingTournaments = () => {
 
     // Gestion du WebSocket
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/waitTournaments/${waitRoomId}`);
+        const ws = new WebSocket(`ws://localhost:8000/ws/waitTournaments/${waitRoomId}/?token=${myJwt}`);
 
         ws.onopen = () => {
             console.log('WebSocket connecté à la room:', waitRoomId);
