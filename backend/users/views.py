@@ -145,3 +145,26 @@ def changeLangue(request):
     user.langue = data.get('langue')
     user.save()
     return JsonResponse({'success': True, 'langue': user.langue})
+
+@csrf_exempt  
+def changeLangue(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.langue = data.get('langue')
+    user.save()
+    return JsonResponse({'success': True, 'langue': user.langue})
+
+@csrf_exempt  
+def toggle2fa(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.dauth = data.get('dauth')
+    logger.info("test-----> %s", user.dauth)
+    user.save()
+    return JsonResponse({'success': True, 'dauth': user.dauth})
+
+

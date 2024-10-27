@@ -7,6 +7,7 @@ class User(AbstractUser):
     profilePicture = models.CharField(max_length=250, default="default.jpg")
     isFrom42 = models.BooleanField(default=False)
     langue = models.CharField(max_length=10, default="fr")
+    dauth = models.BooleanField(default=False)
 
 
 class Invitation(models.Model):
