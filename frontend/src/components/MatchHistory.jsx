@@ -25,7 +25,7 @@ function MatchHistory() {
 	return (
 		<div className="matchHistory">
 			<div className="matchHistory-header">
-				<span className="writeHistory">Match History</span>
+				<span className="writeHistory"> My Match History</span>
 			</div>
 			<div className={`matchHistory-content ${matchHistory.length >= 5 ? "scrollable" : ""}`}>
 				{matchHistory.length === 0 && (

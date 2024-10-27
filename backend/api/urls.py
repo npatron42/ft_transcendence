@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import getUser, getAllUsers, postInvite, getMatchHistory, getFriendsInvitations, getGamesInvitations, getDiscussions, getBlockedUsers, getUsersList, getFriendsList, getUserBlockedRelations
+from users.views import getUser, getAllUsers, postInvite, getMatchHistory, getFriendsInvitations, getGamesInvitations, getDiscussions, getBlockedUsers, getUsersList, getFriendsList, getUserBlockedRelations, getMatchHistoryByUsername
 
 urlpatterns = [
 	path('user/', getUser, name="getUser"),
@@ -12,5 +12,6 @@ urlpatterns = [
 	path('user/discussions/', getDiscussions, name="getDiscussions"),
 	path('sendInvite/', postInvite, name="postInvite"),
 	path('friendsList/', getFriendsList, name="getFriendsList"),
-	path('usersList/', getUsersList, name="getUsersList")
+	path('usersList/', getUsersList, name="getUsersList"),
+	path('user/matchHistory/<str:username>/', getMatchHistoryByUsername, name="getMatchHistoryByUsername")
 ]

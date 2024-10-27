@@ -84,6 +84,40 @@ def getMatchHistory(request):
     logger.info(result)
     return JsonResponse(result, safe=False)
 
+def getMatchHistoryByUsername(request, username):
+    payload = middleWareAuthentication(request)
+    myUser = User.objects.filter(username=username).first()
+
+    
+    
+    matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
+    matchesSer = MatchHistorySerializer(matchesTmp, many=True)
+    matches = matchesSer.data
+
+    i = 0
+    myLen = len(matches)
+    result = []
+    while i < myLen:
+        if myUser.id == matches[i]["player1"]:
+            opponent = getUserById(matches[i]["player2"])
+            score = str(matches[i]["player1_score"]) + "  /  " + str(matches[i]["player2_score"])
+        else:
+            opponent = getUserById(matches[i]["player1"])
+            score = str(matches[i]["player2_score"]) + "  /  " + str(matches[i]["player1_score"])
+        if myUser.id == matches[i]["winner"]:
+            win = True
+        else:
+            win = False
+        dataToSend = {
+            "opponent": opponent,
+            "score": score,
+            "win": win
+        }
+        result.append(dataToSend)
+        i += 1
+    logger.info(result)
+    return JsonResponse(result, safe=False)
+
 
 def getGamesInvitations(request):
     payload = middleWareAuthentication(request)
