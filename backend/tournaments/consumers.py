@@ -4,33 +4,40 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
+
 class WaitingConsumer(AsyncWebsocketConsumer):
     players = {}
     nbPlayers = {}
 
     async def connect(self):
-        self.room_id = self.scope['url_route']['kwargs']['room_id']
-        self.room_group_name = f'waitTournaments_{self.room_id}'
 
-        if self.room_id not in WaitingConsumer.players:
-            WaitingConsumer.players[self.room_id] = []
+        myUser = self.scope["user"]
 
-        self.username = None
+        if myUser.is_authenticated:
+            logger.info("Mon user ------> %s", self.scope["user"])
+            self.room_id = self.scope['url_route']['kwargs']['room_id']
+            self.room_group_name = f'waitTournaments_{self.room_id}'
 
-        await self.channel_layer.group_add(
-            self.room_group_name,
-            self.channel_name
-        )
+            if self.room_id not in WaitingConsumer.players:
+                WaitingConsumer.players[self.room_id] = myUser.user
 
-        await self.accept()
+            self.username = None
 
-        await self.channel_layer.group_send(
-            self.room_group_name,
-            {
-                'type': 'updatePlayers',
-                'players': WaitingConsumer.players[self.room_id]
-            }
-        )
+            await self.channel_layer.group_add(
+                self.room_group_name,
+                self.channel_name
+            )
+
+            await self.accept()
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'updatePlayers',
+                    'players': WaitingConsumer.players[self.room_id]
+                }
+            )
 
 
     async def disconnect(self, close_code):

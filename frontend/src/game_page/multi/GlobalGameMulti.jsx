@@ -11,15 +11,15 @@ const GlobalGameMulti = () => {
     const userSelected = location.state?.userSelected;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const isRefreshed = localStorage.getItem('isRefreshed');
-        if (isRefreshed) {
-          navigate('/home');
-        } else {
-          localStorage.setItem('isRefreshed', 'true');
-        }
-        return () => localStorage.removeItem('isRefreshed');
-      }, [navigate]);
+    // useEffect(() => {
+    //     const isRefreshed = localStorage.getItem('isRefreshed');
+    //     if (isRefreshed) {
+    //       navigate('/home');
+    //     } else {
+    //       localStorage.setItem('isRefreshed', 'true');
+    //     }
+    //     return () => localStorage.removeItem('isRefreshed');
+    //   }, [navigate]);
 
     return (
         <div className="GlobalGame">
