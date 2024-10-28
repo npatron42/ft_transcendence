@@ -43,7 +43,7 @@ function IdPass() {
                 if (user.dauth)
                     handleShowOtpModal(); // Afficher le modal OTP
                 
-				// navigate('/home'); // Rediriger vers la page d'accueil si 2FA n'est pas nécessaire
+				//navigate('/home'); // Rediriger vers la page d'accueil si 2FA n'est pas nécessaire
 
                 localStorage.setItem('i18nextLng', userLangue);
             } else {

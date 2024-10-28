@@ -9,6 +9,7 @@ from django.contrib.auth import authenticate, login
 from django.views.decorators.csrf import csrf_exempt
 from oauth.views import attributeToUserJWT
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 import json
 
 logger = logging.getLogger(__name__)
@@ -82,3 +83,15 @@ def registerPage(request):
             }
         })
     return JsonResponse({'success': False, 'message': 'Méthode non autorisée.'})
+
+
+from django.core.mail import send_mail
+
+def envoyer_email():
+    send_mail(
+        'Sujet de l\'email',  # Sujet de l'email
+        'Voici le corps de l\'email.',  # Contenu de l'email
+        '7ecc25001@smtp-brevo.com',  # Adresse e-mail de l'expéditeur
+        ['ft.transcendence.42nice@gmail.com'],  # Liste des destinataires
+        fail_silently=False,  # Si vous ne voulez pas d'erreurs silencieuses
+    )
