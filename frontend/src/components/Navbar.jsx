@@ -46,7 +46,6 @@ function NavbarBS() {
 
   useEffect(() => {
     const handleNotif = (data) => {
-      console.log("data Navbar ---> ", data)
       if (data["friendsInvitations"]) {
         const nbFriendsInvitationsTmp = data["friendsInvitations"].length;
         setNbFriendsInvitations(nbFriendsInvitationsTmp);
@@ -107,17 +106,20 @@ function NavbarBS() {
       setProfile(!profileShown);
   }
 
+  const chooseCssForMePlease = () => {
+    if (location.pathname === "/home")
+      return ("logo-navbar-active");
+    return ("logo-navbar");
+  }
 
   return (
     <>
       <Navbar>
         <Nav>
           <Nav.Link onClick={handleOtherLocations} as={NavLink} to="/ChooseGame">PONG</Nav.Link>
-          {homeShown ? (
-            <img src={logoActive} className="logo-transcendence" onClick={handleHome}/>
-          ) : (
-            <img src={logo} className="logo-transcendence" onClick={handleHome}/>  
-          )}
+          <Nav.Link onClick={() => handleHome()} className="nav-link-logo">
+              <span className={chooseCssForMePlease()}> TRANSCENDENCE </span>
+          </Nav.Link>
           <Nav.Link onClick={() => handleChat()}>CHAT</Nav.Link>
         </Nav>
 

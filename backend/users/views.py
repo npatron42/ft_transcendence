@@ -66,18 +66,20 @@ def getMatchHistory(request):
     while i < myLen:
         if myUser.id == matches[i]["player1"]:
             opponent = getUserById(matches[i]["player2"])
-            score = str(matches[i]["player1_score"]) + "  /  " + str(matches[i]["player2_score"])
+            score = str(matches[i]["player1_score"]) + "  -  " + str(matches[i]["player2_score"])
         else:
             opponent = getUserById(matches[i]["player1"])
-            score = str(matches[i]["player2_score"]) + "  /  " + str(matches[i]["player1_score"])
+            score = str(matches[i]["player2_score"]) + "  -  " + str(matches[i]["player1_score"])
         if myUser.id == matches[i]["winner"]:
             win = True
         else:
             win = False
+        date = matches[i]["date"]
         dataToSend = {
             "opponent": opponent,
             "score": score,
-            "win": win
+            "win": win,
+            "date": date
         }
         result.append(dataToSend)
         i += 1

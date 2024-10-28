@@ -116,16 +116,18 @@ function Chat() {
     const chooseStatus = (username) => {
         if (usersStatus[username] === true)
             return ("online")
+        else if (usersStatus[username] === "in-game")
+            return ("in-game")
         return ("offline")
     };
-
+ 
 
     // HTTP --> USERSSTATUS + userslist
 
     
     const defineAllUsersStatus = async () => {
         const allUsers = await getAllUsers();
-        const status = []
+        const myResult = []
         for (let i = 0; i < allUsers.length; i++) {
             const username = allUsers[i].username;
             const hisStatus = allUsers[i].status;
@@ -133,11 +135,14 @@ function Chat() {
 
             if (hisStatus === "online")
                 hisStatusTmp = true
+            else if (hisStatus === "in-game")
+                hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
-                status[username] = hisStatusTmp;
+            myResult[username] = hisStatusTmp;
         }
-        setUsersStatus(status);
+        setUsersStatus(myResult);
+        console.log("result --> ", myResult)
     }
 
 

@@ -232,12 +232,17 @@
 
 .header-status-custom-online {
     font-size: 15px;
-    color: #B8F2E6;
+    color: #74c69d;
 }
 
 .header-status-custom-offline {
     font-size: 15px;
-    color: #FFA69E;
+    color: #f94144;
+}
+
+.header-status-custom-in-game {
+    font-size: 15px;
+    color: #cdb4db;
 }
 
 
