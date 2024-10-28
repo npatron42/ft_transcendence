@@ -23,11 +23,24 @@ function IdPass() {
     const handleClick = async (e) => {
         e.preventDefault();
 
-        if (username === "" || password === "" 
-            || username.includes("_") || password.includes("_")) {
-            setErrorMessage('loginPage.error');
-            return;
-        }
+        // if (username === "" || password === "" 
+        //     || username.includes("_") || password.includes("_")) {
+        //     setErrorMessage('loginPage.error');
+        //     return;
+        // }
+
+        // try {
+        //     const testResponse = await axios.post('http://localhost:8000/auth/test/');
+        //     console.log(testResponse)
+        //     if (testResponse.data.success) {
+        //         alert("Test email sent successfully.");
+        //     } else {
+        //         alert("Test email failed to send.");
+        //     }
+        // } catch (error) {
+        //     console.error("Error sending test email:", error);
+        // }
+
 
         try {
             const response = await axios.post('http://localhost:8000/auth/login/', {
@@ -37,15 +50,20 @@ function IdPass() {
             if (response.data.success) {
                 localStorage.setItem('jwt', response.data.token);
                 sessionStorage.removeItem('i18nextLng');
-                const user = await getUser();
-                const userLangue = user.langue;
-
-                if (user.dauth)
-                    handleShowOtpModal(); // Afficher le modal OTP
                 
-				//navigate('/home'); // Rediriger vers la page d'accueil si 2FA n'est pas nécessaire
+                if (!response.data.token)
+                    handleShowOtpModal();
+                                
 
-                localStorage.setItem('i18nextLng', userLangue);
+                else {
+                    navigate('/home');
+
+                    const user = await getUser();
+                    const userLangue = user.langue;
+    
+                    localStorage.setItem('i18nextLng', userLangue);
+                }
+
             } else {
                 setErrorMessage('loginPage.error');
             }
@@ -56,15 +74,22 @@ function IdPass() {
 
     const handleOtpSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/auth/verify_otp/', {
-                otp
+            const response = await axios.post('http://localhost:8000/auth/verify/', {
+                otp_code,
+                username
             });
 
             if (response.data.success) {
-                handleCloseOtpModal(); // Fermer le modal
-                navigate('/home'); // Rediriger vers la page d'accueil
+                handleCloseOtpModal();
+
+                const user = await getUser();
+                const userLangue = user.langue;
+
+                localStorage.setItem('i18nextLng', userLangue);
+
+                navigate('/home');
             } else {
-                setErrorMessage('loginPage.invalidOtp'); // Gérer les erreurs d'OTP
+                setErrorMessage(response.data.message);
             }
         } catch (error) {
             console.log("Une erreur est survenue lors de la vérification de l'OTP.");

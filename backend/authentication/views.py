@@ -10,7 +10,13 @@ from django.views.decorators.csrf import csrf_exempt
 from oauth.views import attributeToUserJWT
 from django.contrib.auth import get_user_model
 from django.core.cache import cache
+from django.core.mail import send_mail
 import json
+import random
+import string
+from django.utils import timezone
+from datetime import timedelta
+
 
 logger = logging.getLogger(__name__)
 
@@ -25,14 +31,36 @@ def loginPage(request):
         user = authenticate(username=username, password=password)
 
         if user is not None:
-           
-            token = attributeToUserJWT(user)
 
-            return JsonResponse({
-                'success': True,
-                'message': f'You are connected, {user.username}',
-                'token': token.data['jwt'],
-            })
+            user = User.objects.get(username=username)
+            
+            if user.dauth:
+
+                user.otp_code = ''.join(random.choices(string.digits, k=6))
+                logger.info("test otp =====> %s", user.otp_code)
+                user.otp_created_at = timezone.now()
+                user.save()
+
+                send_mail(
+                    f'Ft_TRANSCENDANCE = {user.username}',
+                    f'--------> {user.otp_code}',
+                    'ft.transcendence.42nice@gmail.com',
+                    [user.email],
+                    fail_silently=False,
+                )
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'You are connected, {user.username}',
+                })
+            else :
+                token = attributeToUserJWT(user)
+
+                return JsonResponse({
+                    'success': True,
+                    'message': f'You are connected, {user.username}',
+                    'token': token.data['jwt'],
+                })
 
         else:
             return JsonResponse({'success': False, 'message': 'dommage mauvais id'})
@@ -85,13 +113,42 @@ def registerPage(request):
     return JsonResponse({'success': False, 'message': 'Méthode non autorisée.'})
 
 
-from django.core.mail import send_mail
 
-def envoyer_email():
+@csrf_exempt
+def envoyer_email(request):
     send_mail(
-        'Sujet de l\'email',  # Sujet de l'email
-        'Voici le corps de l\'email.',  # Contenu de l'email
-        '7ecc25001@smtp-brevo.com',  # Adresse e-mail de l'expéditeur
-        ['ft.transcendence.42nice@gmail.com'],  # Liste des destinataires
-        fail_silently=False,  # Si vous ne voulez pas d'erreurs silencieuses
-    )
+        'Email de test',
+        'Ceci est un e-mail de test pour vérifier l\'envoi d\'emails.',
+        'ft.transcendence.42nice@gmail.com',
+        ['leilyesdu06300@gmail.com'],
+        fail_silently=False,
+        )
+    return JsonResponse({'success': True, 'message': 'Email envoyé avec succès'})
+
+@csrf_exempt
+def verify_otp(request):
+    data = json.loads(request.body)
+    username = data.get('username')
+    otp_code = data.get('otp_code') 
+
+    
+    user = User.objects.get(username=username)
+
+    is_otp_valid = user.otp_code == otp_code
+    is_otp_not_expired = user.otp_not_expire
+
+    if is_otp_valid and is_otp_not_expired:
+        user.otp_code = ''
+        user.otp_created_at = None
+        user.save()
+
+        token = attributeToUserJWT(user)
+
+        return JsonResponse({
+            'success': True,
+            'message': f'Vous êtes connecté, {user.username}',
+            'token': token.data['jwt'],
+        })
+    else:
+        error_message = 'Code OTP invalide.' if is_otp_valid else 'Code OTP expiré.'
+        return JsonResponse({'success': False, 'message': error_message})
