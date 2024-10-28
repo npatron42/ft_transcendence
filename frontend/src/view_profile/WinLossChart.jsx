@@ -1,7 +1,7 @@
 import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import './ViewProfile.css';
+import './viewProfile.css';
 
 Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
