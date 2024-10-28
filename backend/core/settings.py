@@ -11,6 +11,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 SECRET_KEY = os.getenv('SECRET_KEY')
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp-relay.brevo.com'
+EMAIL_PORT = 587  # Utilisez 465 si vous choisissez SSL
+EMAIL_USE_TLS = True  # Ou EMAIL_USE_SSL = True
+EMAIL_HOST_USER = '7ecc25001@smtp-brevo.com'
+EMAIL_HOST_PASSWORD = os.getenv('PASSMAIL')
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER 
+
 
 ALLOWED_HOSTS = []
 
@@ -109,6 +117,16 @@ DATABASES = {
         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
         'HOST': os.getenv('POSTGRES_HOST'),
         'PORT': os.getenv('POSTGRES_PORT'),
+    }
+}
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Adresse Redis
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
 
