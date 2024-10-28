@@ -39,7 +39,7 @@ const ChooseGame = () => {
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
-            <div className="custom2-cadre">
+            {/* <div className="custom2-cadre"> */}
             <div className="row">
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
@@ -165,7 +165,7 @@ const ChooseGame = () => {
                 </div>
             </div>
         </div>
-    </div>
+    // </div>
     );
 };
 
