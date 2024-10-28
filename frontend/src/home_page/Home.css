@@ -42,7 +42,7 @@
         font-family: 'Millimetre', sans-serif;
         font-size: 18px;
         text-align: center;
-        color: #FFA69E !important;
+        color: #cdb4db !important;
         padding: 8px;
         padding-bottom: 3px;
         width: 85px;
@@ -191,12 +191,12 @@
 
 .modifyTrash {
     font-size: 22px;
-    color: #5E6472;
+    color: #cdb4db;
 }
 
 .modifyTrash2 {
     font-size: 20px;
-    color: #5E6472;
+    color: #cdb4db;
 }
 
 .modifyTrash2:hover {
