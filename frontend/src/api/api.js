@@ -99,6 +99,28 @@ export const sendLangue = async (langue) => {
 	}
 };
 
+export const sendName = async (name) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changeName/", { name } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+
+
 export const getAllUsers = async () => {
 	try {
 		const token = localStorage.getItem('jwt');

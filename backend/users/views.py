@@ -145,3 +145,42 @@ def changeLangue(request):
     user.langue = data.get('langue')
     user.save()
     return JsonResponse({'success': True, 'langue': user.langue})
+
+@csrf_exempt  
+def changeName(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    name = data.get('name')
+    
+
+    if User.objects.filter(username=name).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+
+    logger.info("new user -------> ", user)
+    user.username = name
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def changeMail(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    mail = data.get('mail')
+    
+
+    if User.objects.filter(email=mail).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+
+    logger.info("new mail -------> ", mail)
+    user.email = mail
+    user.save()
+    return JsonResponse({'success': True})
+
