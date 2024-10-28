@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 import { getUserMatchHistory } from '../api/api';
-import HistoryItem from '../components/HistoryItem';
 import { useParams } from 'react-router-dom';
 import WinLossChart from './WinLossChart';
 import './viewProfile.css';
+import HistoryProfileItem from './HistoryProfileItem';
 
 function ViewProfile() {
     const [matchHistory, setMatchHistory] = useState([]);
@@ -27,18 +27,19 @@ function ViewProfile() {
         <div className="viewProfile">
             <div className="matchHistoryProfile">
                 <div className="matchHistory-headerProfile">
-                    <span className="writeHistory">PROFILE DE {username} </span>
+                    <span className="writeHistoryProfile">{username} </span>
                 </div>
-                <WinLossChart matchHistory={matchHistory} />
-                <div className={`matchHistory-content ${matchHistory.length >= 5 ? "scrollable" : ""}`}>
+                {matchHistory.length !== 0 && (
+                <WinLossChart matchHistory={matchHistory} />)}
+                <div className={`matchHistory-content ${matchHistory.length >= 2 ? "scrollable" : ""}`}>
                     {matchHistory.length === 0 && (
-                        <div className="historyInfo">
-                            Play some matches to have history!
+                        <div className="historyInfoProfile">
+                            {username} has not played a match
                         </div>
                     )}
                     {matchHistory.length !== 0 && (
                         matchHistory.map((match) => (
-                            <HistoryItem
+                            <HistoryProfileItem
                                 key={match.id}
                                 match={match}
                             />
