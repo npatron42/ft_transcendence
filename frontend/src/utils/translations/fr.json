@@ -45,6 +45,8 @@
       "cancel" : "Annuler",
       "oldmdp" : "Entrez l'ancien mot de passe",
       "succesUpload": "Téléchargement réussi",
-      "errorUpload" : "Échec du téléchargement"
+      "errorUpload" : "Échec du téléchargement",
+      "errorUser" : "Identifiant est déjà utilisé",
+      "errorMail" : "Le mail est déjà utilisé"
     }
   }

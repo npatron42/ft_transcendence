@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 import { useAuth } from '../provider/UserAuthProvider';
 import { useTranslation } from 'react-i18next';
+import { getUser, sendName } from '../api/api';
 import './pseudo.css'
 
 function Pseudo({Actif, setActif}) {
@@ -9,12 +10,12 @@ function Pseudo({Actif, setActif}) {
 	const { t } = useTranslation();
 
 	const {myUser, setUser} = useAuth();
-	const [input, setInput] = useState('');
+	const [input, setInput] = useState(myUser.username || '');
 	const [modif, setModif] = useState(false);
 	const [valide, setValide] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 
-	const handleClick = () => {
+	const handleClick = async () => {
 		
 		if (modif) {
 			const usernameRegex = /^[a-zA-Z0-9.-]{3,11}$/;
@@ -28,13 +29,28 @@ function Pseudo({Actif, setActif}) {
 				setErrorMessage("registerPage.idCara");
 				return;
 			}
-				setPseudo(input); 
-				setInput(''); 
-				setModif(false);
-				setActif(false);
-				setValide(false);
-				setErrorMessage('');
+			try
+			{
+				const response = await sendName(input);
+				if (response.success)
+				{
+					const tmpUser = await getUser();
+					setUser(tmpUser);
+					setInput(''); 
+					setModif(false);
+					setActif(false);
+					setValide(false);
+					setErrorMessage('');
+				}
+				else if (response.success === false)
+					setErrorMessage("profilPage.errorUser");
+				else
+					console.log("marche pas");
+				} catch (error) {
+					alert('Failed');
+				  }
 			} else {
+			setInput('');
 			setValide(true);
 			setActif(true);
 			setModif(true);

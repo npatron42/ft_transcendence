@@ -44,6 +44,8 @@
       "cancel" : "Cancellare",
       "oldmdp" : "Inserisci la vecchia password",
       "succesUpload": "Download riuscito",
-      "errorUpload" : "Download non riuscito"
+      "errorUpload" : "Download non riuscito",
+      "erroUser": "L'email è già in uso",
+      "erroMail": "Utente è già in uso"
     }
   }

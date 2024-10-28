@@ -43,6 +43,8 @@
       "cancel" : "Cancel",
       "oldmdp" : "Enter the old password",
       "succesUpload": "Upload successful",
-      "errorUpload" : "Upload failed"
+      "errorUpload" : "Upload failed",
+      "errorUser" : "User is already in use",
+      "errorMail" : "The email is already in use"
     }
   }

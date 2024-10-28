@@ -54,7 +54,6 @@ def registerPage(request):
         user = get_user_model()
 
         if user.objects.filter(username=username).exists():
-            logger.error(f'Username {username} already exists.')
             return JsonResponse({
                 'success': False,
                 'username': False,
@@ -62,7 +61,6 @@ def registerPage(request):
             })
 
         if user.objects.filter(email=email).exists():
-            logger.error(f'Email {email} already exists.')
             return JsonResponse({
                 'success': False,
                 'username': True,

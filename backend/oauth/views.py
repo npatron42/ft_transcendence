@@ -16,7 +16,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 myId = "u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122"
-mySecret = "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"
+mySecret = "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"
 url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcheck42user&response_type=code"
 myRedirect = "http://localhost:5173/check42user"
 
