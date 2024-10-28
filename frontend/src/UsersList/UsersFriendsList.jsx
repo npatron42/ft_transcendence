@@ -29,6 +29,8 @@ const UsersFriendsList = ({ myUser }) => {
             if (data["blocked"]) {
                 console.log("BLOCK")
             }
+            
+            console.log("data de ma socket ---> ", data)
         };
 
         const handleStatus = (data) => {

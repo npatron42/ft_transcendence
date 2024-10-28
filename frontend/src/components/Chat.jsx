@@ -30,7 +30,6 @@ function Chat() {
     const [friendsMessagesClicked, setFriendsMessagesClicked] = useState(false)
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
     const [blockedUsers, setBlockedUsers] = useState([])
-
     const [inputMessage, setInputMessage] = useState('');
 
     const handleWriting = (event) => {
@@ -357,7 +356,7 @@ function Chat() {
                         {/* NO USER SEELCTED */}
 
 
-                    {usersMessagesClicked && !friendsMessagesClicked && friendsList.length !== 0 && userSelected === null && (
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected === null && (
                         <div className="welcomeMessage">
                             <span className="welcomeMessage-span-username">Choose a discuss</span>
                         </div>

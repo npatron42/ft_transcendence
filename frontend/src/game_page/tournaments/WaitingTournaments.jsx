@@ -13,6 +13,7 @@ const WaitingTournaments = () => {
     const [webSocket, setWebSocket] = useState(null);
     const [user, setUser] = useState(null);
     const [players, setPlayers] = useState([]);
+    const myJwt = localStorage.getItem("jwt");
 
     // Récupération de l'utilisateur
     useEffect(() => {
@@ -31,28 +32,17 @@ const WaitingTournaments = () => {
 
     // Gestion du WebSocket
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/waitTournaments/${waitRoomId}`);
+        const ws = new WebSocket(`ws://localhost:8000/ws/waitTournaments/${waitRoomId}/?${myJwt}`);
 
         ws.onopen = () => {
-            console.log('WebSocket connecté à la room:', waitRoomId);
-            console.log('envoie nb joueur ; ', nbplayer)
             ws.send(JSON.stringify({ numberPlayerInvited: nbplayer }));
         };        
 
         ws.onmessage = (event) => {
-            console.log("Message reçu:", event.data);
             const data = JSON.parse(event.data);
             if (data.updatePlayers) {
                 setPlayers(data.updatePlayers);
             }
-        };
-
-        ws.onclose = (event) => {
-            console.log('WebSocket fermé, code :', event.code);
-        };
-
-        ws.onerror = (error) => {
-            console.error('Erreur WebSocket :', error);
         };
 
         setWebSocket(ws);
@@ -64,11 +54,9 @@ const WaitingTournaments = () => {
         };
     }, [waitRoomId, maxScore]);
 
-    // Envoi du nom d'utilisateur une fois que le WebSocket est ouvert
     useEffect(() => {
         if (webSocket && webSocket.readyState === WebSocket.OPEN && user) {
             webSocket.send(JSON.stringify({ name: user.username }));
-            console.log("Nom d'utilisateur envoyé via WebSocket :", user.username);
         }
     }, [webSocket, user, nbplayer]);
 
