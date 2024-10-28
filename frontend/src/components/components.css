@@ -1,8 +1,15 @@
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
-    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-family: 'Millimetre'; 
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+  font-family: 'Millimetre-Bold'; 
+  src: url('../assets/millimetre/Millimetre-Bold.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
 }
 
 .navbar {
@@ -35,36 +42,52 @@
 }
 
 .navbar-nav {
-    background-color: #5e6472;
-    border-bottom: solid 3px #000000;;
-    border-radius: 20px;
-    position: fixed; 
-    top: 30px; 
-    left: 50%;
-    transform: translateX(-50%);
-	  height: 50px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
+  background-color: #161719;
+  border-bottom: solid 3px #000000;;
+  border-radius: 20px;
+  position: fixed; 
+  top: 30px; 
+  left: 50%;
+  transform: translateX(-50%);
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+.navbar-nav-profile {
+  background-color: #161719;
+  border-bottom: solid 3px #000000;;
+  border-radius: 20px;
+  position: fixed; 
+  top: 30px; 
+  left: 85%;
+  transform: translateX(-50%);
+  height: 50px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 5px;
+  padding-bottom: 5px;
 }
 
-.nav-link-2 {
-    display: flex;
-    justify-content: center;
-    font-family: Millimetre;
-    font-size: 18px;
-    color: #fdf0d5 !important;
-    width: 65px;
-}
 
 .nav-link {
-    display: flex;
     justify-content: center;
-    font-family: Millimetre;
+    font-family: Millimetre-Bold !important;
     font-size: 18px;
-    color: #d !important;
-    width: 65px;
+    width: auto;
+    font-family: Millimetre;
+    color:#fdf0d5 !important
+}
+
+.nav-link-logo {
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  font-family: Millimetre-Bold !important;
+  font-size: 18px;
+  color: #fdf0d5 !important;
+  margin-bottom: 40px; 
 }
 
 .nav-link-profile {
@@ -82,31 +105,42 @@
     align-items: center;
 }
 
+.nav-link {
+  /* display: flex; */
+  justify-content: center;
+  font-family: Millimetre;
+  font-size: 18px;
+  color: #fdf0d5 !important;
+}
+
+
 .nav-link.active {
-    display: flex;
+    /* display: flex; */
     justify-content: center;
     font-family: Millimetre;
     font-size: 18px;
     color: #ffa69e !important;
-    width: 65px;
 }
 
 .profile-navbar {
 	margin-left: 80px;
 }
 
-.police-navbar .nav-link {
-	font-family: Millimetre;
-	font-size: 20px;
-	color: #fdf0d5 !important;
 
-}
 
 
 .logo-navbar {
-  font-family: Millimetre;
-	font-size: 32px;
-	color: #fdf0d5 !important;
+  display: inline; 
+  font-family: Millimetre-Bold !important;
+  font-size: 48px;
+  color: #fdf0d5 !important;
+}
+
+.logo-navbar-active {
+  display: inline; 
+  font-family: Millimetre-Bold !important;
+  font-size: 48px;
+  color: #ffa69e !important;
 }
 
 .profile-picture-navbar {
@@ -116,21 +150,6 @@
     object-fit: cover;
 }
 
-.navbar-nav-profile {
-    background-color: #5e6472;
-    border-bottom: solid 3px #000000;;
-    border-radius: 20px;
-    position: fixed; 
-    top: 0; 
-    left: 85%;
-    transform: translateX(-50%);
-	  height: 50px;
-    padding-left: 20px;
-    padding-right: 20px;
-    padding-top: 5px;
-    padding-bottom: 5px;
-    margin-top: 10px;
-}
 
 .notif-placement {
     width: 40px;
@@ -237,7 +256,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-family: Millimetre;
+    font-family: Millimetre-Bold;
     color: #fdf0d5;
     font-size: 17px;
 }
@@ -255,7 +274,7 @@
 .underNavbar {
     position: fixed;
     width: 60px;
-    background-color: #5e6472;
+    background-color: #161719;
     border-bottom: solid 3px #000000;
     border-radius: 20px;
     bottom: 90%;

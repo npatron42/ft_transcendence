@@ -54,6 +54,8 @@ const UsersFriendsList = ({ myUser }) => {
 
             if (hisStatus === "online")
                 hisStatusTmp = true
+            else if (hisStatus === "in-game")
+                hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
             myResult[username] = hisStatusTmp;
@@ -118,6 +120,8 @@ const UsersFriendsList = ({ myUser }) => {
     const chooseStatus = (username) => {
         if (socketMessage[username] === true)
             return ("online")
+        else if (socketMessage[username] === "in-game")
+            return ("in-game")
         return ("offline")
     };
 
@@ -131,19 +135,19 @@ const UsersFriendsList = ({ myUser }) => {
                         {activeList === 'users' ? (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
-                                    USERS
+                                    <i class="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                                    FRIENDS
+                                    <i class="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         ) : (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                                    USERS
+                                    <i class="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
-                                    FRIENDS
+                                    <i class="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         )}

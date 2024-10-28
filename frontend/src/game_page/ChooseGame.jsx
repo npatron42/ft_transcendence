@@ -5,6 +5,7 @@ import { useWebSocket } from '../provider/WebSocketProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/chooseGame.css';
 import Button from 'react-bootstrap/Button';
+import "../home_page/HomeCadre.css"
 
 const ChooseGame = () => {
     const navigate = useNavigate();
@@ -38,6 +39,7 @@ const ChooseGame = () => {
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
+            {/* <div className="custom2-cadre"> */}
             <div className="row">
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
@@ -163,6 +165,7 @@ const ChooseGame = () => {
                 </div>
             </div>
         </div>
+    // </div>
     );
 };
 
