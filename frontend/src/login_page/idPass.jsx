@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Modal } from 'react-bootstrap';
+import { Button, Form, Modal, Spinner } from 'react-bootstrap';
 import { getUser } from '../api/api';
 import { useTranslation } from 'react-i18next';
 import './cadre.css';
@@ -10,7 +10,7 @@ import axios from 'axios';
 function IdPass() {
     const { t } = useTranslation();
     const navigate = useNavigate();
-
+    const [isLoading, setIsLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [otp, setOtp] = useState(''); // État pour stocker l'OTP
@@ -22,46 +22,28 @@ function IdPass() {
 
     const handleClick = async (e) => {
         e.preventDefault();
-
-        // if (username === "" || password === "" 
-        //     || username.includes("_") || password.includes("_")) {
-        //     setErrorMessage('loginPage.error');
-        //     return;
-        // }
-
-        // try {
-        //     const testResponse = await axios.post('http://localhost:8000/auth/test/');
-        //     console.log(testResponse)
-        //     if (testResponse.data.success) {
-        //         alert("Test email sent successfully.");
-        //     } else {
-        //         alert("Test email failed to send.");
-        //     }
-        // } catch (error) {
-        //     console.error("Error sending test email:", error);
-        // }
-
-
+        setIsLoading(true);
+        
         try {
             const response = await axios.post('http://localhost:8000/auth/login/', {
                 username,
                 password
             });
             if (response.data.success) {
-                localStorage.setItem('jwt', response.data.token);
-                sessionStorage.removeItem('i18nextLng');
                 
                 if (!response.data.token)
                     handleShowOtpModal();
-                                
-
+                
+                
                 else {
-                    navigate('/home');
-
+                    localStorage.setItem('jwt', response.data.token);
+                    sessionStorage.removeItem('i18nextLng');
+                    
                     const user = await getUser();
                     const userLangue = user.langue;
-    
+                    
                     localStorage.setItem('i18nextLng', userLangue);
+                    navigate('/home');
                 }
 
             } else {
@@ -69,19 +51,28 @@ function IdPass() {
             }
         } catch (error) {
             console.log("Une erreur est survenue lors de la connexion.");
+        } finally {
+            setIsLoading(false); 
         }
     };
 
     const handleOtpSubmit = async () => {
         try {
-            const response = await axios.post('http://localhost:8000/auth/verify/', {
-                otp_code,
+            console.log("usersane == ",  username)
+            console.log("otp== ", otp)
+            const response = await axios.post('http://localhost:8000/auth/verif/', {
+                otp,
                 username
             });
 
             if (response.data.success) {
+                localStorage.setItem('jwt', response.data.token);
+                sessionStorage.removeItem('i18nextLng');
+                
                 handleCloseOtpModal();
 
+                setOtp('')
+                
                 const user = await getUser();
                 const userLangue = user.langue;
 
@@ -89,7 +80,11 @@ function IdPass() {
 
                 navigate('/home');
             } else {
-                setErrorMessage(response.data.message);
+                setOtp('');
+                if (response.data.noValid)
+                    alert(t('loginPage.errorOtpExp'))
+                else    
+                    alert(t('loginPage.errorOtp'))
             }
         } catch (error) {
             console.log("Une erreur est survenue lors de la vérification de l'OTP.");
@@ -106,6 +101,7 @@ function IdPass() {
                         placeholder={t('loginPage.champ1')}
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
+                        maxLength={30} 
                         className="form-test" />
                 </Form.Group>
 
@@ -116,27 +112,28 @@ function IdPass() {
                         placeholder={t('loginPage.champ2')}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
+                        maxLength={30} 
                         className="form-test" />
                 </Form.Group>
 
                 {errorMessage && <p className="error">{t(errorMessage)}</p>}
 
-                <Button variant="outline-dark" className="custom-log" onClick={handleClick}>
-                    {t('loginPage.login')}
+                <Button variant="outline-dark" className="custom-log" onClick={handleClick} disabled={isLoading}>
+                {isLoading ? ( <Spinner size="sm"/>) : (t('loginPage.login'))}
                 </Button>
             </Form>
 
-            <Modal show={showOtpModal} onHide={handleCloseOtpModal}>
+            <Modal show={showOtpModal} onHide={handleCloseOtpModal} className="modal-custom-otp">
 				<Modal.Body className="modal-content-custom">
 					<Form>
                     <Form.Group className="input-check"  controlId="formOtp">
-                        <Form.Label>{t('profilPage.enterOtp')}</Form.Label>
+                        <Form.Label className="txt-label">{t('loginPage.enterOtp')}</Form.Label>
                         <Form.Control
                             type="text"
-                            placeholder={t('profilPage.otpPlaceholder')}
+                            style={{width: '18vw'}}
                             onChange={(e) => setOtp(e.target.value)}
-							className="form-test"
-                        />
+                            maxLength={30}
+							className="form-test"/>
                     </Form.Group>
 					</Form>
                 </Modal.Body>
@@ -148,6 +145,7 @@ function IdPass() {
                     <Button variant="outline-dark" className="custom-click2" onClick={handleOtpSubmit}>
                         {t('profilPage.valide')}
                     </Button>
+                    <p className="otp-message">{t('loginPage.errorOtp1')}</p>
                 </Modal.Footer>
             </Modal>
         </div>

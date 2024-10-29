@@ -180,4 +180,8 @@
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 200;
 }
-	
+
+.otp-message{
+		font-size: 14px;
+		color: #696969;  
+}
