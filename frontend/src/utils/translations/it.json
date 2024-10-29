@@ -8,7 +8,12 @@
       "new" : "Nuovo utente?",
       "createAccount" : "Crea un account",
       "log42" : "Connettiti con",
-      "error" : "Utente o password errati."                                                                                                                                                                      
+      "error" : "Utente o password errati.",
+      "enterOtp" : "Inserisci il codice ricevuto via email.",
+      "errorOtp": "Codice non valido.",                                                                                                                                                                     
+      "errorOtpEx": "Codice scaduto",                                                                                                                                                                     
+      "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\"."                                                                                                                                                                      
+                                                                                                                                                                     
     },
 
     "registerPage": {

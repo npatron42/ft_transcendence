@@ -95,6 +95,13 @@
 	padding: 0;
 }
 
+.modal-custom-otp {
+	position: center;
+	left: 16vw;
+	top : 50vh;
+	padding: 0;
+}
+
 .modal-content-custom {
 	background-color: #2a2c31; 
 	padding: 5px;

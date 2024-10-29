@@ -8,7 +8,11 @@
       "new" : "New user ?",
       "createAccount" : "Create account",
       "log42" : "Connect with",
-      "error" : "Incorrect username or password."                                                                                                                                                                             
+      "error" : "Incorrect username or password.",
+      "enterOtp": "Please enter the code received by email.",
+      "errorOtp": "Invalid code.",                                                                                                                                                                      
+      "errorOtpExp": "Expired code",                                                                                                                                                                      
+      "errorOtp1": "Invalid code ? Please cancel and click \"Login\" again."                                                                                                                                                                      
     },
 
     "registerPage": {

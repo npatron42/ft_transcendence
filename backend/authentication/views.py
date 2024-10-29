@@ -114,23 +114,25 @@ def registerPage(request):
 
 
 
-@csrf_exempt
-def envoyer_email(request):
-    send_mail(
-        'Email de test',
-        'Ceci est un e-mail de test pour vérifier l\'envoi d\'emails.',
-        'ft.transcendence.42nice@gmail.com',
-        ['leilyesdu06300@gmail.com'],
-        fail_silently=False,
-        )
-    return JsonResponse({'success': True, 'message': 'Email envoyé avec succès'})
+# @csrf_exempt
+# def envoyer_email(request):
+#     send_mail(
+#         'Email de test',
+#         'Ceci est un e-mail de test pour vérifier l\'envoi d\'emails.',
+#         'ft.transcendence.42nice@gmail.com',
+#         ['leilyesdu06300@gmail.com'],
+#         fail_silently=False,
+#         )
+#     return JsonResponse({'success': True, 'message': 'Email envoyé avec succès'})
 
 @csrf_exempt
 def verify_otp(request):
     data = json.loads(request.body)
     username = data.get('username')
-    otp_code = data.get('otp_code') 
+    otp_code = data.get('otp') 
 
+    logger.info("je recois ce otp ------>>%s", otp_code)
+    logger.info("je recois ce user ------>>%s", username)
     
     user = User.objects.get(username=username)
 
@@ -138,6 +140,7 @@ def verify_otp(request):
     is_otp_not_expired = user.otp_not_expire
 
     if is_otp_valid and is_otp_not_expired:
+        logger.info("je suis valide")
         user.otp_code = ''
         user.otp_created_at = None
         user.save()
@@ -150,5 +153,8 @@ def verify_otp(request):
             'token': token.data['jwt'],
         })
     else:
-        error_message = 'Code OTP invalide.' if is_otp_valid else 'Code OTP expiré.'
-        return JsonResponse({'success': False, 'message': error_message})
+        logger.info("pas valide")
+        if is_otp_valid :
+            return JsonResponse({'success': False})
+        else :
+            return JsonResponse({'success': False, 'noValid': True})
