@@ -35,6 +35,24 @@ export const getUser = async () => {
 	}
 };
 
+export const getUserByUsername = async (username) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		
+		const response = await axios.get(`http://localhost:8000/api/user/${username}/`, config);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
 export const getBlockedRelations = async () => {
 	try {
 		const token = localStorage.getItem('jwt');
