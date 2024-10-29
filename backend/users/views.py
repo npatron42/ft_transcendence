@@ -31,7 +31,10 @@ def getUserById(myId):
     serializer = UserSerializer(user)
     return serializer.data
 
-
+def getUserByUsername(request, username):
+    user = User.objects.get(username=username)
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
 
     ### ALL USERS ###
 

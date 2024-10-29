@@ -1,4 +1,3 @@
-
 @font-face {
     font-family: 'Millimetre-Light';
     src: url('../assets/millimetre/Millimetre-Light.otf') format('opentype');
@@ -6,15 +5,7 @@
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'Millimetre';
-    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-
-.viewProfile {
+.view-profile {
     height: 100vh;
     width: 100vw;
     margin: 0;
@@ -26,42 +17,57 @@
     align-items: center;
 }
 
-.matchHistoryProfile {
-    height: 70vh;
+.matchHistory-profile {
+    position: absolute;
+    margin-top: 110px !important;
+    width: 80vw;
+    height: 80vh;
+    margin: 2.5vw auto;
+    backdrop-filter: blur(10px);
+    border: 2px solid #FFA69E;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 40px;
+    border-radius: 10px;
+}
+
+.matchHistory-container {
+    z-index: 100;
+    height: 100%;
+    width: 60%;
     border-radius: 50px;
-    border: solid 4px #FFA69E;
-    width: 100vh; 
-    backdrop-filter: blur(5px);
-    background-color: transparent;
+    background: transparent;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-.matchHistory-headerProfile {
-	height: 58px;
-	width: 100%;
-	border-bottom: 1px solid #FAF3DD;
-	display: flex;
-	align-items: center;
-	justify-content: center;
+.matchHistory-content-profile2 {
+    z-index: 100;
+    height: 50%;
+    width: 100%;
+    border-radius: 50px;
+    border: 3px solid #161719;
+    background: transparent;
+    margin-bottom: 20px;
 }
 
-.writeHistoryProfile {
-	font-family: 'Millimetre', sans-serif;
-    font-size: 18px; 
-    font-weight: bold;
-	color: #AED9E0;
+.matchHistory-content-profile3 {
+    z-index: 100;
+    height: 50%;
+    width: 100%;
+    border-radius: 50px;
+    border: 3px solid #161719;
+    background: transparent;
+    margin-top: 20px;
 }
 
-.matchHistory-contentProfile {
-	width: 100%;
-	height: 80%;
-	display: flex;
-	flex-direction: column;
-}
 
 .scrollable {
     overflow-y: auto;
-    height: 65%;
-    margin-right: 20px;
 }
 
 .scrollable::-webkit-scrollbar {
@@ -76,38 +82,45 @@
 }
 
 
-.matchHistoryProfile {
-	font-family: 'Millimetre', sans-serif;
-    font-size: 20px; 
+.writeHistory-profile {
+    font-family: Millimetre;
+    font-size: 20px;
     font-weight: bold;
-	color: #FAF3DD;
+    color: #ffffff;
 }
 
-.historyInfoProfile {
-	margin-top: 62px;
+.matchHistory-profile {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #FAF3DD;
+}
+
+.history-info-profile {
+    margin-top: 62px;
     display: flex;
-	align-items: center;
-	justify-content: center;
-    
+    align-items: center;
+    justify-content: center;
+
 }
 
 .historyItem {
-    display: flex;              
-    justify-content: flex-end;  
-    width: 100%;                 
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
 }
 
 .historyItem-part {
-    flex: 1;                     
-    text-align: center;          
-    padding: 10px;       
+    flex: 1;
+    text-align: center;
+    padding: 10px;
 }
 
 .modifyUsername {
-	font-family: Millimetre;
-    font-size: 18px; 
+    font-family: Millimetre;
+    font-size: 18px;
     font-weight: bold;
-	color: #FAF3DD !important;
+    color: #FAF3DD !important;
 }
 
 .profile-picture2 {
@@ -120,53 +133,68 @@
     object-fit: cover;
 }
 
+.profile-picture3-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 200px;
+}
+
+.profile-picture3 {
+    width: 200px;
+    height: 200px;
+    border: 3px solid #AED9E0;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .modifyScorewin {
-    font-size: 20px; 
+    font-size: 20px;
     font-weight: bold;
-	color: #B8F2E6;
+    color: #B8F2E6;
     font-family: Millimetre-Light;
     border-bottom: 1px solid #B8F2E6;
 }
 
 .modifyScorelose {
-    font-size: 20px; 
+    font-size: 20px;
     font-weight: bold;
-	color: #FFA69E;
+    color: #FFA69E;
     font-family: Millimetre-Light;
     border-bottom: 1px solid #FFA69E;
 }
 
 .modifylose {
-	font-family: Millimetre;
-    font-size: 18px; 
+    font-family: Millimetre;
+    font-size: 18px;
     font-weight: bold;
-	color: #FFA69E;
+    color: #FFA69E;
 }
 
 .modifywin {
-	font-family: Millimetre;
-    font-size: 18px; 
+    font-family: Millimetre;
+    font-size: 18px;
     font-weight: bold;
-	color: #B8F2E6;
+    color: #B8F2E6;
 }
 
 .modifyUsername {
-	font-family: Millimetre;
-    font-size: 18px; 
+    font-family: Millimetre;
+    font-size: 18px;
     font-weight: bold;
-	color: #AED9E0;
+    color: #AED9E0;
 }
 
 .win-loss-chart {
-    width: 200px;
-    height: 200px;
+    width: 80%;
+    height: 80%;
     margin: 0 auto;
 }
 
 .win-loss-chart .chartjs-render-monitor {
     border: 2px solid #FFA69E;
     border-radius: 20px;
-    background-color: rgba(255, 255, 255, 0.2); 
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .win-loss-chart .chartjs-legend {
@@ -177,6 +205,142 @@
 
 .win-loss-chart .chartjs-legend li {
     font-family: 'Millimetre', sans-serif;
-    color: #FAF3DD; 
+    color: #FAF3DD;
     margin: 0 10px;
+}
+
+
+.card {
+    height: 100%;
+    border-radius: 50px;
+    border: 3px solid #161719;
+    width: 40%;
+    background: transparent;
+    margin-right: 200px;
+    overflow: hidden;
+}
+
+.card .banner {
+    background-color: #AED9E0;
+    background-image: linear-gradient(43deg, #4158D0 0%, #C850C0 46%, #FFCC70 100%);
+    height: 12rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.card .banner-image {
+    width: 12rem;
+    height: 12rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+    border-radius: 50%;
+    object-fit: cover;
+    overflow: hidden;
+    transform: translateY(40%);
+    display: block;
+}
+
+.card .banner-image:hover {
+    transform: translateY(40%) scale(1.2);
+}
+
+.card .name {
+    padding-top: 30px;
+    font-family: Millimetre;
+    font-size: 24px;
+    font-weight: bold;
+    color: #ffffff;
+    text-align: center;
+}
+
+.card .margin-card {
+    width: 100%;
+    height: 6rem;
+    padding: 1rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.card .actions {
+    padding: 0 2rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    order: 99;
+}
+
+.card .actions .follow-info {
+    padding: 0 0 1rem;
+    display: flex;
+}
+
+.card .actions .follow-info h2 {
+    text-align: center;
+    width: 50%;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.card .actions .follow-info h2 a {
+    text-decoration: none;
+    padding: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0.8rem;
+    transition: background-color 100ms ease-in-out;
+}
+
+.card .actions .follow-info h2 a span {
+    color: #1c9eff;
+    font-weight: bold;
+    transform-origin: bottom;
+    transform: scaleY(1.3);
+    transition: color 100ms ease-in-out;
+}
+
+.card .actions .follow-info h2 a small {
+    color: #afafaf;
+    font-size: 0.85rem;
+    font-weight: normal;
+}
+
+.card .actions .follow-info h2 a:hover {
+    background-color: #f2f2f2;
+}
+
+.card .actions .follow-info h2 a:hover span {
+    color: #007ad6;
+}
+
+.card .actions .follow-btn button {
+    color: inherit;
+    font: inherit;
+    font-weight: bold;
+    background-color: #ffd01a;
+    width: 100%;
+    border: none;
+    padding: 1rem;
+    outline: none;
+    box-sizing: border-box;
+    border-radius: 1.5rem/50%;
+    transition: background-color 100ms ease-in-out, transform 200ms cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.card .actions .follow-btn button:hover {
+    background-color: #efb10a;
+    transform: scale(1.1);
+}
+
+.card .actions .follow-btn button:active {
+    background-color: #e8a200;
+    transform: scale(1);
+}
+
+.card .desc {
+    text-align: justify;
+    padding: 0 2rem 2.5rem;
+    order: 100;
 }

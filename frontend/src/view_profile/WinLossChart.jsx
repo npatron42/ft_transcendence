@@ -50,10 +50,7 @@ function WinLossChart({ matchHistory }) {
     };
 
     return (
-        <div>
-            <h3>Ratio Victoires/Défaites</h3>
             <Pie data={data} options={options} className="win-loss-chart" />
-        </div>
     );
 }
 
