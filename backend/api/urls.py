@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import changeName, changeLangue, resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
+from users.views import checkPass, changePass, changeMail, changeName, changeLangue, resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
 
 urlpatterns = [
 	path('user/', getUser, name="getUser"),
@@ -10,5 +10,8 @@ urlpatterns = [
 	path('uploadProfilePicture/', uploadProfilePicture, name='uploadProfilePicture'),
 	path('resetProfilePicture/', resetProfilePicture, name='resetProfilePicture'),
 	path('changeLangue/', changeLangue, name='changeLangue'),
-	path('changeName/', changeName, name='changeName')
+	path('changeName/', changeName, name='changeName'),
+	path('changeMail/', changeMail, name='changeMail'),
+	path('changePass/', changePass, name='changepass'),
+	path('checkPass/', checkPass, name='checkPass')
 ]

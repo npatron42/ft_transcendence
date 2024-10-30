@@ -1,5 +1,6 @@
 import shutil
 import json
+from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from django.db import transaction
 from django.views.decorators.http import require_POST
@@ -181,6 +182,42 @@ def changeMail(request):
 
     logger.info("new mail -------> ", mail)
     user.email = mail
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def checkPass(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    password = data.get('pass')
+    
+    logger.info("mdp %s", user.password)
+    logger.info("recu %s", password)
+
+    if (password==user.password):
+        logger.info("user exist")
+        return JsonResponse({'success': True})
+    else :
+        return JsonResponse({'success': False})
+
+@csrf_exempt  
+def changePass(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    password = data.get('pass')
+    
+
+    if User.objects.filter(password=password).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+    logger.info("new pass -------> %s ", password)
+
+    user.password = password
     user.save()
     return JsonResponse({'success': True})
 

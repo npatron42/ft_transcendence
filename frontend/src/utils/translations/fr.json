@@ -47,6 +47,7 @@
       "succesUpload": "Téléchargement réussi",
       "errorUpload" : "Échec du téléchargement",
       "errorUser" : "Identifiant est déjà utilisé",
+      "errorpass" : "Mot de passe est déjà utilisé",
       "errorMail" : "Le mail est déjà utilisé"
     }
   }

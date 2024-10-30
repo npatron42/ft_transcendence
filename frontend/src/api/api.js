@@ -119,7 +119,65 @@ export const sendName = async (name) => {
 	}
 };
 
+export const sendMail = async (mail) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changeMail/", { mail } , config);
 
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const sendPass = async (pass) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changePass/", { pass } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const checkPass = async (pass) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/checkPass/", { pass } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
 
 export const getAllUsers = async () => {
 	try {
