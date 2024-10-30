@@ -221,3 +221,13 @@ def changePass(request):
     user.save()
     return JsonResponse({'success': True})
 
+@csrf_exempt  
+def toggle2fa(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.dauth = data.get('dauth')
+    logger.info("test-----> %s", user.dauth)
+    user.save()
+    return JsonResponse({'success': True, 'dauth': user.dauth})
