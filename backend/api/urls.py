@@ -1,5 +1,5 @@
 from django.urls import path, include
-from users.views import checkPass, changePass, changeMail, changeName, changeLangue, resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
+from users.views import toggle2fa, checkPass, changePass, changeMail, changeName, changeLangue, resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, getAllNotifs, uploadProfilePicture
 
 urlpatterns = [
 	path('user/', getUser, name="getUser"),
@@ -13,5 +13,6 @@ urlpatterns = [
 	path('changeName/', changeName, name='changeName'),
 	path('changeMail/', changeMail, name='changeMail'),
 	path('changePass/', changePass, name='changepass'),
-	path('checkPass/', checkPass, name='checkPass')
+	path('checkPass/', checkPass, name='checkPass'),
+	path('toggle2fa/', toggle2fa, name='toggle2fa')
 ]

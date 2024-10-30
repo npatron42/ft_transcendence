@@ -1,12 +1,23 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone
+from datetime import timedelta
 
 class User(AbstractUser):
     status = models.CharField(max_length=15, default="Disconnected")
     profilePicture = models.CharField(max_length=250, default="default.jpg")
     isFrom42 = models.BooleanField(default=False)
     langue = models.CharField(max_length=10, default="fr")
+
+    dauth = models.BooleanField(default=False,  blank=True, null=True)
+    otp_code = models.CharField(max_length=6, null=True)
+    otp_created_at = models.DateTimeField(null=True)
+
+    def otp_not_expire(self):
+        if self.otp_created_at:
+            return timezone.now() < self.otp_created_at + timedelta(minutes=5)
+        return False
 
 
 class Invitation(models.Model):
