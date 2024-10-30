@@ -45,6 +45,7 @@
       "succesUpload": "Upload successful",
       "errorUpload" : "Upload failed",
       "errorUser" : "User is already in use",
+      "errorPass" : "Passwrod is already in use",
       "errorMail" : "The email is already in use"
     }
   }
