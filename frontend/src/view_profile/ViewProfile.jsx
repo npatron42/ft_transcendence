@@ -14,6 +14,7 @@ function ViewProfile() {
     const { socketUser } = useWebSocket();
     const { username } = useParams();
     const [profileUser, setProfileUser] = useState();
+    const [nbMatch, setNbMatch] = useState();
 
     useEffect(() => {
         initMyMatchs();
@@ -23,7 +24,9 @@ function ViewProfile() {
     const initMyMatchs = async () => {
         const matchTmp = await getUserMatchHistory(username);
         setMatchHistory(matchTmp);
-        console.log(matchTmp);
+        setNbMatch(matchTmp.length);
+        console.log("nombre de match", nbMatch);
+        console.log("la", matchTmp.length);
     };
 
     const getUser = async () => {
@@ -40,6 +43,8 @@ function ViewProfile() {
         <div className="view-profile">
             <div className="matchHistory-profile">
                 <div className="card">
+                    <div className="shine"></div>
+
                     <div className="banner">
                         <img
                             src={profileUser.profilePicture}
@@ -52,14 +57,15 @@ function ViewProfile() {
                         className="margin-card">
                     </div>
                     <p className="name">{profileUser.username}</p>
-                    <div className="actions">
-                        <div class="follow-info">
-                            <h2><a href="#"><span>12</span><small>friends</small></a></h2>
-                            <h2><a href="#"><span>1000</span><small>Following</small></a></h2>
+                    <div class="follow-info row">
+                        <div class="col-md-6">
+                            <p class="info-profile">Match played: {nbMatch}</p>
                         </div>
-                        <div className="follow-btn"><button>Follow</button></div>
+                        <div class="col-md-6">
+                            <p class="info-profile">Friends: {nbMatch}</p>
+                        </div>
                     </div>
-                    <div className="desc">Morgan has collected ants since they were six years old and now has many dozen ants but none in their pants.</div>
+                    <div className="follow-btn"><button>Follow</button></div>
                 </div>
                 <div className="matchHistory-container">
                     <div className="matchHistory-content-profile2">
