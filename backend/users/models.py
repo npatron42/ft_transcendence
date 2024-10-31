@@ -14,11 +14,6 @@ class User(AbstractUser):
     otp_code = models.CharField(max_length=6, null=True)
     otp_created_at = models.DateTimeField(null=True)
 
-    def otp_not_expire(self):
-        if self.otp_created_at:
-            return timezone.now() < self.otp_created_at + timedelta(minutes=5)
-        return False
-
 
 class Invitation(models.Model):
     expeditor = models.ForeignKey(User, related_name="send_invitation", on_delete=models.CASCADE, default=None)

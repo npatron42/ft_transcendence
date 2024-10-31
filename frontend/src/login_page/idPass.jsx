@@ -56,10 +56,11 @@ function IdPass() {
         }
     };
 
-    const handleOtpSubmit = async () => {
+    const handleOtpSubmit = async (e) => {
+        e.preventDefault();
         try {
             console.log("usersane == ",  username)
-            console.log("otp== ", otp)
+            console.log("otp == ", otp)
             const response = await axios.post('http://localhost:8000/auth/verif/', {
                 otp,
                 username
@@ -80,8 +81,9 @@ function IdPass() {
 
                 navigate('/home');
             } else {
+                console.log("test du otp", response.data.noValid)
                 setOtp('');
-                if (response.data.noValid)
+                if (response.data.noValid === true)
                     alert(t('loginPage.errorOtpExp'))
                 else    
                     alert(t('loginPage.errorOtp'))
@@ -93,7 +95,7 @@ function IdPass() {
 
     return (
         <div>
-            <Form>
+            <Form onSubmit={handleClick}>
                 <p className="para-id">{t('loginPage.id')}</p>
                 <Form.Group className="input-id" controlId="formUser">
                     <Form.Control
@@ -118,14 +120,14 @@ function IdPass() {
 
                 {errorMessage && <p className="error">{t(errorMessage)}</p>}
 
-                <Button variant="outline-dark" className="custom-log" onClick={handleClick} disabled={isLoading}>
+                <Button type="submit" variant="outline-dark" className="custom-log" onClick={handleClick} disabled={isLoading}>
                 {isLoading ? ( <Spinner size="sm"/>) : (t('loginPage.login'))}
                 </Button>
             </Form>
 
             <Modal show={showOtpModal} onHide={handleCloseOtpModal} className="modal-custom-otp">
 				<Modal.Body className="modal-content-custom">
-					<Form>
+					<Form onSubmit={handleOtpSubmit}>
                     <Form.Group className="input-check"  controlId="formOtp">
                         <Form.Label className="txt-label">{t('loginPage.enterOtp')}</Form.Label>
                         <Form.Control
@@ -142,7 +144,7 @@ function IdPass() {
                     <Button variant="danger" className="custom-click3" onClick={handleCloseOtpModal}>
                         {t('profilPage.cancel')}
                     </Button>
-                    <Button variant="outline-dark" className="custom-click2" onClick={handleOtpSubmit}>
+                    <Button type="submit" variant="outline-dark" className="custom-click2" onClick={handleOtpSubmit}>
                         {t('profilPage.valide')}
                     </Button>
                     <p className="otp-message">{t('loginPage.errorOtp1')}</p>

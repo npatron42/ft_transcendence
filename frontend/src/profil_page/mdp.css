@@ -97,8 +97,8 @@
 
 .modal-custom-otp {
 	position: center;
-	left: 16vw;
-	top : 50vh;
+	left: 17vw;
+	top : 42vh;
 	padding: 0;
 }
 
@@ -112,6 +112,7 @@
 	margin-bottom: 0; 
 	border: none;
 	display: flex;
+	align-items: center; 
     justify-content: center;
     gap: 1vw;
   }

@@ -125,7 +125,8 @@ def verify_otp(request):
     user = User.objects.get(username=username)
 
     is_otp_valid = user.otp_code == otp_code
-    is_otp_not_expired = user.otp_not_expire
+    otp_expiration_time = user.otp_created_at + timedelta(minutes=5)
+    is_otp_not_expired = timezone.now() < otp_expiration_time
 
     if is_otp_valid and is_otp_not_expired:
         logger.info("je suis valide")
@@ -141,8 +142,10 @@ def verify_otp(request):
             'token': token.data['jwt'],
         })
     else:
-        logger.info("pas valide")
-        if is_otp_valid :
-            return JsonResponse({'success': False})
+        # logger.info("pas valide")
+        # logger.info("otp not expire %s", is_otp_not_expired)
+        # logger.info("otp valid %s", is_otp_valid)
+        if is_otp_not_expired:
+            return JsonResponse({'success': False })
         else :
             return JsonResponse({'success': False, 'noValid': True})
