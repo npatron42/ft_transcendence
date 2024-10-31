@@ -95,8 +95,16 @@
 	padding: 0;
 }
 
+.modal-custom-otp {
+	position: center;
+	left: 17vw;
+	top : 42vh;
+	padding: 0;
+}
+
+
 .modal-content-custom {
-	background-color: #78fd0c; 
+	background-color: transparent; 
 	padding: 5px;
 	width: 20vw !important;
 	max-width: 20vw !important;
@@ -104,6 +112,7 @@
 	margin-bottom: 0; 
 	border: none;
 	display: flex;
+	align-items: center; 
     justify-content: center;
     gap: 1vw;
   }

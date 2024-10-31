@@ -16,9 +16,9 @@ import { getBlockedRelations2 } from '../api/api.js';
 
 function profilPage() {
 
+	const [Actif, setActif] = useState(false);
 	const {myUser} = useAuth();
 	const {socketUser, subscribeToMessages} = useWebSocket();
-	const [Actif, setActif] = useState(false);
 
 	const [blockedUsers, setBlockedUsers] = useState([]);
 
@@ -44,19 +44,21 @@ function profilPage() {
             unsubscribeMess(); 
         };
     }, [subscribeToMessages, socketUser]);
-
+	
 	return (
 	<div id="background-container">
-		<Pseudo Actif={Actif} setActif={setActif} />
-		<Image />
-		<Bt2fa />
-		<Del />
-		<ButtonDef />
-		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser}/>
+		{/* <div className="custom-cadre-pic"></div> */}
+		{/* <div className="custom-cadre-change"></div> */}
 		<Upload />
-		<Langue />
+		<Image />
+		<Del />
+		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser}/>
+		<Pseudo Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
+		<Bt2fa />
+		<ButtonDef />
+		<Langue />
 	</div>
   )
 }
