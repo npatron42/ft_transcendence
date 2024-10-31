@@ -16,15 +16,17 @@ function profilPage() {
 	
 	return (
 	<div id="background-container">
-		<Pseudo Actif={Actif} setActif={setActif} />
-		<Image />
-		<Bt2fa />
-		<Del />
-		<ButtonDef />
+		{/* <div className="custom-cadre-pic"></div> */}
+		{/* <div className="custom-cadre-change"></div> */}
 		<Upload />
-		<Langue />
+		<Image />
+		<Del />
+		<Pseudo Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
+		<Bt2fa />
+		<ButtonDef />
+		<Langue />
 	</div>
   )
 }

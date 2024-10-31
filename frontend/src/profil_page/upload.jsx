@@ -16,7 +16,8 @@ function Upload() {
   const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
   
-  const handleButtonClick = () => {
+  const handleButtonClick = (e) => {
+    e.preventDefault();
     // console.log(myUser.id);
     fileInputRef.current.click();
   };
