@@ -9,6 +9,7 @@ export const useWebSocket = () => {
 export const WebSocketProvider = ({ children }) => {
     const [socketUser, setSocket] = useState(null);
     const [socketTournament, setSocketTournament] = useState(null);
+
     const listeners = useRef([]);
     const listenersStatus = useRef([]);
     const listenersNotifs = useRef([]);
@@ -21,6 +22,7 @@ export const WebSocketProvider = ({ children }) => {
         }
 
         const socket = new WebSocket(`ws://localhost:8000/ws/socketUser/?token=${myJwt}`);
+        const socket2 = new WebSocket(`ws://localhost:8000/ws/TournamentsConsumer/?token=${myJwt}`);
         setSocket(socket);
 
         const pingInterval = setInterval(() => {
