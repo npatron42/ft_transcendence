@@ -13,8 +13,8 @@ function IdPass() {
     const [isLoading, setIsLoading] = useState(false);
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [otp, setOtp] = useState(''); // État pour stocker l'OTP
-    const [showOtpModal, setShowOtpModal] = useState(false); // État pour afficher le modal OTP
+    const [otp, setOtp] = useState('');
+    const [showOtpModal, setShowOtpModal] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const handleShowOtpModal = () => setShowOtpModal(true);

@@ -1,6 +1,7 @@
 import "../index.css";
 import "./Home.css";
 import "../App.css";
+import Langue from '../login_page/languages.jsx';
 import { getUser } from '../api/api'
 import { useNavigate } from 'react-router-dom';
 import Languages from "../login_page/languages";
@@ -18,7 +19,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
     const myJwt = localStorage.getItem("jwt");
-
+    
     useEffect(() => {
         if (!myJwt) {
             navigate('/');
@@ -52,9 +53,8 @@ const Home = () => {
 
     return (
         <div id="background-container">
+            <Langue/>
             <div className="custom2-cadre">
-                
-                <Languages></Languages>
                 <NavbarBS myUser={myUser} />
                 <div className="playPlacement">
                     <CadrePlay/>
