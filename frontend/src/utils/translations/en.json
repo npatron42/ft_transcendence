@@ -8,7 +8,11 @@
       "new" : "New user ?",
       "createAccount" : "Create account",
       "log42" : "Connect with",
-      "error" : "Incorrect username or password."                                                                                                                                                                             
+      "error" : "Incorrect username or password.",
+      "enterOtp": "Please enter the code received by email.",
+      "errorOtp": "Invalid code.",                                                                                                                                                                      
+      "errorOtpExp": "Expired code",                                                                                                                                                                      
+      "errorOtp1": "Invalid code ? Please cancel and click \"Login\" again."                                                                                                                                                                         
     },
 
     "registerPage": {
@@ -42,6 +46,14 @@
       "inco" : "Incorrect password",
       "cancel" : "Cancel",
       "oldmdp" : "Enter the old password",
+      "succesUpload": "Upload successful",
+      "errorUpload" : "Upload failed",
+      "errorUser" : "User is already in use",
+      "errorPass" : "Passwrod is already in use",
+      "errorMail" : "The email is already in use",
+      "enable2fa" : "Enable two-factor authentication",
+      "good2fa" : "Two-factor authentication implemented",
+      "disable2fa" : "Disable2fa two-factor authentication",
       "blocked": "Blocked users"
     }
   }

@@ -8,7 +8,11 @@
       "new" : "Nuovo utente?",
       "createAccount" : "Crea un account",
       "log42" : "Connettiti con",
-      "error" : "Utente o password errati."                                                                                                                                                                      
+      "error" : "Utente o password errati.",
+      "enterOtp" : "Inserisci il codice ricevuto via email.",
+      "errorOtp": "Codice non valido.",                                                                                                                                                                     
+      "errorOtpEx": "Codice scaduto",                                                                                                                                                                     
+      "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\"."                                                                                                                                                                     
     },
 
     "registerPage": {
@@ -43,6 +47,14 @@
       "inco" : "Password errata",
       "cancel" : "Cancellare",
       "oldmdp" : "Inserisci la vecchia password",
+      "succesUpload": "Download riuscito",
+      "errorUpload" : "Download non riuscito",
+      "erroUser": "L'email è già in uso",
+      "erroPass": "Password è già in uso",
+      "erroMail": "Utente è già in uso",
+      "enable2fa" : "Abilitare l'autenticazione a due fattori",
+      "good2fa" : "Autenticazione a due fattori implementata",
+      "disable2fa" : "Disabilita l'autenticazione a due fattori",
       "blocked": "Utenti bloccati"
     }
   }

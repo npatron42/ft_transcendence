@@ -9,7 +9,7 @@ function UnderNavbar() {
 		navigate("/profile")
 	}
 	const handleDisconnect = () => {
-		localStorage.removeItem("jwt");
+		localStorage.clear();
 		navigate("/")
 	}
 
