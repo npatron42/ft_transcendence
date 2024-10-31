@@ -6,7 +6,7 @@ export const useWebSocket = () => {
     return useContext(WebSocketContext);
 };
 
-export const WebSocketProvider = ({ children }) => {
+export const TournamentSocketProvider = ({ children }) => {
     const [socketUser, setSocket] = useState(null);
 
     const listeners = useRef([]);
