@@ -1,6 +1,8 @@
 import { useNavigate } from 'react-router-dom';
 import { setJwt, getAllUsers, getUser } from '../api/api'
 import React, { useEffect, useState } from 'react';
+import './check.css'
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Check42User = () => {
@@ -17,19 +19,24 @@ const Check42User = () => {
                 await setJwt(codeFromUrl);
                 const newJwt = localStorage.getItem("jwt");
                 setMyJwt(newJwt)
+                sessionStorage.removeItem('i18nextLng');
+                const user = await getUser();
+                const userLangue = user.langue;
+                localStorage.setItem('i18nextLng', userLangue);
             }
         };
 
         fetchData();
         if (myJwt) {
-            console.log("ALLER VAMOS")
+            // console.log("ALLER VAMOS")
             navigate("/home")
         }
     }, [navigate, myJwt]);
 
 
     return (
-        <div className="background-container">
+        <div id="background-container">
+            <div class="loader"></div>
         </div>
     );
 }
