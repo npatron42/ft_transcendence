@@ -20,6 +20,7 @@ pool_lock = asyncio.Lock()
 
 socketsUsers = {}
 usersPool = {}
+
 usersStatus = {}
 
 async def finalFriendsList(friendsList):
@@ -393,11 +394,28 @@ async def findGameInvitationToErase(myUser):
         raise Exception("Game cannot be find")
 
 
+async def sendToShareSocket(self, message):
+    await self.channel_layer.group_send("shareSocket", {
+        "type": "shareSocket",
+        "message": message,
+    })
+
+async def sendToSocketTournament(self, message):
+    await self.channel_layer.group_send("socketTournament", {
+        "type": "socketTournament",
+        "message": message,
+    })
+
+
 class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def notification_message(self, event):
         message = event['message']
         await self.send(text_data=json.dumps(message))
+
+    async def socketTournament(self, event):
+        data = event['message']
+        # type = data.get("type")
 
     async def shareSocket(self, event):
         data = event['message']
@@ -413,24 +431,19 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await sendToClient2(self, gamesInvitations, userToNotif.get("username"))
 
         elif type == "USERS-STATUS-INGAME":
-            logger.info("BEFORE ---> %s", usersStatus)
             statusReceived = data["status"]
             for key in statusReceived:
                 usersStatus[key] = "in-game"
                 userToChange = await getUserByUsername(key)
-            logger.info("AFTER ---> %s", usersStatus)
             await self.send_status_to_all()
             await update_user_status(userToChange, "in-game")
 
 
         elif type == "USERS-STATUS-OUTGAME":
-            logger.info("BEFORE ---> %s", usersStatus)
             statusReceived = data["status"]
             for key in statusReceived:
                 usersStatus[key] = True
-            logger.info("AFTER ---> %s", usersStatus)
             await self.send_status_to_all()
-            logger.info("J AI SEND --> %s", usersStatus)
             await update_user_status(myUser, "online")
 
 
@@ -477,6 +490,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await self.channel_layer.group_add("invitations", self.channel_name)
             await self.channel_layer.group_add("status_updates", self.channel_name)
             await self.channel_layer.group_add("shareSocket", self.channel_name)
+            await self.channel_layer.group_add("socketTournament", self.channel_name)
 
             mySocket = self.channel_name
             myUser = self.scope['user']
@@ -548,7 +562,11 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
                 friendsInvitationsToExpeditor = await getFriendsInvitations(myExpeditor.username)
                 await self.send(text_data=json.dumps(friendsInvitationsToExpeditor))                
-    
+
+            elif (invitation_exists == "ALREADY FRIENDS"):
+                return
+            elif invitation_exists == True:
+                return
             else:
                 await saveInvitation(myInvitation)
 
@@ -658,9 +676,11 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 }
                 await sendToClient2(self, dataToSend, myUser.username)
                 await sendToClient2(self, gamesInvitations, myUser.username)
-
             except:
                 raise (Exception("MOUAIS"))
+        elif type == "CREATE-TOURNAMENT":
+            logger.info("User qui cree le tournoi --> %s", myUser.username)
+            await sendToSocketTournament(self, "oui")
 
 
 async def sendToBothClientUsersAndFriendsListAndBlocked(self, myUser, secondUser):

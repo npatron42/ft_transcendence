@@ -35,7 +35,7 @@ class GameInvitation(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
     receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, default=None)
-    message = models.CharField(max_length=125, default=None)
+    message = models.CharField(max_length=250, default=None)
     date = models.DateTimeField(default=timezone.now)
 
     class Meta:

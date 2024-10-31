@@ -28,7 +28,6 @@ def middleWareAuthentication(request):
 		raise AuthenticationFailed('No existing token')
 	try:
 		payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
-		logger.info(payload)
 		isTokenExpired(payload)
 		
 	except:

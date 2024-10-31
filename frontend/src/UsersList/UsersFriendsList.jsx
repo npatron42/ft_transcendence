@@ -9,7 +9,7 @@ import { useAuth } from '../provider/UserAuthProvider';
 
 const UsersFriendsList = ({ myUser }) => {
 
-    const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
+    const { socketUser, subscribeToMessages, subscribeToStatus, subscribeToNotifs} = useWebSocket();
 
     const [socketMessage, setSocketMessage] = useState([]);
     const [usersList, setUsersList] = useState([]);
@@ -29,8 +29,6 @@ const UsersFriendsList = ({ myUser }) => {
             if (data["blocked"]) {
                 console.log("BLOCK")
             }
-            
-            console.log("data de ma socket ---> ", data)
         };
 
         const handleStatus = (data) => {
@@ -39,10 +37,14 @@ const UsersFriendsList = ({ myUser }) => {
 
         const unsubscribeMess = subscribeToMessages(handleSocketUser);
         const unsubscribeStatus = subscribeToStatus(handleStatus);
+
         return () => {
-            unsubscribeMess(); 
+
+            unsubscribeMess();
             unsubscribeStatus();
+
         };
+
     }, [subscribeToMessages, subscribeToStatus, socketUser]);
 
 

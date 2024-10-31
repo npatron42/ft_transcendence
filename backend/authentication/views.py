@@ -45,7 +45,6 @@ def loginPage(request):
 def registerPage(request):
     if request.method == 'POST':
         data = json.loads(request.body)
-        logger.info(f'Received data: {data}')
                 
         username = data.get('username')
         email = data.get('email')
@@ -70,7 +69,6 @@ def registerPage(request):
             })
 
         user = user.objects.create_user(username=username, email=email, password=password)
-        logger.info(f'User {username} created successfully.')
 
         return JsonResponse({
             'success': True,

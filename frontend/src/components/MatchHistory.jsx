@@ -13,8 +13,7 @@ function MatchHistory() {
 
     useEffect(() => {
         initMyMatchs();
-
-    },[myUser.username])
+    },[myUser])
 
 	const initMyMatchs = async () => {
 		const matchTmp = await getMatchHistory();
