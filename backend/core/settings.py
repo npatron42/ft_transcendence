@@ -13,10 +13,9 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587  # Utilisez 465 si vous choisissez SSL
-EMAIL_USE_TLS = True  # Ou EMAIL_USE_SSL = True
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 
 EMAIL_HOST_USER = 'ft.transcendence.42nice@gmail.com'
-# EMAIL_HOST_PASSWORD = os.getenv('PASSMAIL')
 EMAIL_HOST_PASSWORD =  'lgqm xtii tpjs jqqb'
 DEFAULT_FROM_EMAIL = 'ft.transcendence.42nice@gmail.com'
 
@@ -198,6 +197,11 @@ LOGGING = {
             'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
+        },
+        'tournaments': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
         },
         # Add other apps here if needed
     },

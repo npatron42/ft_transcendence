@@ -8,7 +8,7 @@ function UserItem({ user, handleInvitation, chooseStatus}) {
 			<td className="friend-item.td"><span  className="username">{user.username}</span></td>
 			<td className="friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
             <td className="friend-item.td">
-                <button type="button" className="btn btn-outline-dark buttonAdd" onClick={() => handleInvitation(user)}>add</button>
+                    <i className="bi bi-person-plus modifyTrash" onClick={() => handleInvitation(user)}></i>
             </td>
         </tr>
     );

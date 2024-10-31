@@ -1,4 +1,4 @@
-function GameNotif({ myUser, declineInvitation, acceptInvitation}) {
+function GameNotif({ myUser, declineGameInvitation, acceptGameInvitation}) {
     return (
         <tr className="invite-item">
             <td className="invite-item.td">
@@ -6,10 +6,10 @@ function GameNotif({ myUser, declineInvitation, acceptInvitation}) {
             </td>
 			<td className="invite-item.td"><span  className="username-friendNotif">{myUser.username}</span></td>
             <td className="invite-item.td">
-			<i class="bi bi-check-lg buttonAccept" onClick={() => acceptInvitation(myUser)}></i>
+			<i className="bi bi-check-lg buttonAccept" onClick={() => acceptGameInvitation(myUser)}></i>
             </td>
 			<td className="invite-item.td">
-			<i class="bi bi-x buttonDecline" onClick={() => declineInvitation(myUser)}></i>
+			<i className="bi bi-x buttonDecline" onClick={() => declineGameInvitation(myUser)}></i>
             </td>
         </tr>
     );

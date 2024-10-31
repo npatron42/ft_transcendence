@@ -54,6 +54,7 @@
       "erroMail": "Utente è già in uso",
       "enable2fa" : "Abilitare l'autenticazione a due fattori",
       "good2fa" : "Autenticazione a due fattori implementata",
-      "disable2fa" : "Disabilita l'autenticazione a due fattori"
+      "disable2fa" : "Disabilita l'autenticazione a due fattori",
+      "blocked": "Utenti bloccati"
     }
   }

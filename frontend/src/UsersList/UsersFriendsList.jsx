@@ -1,12 +1,15 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { getAllUsers, getFriendsList, getNotifs } from '../api/api';  // Assurez-vous que les imports sont corrects
+import { getUsersList, getFriendsList, getAllUsers } from '../api/api';
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
+
 import { useWebSocket } from '../provider/WebSocketProvider';
+import { useAuth } from '../provider/UserAuthProvider';
+
 const UsersFriendsList = ({ myUser }) => {
 
-    const { socketUser, subscribeToMessages, subscribeToStatus} = useWebSocket();
+    const { socketUser, subscribeToMessages, subscribeToStatus, subscribeToNotifs} = useWebSocket();
 
     const [socketMessage, setSocketMessage] = useState([]);
     const [usersList, setUsersList] = useState([]);
@@ -18,10 +21,13 @@ const UsersFriendsList = ({ myUser }) => {
     useEffect(() => {
         const handleSocketUser = (data) => {
             if (data["friends"]) {
-                changeFriendsList(data);
+                setFriendsList(data["friends"]);
             }
             if (data["AllUsers"]) {
-                changeUsersList(data["AllUsers"], friendsList);
+                setUsersList(data["AllUsers"]);
+            }
+            if (data["blocked"]) {
+                console.log("BLOCK")
             }
         };
 
@@ -31,62 +37,17 @@ const UsersFriendsList = ({ myUser }) => {
 
         const unsubscribeMess = subscribeToMessages(handleSocketUser);
         const unsubscribeStatus = subscribeToStatus(handleStatus);
+
         return () => {
-            unsubscribeMess(); 
+
+            unsubscribeMess();
             unsubscribeStatus();
+
         };
+
     }, [subscribeToMessages, subscribeToStatus, socketUser]);
 
-    const changeFriendsList = (data) => {
-        setFriendsList(data["friends"])
-    } 
 
-    const changeUsersList = async (usersList, friendsList) => {
-        const allUsers = usersList
-        const filteredList = allUsers.filter(user => user.username !== myUser.username);
-        const withoutFriends = [];
-        for (let i = 0; i < filteredList.length; i++) {
-            let isFriend = false;
-            const tmpName = filteredList[i].username;
-            for (let i = 0; i < friendsList.length; i++) {
-                if (tmpName === friendsList[i].username) {
-                    isFriend = true;
-                }
-            }
-            if (isFriend == false)
-                withoutFriends.push(filteredList[i])
-        }
-        setUsersList(withoutFriends);
-    };
-
-    const defineUsersList = async (friendsList) => {
-        setIsLoading(true);
-        const myList = await getAllUsers();
-        const filteredList = myList.filter(user => user.username !== myUser.username);
-        const withoutFriends = [];
-        for (let i = 0; i < filteredList.length; i++) {
-            let isFriend = false;
-            const tmpName = filteredList[i].username;
-            for (let i = 0; i < friendsList.length; i++) {
-                if (tmpName === friendsList[i].username) {
-                    isFriend = true;
-                }
-            }
-            if (isFriend == false)
-                withoutFriends.push(filteredList[i])
-        }
-        setUsersList(withoutFriends);
-        setIsLoading(false);
-    };
-
-    const defineFriendsList = async () => {
-        setIsLoading(true);
-        const myFriendsList = await getFriendsList();
-        setFriendsList(myFriendsList);
-        setIsLoading(false);
-        return (myFriendsList);
-    };
-    
     const defineAllUsersStatus = async () => {
         const allUsers = await getAllUsers();
         const myResult = []
@@ -97,6 +58,8 @@ const UsersFriendsList = ({ myUser }) => {
 
             if (hisStatus === "online")
                 hisStatusTmp = true
+            else if (hisStatus === "in-game")
+                hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
             myResult[username] = hisStatusTmp;
@@ -105,13 +68,20 @@ const UsersFriendsList = ({ myUser }) => {
     }
 
     const initMyLists = async () => {
-        const myFriendsList = await defineFriendsList();
-        await defineUsersList(myFriendsList);
+
+        const myUsersList = await getUsersList();
+        const myFriendsList = await getFriendsList();
+
+        setFriendsList(myFriendsList);
+        setUsersList(myUsersList);
         await defineAllUsersStatus();
     };
 
     useEffect(() => {
+        setIsLoading(true)
         initMyLists();
+        setIsLoading(false)
+
     },[myUser.username])
     
     const showUsersList = () => {
@@ -154,6 +124,8 @@ const UsersFriendsList = ({ myUser }) => {
     const chooseStatus = (username) => {
         if (socketMessage[username] === true)
             return ("online")
+        else if (socketMessage[username] === "in-game")
+            return ("in-game")
         return ("offline")
     };
 
@@ -167,31 +139,31 @@ const UsersFriendsList = ({ myUser }) => {
                         {activeList === 'users' ? (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
-                                    Users
+                                    <i class="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                                    Friends
+                                    <i class="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         ) : (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                                    Users
+                                    <i class="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
-                                    Friends
+                                    <i class="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         )}
                     </div>
                     
                     {activeList === 'users' ? (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(usersList) ? (
                                 usersList.length === 0 ? (
                                     <div className="noUsers">No users found</div>
                                 ) : (
-                                    <table className={`users-list ${usersList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {usersList.map((user) => (
                                                 <UserItem 
@@ -216,12 +188,12 @@ const UsersFriendsList = ({ myUser }) => {
                             )}
                         </div>
                     ) : (
-                        <div>
+                        <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(friendsList) ? (
                                 friendsList.length === 0 ? (
                                     <div className="noUsers">No friends found</div>
                                 ) : (
-                                    <table className={`users-list ${friendsList.length >= 4 ? 'scroll' : ''}`}>
+                                    <table>
                                         <tbody>
                                             {friendsList.map((user) => (
                                                 <FriendItem 
