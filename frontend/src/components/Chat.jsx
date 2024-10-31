@@ -36,6 +36,12 @@ function Chat() {
         if (event.key === 'Enter' && inputMessage.length !== 0) { 
             event.preventDefault();
             setInputMessage('')
+            console.log("InputMessage ---> ", inputMessage)
+            if (inputMessage.length > 250) {
+                alert("TOO LONG MESSAGE") ;
+                setInputMessage(null)
+                return ;
+            }
             const myData = {
                 "type": "MESSAGE",
                 "sender": myUser,

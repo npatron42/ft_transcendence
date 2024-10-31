@@ -83,7 +83,6 @@ def getMatchHistory(request):
         }
         result.append(dataToSend)
         i += 1
-    logger.info(result)
     return JsonResponse(result, safe=False)
 
 
@@ -381,8 +380,6 @@ def removeUsernameFromList(usernamesToRemove, myList):
             j += 1
         i += 1
     return myList
-
-
 
 
 

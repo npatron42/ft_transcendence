@@ -66,7 +66,6 @@ def	doRequestTo42(access_token: str, endpoint: str):
 
 
 def add42UserToDB(jsonFile):
-    logger.info("Mon retour de 42 ---> %s", jsonFile)
     login42 = jsonFile.get("login")
     email42 = jsonFile.get("email")
     picture = jsonFile.get("image", {}).get("link")
@@ -74,7 +73,6 @@ def add42UserToDB(jsonFile):
 
     try:
         isExistingUser = User.objects.get(email=email42)
-        logger.info("User %s is existing", isExistingUser.username)
         return (isExistingUser)
     except:
         User.DoesNotExist

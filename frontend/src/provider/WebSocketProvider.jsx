@@ -8,7 +8,7 @@ export const useWebSocket = () => {
 
 export const WebSocketProvider = ({ children }) => {
     const [socketUser, setSocket] = useState(null);
-
+    const [socketTournament, setSocketTournament] = useState(null);
     const listeners = useRef([]);
     const listenersStatus = useRef([]);
     const listenersNotifs = useRef([]);
