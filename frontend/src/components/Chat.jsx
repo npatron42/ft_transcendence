@@ -252,7 +252,7 @@ function Chat() {
                                 {friendsList && friendsList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
+                                            <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://localhost:8000/media/${user.profilePicture}`} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
@@ -267,7 +267,7 @@ function Chat() {
                                 {usersList && usersList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
+                                            <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://localhost:8000/media/${user.profilePicture}`} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
