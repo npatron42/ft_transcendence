@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
+import { useAuth } from '../../provider/UserAuthProvider';
 
 const usePaddleMovement = (webSocket, playerId) => {
-    const [keysPressed, setKeysPressed] = useState({});
+    const [keysPressed, setKeysPressed] = useState({})
 
     useEffect(() => {
         if (!webSocket) return;
@@ -33,90 +34,100 @@ const usePaddleMovement = (webSocket, playerId) => {
 
         const interval = setInterval(() => {
             if (keysPressed['w'] || keysPressed['W']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddleup' }));
             }
             if (keysPressed['s'] || keysPressed['S']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddledown' }));
             }
             if (keysPressed['ArrowUp']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddleup' }));
             }
             if (keysPressed['ArrowDown']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown', id: playerId }));
+                webSocket.send(JSON.stringify({ action: 'paddledown' }));
             }
         }, 11);
 
         return () => clearInterval(interval);
-    }, [keysPressed, webSocket, playerId]);
+    }, [keysPressed, webSocket]);
 };
 
-const PongMulti = ({ roomId, maxScore }) => {
-    const [paddleLeftPos, setPaddleLeftPos] = useState(300);
-    const [paddleRightPos, setPaddleRightPos] = useState(300);
+const PongMulti = ({ roomId, maxScore, powerUp }) => {
+    const myJwt = localStorage.getItem('jwt');
+    const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
+    const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
-    const [webSocket, setWebSocket] = useState(null);
+    const [scores, setScores] = useState({ player1: 0, player2: 0 });
+    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
-    const [playerId, setPlayerId] = useState(null);
     const [roomPlayers, setRoomPlayers] = useState([]);
-    const [score1, setScore1] = useState(0);
-    const [score2, setScore2] = useState(0);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
+    const [webSocket, setWebSocket] = useState(null);
+    const { myUser } = useAuth();
+    const [powerUpType, setPowerUpType] = useState(null);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}`);
+        console.log("le voila", powerUpType);
+        console.log("la pos", powerUpPosition);
+    }, [powerUpType, powerUpPosition]);
 
-        ws.onopen = () => {
-            console.log('WebSocket connecté à la room:', roomId);
-            const maxScoreNum = Number(maxScore);
-            ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
-        };
+    useEffect(() => {
+        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/?token=${myJwt}`);
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data);
+        if (myUser) {
+            ws.onopen = () => {
+                const powerUpBool = Boolean(powerUp);
+                const maxScoreNum = Number(maxScore);
+                ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
+                ws.send(JSON.stringify({ name: myUser.username }));
+                ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
+            };
 
-            if (data.id) {
-                setPlayerId(data.id);
-            }
-            if (data.players) {
-                setRoomPlayers(data.players);
-            }
-            if (data.paddles) {
-                setPaddleLeftPos(data.paddles.left);
-                setPaddleRightPos(data.paddles.right);
-            }
-            if (data.ball) {
-                setBallPos(data.ball);
-            }
-            if (data.score) {
-                setScore1(data.score.player1);
-                setScore2(data.score.player2);
-            }
-            if (data.max_score !== undefined) {
-                setMaxScoreToUse(data.max_score);
-            }
-
-            if (data.players && data.players.length >= 2) {
-                const maxScore2 = data.max_score;
-                if (data.score.player1 >= maxScore2) {
-                    console.log("Gagnant :", data.players[0]);
-                    setWinner(data.players[0]);
-                    setIsGameOver(true);
-                } else if (data.score.player2 >= maxScore2) {
-                    console.log("Gagnant :", data.players[1]);
-                    setWinner(data.players[1]);
-                    setIsGameOver(true);
+            ws.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+                if (data.players) {
+                    setRoomPlayers(data.players);
                 }
-            }
-        };
+                if (data.paddles_pos) {
+                    setPaddlePos(data.paddles_pos);
+                }
+                if (data.paddle_left_height) {
+                    setPaddleSizes((prev) => ({ ...prev, left: data.paddle_left_height }));
+                }
+                if (data.paddle_right_height) {
+                    setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
+                }
+                if (data.ball) {
+                    setBallPos(data.ball);
+                }
+                if (data.score) {
+                    setScores(data.score);
+                }
+                if (data.max_score !== undefined) {
+                    setMaxScoreToUse(data.max_score);
+                }
+                if (data.winner) {
+                    setIsGameOver(true);
+                    setWinner(data.winner);
+                }
+                if (data.status === "add" && data.power_up_position) {
+                    setPowerUpPosition(data.power_up_position);
+                    setPowerUpType(data.power_up);
+                }
+                if (data.status === "erase") {
+                    setPowerUpPosition({ x: 0, y: 0 });
+                    setPowerUpType(null);
+                }
+            };
 
-        ws.onclose = (event) => {
-            console.log('WebSocket fermé, code :', event.code);
-        };
+            ws.onclose = (event) => {
+                console.log('WebSocket closed, code:', event.code);
+            };
 
-        ws.onerror = (error) => {
-            console.error('Erreur WebSocket :', error);
-        };
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
+            };
+        }
 
         setWebSocket(ws);
 
@@ -127,21 +138,42 @@ const PongMulti = ({ roomId, maxScore }) => {
         };
     }, [roomId, maxScore]);
 
-    usePaddleMovement(webSocket, playerId, roomPlayers);
+    usePaddleMovement(webSocket, roomPlayers);
+
+    const renderPowerUp = () => {
+        switch (powerUpType) {
+            case 'increase_paddle':
+                return <img src="../../src/assets/game/increase_paddle.svg" alt="Increase Paddle" style={{ width: '40px', height: '40px' }} />;
+            case 'inversed_control':
+                return <img src="../../src/assets/game/inversed_control.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'decrease_paddle':
+                return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            default:
+                return null;
+        }
+    };
 
     return (
         <div className="pong-container">
             <div className="board">
-                <ScoreBoard score1={score1} score2={score2} maxScoreToUse={maxScoreToUse} />
+                <ScoreBoard
+                    score1={scores.player1}
+                    score2={scores.player2}
+                    maxScoreToUse={maxScoreToUse}
+                />
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
-                <div className="paddle paddleleft" style={{ top: `${paddleLeftPos}px` }}></div>
-                <div className="paddle paddleright" style={{ top: `${paddleRightPos}px` }}></div>
+                <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
+                <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
+                {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
+                    <div className="power-up" style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
+                        {renderPowerUp()}
+                    </div>
+                )}
             </div>
         </div>
     );
 };
-
 
 export default PongMulti;

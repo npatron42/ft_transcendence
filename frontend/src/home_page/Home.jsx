@@ -9,6 +9,9 @@ import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import UsersFriendsList  from "../UsersList/UsersFriendsList";
 import Loading from "../loading_page/Loading";
+import MatchHistory from "../components/MatchHistory";
+import HomeCadre from "./HomeCadre";
+import CadrePlay from "./CadrePlay";
 
 const Home = () => {
     const [myUser, setUser] = useState(null);
@@ -45,12 +48,23 @@ const Home = () => {
         );
     }
 
+
+
     return (
         <div id="background-container">
-            <Languages></Languages>
-            <NavbarBS myUser={myUser} />
-            <div className="card-users">
-                <UsersFriendsList myUser={myUser} />
+            <div className="custom2-cadre">
+                
+                <Languages></Languages>
+                <NavbarBS myUser={myUser} />
+                <div className="playPlacement">
+                    <CadrePlay/>
+                </div>
+                <div className="usersFriendsListPlacement">
+                    <UsersFriendsList myUser={myUser} />
+                </div>
+                <div className="matchHistoryPlacement">
+                    <MatchHistory/>
+                </div>
             </div>
         </div>
     );

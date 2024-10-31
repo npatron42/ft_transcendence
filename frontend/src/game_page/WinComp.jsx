@@ -20,7 +20,7 @@ export const WinComp = ({ winner }) => {
                 <div className="flip-card-inner">
                     <div className="flip-card-front">
                         <div className="flip-card-content">
-                            <p className="title">{winner}</p>
+                            <p className="title2">{winner}</p>
                         </div>
                     </div>
                     <div className="flip-card-back">

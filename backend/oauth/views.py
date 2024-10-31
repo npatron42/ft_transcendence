@@ -73,7 +73,6 @@ def add42UserToDB(jsonFile):
 
     try:
         isExistingUser = User.objects.get(email=email42)
-        logger.info("User %s is existing", isExistingUser.username)
         return (isExistingUser)
     except:
         User.DoesNotExist

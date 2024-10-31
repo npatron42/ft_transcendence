@@ -1,0 +1,43 @@
+.waiting-container {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-image: url("../../assets/background.png");
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.waiting-title {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 40px;
+    background-color: rgba(134,159,169,0.6);
+    padding: 10px;
+    border-radius: 20px;
+    color: #FCE0CE;
+}
+
+.no-players {
+    color: #999;
+    font-size: 16px;
+}
+
+.glass-card {
+    backdrop-filter: blur(5px);
+    border-radius: 15px;
+    border: solid 4px #FFA69E;
+    box-shadow: 0 8px 14px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+}
+
+.player-list {
+    color: #FAF3DD;
+    margin-bottom: 5px;
+}
+
+.game-info div {
+    margin-top: 10px;
+    color: #555;
+}

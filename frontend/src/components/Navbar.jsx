@@ -3,7 +3,7 @@ import { useNavigate, useLocation, } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
-import { getNotifs } from '../api/api';
+import { getGamesInvitations, getFriendsInvitations } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
 import Notifications from '../notifications/Notifications';
@@ -15,7 +15,8 @@ import "./components.css"
 
 function NavbarBS() {
   const { myUser } = useAuth();
-  const [nbNotifs, setNbNotifs] = useState(0);
+  const [nbFriendsInvitations, setNbFriendsInvitations] = useState(0);
+  const [nbGamesInvitations, setNbGameInvitations] = useState(0);
   const [notifIsClicked, setNotifClicked] = useState(false);
 
   const { subscribeToNotifs } = useWebSocket();
@@ -39,23 +40,35 @@ function NavbarBS() {
   const handleHome = () => {
     if (location.pathname !== "/home")
       setHomeShown(prevHomeShown => !prevHomeShown);
+    if (chatShown === true)
+      setChatShown(!chatShown)
     navigate("/home");
   };
 
   useEffect(() => {
     const handleNotif = (data) => {
-      const nbNotifsTmp = data["friendsInvitations"].length;
-      setNbNotifs(nbNotifsTmp);
+      if (data["friendsInvitations"]) {
+        const nbFriendsInvitationsTmp = data["friendsInvitations"].length;
+        setNbFriendsInvitations(nbFriendsInvitationsTmp);
+      }
+
+      if (data["gamesInvitations"]) {
+        const nbGamesInvitationsTmp = data["gamesInvitations"].length;
+        setNbGameInvitations(nbGamesInvitationsTmp);
+      }
     };
 
     const unsubscribe = subscribeToNotifs(handleNotif);
 
     
     const initNotifs = async () => {
-      const myData = await getNotifs();
-      const realNbNotifs = myData["friendsInvitations"].length + myData["gameInvitations"].length;
-      setNbNotifs(realNbNotifs);
-    }
+      const myFriendData = await getFriendsInvitations();
+      const myGameData = await getGamesInvitations();
+      const fn = myFriendData.length;
+      const gn = myGameData.length;
+      setNbFriendsInvitations(fn);
+      setNbGameInvitations(gn)
+      }
     
     initNotifs();
     
@@ -63,7 +76,7 @@ function NavbarBS() {
       unsubscribe();
     };
 
-  }, [subscribeToNotifs, nbNotifs]);
+  }, [subscribeToNotifs, nbFriendsInvitations, nbGamesInvitations]);
 
 
 
@@ -78,36 +91,42 @@ function NavbarBS() {
     setNotifClicked(!notifIsClicked);
     if (profileShown === true)
       setProfile(!profileShown);
+
   };
 
   const handleOtherLocations = () => {
     if (homeShown === true)
       setHomeShown(!homeShown);
+    if (chatShown === true)
+      setChatShown(!chatShown)
   }
 
   const handleChat = () => {
-    console.log(setChatShown(!chatShown));
+    setChatShown(!chatShown);
     if (profileShown === true)
       setProfile(!profileShown);
   }
 
+  const chooseCssForMePlease = () => {
+    if (location.pathname === "/home")
+      return ("logo-navbar-active");
+    return ("logo-navbar");
+  }
 
   return (
     <>
       <Navbar>
         <Nav>
           <Nav.Link onClick={handleOtherLocations} as={NavLink} to="/ChooseGame">PONG</Nav.Link>
-          {homeShown ? (
-            <img src={logoActive} className="logo-transcendence" onClick={handleHome}/>
-          ) : (
-            <img src={logo} className="logo-transcendence" onClick={handleHome}/>  
-          )}
+          <Nav.Link onClick={() => handleHome()} className="nav-link-logo">
+              <span className={chooseCssForMePlease()}> TRANSCENDENCE </span>
+          </Nav.Link>
           <Nav.Link onClick={() => handleChat()}>CHAT</Nav.Link>
         </Nav>
 
         <Nav className="navbar-nav-profile">
         <div className="notif-placement">
-          {nbNotifs === 0 ? (
+          {nbFriendsInvitations === 0 && nbGamesInvitations === 0? (
             <i onClick={() => handleNotif()} className="bi bi-bell-fill notif"></i>
           ) : (
             <i onClick={() => handleNotif()} className="bi bi-bell-fill notifFull"></i>

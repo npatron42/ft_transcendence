@@ -24,7 +24,6 @@ class JWTAuthMiddleware(BaseMiddleware):
         if token:
             try:
                 user = await getUserFromJWT(token)
-                logger.info(token)
                 if user:
                     scope['user'] = user
                 else:
