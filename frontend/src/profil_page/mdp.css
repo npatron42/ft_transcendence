@@ -74,19 +74,20 @@
 			border-radius: 10px; 
 		}
 		.custom-click3 {
-			/* background-color:#000000; */
-			background-color:rgb(255, 69, 69) ;
-			/* color:#9b5743 !important; */
-			color:#FDCDBE !important;
+			background-color:rgb(255, 69, 69) !important;
+			color:#FDCDBE!important;
 			border: 1px solid #FDCDBE!important;
-			/* border :1px solid #9b5743!important; */
 			padding: 0.2vw 0.8vw;
 			font-size: 1vw;
 			font-family: 'Millimetre', sans-serif;
 			font-weight: bold;
 			border-radius: 10px; 
 		}
-  /* mdp.css */
+
+		.custom-click3:hover {
+			background-color: rgb(255, 69, 69) !important;
+			color: #FDCDBE!important;
+		}
 
 .modal-custom {
 	position: center;
