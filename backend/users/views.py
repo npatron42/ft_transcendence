@@ -355,6 +355,9 @@ def postInvite(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+    ## PROFIL PAGE ## 
+
+
 @csrf_exempt
 def uploadProfilePicture(request):
     payload = middleWareAuthentication(request)
@@ -385,6 +388,11 @@ def uploadProfilePicture(request):
 def resetProfilePicture(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
+    
+    upload_directory = f'media/{user.id}/'
+
+    if os.path.exists(upload_directory):
+        shutil.rmtree(upload_directory)
 
     user.profilePicture = 'default.jpg'
     user.save()
