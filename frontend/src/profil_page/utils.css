@@ -25,7 +25,7 @@
 
 .succes-upload {
 	position: absolute;
-	top: 28vh;
+	top: 29.5vh;
 	left: 41vw;
 	color: #2886038e;
 	font-size: 0.9vw;
@@ -36,7 +36,7 @@
 
 .error-upload {
 	position: absolute;
-	top: 28vh;
+	top: 29.5vh;
 	left: 41vw;
 	color: #fc00008e;
 	font-size: 0.9vw;
