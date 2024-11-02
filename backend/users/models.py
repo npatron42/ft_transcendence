@@ -8,11 +8,14 @@ class User(AbstractUser):
     status = models.CharField(max_length=15, default="Disconnected")
     profilePicture = models.CharField(max_length=250, default="default.jpg")
     isFrom42 = models.BooleanField(default=False)
+    id42 = models.CharField(null=True)
     langue = models.CharField(max_length=10, default="fr")
 
     dauth = models.BooleanField(default=False,  blank=True, null=True)
     otp_code = models.CharField(max_length=6, null=True)
     otp_created_at = models.DateTimeField(null=True)
+
+    sup = models.BooleanField(default=False)
 
 
 class Invitation(models.Model):

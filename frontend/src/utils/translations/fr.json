@@ -55,6 +55,9 @@
       "enable2fa" : "Activez la double authentification",
       "good2fa" : "Double authentication mise en place",
       "disable2fa" : "Désactiver la double authentification",
-      "blocked": "Utilisateurs bloqués"
+      "blocked": "Utilisateurs bloqués",
+      "sup" : "Supprimer mon compte",
+      "verif" : "Êtes-vous sûr ?",
+      "recup" : "Récupérer mes données"
     }
   }

@@ -19,6 +19,7 @@ from django.core.files.storage import FileSystemStorage
 import jwt
 import logging
 import os
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -527,4 +528,30 @@ def removeUsernameFromList(usernamesToRemove, myList):
     return myList
 
 
+##RGPD
 
+
+@csrf_exempt  
+def deleteProfil(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    while True:
+        random_number = random.randint(10000, 99999)
+        name = f"user_{random_number}"
+        email = f"{name}@delete"
+        if not user.isFrom42 :
+            password = f"{random_number}"
+        if not User.objects.filter(username=name).exists():
+            break
+    
+    logger.info("new user -------> %s", user)
+    logger.info("new mdp -------> %s ", user.password)
+    user.sup = True
+    user.username = name
+    user.profilePicture = 'default.jpg'
+    if not user.isFrom42 :
+        user.password = password
+    user.email = email
+    user.save()
+    return JsonResponse({'success': True})
