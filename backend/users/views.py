@@ -33,7 +33,6 @@ def getUser(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
     serializer = UserSerializer(user)
-    logger.info(f"User data retrieved: {serializer.data}")
     return JsonResponse(serializer.data)
 
 def getUserById(myId):
@@ -41,8 +40,6 @@ def getUserById(myId):
     user = User.objects.get(id=myId)
     serializer = UserSerializer(user)
     return serializer.data
-
-
 
     ### ALL USERS ###
 

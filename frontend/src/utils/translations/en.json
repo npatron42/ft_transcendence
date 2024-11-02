@@ -12,7 +12,9 @@
       "enterOtp": "Please enter the code received by email.",
       "errorOtp": "Invalid code.",                                                                                                                                                                      
       "errorOtpExp": "Expired code",                                                                                                                                                                      
-      "errorOtp1": "Invalid code ? Please cancel and click \"Login\" again."                                                                                                                                                                         
+      "errorOtp1": "Invalid code ? Please cancel and click \"Login\" again." ,
+      "sup" : "Account deleted",                                                                                                                                                                        
+      "sup2" : "Your account has been deleted."                                                                                                                                                                     
     },
 
     "registerPage": {
