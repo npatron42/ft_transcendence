@@ -7,10 +7,11 @@ import Loading from '../loading_page/Loading';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 
-const UsersFriendsList = ({ myUser }) => {
+const UsersFriendsList = () => {
 
     const { socketUser, subscribeToMessages, subscribeToStatus, subscribeToNotifs} = useWebSocket();
 
+    const {myUser} = useAuth()
     const [socketMessage, setSocketMessage] = useState([]);
     const [usersList, setUsersList] = useState([]);
     const [friendsList, setFriendsList] = useState([]);
@@ -75,6 +76,7 @@ const UsersFriendsList = ({ myUser }) => {
         setFriendsList(myFriendsList);
         setUsersList(myUsersList);
         await defineAllUsersStatus();
+        console.log("C ESCET APPEL")
     };
 
     useEffect(() => {
@@ -82,7 +84,7 @@ const UsersFriendsList = ({ myUser }) => {
         initMyLists();
         setIsLoading(false)
 
-    },[myUser.username])
+    },[])
     
     const showUsersList = () => {
         setActiveList('users');
@@ -139,19 +141,19 @@ const UsersFriendsList = ({ myUser }) => {
                         {activeList === 'users' ? (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent-active" onClick={showUsersList}>
-                                    <i class="bi bi-people-fill"></i>
+                                    <i className="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent" onClick={showFriendsList}>
-                                    <i class="bi bi-person-hearts"></i>
+                                    <i className="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         ) : (
                             <div>
                                 <h4 type="button" className="btn btn-outline-dark nameUserComponent" onClick={showUsersList}>
-                                    <i class="bi bi-people-fill"></i>
+                                    <i className="bi bi-people-fill"></i>
                                 </h4>
                                 <h4 type="button" className="btn btn-outline-dark nameFriendComponent-active" onClick={showFriendsList}>
-                                    <i class="bi bi-person-hearts"></i>
+                                    <i className="bi bi-person-hearts"></i>
                                 </h4>
                             </div>
                         )}

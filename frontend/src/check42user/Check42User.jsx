@@ -22,7 +22,7 @@ const Check42User = () => {
 
         fetchData();
         if (myJwt) {
-            console.log("ALLER VAMOS")
+            console.log("JE PASSE DANS LE CHECK42USER")
             navigate("/home")
         }
     }, [navigate, myJwt]);

@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import { useWebSocket } from '../provider/WebSocketProvider';
+import { useTournamentSocket } from '../provider/TournamentSocketProvider';
+import { TournamentSocketProvider } from '../provider/TournamentSocketProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/chooseGame.css';
 import './css/tournament.css';
@@ -13,6 +15,7 @@ const ChooseGame = () => {
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]);
     const {socketUser} = useWebSocket()
+    const {tournamentSocket} = useTournamentSocket();
     
     const [powerUp, setPowerUp] = useState(false);
 
@@ -29,7 +32,7 @@ const ChooseGame = () => {
         const myData = {
             "type": "CREATE-TOURNAMENT"
         }
-        socketUser.send(JSON.stringify(myData));
+        tournamentSocket.send(JSON.stringify(myData));
         navigate("/waitingTournaments");
     };
 

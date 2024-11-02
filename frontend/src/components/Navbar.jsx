@@ -26,9 +26,8 @@ function NavbarBS() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
+  const myJwt = localStorage.getItem('jwt')
 
-  if (myUser)
-    console.log(myUser.profilePicture);
   useEffect(() => {
     if (location.pathname === "/home") {
       setHomeShown(true);
@@ -62,12 +61,14 @@ function NavbarBS() {
 
     
     const initNotifs = async () => {
-      const myFriendData = await getFriendsInvitations();
-      const myGameData = await getGamesInvitations();
-      const fn = myFriendData.length;
-      const gn = myGameData.length;
-      setNbFriendsInvitations(fn);
-      setNbGameInvitations(gn)
+      if (myJwt) {
+        const myFriendData = await getFriendsInvitations();
+        const myGameData = await getGamesInvitations();
+        const fn = myFriendData.length;
+        const gn = myGameData.length;
+        setNbFriendsInvitations(fn);
+        setNbGameInvitations(gn)
+      }
       }
     
     initNotifs();
