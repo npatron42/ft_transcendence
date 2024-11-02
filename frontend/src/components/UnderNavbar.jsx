@@ -16,8 +16,8 @@ function UnderNavbar() {
   return (
     <div className="underNavbar">
 		<tr className="underNavbar-tr">
-			<i class="bi bi-person-lines-fill profileBS" onClick={() => handleProfile()}></i>
-			<i class="bi bi-box-arrow-right profileBS" onClick={() => handleDisconnect()}></i>	
+			<i className="bi bi-person-lines-fill profileBS" onClick={() => handleProfile()}></i>
+			<i className="bi bi-box-arrow-right profileBS" onClick={() => handleDisconnect()}></i>	
 		</tr>
     </div>
   );

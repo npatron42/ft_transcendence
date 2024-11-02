@@ -414,7 +414,6 @@ def changeName(request):
         return JsonResponse({'success': False})
     
 
-    logger.info("new user -------> ", user)
     user.username = name
     user.save()
     return JsonResponse({'success': True})

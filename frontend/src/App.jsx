@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Routes, Route } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { WebSocketProvider } from './provider/WebSocketProvider.jsx';
+import { TournamentSocketProvider } from './provider/TournamentSocketProvider.jsx';
 import { UserAuthProvider } from './provider/UserAuthProvider.jsx';
 import NavbarBS from './components/Navbar.jsx';
 import GlobalGameSolo from './game_page/solo/GlobalGameSolo';
@@ -31,6 +32,7 @@ const App = () => {
       <UserAuthProvider>
       {!["/", "/register", "check42user"].includes(location.pathname) && (
       <WebSocketProvider>
+      <TournamentSocketProvider>
       <NavbarBS/>
       <Routes>
         <Route path="/profile" element={<ProfilPage/>} />
@@ -42,7 +44,9 @@ const App = () => {
         <Route path="/game/options" element={<GameOptions />} />
         <Route path="/waitingTournaments" element={<GlobalTournaments />} />
       </Routes>
+      </TournamentSocketProvider>
       </WebSocketProvider>
+
     )}
       </UserAuthProvider>
     </>  

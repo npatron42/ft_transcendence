@@ -1,17 +1,15 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
-const WebSocketContext = createContext(null);
+const TournamentContext = createContext(null);
 
-export const useWebSocket = () => {
-    return useContext(WebSocketContext);
+export const useTournamentSocket = () => {
+    return useContext(TournamentContext);
 };
 
 export const TournamentSocketProvider = ({ children }) => {
-    const [socketUser, setSocket] = useState(null);
+    const [tournamentSocket, setSocket] = useState(null);
 
     const listeners = useRef([]);
-    const listenersStatus = useRef([]);
-    const listenersNotifs = useRef([]);
 
     const myJwt = localStorage.getItem("jwt");
 
@@ -20,33 +18,15 @@ export const TournamentSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://localhost:8000/ws/socketUser/?token=${myJwt}`);
+        const socket = new WebSocket(`ws://localhost:8000/ws/tournamentsConsumer/?token=${myJwt}`);
         setSocket(socket);
-
-        const pingInterval = setInterval(() => {
-            if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "ping" }));
-            }
-        }, 10000);
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.status) {
-                listenersStatus.current.forEach(callback => callback(data));
-            } else if (data.friendsInvitations || data.gamesInvitations || data.acceptGameInvitation) {
-                listenersNotifs.current.forEach(callback => callback(data));
-            } else {
-                listeners.current.forEach(callback => callback(data));
-            }
-        };
-
-        socket.onclose = () => {
-            clearInterval(pingInterval); 
-            console.log("JE CLOSE DANS LE PROVIDER");
+            listeners.current.forEach(callback => callback(data));
         };
 
         return () => {
-            clearInterval(pingInterval);
             if (socket.readyState === WebSocket.OPEN) {
                 socket.close();
             }
@@ -60,23 +40,9 @@ export const TournamentSocketProvider = ({ children }) => {
         };
     };
 
-    const subscribeToStatus = (callback) => {
-        listenersStatus.current.push(callback);
-        return () => {
-            listenersStatus.current = listenersStatus.current.filter(listener => listener !== callback);
-        };
-    };
-
-    const subscribeToNotifs = (callback) => {
-        listenersNotifs.current.push(callback);
-        return () => {
-            listenersNotifs.current = listenersNotifs.current.filter(listener => listener !== callback);
-        };
-    };
-
     return (
-        <WebSocketContext.Provider value={{ socketUser, subscribeToMessages, subscribeToStatus, subscribeToNotifs }}>
+        <TournamentContext.Provider value={{ tournamentSocket, subscribeToMessages}}>
             {children}
-        </WebSocketContext.Provider>
+        </TournamentContext.Provider>
     );
 };

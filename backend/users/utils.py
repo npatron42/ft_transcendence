@@ -23,6 +23,7 @@ def	isTokenExpired(payload):
 
 def middleWareAuthentication(request):
 	auth_header = request.headers.get('Authorization')
+	logger.info("MON HEADER ----> %s", auth_header)
 	token = auth_header.split(' ')[1]
 	if not token:
 		raise AuthenticationFailed('No existing token')
