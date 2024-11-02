@@ -22,6 +22,8 @@ function profilPage() {
 	const {myUser} = useAuth();
 	const {socketUser, subscribeToMessages} = useWebSocket();
 
+	console.log(myUser);
+
 	const [blockedUsers, setBlockedUsers] = useState([]);
 
 	const initBlockedUsers = async () => {

@@ -23,6 +23,11 @@ const Check42User = () => {
                 const user = await getUser();
                 const userLangue = user.langue;
                 localStorage.setItem('i18nextLng', userLangue);
+                // if (user.sup){
+                //     alert("compte sup");
+                //     localStorage.clear();
+                //     navigate("/");
+                // }
             }
         };
 

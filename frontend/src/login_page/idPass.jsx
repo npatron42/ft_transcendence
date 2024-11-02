@@ -67,6 +67,7 @@ function IdPass() {
             });
 
             if (response.data.success) {
+                // localStorage.clear();
                 localStorage.setItem('jwt', response.data.token);
                 sessionStorage.removeItem('i18nextLng');
                 

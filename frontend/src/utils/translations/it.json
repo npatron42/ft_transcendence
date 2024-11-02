@@ -55,6 +55,9 @@
       "enable2fa" : "Abilitare l'autenticazione a due fattori",
       "good2fa" : "Autenticazione a due fattori implementata",
       "disable2fa" : "Disabilita l'autenticazione a due fattori",
-      "blocked": "Utenti bloccati"
+      "blocked": "Utenti bloccati",
+      "sup" : "Elimina il mio account",
+      "verif" : "Sei sicuro ?",
+      "recup" : "Recupera i miei dati"
     }
   }

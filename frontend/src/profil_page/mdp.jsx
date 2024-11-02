@@ -24,7 +24,8 @@ function Mdp({Actif, setActif}) {
   const handleShow = () => setShow(true);
 
   
-  const handleClick = async () => {
+  const handleClick = async (e) => {
+    e.preventDefault();
     if (modif) {
 
       const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^_\-=~.])[A-Za-z\d@$!%*?&#^_\-=~.]{8,40}$/;

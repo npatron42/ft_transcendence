@@ -388,3 +388,24 @@ export const getBlockedRelations2 = async () => {
 		throw error;
 	}
 };
+
+//RGPD 
+
+export const deleteProfil = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/delProfile/", {}, config);
+
+		// console.log(response.data);
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
