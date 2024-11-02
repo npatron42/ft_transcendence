@@ -12,7 +12,9 @@
       "enterOtp": "Veuillez saisir le code reçu par mail.",
       "errorOtp": "Code invalide.",                                                                                                                                                                      
       "errorOtpExp": "Code expiré.",                                                                                                                                                                      
-      "errorOtp1": "Code invalide ? Merci d'annuler et de cliquer à nouveau sur \"Se connecter\"."                                                                                                                                                                            
+      "errorOtp1": "Code invalide ? Merci d'annuler et de cliquer à nouveau sur \"Se connecter\".",
+      "sup" : "Compte supprimé",                                                                                                                                                                        
+      "sup2" : "Votre compte a été supprimé."                                                                                                                                                                         
     },
     
     "registerPage": {
