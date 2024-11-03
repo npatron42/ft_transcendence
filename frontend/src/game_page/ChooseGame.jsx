@@ -29,16 +29,24 @@ const ChooseGame = () => {
     };
 
     const handleCreateTournaments = () => {
+        const idTournament = uuidv4();
         const myData = {
-            "type": "CREATE-TOURNAMENT"
+            "type": "CREATE-TOURNAMENT",
+            "idTournament": idTournament
         }
         tournamentSocket.send(JSON.stringify(myData));
         navigate("/waitingTournaments");
     };
 
-    const handleJoinTournaments = () => {
-        return ;
+    const handleJoinTournaments = (idTournament) => {
+        const myData = {
+            "type": "JOIN-TOURNAMENT",
+            "idTournament": idTournament
+        }
+        tournamentSocket.send(JSON.stringify(myData));
+        navigate("/waitingTournaments");
     };
+
 
     const handleScoreChange = (event) => {
         setMaxScore(Number(event.target.value));
@@ -147,7 +155,7 @@ const ChooseGame = () => {
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
                                     <button className="createJoinButton" onClick={() => handleCreateTournaments()}>CREATE</button>      
-                                    <button className="createJoinButton" onClick={handleJoinTournaments}>JOIN</button>                                  
+                                    <button className="createJoinButton" onClick={handleJoinTournaments("QWD")}>JOIN</button>                                  
                                 </div>
                             </div>
                         </div>
