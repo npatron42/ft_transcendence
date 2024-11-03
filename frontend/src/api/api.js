@@ -409,3 +409,22 @@ export const deleteProfil = async () => {
 		throw error;
 	}
 };
+
+export const recupProfil = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/exportProfile/", {}, config);
+
+		console.log(response.data);
+		return(response);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};

@@ -23,5 +23,6 @@ urlpatterns = [
 	path('toggle2fa/', views.toggle2fa, name='toggle2fa'),
 	path('friendsList/', views.getFriendsList, name="getFriendsList"),
 	path('usersList/', views.getUsersList, name="getUsersList"),
-	path('delProfile/', views.deleteProfil, name="delProfil"),
+	path('delProfile/', views.deleteProfile, name="delProfil"),
+	path('exportProfile/', views.exportProfile, name="exportProfil"),
 ]
