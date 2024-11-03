@@ -1,5 +1,6 @@
 import shutil
 import json
+from pongMulti.models import MatchHistory
 from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from django.db import transaction
@@ -529,7 +530,7 @@ def removeUsernameFromList(usernamesToRemove, myList):
 
 
 @csrf_exempt  
-def deleteProfil(request):
+def deleteProfile(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
     
@@ -552,3 +553,55 @@ def deleteProfil(request):
     user.email = email
     user.save()
     return JsonResponse({'success': True})
+
+
+@csrf_exempt  
+def exportProfile(request):
+    
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    logger.info("requete =======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s", request)
+    
+    user_data = {
+        "username": user.username,
+        "email": user.email,
+        "status": user.status,
+        "profilePicture": user.profilePicture,
+        "isFrom42": user.isFrom42,
+        "myid42": user.myid42,
+        "langue": user.langue,
+        "dauth": user.dauth,
+        "otp_code": user.otp_code,
+        "otp_created_at": user.otp_created_at,
+        "delete_profile" : user.sup
+    }
+
+    invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
+    invitations_received = list(Invitation.objects.filter(receiver=user).values())
+    
+    friends = list(FriendsList.objects.filter(user1=user).values()) + list(FriendsList.objects.filter(user2=user).values())
+    
+    blocked = list(RelationsBlocked.objects.filter(userWhoBlocks=user).values())
+    
+    game_invitations = list(GameInvitation.objects.filter(leader=user).values()) + list(GameInvitation.objects.filter(userInvited=user).values())
+    
+    messages_sent = list(Message.objects.filter(sender=user).values())
+    messages_received = list(Message.objects.filter(receiver=user).values())
+    
+    match_history = list(MatchHistory.objects.filter(Q(player1=user) | Q(player2=user)).values())
+
+    full_data = {
+        "profile": user_data,
+        "invitations_sent": invitations_sent,
+        "invitations_received": invitations_received,
+        "friends": friends,
+        "blocked_users": blocked,
+        "game_invitations": game_invitations,
+        "messages_sent": messages_sent,
+        "messages_received": messages_received,
+        "match_history": match_history,
+    }
+    logger.info("test ----->>>> %s", full_data)
+
+    return JsonResponse(full_data, json_dumps_params={'indent': 2})
