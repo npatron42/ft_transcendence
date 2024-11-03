@@ -43,7 +43,7 @@ async def sendToEveryClientsUsersList(channel_layer):
     while i < size:
         myUser = await getUserByUsername(usersConnected[i])
         myUsersList, myFriendsList, blockedUsers = await getFinalUsersListAndFriendsList(myUser)
-
+        
         dataToSend = {
             "AllUsers": myUsersList
         }
