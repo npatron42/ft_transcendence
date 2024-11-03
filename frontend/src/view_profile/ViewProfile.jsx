@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
-import { getUserMatchHistory } from '../api/api';
-import { getUserByUsername } from '../api/api';
+import { getUserMatchHistory, getUserByUsername } from '../api/api';
 import { useParams } from 'react-router-dom';
 import WinLossChart from './WinLossChart';
 import './viewProfile.css';
@@ -35,6 +34,22 @@ function ViewProfile() {
         console.log("mon user ; ", tmpUser);
     };
 
+    // Fonction handleInvitation pour envoyer une invitation via WebSocket
+    const handleInvitation = () => {
+        if (socketUser && socketUser.readyState === WebSocket.OPEN) {
+            const data = {
+                type: "INVITE",
+                invitationFrom: myUser.username,
+                to: profileUser.username,
+                parse: myUser.username + "|" + profileUser.username
+            };
+            socketUser.send(JSON.stringify(data));
+            console.log(`Invitation envoyée à ${profileUser.username}`);
+        } else {
+            console.log("WebSocket for invitations is not open");
+        }
+    };
+
     if (!profileUser) {
         return <div className="loading">Loading...</div>;
     }
@@ -53,34 +68,48 @@ function ViewProfile() {
                         />
                     </div>
 
-                    <div
-                        className="margin-card">
-                    </div>
+                    <div className="margin-card"></div>
                     <p className="name">{profileUser.username}</p>
-                    <div class="follow-info row">
-                        <div class="col-md-6">
-                            <p class="info-profile">Match played: {nbMatch}</p>
+                    <div className="margin-card"></div>
+
+                    <div className="follow-info row">
+                        <div className="col-md-6">
+                            <p className="info-profile">Match played: {nbMatch}</p>
                         </div>
-                        <div class="col-md-6">
-                            <p class="info-profile">Friends: {nbMatch}</p>
+                        <div className="col-md-6">
+                            <p className="info-profile">Tournament played: {nbMatch}</p>
+                        </div>
+                        <div className="col-md-6">
+                            <p className="info-profile">Friends: {nbMatch}</p>
+                        </div>
+                        <div className="col-md-6">
+                            <p className="info-profile">Status: online</p>
                         </div>
                     </div>
-                    <div className="follow-btn"><button>Follow</button></div>
+
+                    <div className="margin-card"></div>
+                    <div className="button-container">
+                    <button onClick={handleInvitation} className="invite-button">
+                        <i className="bi bi-person-plus"></i> ADD
+                    </button>
+                    </div>
                 </div>
                 <div className="matchHistory-container">
                     <div className="matchHistory-content-profile2">
-                        {matchHistory.length !== 0 && (
-                            <WinLossChart matchHistory={matchHistory} />
-                        )}
-                    </div>
-                    {/* <div className={`matchHistory-content-profile2 ${matchHistory.length >= 2 ? "scrollable" : ""}`}> */}
-                    <div className="matchHistory-content-profile3">
-                        {matchHistory.length === 0 && (
+                        {matchHistory.length === 0 ? (
                             <div className="history-info-profile">
                                 {username} has not played a match
                             </div>
+                        ) : (
+                            <WinLossChart matchHistory={matchHistory} />
                         )}
-                        {matchHistory.length !== 0 && (
+                    </div>
+                       <div className={`matchHistory-content-profile3 ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+                        {matchHistory.length === 0 ? (
+                            <div className="history-info-profile">
+                                {username} has not played a match
+                            </div>
+                        ) : (
                             matchHistory.map((match) => (
                                 <HistoryProfileItem
                                     key={match.id}

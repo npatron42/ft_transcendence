@@ -311,7 +311,23 @@
     margin-top: 20px;
     text-align: center;
 }
+
 .card .info-profile
 {
     color:#ffffff
+}
+
+.card .invite-button {
+    font-family: Millimetre;
+    font-size: 18px;
+    font-weight: bold;
+    color: #FAF3DD;
+    background-color: #FFA69E;
+    border: none;
+    border-radius: 50px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 50%;
 }
