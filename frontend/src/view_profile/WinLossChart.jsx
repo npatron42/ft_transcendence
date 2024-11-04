@@ -19,27 +19,48 @@ const calculateWinLossRatio = (matchHistory) => {
 };
 
 function WinLossChart({ matchHistory }) {
-    const { wins, losses, winPercentage, lossPercentage } = calculateWinLossRatio(matchHistory);
+    const { wins, losses } = calculateWinLossRatio(matchHistory);
 
     const data = {
-        labels: ['Victoire', 'Défaite'],
         datasets: [
             {
                 data: [wins, losses],
-                backgroundColor: ['#B8F2E6', '#FFA69E'],
-                hoverBackgroundColor: ['#A0D3E5', '#E67B7B'],
+                backgroundColor: ['#B3E6E3', '#FFA69E'],
+                borderColor: ['#161719', '#161719'],
+                borderWidth: 2,
                 cutout: '70%',
             }
         ]
     };
 
     const options = {
+        hover: {
+            mode: null
+        },
         plugins: {
             legend: {
+                display: false,
+            },
+            title: {
                 display: true,
+                text: 'Percent of Win',
+                font: {
+                    family: 'Millimetre-Light',
+                    size: 16,
+                    weight: 'bold',
+                    color: '#000000',
+                },
+                padding: {
+                    bottom: 10,
+                }
             },
             datalabels: {
-                color: '#fff',
+                color: '#000000',
+                font: {
+                    family: 'Millimetre-Light', 
+                    size: 10,
+                    weight: 'bold'
+                },
                 formatter: (value, context) => {
                     const total = wins + losses;
                     const percentage = total ? (value / total * 100).toFixed(0) : 0;
@@ -50,7 +71,7 @@ function WinLossChart({ matchHistory }) {
     };
 
     return (
-            <Pie data={data} options={options} className="win-loss-chart" />
+        <Pie data={data} options={options} className="win-loss-chart" />
     );
 }
 
