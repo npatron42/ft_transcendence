@@ -46,7 +46,7 @@ function idRegister() {
 			setErrors(newErrors);
 			return;
 		}
-		const response = await axios.post('http://localhost:8000/auth/register/', {
+		const response = await axios.post('http://c1r1p3:8000/auth/register/', {
 			username,
 			email,
 			password

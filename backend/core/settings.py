@@ -42,7 +42,7 @@ INSTALLED_APPS = [
 ]
 
 
-# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
+# ALLOWED_HOSTS = ['$HOST_PART', '127.0.0.1', '$HOST_PART:5173']
 ALLOWED_HOSTS = ['*']
 
 
@@ -50,17 +50,15 @@ ALLOWED_HOSTS = ['*']
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:8000',
-    'http://10.11.1.7:5173',
-    'http://10.11.1.7:8000', 
+    'http://c1r1p3:5173',
+    'http://c1r1p3:8000',
+	'http://localhost:5173' ,
+	'http://localhost:8000' ,
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://localhost:5173',
-    'http://localhost:8000',
-    'http://10.11.1.7:5173',
-    'http://10.11.1.7:8000',
+    'http://c1r1p3:5173',
+    'http://c1r1p3:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'
@@ -123,7 +121,7 @@ DATABASES = {
 # CACHES = {
 #     'default': {
 #         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://localhost:6379/1',  # Adresse Redis
+#         'LOCATION': 'redis://$HOST_PART:6379/1',  # Adresse Redis
 #         'OPTIONS': {
 #             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
 #         }

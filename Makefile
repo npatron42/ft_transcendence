@@ -1,3 +1,6 @@
+# setup_env:
+# 	bash setup_env.sh
+
 all:
 	docker-compose up --build -d
 

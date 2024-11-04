@@ -2,7 +2,7 @@ function GameNotif({ myUser, declineGameInvitation, acceptGameInvitation}) {
     return (
         <tr className="invite-item">
             <td className="invite-item.td">
-                <img src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://localhost:8000/media/${myUser.profilePicture}`} alt={`${myUser.username}'s profile`} className="profile-picture-notif" />
+                <img src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://c1r1p3:8000/media/${myUser.profilePicture}`} alt={`${myUser.username}'s profile`} className="profile-picture-notif" />
             </td>
 			<td className="invite-item.td"><span  className="username-friendNotif">{myUser.username}</span></td>
             <td className="invite-item.td">

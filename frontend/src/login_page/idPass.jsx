@@ -25,7 +25,7 @@ function IdPass() {
         setIsLoading(true);
         
         try {
-            const response = await axios.post('http://localhost:8000/auth/login/', {
+            const response = await axios.post('http://c1r1p3:8000/auth/login/', {
                 username,
                 password
             });
@@ -61,7 +61,7 @@ function IdPass() {
         try {
             console.log("usersane == ",  username)
             console.log("otp == ", otp)
-            const response = await axios.post('http://localhost:8000/auth/verif/', {
+            const response = await axios.post('http://c1r1p3:8000/auth/verif/', {
                 otp,
                 username
             });

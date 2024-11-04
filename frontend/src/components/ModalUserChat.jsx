@@ -52,7 +52,7 @@ function ModalUserChat(userSelected) {
         <Modal.Body className="modal-body-custom">
 			<div className="div-custom-modal">
 				<div className="inside-div-custom-modal">
-          <img src={userSelected["userSelected"].profilePicture.startsWith('http') ? userSelected["userSelected"].profilePicture : `http://localhost:8000/media/${userSelected["userSelected"].profilePicture}`} className="profile-picture-discuss"></img>
+          <img src={userSelected["userSelected"].profilePicture.startsWith('http') ? userSelected["userSelected"].profilePicture : `http://c1r1p3:8000/media/${userSelected["userSelected"].profilePicture}`} className="profile-picture-discuss"></img>
         </div>
 				<div className="inside-div-custom-modal">
           <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleProfile()}>PROFILE</button>
