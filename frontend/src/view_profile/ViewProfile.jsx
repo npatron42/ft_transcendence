@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
-import { getUserMatchHistory, getUserByUsername } from '../api/api';
+import { getUserMatchHistory, getUserByUsername, getUserFriendsListById } from '../api/api';
 import { useParams } from 'react-router-dom';
 import WinLossChart from './WinLossChart';
+import GoalChart from './GoalChart';
 import './viewProfile.css';
-import HistoryProfileItem from './HistoryProfileItem';
+import HistoryItem from '../components/HistoryItem';
 
 function ViewProfile() {
     const [matchHistory, setMatchHistory] = useState([]);
@@ -14,27 +15,52 @@ function ViewProfile() {
     const { username } = useParams();
     const [profileUser, setProfileUser] = useState();
     const [nbMatch, setNbMatch] = useState();
+    const [friendsList, setFriendsList] = useState([]);
 
     useEffect(() => {
-        initMyMatchs();
-        getUser();
-    }, [myUser.username]);
+        const handleSocketMessage = (message) => {
+            const data = JSON.parse(message.data);
+            console.log("data", data);
 
-    const initMyMatchs = async () => {
+            if (data.status || data.friends) {
+                getUser();
+                initMyData();
+            }
+        };
+
+        if (socketUser) {
+            socketUser.addEventListener('message', handleSocketMessage);
+        }
+
+        getUser();
+        initMyData();
+        initMyMatch();
+        console.log("je passe ici ", myUser.id);
+
+        return () => {
+            if (socketUser) {
+                socketUser.removeEventListener('message', handleSocketMessage);
+            }
+        };
+    }, [socketUser]);
+
+
+    const initMyMatch = async () => {
         const matchTmp = await getUserMatchHistory(username);
         setMatchHistory(matchTmp);
         setNbMatch(matchTmp.length);
-        console.log("nombre de match", nbMatch);
-        console.log("la", matchTmp.length);
+    };
+
+    const initMyData = async () => {
+        const friendsListTmp = await getUserFriendsListById(myUser.id);
+        setFriendsList(friendsListTmp);
     };
 
     const getUser = async () => {
         const tmpUser = await getUserByUsername(username);
         setProfileUser(tmpUser);
-        console.log("mon user ; ", tmpUser);
     };
 
-    // Fonction handleInvitation pour envoyer une invitation via WebSocket
     const handleInvitation = () => {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
@@ -44,10 +70,15 @@ function ViewProfile() {
                 parse: myUser.username + "|" + profileUser.username
             };
             socketUser.send(JSON.stringify(data));
-            console.log(`Invitation envoyée à ${profileUser.username}`);
         } else {
             console.log("WebSocket for invitations is not open");
         }
+    };
+
+    const statusColor = {
+        "online": "#B8F2E6",
+        "offline": "#FFA69E",
+        "in-game": "#D9F3E2"
     };
 
     if (!profileUser) {
@@ -58,6 +89,7 @@ function ViewProfile() {
         <div className="view-profile">
             <div className="matchHistory-profile">
                 <div className="card">
+
                     <div className="shine"></div>
 
                     <div className="banner">
@@ -70,28 +102,25 @@ function ViewProfile() {
 
                     <div className="margin-card"></div>
                     <p className="name">{profileUser.username}</p>
-                    <div className="margin-card"></div>
-
                     <div className="follow-info row">
                         <div className="col-md-6">
-                            <p className="info-profile">Match played: {nbMatch}</p>
+                            <p className="info-profile">Match : {nbMatch}</p>
                         </div>
                         <div className="col-md-6">
-                            <p className="info-profile">Tournament played: {nbMatch}</p>
+                            <p className="info-profile">Tournament : {nbMatch}</p>
                         </div>
                         <div className="col-md-6">
-                            <p className="info-profile">Friends: {nbMatch}</p>
+                            <p className="info-profile">Friends : {friendsList.length}</p>
                         </div>
                         <div className="col-md-6">
-                            <p className="info-profile">Status: online</p>
+                            <p className="info-profile" style={{ color: statusColor[profileUser.status] || "white" }}
+                            > Status : {profileUser.status} </p>
                         </div>
                     </div>
-
-                    <div className="margin-card"></div>
                     <div className="button-container">
-                    <button onClick={handleInvitation} className="invite-button">
-                        <i className="bi bi-person-plus"></i> ADD
-                    </button>
+                        <button onClick={handleInvitation} className="invite-button">
+                            <i className="bi bi-person-plus"></i> ADD
+                        </button>
                     </div>
                 </div>
                 <div className="matchHistory-container">
@@ -101,17 +130,21 @@ function ViewProfile() {
                                 {username} has not played a match
                             </div>
                         ) : (
-                            <WinLossChart matchHistory={matchHistory} />
+                            <div className="chart-container">
+                                <div className="chart-circle"><WinLossChart matchHistory={matchHistory} /></div>
+                                <div className="chart-stick"><GoalChart goalsConceded={12} goalsScored={15} /></div>
+                            </div>
                         )}
                     </div>
-                       <div className={`matchHistory-content-profile3 ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+
+                    <div className={`matchHistory-content-profile3 ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                         {matchHistory.length === 0 ? (
                             <div className="history-info-profile">
                                 {username} has not played a match
                             </div>
                         ) : (
                             matchHistory.map((match) => (
-                                <HistoryProfileItem
+                                <HistoryItem
                                     key={match.id}
                                     match={match}
                                 />

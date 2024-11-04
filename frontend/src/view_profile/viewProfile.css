@@ -63,10 +63,14 @@
     border: 3px solid #161719;
     background: transparent;
     margin-top: 20px;
+    overflow: hidden;
+    flex-direction: column;
 }
 
 .scrollable {
     overflow-y: auto;
+    height: 65%;
+    margin-right: 20px;
 }
 
 .scrollable::-webkit-scrollbar {
@@ -77,7 +81,7 @@
 .scrollable::-webkit-scrollbar-thumb {
     border: 2px solid #000000;
     border-radius: 20px;
-    background-color: #AED9E0;
+    background-color: #FFA69E;
 }
 
 
@@ -184,11 +188,32 @@
     color: #AED9E0;
 }
 
-.win-loss-chart {
-    width: 100px;
-    height: 100px;
-    margin: 0 auto;
+.chart-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    width: 100%;
+    height: 100%;
+    padding: 30px;
+
 }
+
+.chart-circle, .chart-stick {
+    flex: 1;
+    margin: 0 10px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.chart-circle {
+    max-width: 200px;
+}
+
+.chart-stick {
+    max-width: 350px;
+}
+
 
 .win-loss-chart .chartjs-render-monitor {
     border: 2px solid #FFA69E;
@@ -219,44 +244,39 @@
     overflow: hidden;
     position: relative;
     text-align: center;
+    transition: transform 0.1s ease;
+    transform-style: preserve-3d;  
     box-shadow: inset 5px 5px 20px rgba(255,255,255,0.1);
-    -webkit-animation: shimmy 6s ease-in-out infinite;
-  }
-
-  @-webkit-keyframes shimmy{
-    0%, 100%{
-      transform: rotateY(0deg) skewX(0deg);
-    }
-    25%{
-      transform: rotateY(7.5deg) skewX(0.75deg);
-    }
-    50%{
-        transform: rotateY(0deg) skewX(0deg);
-      }
-      75%{
-        transform: rotateY(-7.5deg) skewX(-0.75deg);
-      }
   }
 
 
-  .shine{
+  .shine {
     width: 1000px;
     height: 100px;
     margin-left: -100px;
     transform: rotate(30deg);
     background: -webkit-linear-gradient(top, transparent, rgba(200,200,200,0.1),transparent);
     position: absolute;
-    -webkit-animation: shine 6s ease-in-out infinite;
+    -webkit-animation: shine 8s ease-in-out infinite;
   }
-  @-webkit-keyframes shine{
-    0%,100%{
-      margin-top: -100px;
-      
+
+  @-webkit-keyframes shine {
+    0% {
+        margin-top: -100px;
     }
-    50%{
-      margin-top: 800px;
+    25% {
+        margin-top: 900px;
     }
-  }
+    50% {
+        margin-top: 900px;
+    }
+    75% {
+        margin-top: -100px;
+    }
+    100% {
+        margin-top: -100px;
+    }
+}
   
 
 .card .banner {
@@ -305,11 +325,11 @@
 }
 
 
-.card .follow-info
-{
-    border: solid 3px #161719;
-    margin-top: 20px;
-    text-align: center;
+.card .follow-info {
+    margin: 10px;
+    padding: 10px;
+    text-align:justify;
+    display: flex;
 }
 
 .card .info-profile
@@ -325,8 +345,7 @@
     background-color: #FFA69E;
     border: none;
     border-radius: 50px;
-    padding: 10px 20px;
-    margin-top: 20px;
+    margin-top: 60px;
     cursor: pointer;
     transition: background-color 0.3s;
     width: 50%;

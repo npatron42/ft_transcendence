@@ -113,10 +113,12 @@ def getMatchHistoryByUsername(request, username):
             win = True
         else:
             win = False
+        date = matches[i]["date"]
         dataToSend = {
             "opponent": opponent,
             "score": score,
-            "win": win
+            "win": win,
+            "date": date
         }
         result.append(dataToSend)
         i += 1
@@ -271,6 +273,25 @@ def getDiscussions(request):
 
 
         ### FRIENDS LIST ###
+
+def getUserFriendsListById(request, id):
+    logger.info("ICCCCCCCCCCCCCIIIII LE USER")
+    myUser = User.objects.filter(id=id).first()
+    if not myUser:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
+    tabFriends = []
+    for relationship in friendsRelationships:
+        userToAdd = UserSerializer(relationship.user2 if relationship.user1 == myUser else relationship.user1)
+        tabFriends.append(userToAdd.data)
+
+    usernamesBlocked = getUsernamesBlocked(request)
+    tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
+
+    logger.info("ICCCCCCCCCCCCCIIIII LE TAB %s", tabFriends)
+
+    return JsonResponse(tabFriends, safe=False)
 
 
 
