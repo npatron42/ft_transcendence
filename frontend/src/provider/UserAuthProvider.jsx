@@ -46,15 +46,27 @@ export const UserAuthProvider = ({ children }) => {
         }
     }, [navigate, location.pathname, myJwt]);
 
+    useEffect(() => {
+        const updateUser = async () => {
+            if (myJwt) {
+                try {
+                    const updatedUser = await getUser();
+                    setUser(updatedUser);
+                } catch (error) {
+                    console.error("Failed to fetch updated user:", error);
+                }
+            }
+        };
+        updateUser();
+    }, []);
+
     if (isLoading) {
         return <div>Loading baby...</div>;
     }
 
     return (
-        <UserAuthContext.Provider value={{ myUser }}>
+        <UserAuthContext.Provider value={{ myUser, setUser }}>
             {children}
         </UserAuthContext.Provider>
     );
 };
-
-

@@ -13,8 +13,7 @@ function MatchHistory() {
 
     useEffect(() => {
         initMyMatchs();
-
-    },[myUser.username])
+    },[myUser])
 
 	const initMyMatchs = async () => {
 		const matchTmp = await getMatchHistory();
@@ -27,7 +26,7 @@ function MatchHistory() {
 			<div className="matchHistory-header">
 				<span className="writeHistory"> My Match History</span>
 			</div>
-			<div className={`matchHistory-content ${matchHistory.length >= 5 ? "scrollable" : ""}`}>
+			<div className={`matchHistory-content ${matchHistory.length >= 3 ? "scrollable" : ""}`}>
 				{matchHistory.length === 0 && (
 					<div className="historyInfo">
 						Play some matches to have history!

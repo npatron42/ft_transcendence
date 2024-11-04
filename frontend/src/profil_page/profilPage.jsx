@@ -8,6 +8,8 @@ import Upload from './upload.jsx';
 import Pseudo from './pseudo.jsx';
 import Mail from './mail.jsx';
 import Mdp from './mdp.jsx';
+import DelProfil from './delProfil.jsx';
+import RecProfil from './recProfil.jsx';
 import ButtonDef from './buttonDef.jsx';
 import ButtonBlockedUsers from './buttonBlockedUsers.jsx';
 import { useWebSocket } from '../provider/WebSocketProvider.jsx';
@@ -16,10 +18,9 @@ import { getBlockedRelations2 } from '../api/api.js';
 
 function profilPage() {
 
+	const [Actif, setActif] = useState(false);
 	const {myUser} = useAuth();
 	const {socketUser, subscribeToMessages} = useWebSocket();
-	const [Actif, setActif] = useState(false);
-
 	const [blockedUsers, setBlockedUsers] = useState([]);
 
 	const initBlockedUsers = async () => {
@@ -44,19 +45,23 @@ function profilPage() {
             unsubscribeMess(); 
         };
     }, [subscribeToMessages, socketUser]);
-
+	
 	return (
 	<div id="background-container">
-		<Pseudo Actif={Actif} setActif={setActif} />
-		<Image />
-		<Bt2fa />
-		<Del />
-		<ButtonDef />
-		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser}/>
+		{/* <div className="custom-cadre-pic"></div> */}
+		{/* <div className="custom-cadre-change"></div> */}
 		<Upload />
-		<Langue />
+		<Image />
+		<Del />
+		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser}/>
+		<Pseudo Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
+		<DelProfil/>
+		<Bt2fa />
+		<RecProfil />
+		<ButtonDef />
+		<Langue />
 	</div>
   )
 }

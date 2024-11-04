@@ -13,11 +13,11 @@ import math
 logger = logging.getLogger(__name__)
 
 
-async def sendToClient(self, message):
-	await self.channel_layer.group_send("shareSocket", {
-		"type": "shareSocket",
-		"message": message,
-	})
+async def sendToShareSocket(self, message):
+    await self.channel_layer.group_send("shareSocket", {
+        "type": "shareSocket",
+        "message": message,
+    })
 
 async def sendGameStatusToUsers(self):
 	result = {}
@@ -30,7 +30,7 @@ async def sendGameStatusToUsers(self):
 		"type": "USERS-STATUS-INGAME",
 		"status": result,
 	}
-	await sendToClient(self, dataToSend)
+	await sendToShareSocket(self, dataToSend)
 
 async def removeClientFromUsers(self, username):
 	result = {}
@@ -47,7 +47,7 @@ async def removeClientFromUsers(self, username):
 	while i < myLen:
 		if usersInGame[i] == username:
 			del usersInGame[i]
-			await sendToClient(self, dataToSend)
+			await sendToShareSocket(self, dataToSend)
 			return
 		i += 1
 	
@@ -212,12 +212,12 @@ class PongConsumer(AsyncWebsocketConsumer):
 			)
 
 		if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.matchIsPlayed[self.room_id] == False:
-			myUser = data=self.scope['user']
+			myUser = self.scope['user']
 			dataToSend = {
 				"type": "ABORT-MATCH",
 				"userAborted": myUser.username,
 			}
-			await sendToClient(self, dataToSend)
+			await sendToShareSocket(self, dataToSend)
 		await removeClientFromUsers(self, myUser.username)
 					
 		

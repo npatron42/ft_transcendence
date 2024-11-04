@@ -17,7 +17,7 @@
     width: 500px;
     height: 600px;
     z-index: 1000;
-    background-color: #2A2C31;
+    background: #161719;
     position: fixed;
     border-radius: 30px;
     border: 4px solid #ffa69e;
@@ -53,8 +53,7 @@
     left: 0;
     width: 100%;
     height: 12%;
-    background: rgb(94,100,114);
-    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%);
+    background: #161719;
     border-top-left-radius: 25px;
     border-top-right-radius: 0;
     border-bottom: 2px solid #FAF3DD;
@@ -67,8 +66,7 @@
     display: flex;
     width: 175px; 
     height: 100%; 
-    background: rgb(94,100,114);
-    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%);
+    background: #161719;
     border-right: 2px solid #FAF3DD;
     border-top-left-radius: 25px;
     border-bottom-left-radius: 25px;

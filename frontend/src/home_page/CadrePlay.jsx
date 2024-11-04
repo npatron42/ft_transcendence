@@ -12,7 +12,7 @@ function CadrePlay() {
 	}
 
 	return (
-		<div class="e-card playing">
+		<div class="e-card playing" onClick={() => handlePlay()}>
 		<div class="image"></div>
 		
 		<div class="wave"></div>

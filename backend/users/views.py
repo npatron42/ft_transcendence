@@ -1,3 +1,11 @@
+import shutil
+import json
+from pongMulti.models import MatchHistory
+from django.contrib.auth.hashers import check_password
+from django.http import JsonResponse
+from django.db import transaction
+from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.db.models import Q
 from users.models import User, FriendsList, Invitation, Message, RelationsBlocked, GameInvitation
@@ -7,9 +15,12 @@ from pongMulti.models import MatchHistory
 from pongMulti.serializers import MatchHistorySerializer
 from .utils import middleWareAuthentication
 from channels.db import database_sync_to_async
+from django.views.decorators.cache import cache_control
+from django.core.files.storage import FileSystemStorage
 import jwt
 import logging
 import os
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -86,7 +97,6 @@ def getMatchHistory(request):
         }
         result.append(dataToSend)
         i += 1
-    logger.info(result)
     return JsonResponse(result, safe=False)
 
 def getMatchHistoryByUsername(request, username):
@@ -404,10 +414,145 @@ def postInvite(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+    ## PROFIL PAGE ## 
 
 
+@csrf_exempt
+def uploadProfilePicture(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
 
-    ### UTILS FUNCTIONS ###
+    file = request.FILES['profilPicture']
+    upload_directory = f'media/{user.id}/'
+
+    if os.path.exists(upload_directory):
+        shutil.rmtree(upload_directory)
+        os.makedirs(upload_directory, exist_ok=True)
+    else:
+        os.makedirs(upload_directory, exist_ok=True)
+
+    file_path = os.path.join(upload_directory, file.name)
+
+    with open(file_path, 'wb+') as destination:
+        for chunk in file.chunks():
+            destination.write(chunk)
+
+    relative_path = f'{user.id}/{file.name}'
+    user.profilePicture = relative_path
+    user.save()
+
+    return JsonResponse({"message": "Profile picture updated successfully", "path": relative_path})
+
+@csrf_exempt  
+def resetProfilePicture(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    upload_directory = f'media/{user.id}/'
+
+    if os.path.exists(upload_directory):
+        shutil.rmtree(upload_directory)
+
+    user.profilePicture = 'default.jpg'
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def changeLangue(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.langue = data.get('langue')
+    user.save()
+    return JsonResponse({'success': True, 'langue': user.langue})
+
+@csrf_exempt  
+def changeName(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    name = data.get('name')
+    
+
+    if User.objects.filter(username=name).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+
+    logger.info("new user -------> ", user)
+    user.username = name
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def changeMail(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    mail = data.get('mail')
+    
+
+    if User.objects.filter(email=mail).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+
+    logger.info("new mail -------> ", mail)
+    user.email = mail
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def checkPass(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    password = data.get('pass')
+    
+    logger.info("mdp %s", user.password)
+    logger.info("recu %s", password)
+
+    if (password==user.password):
+        logger.info("user exist")
+        return JsonResponse({'success': True})
+    else :
+        return JsonResponse({'success': False})
+
+@csrf_exempt  
+def changePass(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    password = data.get('pass')
+    
+
+    if User.objects.filter(password=password).exists():
+        logger.info("user exist")
+        return JsonResponse({'success': False})
+    
+    logger.info("new pass -------> %s ", password)
+
+    user.password = password
+    user.save()
+    return JsonResponse({'success': True})
+
+@csrf_exempt  
+def toggle2fa(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    data = json.loads(request.body)
+    user.dauth = data.get('dauth')
+    logger.info("test-----> %s", user.dauth)
+    user.save()
+    return JsonResponse({'success': True, 'dauth': user.dauth})
+    
+### UTILS FUNCTIONS ###
 
 
 def getUsernamesBlocked(request):
@@ -441,6 +586,82 @@ def removeUsernameFromList(usernamesToRemove, myList):
     return myList
 
 
+##RGPD
 
 
+@csrf_exempt  
+def deleteProfile(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    while True:
+        random_number = random.randint(10000, 99999)
+        name = f"user_{random_number}"
+        email = f"{name}@delete"
+        if not user.isFrom42 :
+            password = f"{random_number}"
+        if not User.objects.filter(username=name).exists():
+            break
+    
+    logger.info("new user -------> %s", user)
+    logger.info("new mdp -------> %s ", user.password)
+    user.sup = True
+    user.username = name
+    user.profilePicture = 'default.jpg'
+    if not user.isFrom42 :
+        user.password = password
+    user.email = email
+    user.save()
+    return JsonResponse({'success': True})
 
+
+@csrf_exempt  
+def exportProfile(request):
+    
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    logger.info("requete =======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s", request)
+    
+    user_data = {
+        "username": user.username,
+        "email": user.email,
+        "status": user.status,
+        "profilePicture": user.profilePicture,
+        "isFrom42": user.isFrom42,
+        "myid42": user.myid42,
+        "langue": user.langue,
+        "dauth": user.dauth,
+        "otp_code": user.otp_code,
+        "otp_created_at": user.otp_created_at,
+        "delete_profile" : user.sup
+    }
+
+    invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
+    invitations_received = list(Invitation.objects.filter(receiver=user).values())
+    
+    friends = list(FriendsList.objects.filter(user1=user).values()) + list(FriendsList.objects.filter(user2=user).values())
+    
+    blocked = list(RelationsBlocked.objects.filter(userWhoBlocks=user).values())
+    
+    game_invitations = list(GameInvitation.objects.filter(leader=user).values()) + list(GameInvitation.objects.filter(userInvited=user).values())
+    
+    messages_sent = list(Message.objects.filter(sender=user).values())
+    messages_received = list(Message.objects.filter(receiver=user).values())
+    
+    match_history = list(MatchHistory.objects.filter(Q(player1=user) | Q(player2=user)).values())
+
+    full_data = {
+        "profile": user_data,
+        "invitations_sent": invitations_sent,
+        "invitations_received": invitations_received,
+        "friends": friends,
+        "blocked_users": blocked,
+        "game_invitations": game_invitations,
+        "messages_sent": messages_sent,
+        "messages_received": messages_received,
+        "match_history": match_history,
+    }
+    logger.info("test ----->>>> %s", full_data)
+
+    return JsonResponse(full_data, json_dumps_params={'indent': 2})

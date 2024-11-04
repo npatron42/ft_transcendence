@@ -1,17 +1,14 @@
 .notifications {
+	
 	background-color: #161719;
 	width: 400px;
 	height: 200px;
-	border-top: solid 2px #FFA69E;
-	border-left: solid 2px #FFA69E;
-	border-right: solid 2px #FFA69E;
-	border-bottom: solid 2px #FFA69E;
+	border: solid 2px #161719;
     border-radius: 20px;
-    position: fixed; 
-	bottom: 70%;
-    left: 85%;
-    transform: translateX(-50%);
+    position: absolute; 
 	z-index: 1;
+	bottom: 130px;
+	left: 400px;
 }
 
 

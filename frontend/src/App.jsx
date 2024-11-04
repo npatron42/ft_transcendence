@@ -14,8 +14,6 @@ import GlobalGameMulti from './game_page/multi/GlobalGameMulti';
 import RegisterPage from './register_page/registerPage';
 import GameOptions from './components/GameOptions.jsx';
 import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
-import { getUser } from './api/api.js';
-import { useState, useEffect } from 'react';
 import ProfilPage from './profil_page/profilPage.jsx';
 import Check42User from './check42user/Check42User.jsx';
 import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
@@ -45,6 +43,7 @@ const App = () => {
         <Route path="/game/options" element={<GameOptions />} />
         <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
         <Route path="/profile/:username" element={<ViewProfile />} />
+        <Route path="/waitingTournaments" element={<GlobalTournaments />} />
       </Routes>
       </WebSocketProvider>
     )}

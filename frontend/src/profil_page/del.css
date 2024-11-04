@@ -1,7 +1,7 @@
 .button {
 	position: absolute; 
-	top: -20vh;
-	left: 6vw;
+	top: -21.5vh;
+	left: 7.4vw;
 	width: 50px;
 	height: 50px;
 	border-radius: 50%;
@@ -56,4 +56,5 @@
 	transform: translateY(30px);
 	transition-duration: .3s;
   }
+
 

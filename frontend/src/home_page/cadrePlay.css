@@ -24,6 +24,23 @@
 	border: 3px solid #161719;
 	overflow: hidden;
   }	
+
+.modifyPlayPong {
+	font-size: 35px;
+	font-family: Millimetre;
+	margin-top: 30px;
+	color: #FAF3DD;
+	cursor: default;
+}
+
+
+.e-card:hover .modifyPlayPong {
+	font-size: 40px;
+	font-family: Millimetre-Bold;
+	margin-top: 30px;
+	color: #FAF3DD;
+	cursor: default;
+}
   
   .wave {
 	position: absolute;
@@ -124,3 +141,4 @@
 	font-size: 30px;
 
 }
+

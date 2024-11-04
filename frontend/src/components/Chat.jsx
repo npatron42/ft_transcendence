@@ -30,13 +30,18 @@ function Chat() {
     const [friendsMessagesClicked, setFriendsMessagesClicked] = useState(false)
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
     const [blockedUsers, setBlockedUsers] = useState([])
-
     const [inputMessage, setInputMessage] = useState('');
 
     const handleWriting = (event) => {
         if (event.key === 'Enter' && inputMessage.length !== 0) { 
             event.preventDefault();
             setInputMessage('')
+            console.log("InputMessage ---> ", inputMessage)
+            if (inputMessage.length > 250) {
+                alert("TOO LONG MESSAGE") ;
+                setInputMessage(null)
+                return ;
+            }
             const myData = {
                 "type": "MESSAGE",
                 "sender": myUser,
@@ -247,7 +252,7 @@ function Chat() {
                                 {friendsList && friendsList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
+                                            <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://localhost:8000/media/${user.profilePicture}`} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
@@ -262,7 +267,7 @@ function Chat() {
                                 {usersList && usersList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
+                                            <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://localhost:8000/media/${user.profilePicture}`} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
@@ -357,7 +362,7 @@ function Chat() {
                         {/* NO USER SEELCTED */}
 
 
-                    {usersMessagesClicked && !friendsMessagesClicked && friendsList.length !== 0 && userSelected === null && (
+                    {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected === null && (
                         <div className="welcomeMessage">
                             <span className="welcomeMessage-span-username">Choose a discuss</span>
                         </div>

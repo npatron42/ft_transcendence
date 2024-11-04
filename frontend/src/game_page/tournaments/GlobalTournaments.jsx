@@ -6,6 +6,7 @@ const GlobalGameTournaments = () => {
     const { roomId } = useParams();
     const location = useLocation();
     const maxScore = location.state?.maxScore || 10;
+    const powerUp = location.state?.powerUp;
 
     return (
         <div className="GlobalGame">
@@ -13,6 +14,7 @@ const GlobalGameTournaments = () => {
                 
                 roomId={roomId}
                 maxScore={maxScore}
+                powerUp={powerUp}
                 
             />
         </div>

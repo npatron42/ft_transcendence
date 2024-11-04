@@ -17,6 +17,7 @@ export const setJwt = async (codeFromUrl) => {
 	}
 };
 
+
 export const getUser = async () => {
 	try {
 		const token = localStorage.getItem('jwt');
@@ -89,7 +90,27 @@ export const getBlockedRelations = async () => {
 	}
 };
 
-export const getBlockedRelations2 = async () => {
+export const postPicture = async (myData) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				'Content-Type': 'multipart/form-data',
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/uploadProfilePicture/", myData, config);
+
+		// console.log(response.data);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const resetPicture = async () => {
 	try {
 		const token = localStorage.getItem('jwt');
 		const config = {
@@ -97,10 +118,113 @@ export const getBlockedRelations2 = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		
-		const response = await axios.get("http://localhost:8000/api/blockedUsers2/", config);
+		const response = await axios.post("http://localhost:8000/api/resetProfilePicture/", {}, config);
 
-		return response.data;
+		// console.log(response.data);
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+
+
+export const sendLangue = async (langue) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changeLangue/", { langue } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const sendName = async (name) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changeName/", { name } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const sendMail = async (mail) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changeMail/", { mail } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const sendPass = async (pass) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/changePass/", { pass } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const checkPass = async (pass) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/checkPass/", { pass } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
 	} catch (error) {
 		console.error("Error fetching user data:", error);
 		throw error;
@@ -278,3 +402,83 @@ export const postInvite = async (myData) => {
 	}
 };
 
+export const toggle2fa = async (dauth) => {
+	console.log("test")
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/toggle2fa/", { dauth } , config);
+
+		console.log(response.data);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+
+
+export const getBlockedRelations2 = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		
+		const response = await axios.get("http://localhost:8000/api/blockedUsers2/", config);
+
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+//RGPD 
+
+export const deleteProfil = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/delProfile/", {}, config);
+
+		// console.log(response.data);
+		return(response.data);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
+
+export const recupProfil = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post("http://localhost:8000/api/exportProfile/", {}, config);
+
+		console.log(response.data);
+		return(response);
+
+	} catch (error) {
+		console.error("Error fetching user data:", error);
+		throw error;
+	}
+};
