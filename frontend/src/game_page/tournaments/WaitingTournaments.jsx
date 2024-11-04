@@ -13,7 +13,7 @@ const WaitingTournaments = ({roomId, maxScore, powerUp}) => {
 
 
     useEffect(() => {
-        const tournamentSocket = new WebSocket(`ws://localhost:8000/ws/TournamentsConsumer/?token=${myJwt}`);
+        const tournamentSocket = new WebSocket(`ws://c1r1p3:8000/ws/TournamentsConsumer/?token=${myJwt}`);
 
         tournamentSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);

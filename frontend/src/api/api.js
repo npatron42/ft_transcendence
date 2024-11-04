@@ -1,19 +1,27 @@
 import axios from 'axios';
 
+// const hostPart = process.env.REACT_APP_HOST_PART;
+// const host_Part = 'c1r1p3' ;
+// if (!hostPart) {
+//     console.error("REACT_APP_HOST_PART is not defined");
+// }
+
 // GET METHODS
 
 export const setJwt = async (codeFromUrl) => {
 	try {
-		const response = await axios.post("http://localhost:8000/oauth2/login/", {
+		const response = await axios.post(`http://c1r1p3:8000/oauth2/login/`, {
 			code: codeFromUrl,
 		});
 
-		if (response.data.Error === "Failed during creation proccess, to DB")
+		if (response.data.Error === `Failed during creation proccess, to DB`)
 			return ;
 
-		const myJWT = localStorage.setItem("jwt", response.data.jwt);
+		console.log("wesh JWT", response.data.jwt);
+		
+		const myJWT = localStorage.setItem(`jwt`, response.data.jwt);
 	} catch (error) {
-		console.error("Error during login:", error);
+		console.error(`Error during login:`, error);
 	}
 };
 
@@ -27,13 +35,13 @@ export const getUser = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/user/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/user/`, config);
 
-		// console.log("Response from getUser :", response.data);
+		// console.log(`Response from getUser :`, response.data);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -47,13 +55,13 @@ export const postPicture = async (myData) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/uploadProfilePicture/", myData, config);
+		const response = await axios.post(`http://c1r1p3:8000/api/uploadProfilePicture/`, myData, config);
 
 		// console.log(response.data);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -66,13 +74,13 @@ export const resetPicture = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/resetProfilePicture/", {}, config);
+		const response = await axios.post(`http://c1r1p3:8000/api/resetProfilePicture/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -87,14 +95,14 @@ export const sendLangue = async (langue) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/changeLangue/", { langue } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/changeLangue/`, { langue } , config);
 
 		console.log(response.data);
 
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -107,14 +115,14 @@ export const sendName = async (name) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/changeName/", { name } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/changeName/`, { name } , config);
 
 		console.log(response.data);
 
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -127,14 +135,14 @@ export const sendMail = async (mail) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/changeMail/", { mail } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/changeMail/`, { mail } , config);
 
 		console.log(response.data);
 
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -147,14 +155,14 @@ export const sendPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/changePass/", { pass } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/changePass/`, { pass } , config);
 
 		console.log(response.data);
 
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -167,14 +175,14 @@ export const checkPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/checkPass/", { pass } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/checkPass/`, { pass } , config);
 
 		console.log(response.data);
 
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -188,11 +196,11 @@ export const getAllUsers = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/users/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/users/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -206,11 +214,11 @@ export const getFriendsList = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/friendsList/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/friendsList/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -224,11 +232,11 @@ export const getUsersList = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/usersList/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/usersList/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -242,11 +250,11 @@ export const getGamesInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/user/gamesInvitations/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/user/gamesInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -260,11 +268,11 @@ export const getMatchHistory = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/user/matchHistory/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/user/matchHistory/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -278,11 +286,11 @@ export const getFriendsInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/user/friendsInvitations/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/user/friendsInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -298,15 +306,15 @@ export const getDiscussions = async (myData) => {
 		};
 		
 
-		console.log("myData GD ---> ", myData)
-		const response = await axios.get("http://localhost:8000/api/user/discussions/", {
+		console.log(`myData GD ---> `, myData)
+		const response = await axios.get(`http://c1r1p3:8000/api/user/discussions/`, {
 			params: myData,
 			...config
 		});
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -323,17 +331,17 @@ export const postInvite = async (myData) => {
 			}
 		};
 		
-		const response = await axios.post("http://localhost:8000/api/sendInvite/", myData, config);
+		const response = await axios.post(`http://c1r1p3:8000/api/sendInvite/`, myData, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
 
 export const toggle2fa = async (dauth) => {
-	console.log("test")
+	console.log(`test`)
 	try {
 		const token = localStorage.getItem('jwt');
 		const config = {
@@ -341,14 +349,14 @@ export const toggle2fa = async (dauth) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/toggle2fa/", { dauth } , config);
+		const response = await axios.post(`http://c1r1p3:8000/api/toggle2fa/`, { dauth } , config);
 
 		console.log(response.data);
 
 		return(response.data);getBlockedRelations2
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -362,11 +370,11 @@ export const getBlockedRelations = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/blockedUsers/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/blockedUsers/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -380,11 +388,11 @@ export const getBlockedRelations2 = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/blockedUsers2/", config);
+		const response = await axios.get(`http://c1r1p3:8000/api/blockedUsers2/`, config);
 
 		return response.data;
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -399,13 +407,13 @@ export const deleteProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/delProfile/", {}, config);
+		const response = await axios.post(`http://c1r1p3:8000/api/delProfile/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };
@@ -418,13 +426,13 @@ export const recupProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post("http://localhost:8000/api/exportProfile/", {}, config);
+		const response = await axios.post(`http://c1r1p3:8000/api/exportProfile/`, {}, config);
 
 		console.log(response.data);
 		return(response);
 
 	} catch (error) {
-		console.error("Error fetching user data:", error);
+		console.error(`Error fetching user data:`, error);
 		throw error;
 	}
 };

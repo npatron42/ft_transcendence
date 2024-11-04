@@ -18,8 +18,10 @@ const Check42User = () => {
         const fetchData = async () => {
             const params = new URLSearchParams(window.location.search);
             const codeFromUrl = params.get('code');
+            console.log("test--->", codeFromUrl);
             if (codeFromUrl) {
-                await setJwt(codeFromUrl);
+                response = await setJwt(codeFromUrl);
+                console.log("test2 --->", response);
                 const newJwt = localStorage.getItem("jwt");
                 setMyJwt(newJwt)
                 const user = await getUser();
@@ -49,7 +51,6 @@ const Check42User = () => {
 
         fetchData();
         if (myJwt) {
-
             navigate("/home")
         }
     }, [navigate, myJwt]);

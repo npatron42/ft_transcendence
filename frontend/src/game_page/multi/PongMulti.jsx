@@ -72,7 +72,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     }, [powerUpType, powerUpPosition]);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/?token=${myJwt}`);
+        const ws = new WebSocket(`ws://c1r1p3:8000/ws/pong/${roomId}/?token=${myJwt}`);
 
         if (myUser) {
             ws.onopen = () => {

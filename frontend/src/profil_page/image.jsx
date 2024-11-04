@@ -12,7 +12,7 @@ function image() {
   return (
 	  <div> 
 		<Image className="image-style"
-		 src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://localhost:8000/media/${myUser.profilePicture}`}
+		 src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://c1r1p3:8000/media/${myUser.profilePicture}`}
 		 roundedCircle />
 	</div>
   );

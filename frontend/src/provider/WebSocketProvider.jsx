@@ -20,7 +20,7 @@ export const WebSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://localhost:8000/ws/socketUser/?token=${myJwt}`);
+        const socket = new WebSocket(`ws://c1r1p3:8000/ws/socketUser/?token=${myJwt}`);
         setSocket(socket);
 
         const pingInterval = setInterval(() => {
