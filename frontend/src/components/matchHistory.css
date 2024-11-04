@@ -52,6 +52,8 @@
 	height: 80%;
 	display: flex;
 	flex-direction: column;
+    max-height: 170px;
+	overflow-x: hidden;
 }
 
 .scrollable {
@@ -71,7 +73,6 @@
     background-color: #FFA69E;
 }
 
-
 .matchHistory {
 	font-family: 'Millimetre', sans-serif;
     font-size: 20px; 
@@ -90,13 +91,19 @@
 .historyItem {
     display: flex;              
     justify-content: flex-end;  
-    width: 100%;                 
+    width: 90%;
+    margin-left: 20px;
+    border: 1px solid #FAF3DD;
+    border-radius: 25px;
+    margin-bottom: 12px;
 }
 
 .historyItem-part {
     flex: 1;                     
     text-align: center;          
     padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
 
 }
 
@@ -104,7 +111,7 @@
 	font-family: Millimetre;
     font-size: 22px; 
     font-weight: bold;
-	color: #FAF3DD !important;
+	color: #cdb4db !important;
 }
 
 .modifyScorewin {

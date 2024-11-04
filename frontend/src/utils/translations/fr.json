@@ -8,7 +8,13 @@
       "new" : "Nouvel utilisateur ?",
       "createAccount" : "Créer un compte",
       "log42" : "Se connecter avec",
-      "error" : "Nom d'utilisateur ou mot de passe incorrect."                                                                                                                                                                              
+      "error" : "Nom d'utilisateur ou mot de passe incorrect.",
+      "enterOtp": "Veuillez saisir le code reçu par mail.",
+      "errorOtp": "Code invalide.",                                                                                                                                                                      
+      "errorOtpExp": "Code expiré.",                                                                                                                                                                      
+      "errorOtp1": "Code invalide ? Merci d'annuler et de cliquer à nouveau sur \"Se connecter\".",
+      "sup" : "Compte supprimé",                                                                                                                                                                        
+      "sup2" : "Votre compte a été supprimé."                                                                                                                                                                         
     },
     
     "registerPage": {
@@ -34,7 +40,6 @@
     },
 
     "profilPage" : {
-      "2fa" : "Activez la double authentification",
       "upload" : "Cliquez pour télécharger",
       "delete" : "Supprimer",
       "lg" : "Langue par défaut : ",
@@ -44,6 +49,17 @@
       "inco" : "Mot de passe incorrect",
       "cancel" : "Annuler",
       "oldmdp" : "Entrez l'ancien mot de passe",
-      "blocked": "Utilisateurs bloqués"
+      "succesUpload": "Téléchargement réussi",
+      "errorUpload" : "Échec du téléchargement",
+      "errorUser" : "Identifiant est déjà utilisé",
+      "errorpass" : "Mot de passe est déjà utilisé",
+      "errorMail" : "Le mail est déjà utilisé",
+      "enable2fa" : "Activez la double authentification",
+      "good2fa" : "Double authentication mise en place",
+      "disable2fa" : "Désactiver la double authentification",
+      "blocked": "Utilisateurs bloqués",
+      "sup" : "Supprimer mon compte",
+      "verif" : "Êtes-vous sûr ?",
+      "recup" : "Récupérer mes données"
     }
   }

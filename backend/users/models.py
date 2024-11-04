@@ -2,13 +2,20 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
-
+from datetime import timedelta
 
 class User(AbstractUser):
-	status = models.CharField(max_length=15, default="Disconnected")
-	profilePicture = models.CharField(max_length=250)
-	isFrom42 = models.BooleanField(default=False)
-	langue = models.CharField(max_length=10, default="fr")
+    status = models.CharField(max_length=15, default="Disconnected")
+    profilePicture = models.CharField(max_length=250, default="default.jpg")
+    isFrom42 = models.BooleanField(default=False)
+    myid42 = models.CharField(default="Not42")
+    langue = models.CharField(max_length=10, default="fr")
+
+    dauth = models.BooleanField(default=False,  blank=True, null=True)
+    otp_code = models.CharField(max_length=6, null=True)
+    otp_created_at = models.DateTimeField(null=True)
+
+    sup = models.BooleanField(default=False)
 
 
 class Invitation(models.Model):
@@ -35,7 +42,7 @@ class GameInvitation(models.Model):
 class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sender", on_delete=models.CASCADE, default=None)
     receiver = models.ForeignKey(User, related_name="receiver", on_delete=models.CASCADE, default=None)
-    message = models.CharField(max_length=125, default=None)
+    message = models.CharField(max_length=250, default=None)
     date = models.DateTimeField(default=timezone.now)
 
     class Meta:

@@ -42,7 +42,6 @@ export const WebSocketProvider = ({ children }) => {
 
         socket.onclose = () => {
             clearInterval(pingInterval); 
-            console.log("JE CLOSE DANS LE PROVIDER");
         };
 
         return () => {

@@ -27,7 +27,8 @@ function NavbarBS() {
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
 
-
+  if (myUser)
+    console.log(myUser.profilePicture);
   useEffect(() => {
     if (location.pathname === "/home") {
       setHomeShown(true);
@@ -134,7 +135,7 @@ function NavbarBS() {
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
-                src={myUser.profilePicture}
+                src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://localhost:8000/media/${myUser.profilePicture}`}
                 alt="Profile"
                 className="profile-picture-navbar"
                 onClick={handleProfile}

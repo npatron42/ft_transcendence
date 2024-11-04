@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/chooseGame.css';
+import './css/tournament.css';
 import Button from 'react-bootstrap/Button';
 import "../home_page/HomeCadre.css"
 
@@ -11,7 +12,7 @@ const ChooseGame = () => {
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]);
-    const socketUser = useWebSocket()
+    const {socketUser} = useWebSocket()
     
     const [powerUp, setPowerUp] = useState(false);
 
@@ -24,9 +25,16 @@ const ChooseGame = () => {
         navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp } });
     };
 
-    const handleTournamentsClick = () => {
-        const waitRoomId = uuidv4();
-        navigate(`/waitingTournaments/${waitRoomId}`, { state: { maxScore } });
+    const handleCreateTournaments = () => {
+        const myData = {
+            "type": "CREATE-TOURNAMENT"
+        }
+        socketUser.send(JSON.stringify(myData));
+        navigate("/waitingTournaments");
+    };
+
+    const handleJoinTournaments = () => {
+        return ;
     };
 
     const handleScoreChange = (event) => {
@@ -39,7 +47,6 @@ const ChooseGame = () => {
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
-            {/* <div className="custom2-cadre"> */}
             <div className="row">
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
@@ -131,33 +138,13 @@ const ChooseGame = () => {
                             <div className="flip-card-front">
                                 <div className="flip-card-content">
                                     <p className="title2">Tournament</p>
-                                    <p>Create a Tournament</p>
+                                    <p>Create / Join</p>
                                 </div>
                             </div>
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
-                                    <p className="title2">Settings</p>
-                                    <Button
-                                        type="button"
-                                        variant={powerUp ? "success" : "danger"}
-                                        onClick={handlePowerUp}
-                                    >
-                                        Power Up
-                                    </Button>
-                                    <div className="slider-container">
-                                        <label htmlFor="maxScoreTournaments">Max Score: {maxScore}</label>
-                                        <input
-                                            type="range"
-                                            id="maxScoreTournaments"
-                                            name="maxScore"
-                                            min="1"
-                                            max="20"
-                                            value={maxScore}
-                                            onChange={handleScoreChange}
-                                            className="form-range"
-                                        />
-                                    </div>
-                                    <button className="start-game" onClick={handleTournamentsClick}>Lancer le jeu</button>
+                                    <button className="createJoinButton" onClick={() => handleCreateTournaments()}>CREATE</button>      
+                                    <button className="createJoinButton" onClick={handleJoinTournaments}>JOIN</button>                                  
                                 </div>
                             </div>
                         </div>
@@ -165,7 +152,6 @@ const ChooseGame = () => {
                 </div>
             </div>
         </div>
-    // </div>
     );
 };
 
