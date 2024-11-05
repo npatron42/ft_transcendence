@@ -3,6 +3,8 @@ import "./utils.css";
 import Pong from "./pong.png";
 import { useAuth } from '../provider/UserAuthProvider';
 
+const host = import.meta.env.VITE_HOST;
+
 function image() {
 	
 	const { myUser } = useAuth();
@@ -12,7 +14,7 @@ function image() {
   return (
 	  <div> 
 		<Image className="image-style"
-		 src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://c1r1p3:8000/media/${myUser.profilePicture}`}
+		 src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://${host}:8000/media/${myUser.profilePicture}`}
 		 roundedCircle />
 	</div>
   );

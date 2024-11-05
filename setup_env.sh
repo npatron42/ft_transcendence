@@ -1,34 +1,31 @@
 #!/bin/bash
 
-# Récupère le hostname actuel
-HOSTNAME=$(hostname)
+# Récupérer la première partie du hostname
+new_host=$(hostname | cut -d'.' -f1)
 
-# Utilise une expression régulière pour extraire la partie souhaitée du hostname (avant le premier point)
-if [[ $HOSTNAME =~ ^([^.]+) ]]; then
-    HOST_PART="${BASH_REMATCH[1]}"
-else
-    echo "Erreur: Impossible de récupérer la partie souhaitée du hostname."
-    exit 1
-fi
+# Fichiers .env à modifier
+env_files=(".env" "./frontend/.env" "./backend/.env")
 
-# Définition du chemin vers les fichiers .env du projet
-ENV_FILE=".env"
-FRONTEND_ENV="frontend/.env"
-BACKEND_ENV="backend/.env"
-
-# Ajouter la variable d'environnement dans le fichier principal .env
-echo "HOST_PART=$HOST_PART" > $ENV_FILE
-
-# Propager la variable dans les fichiers .env du frontend et du backend
-echo "REACT_APP_HOST_PART=$HOST_PART" > $FRONTEND_ENV
-echo "HOST_PART=$HOST_PART" > $BACKEND_ENV
-
-# Remplace `localhost` par la variable dans tous les fichiers .env, .js, .ts, .py, .yml, etc.
-# Types de fichiers où faire le remplacement
-# BASE_DIR="."  # Répertoire de base du projet
-# for file in $(find "$BASE_DIR" -type f \( -name "*.env" -o -name "*.js" -o -name "*.ts" -o -name "*.py" -o -name "*.yml" \)); do
-#     sed -i "s/localhost/\$HOST_PART/g" "$file"
-#     echo "Remplacement de localhost par \$HOST_PART dans $file"
-# done
-
-# echo "Configuration terminée avec succès. HOST_PART=$HOST_PART ajouté dans tous les fichiers nécessaires."
+for file in "${env_files[@]}"; do
+    if [[ -f "$file" ]]; then
+        if [[ "$file" == "./frontend/.env" ]]; then
+            # Remplacez la ligne VITE_HOST par la nouvelle valeur
+            if grep -q "^VITE_HOST=" "$file"; then
+                sed -i.bak "s/^VITE_HOST=.*/VITE_HOST=$new_host/" "$file"
+            else
+                echo "VITE_HOST=$new_host" >> "$file"
+            fi
+            echo "Mis à jour : $file avec VITE_HOST=$new_host"
+        else
+            # Remplacez la ligne HOST par la nouvelle valeur
+            if grep -q "^HOST=" "$file"; then
+                sed -i.bak "s/^HOST=.*/HOST=$new_host/" "$file"
+            else
+                echo "HOST=$new_host" >> "$file"
+            fi
+            echo "Mis à jour : $file avec HOST=$new_host"
+        fi
+    else
+        echo "Fichier non trouvé : $file"
+    fi
+done

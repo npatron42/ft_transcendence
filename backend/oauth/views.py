@@ -11,18 +11,22 @@ from rest_framework.views import APIView
 from django.http import HttpResponse
 import jwt, datetime
 import os
+from django.conf import settings
 import requests
 import logging
 logger = logging.getLogger(__name__)
 
-myId = "u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122"
-mySecret = "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"
-url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2F$HOST_PART%3A5173%2Fcheck42user&response_type=code"
-myRedirect = "http://c1r1p3:5173/check42user"
+myRedirect = os.getenv('HOST')
+
+myId =  os.getenv('ID42')
+mySecret =  os.getenv('SECRET')
+url_42 = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2F{myRedirect}%3A5173%2Fcheck42user&response_type=code"
+myRedirect = f"http://{myRedirect}:5173/check42user"
 
 class OAuthView(APIView):
     def post(self, request):
         code = request.data.get('code')
+        # logger.info("JE RECOIS BIEN LA REQUETE")
         if not code:
             return Response({"error": "Code is required"}, status=status.HTTP_401_UNAUTHORIZED)
         try:

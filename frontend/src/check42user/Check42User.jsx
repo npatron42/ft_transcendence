@@ -20,7 +20,7 @@ const Check42User = () => {
             const codeFromUrl = params.get('code');
             console.log("test--->", codeFromUrl);
             if (codeFromUrl) {
-                response = await setJwt(codeFromUrl);
+                const response = await setJwt(codeFromUrl);
                 console.log("test2 --->", response);
                 const newJwt = localStorage.getItem("jwt");
                 setMyJwt(newJwt)

@@ -2,6 +2,9 @@ import React, { createContext, useContext, useEffect, useState, useRef } from 'r
 
 const WebSocketContext = createContext(null);
 
+const host = import.meta.env.VITE_HOST;
+
+
 export const useWebSocket = () => {
     return useContext(WebSocketContext);
 };
@@ -20,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://c1r1p3:8000/ws/socketUser/?token=${myJwt}`);
+        const socket = new WebSocket(`ws://${host}:8000/ws/socketUser/?token=${myJwt}`);
         setSocket(socket);
 
         const pingInterval = setInterval(() => {

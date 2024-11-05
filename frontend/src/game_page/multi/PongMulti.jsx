@@ -4,6 +4,8 @@ import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
 
+const host = import.meta.env.VITE_HOST;
+
 const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({})
 
@@ -72,7 +74,7 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
     }, [powerUpType, powerUpPosition]);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://c1r1p3:8000/ws/pong/${roomId}/?token=${myJwt}`);
+        const ws = new WebSocket(`ws://${host}:8000/ws/pong/${roomId}/?token=${myJwt}`);
 
         if (myUser) {
             ws.onopen = () => {

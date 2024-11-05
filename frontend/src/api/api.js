@@ -1,16 +1,18 @@
 import axios from 'axios';
 
 // const hostPart = process.env.REACT_APP_HOST_PART;
-// const host_Part = 'c1r1p3' ;
+// const host_Part = '${host}' ;
 // if (!hostPart) {
 //     console.error("REACT_APP_HOST_PART is not defined");
 // }
 
 // GET METHODS
 
+const host = import.meta.env.VITE_HOST;
+
 export const setJwt = async (codeFromUrl) => {
 	try {
-		const response = await axios.post(`http://c1r1p3:8000/oauth2/login/`, {
+		const response = await axios.post(`http://${host}:8000/oauth2/login/`, {
 			code: codeFromUrl,
 		});
 
@@ -35,7 +37,7 @@ export const getUser = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/user/`, config);
+		const response = await axios.get(`http://${host}:8000/api/user/`, config);
 
 		// console.log(`Response from getUser :`, response.data);
 
@@ -55,7 +57,7 @@ export const postPicture = async (myData) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/uploadProfilePicture/`, myData, config);
+		const response = await axios.post(`http://${host}:8000/api/uploadProfilePicture/`, myData, config);
 
 		// console.log(response.data);
 
@@ -74,7 +76,7 @@ export const resetPicture = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/resetProfilePicture/`, {}, config);
+		const response = await axios.post(`http://${host}:8000/api/resetProfilePicture/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
@@ -95,7 +97,7 @@ export const sendLangue = async (langue) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/changeLangue/`, { langue } , config);
+		const response = await axios.post(`http://${host}:8000/api/changeLangue/`, { langue } , config);
 
 		console.log(response.data);
 
@@ -115,7 +117,7 @@ export const sendName = async (name) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/changeName/`, { name } , config);
+		const response = await axios.post(`http://${host}:8000/api/changeName/`, { name } , config);
 
 		console.log(response.data);
 
@@ -135,7 +137,7 @@ export const sendMail = async (mail) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/changeMail/`, { mail } , config);
+		const response = await axios.post(`http://${host}:8000/api/changeMail/`, { mail } , config);
 
 		console.log(response.data);
 
@@ -155,7 +157,7 @@ export const sendPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/changePass/`, { pass } , config);
+		const response = await axios.post(`http://${host}:8000/api/changePass/`, { pass } , config);
 
 		console.log(response.data);
 
@@ -175,7 +177,7 @@ export const checkPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/checkPass/`, { pass } , config);
+		const response = await axios.post(`http://${host}:8000/api/checkPass/`, { pass } , config);
 
 		console.log(response.data);
 
@@ -196,7 +198,7 @@ export const getAllUsers = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/users/`, config);
+		const response = await axios.get(`http://${host}:8000/api/users/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -214,7 +216,7 @@ export const getFriendsList = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/friendsList/`, config);
+		const response = await axios.get(`http://${host}:8000/api/friendsList/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -232,7 +234,7 @@ export const getUsersList = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/usersList/`, config);
+		const response = await axios.get(`http://${host}:8000/api/usersList/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -250,7 +252,7 @@ export const getGamesInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/user/gamesInvitations/`, config);
+		const response = await axios.get(`http://${host}:8000/api/user/gamesInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -268,7 +270,7 @@ export const getMatchHistory = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/user/matchHistory/`, config);
+		const response = await axios.get(`http://${host}:8000/api/user/matchHistory/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -286,7 +288,7 @@ export const getFriendsInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/user/friendsInvitations/`, config);
+		const response = await axios.get(`http://${host}:8000/api/user/friendsInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -307,7 +309,7 @@ export const getDiscussions = async (myData) => {
 		
 
 		console.log(`myData GD ---> `, myData)
-		const response = await axios.get(`http://c1r1p3:8000/api/user/discussions/`, {
+		const response = await axios.get(`http://${host}:8000/api/user/discussions/`, {
 			params: myData,
 			...config
 		});
@@ -331,7 +333,7 @@ export const postInvite = async (myData) => {
 			}
 		};
 		
-		const response = await axios.post(`http://c1r1p3:8000/api/sendInvite/`, myData, config);
+		const response = await axios.post(`http://${host}:8000/api/sendInvite/`, myData, config);
 
 		return response.data;
 	} catch (error) {
@@ -349,7 +351,7 @@ export const toggle2fa = async (dauth) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/toggle2fa/`, { dauth } , config);
+		const response = await axios.post(`http://${host}:8000/api/toggle2fa/`, { dauth } , config);
 
 		console.log(response.data);
 
@@ -370,7 +372,7 @@ export const getBlockedRelations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/blockedUsers/`, config);
+		const response = await axios.get(`http://${host}:8000/api/blockedUsers/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -388,7 +390,7 @@ export const getBlockedRelations2 = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://c1r1p3:8000/api/blockedUsers2/`, config);
+		const response = await axios.get(`http://${host}:8000/api/blockedUsers2/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -407,7 +409,7 @@ export const deleteProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/delProfile/`, {}, config);
+		const response = await axios.post(`http://${host}:8000/api/delProfile/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
@@ -426,7 +428,7 @@ export const recupProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://c1r1p3:8000/api/exportProfile/`, {}, config);
+		const response = await axios.post(`http://${host}:8000/api/exportProfile/`, {}, config);
 
 		console.log(response.data);
 		return(response);
