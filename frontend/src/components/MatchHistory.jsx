@@ -33,7 +33,7 @@ function MatchHistory() {
 					</div>
 				)}
 				{matchHistory.length !== 0 && (
-					matchHistory.map((match) => (
+					matchHistory.slice().reverse().map((match) => (
 						<HistoryItem
 							key={match.id} 
 							match={match} 

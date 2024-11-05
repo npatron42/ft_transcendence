@@ -3,7 +3,6 @@ import { getUsersList, getFriendsList, getAllUsers } from '../api/api';
 import FriendItem from './FriendItem';
 import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
-
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 

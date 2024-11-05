@@ -198,8 +198,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 			else:
 				winner = PongConsumer.players[self.room_id][0]
 				winnerdb = player1
+			p1_score = PongConsumer.score[self.room_id]['player1']
+			p2_score = PongConsumer.score[self.room_id]['player2']
+			logger.info(f"le score du joueur 1 est {p1_score} et le score du joueur 2 est {p2_score}")
 			if PongConsumer.send_db[self.room_id] == False:
-				await save_match(winnerdb, player1, player2, 0, 0, False)
+				await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
 				PongConsumer.send_db[self.room_id] = True
 
 			await self.channel_layer.group_send(
