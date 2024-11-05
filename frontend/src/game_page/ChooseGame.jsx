@@ -8,14 +8,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './css/chooseGame.css';
 import './css/tournament.css';
 import Button from 'react-bootstrap/Button';
+import ShowTournaments from '../components/showTournaments';
 import "../home_page/HomeCadre.css"
 
 const ChooseGame = () => {
+    const [joinIsClicked, setJoinIsClicked] = useState(true)
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
     const [invitedPlayer, setInvitedPlayer] = useState([]);
     const {socketUser} = useWebSocket()
     const {tournamentSocket} = useTournamentSocket();
+    const idTournament = uuidv4();
     
     const [powerUp, setPowerUp] = useState(false);
 
@@ -29,13 +32,12 @@ const ChooseGame = () => {
     };
 
     const handleCreateTournaments = () => {
-        const idTournament = uuidv4();
         const myData = {
             "type": "CREATE-TOURNAMENT",
             "idTournament": idTournament
         }
         tournamentSocket.send(JSON.stringify(myData));
-        navigate("/waitingTournaments");
+        navigate("/waitingTournaments", { state: { idTournament } });
     };
 
     const handleJoinTournaments = (idTournament) => {
@@ -47,6 +49,14 @@ const ChooseGame = () => {
         navigate("/waitingTournaments");
     };
 
+    const handleJoinButton = () => {
+        const myData = {
+            "type": "SHOW-TOURNAMENTS",
+        }
+        tournamentSocket.send(JSON.stringify(myData));
+        setJoinIsClicked(!joinIsClicked);
+        return ;
+    }
 
     const handleScoreChange = (event) => {
         setMaxScore(Number(event.target.value));
@@ -58,6 +68,10 @@ const ChooseGame = () => {
 
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
+            {joinIsClicked === true && (
+
+
+
             <div className="row">
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
@@ -155,13 +169,17 @@ const ChooseGame = () => {
                             <div className="flip-card-back">
                                 <div className="flip-card-content">
                                     <button className="createJoinButton" onClick={() => handleCreateTournaments()}>CREATE</button>      
-                                    <button className="createJoinButton" onClick={handleJoinTournaments("QWD")}>JOIN</button>                                  
+                                    <button className="createJoinButton" onClick={() => handleJoinButton()}>JOIN</button>                                  
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            )}
+            {joinIsClicked === false && (
+                <ShowTournaments />
+            )}
         </div>
     );
 };

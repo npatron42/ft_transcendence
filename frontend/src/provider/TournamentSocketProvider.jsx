@@ -33,7 +33,7 @@ export const TournamentSocketProvider = ({ children }) => {
         };
     }, [myJwt]);
 
-    const subscribeToMessages = (callback) => {
+    const subscribeToTournaments = (callback) => {
         listeners.current.push(callback);
         return () => {
             listeners.current = listeners.current.filter(listener => listener !== callback);
@@ -41,7 +41,7 @@ export const TournamentSocketProvider = ({ children }) => {
     };
 
     return (
-        <TournamentContext.Provider value={{ tournamentSocket, subscribeToMessages}}>
+        <TournamentContext.Provider value={{ tournamentSocket, subscribeToTournaments}}>
             {children}
         </TournamentContext.Provider>
     );
