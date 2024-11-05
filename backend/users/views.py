@@ -32,7 +32,6 @@ def getUser(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
     serializer = UserSerializer(user)
-    logger.info(f"User data retrieved: {serializer.data}")
     return JsonResponse(serializer.data)
 
 def getUserById(myId):
@@ -410,7 +409,6 @@ def changeName(request):
     
 
     if User.objects.filter(username=name).exists():
-        logger.info("user exist")
         return JsonResponse({'success': False})
     
 
@@ -428,11 +426,9 @@ def changeMail(request):
     
 
     if User.objects.filter(email=mail).exists():
-        logger.info("user exist")
         return JsonResponse({'success': False})
     
 
-    logger.info("new mail -------> ", mail)
     user.email = mail
     user.save()
     return JsonResponse({'success': True})
@@ -445,11 +441,8 @@ def checkPass(request):
     data = json.loads(request.body)
     password = data.get('pass')
     
-    logger.info("mdp %s", user.password)
-    logger.info("recu %s", password)
 
     if (password==user.password):
-        logger.info("user exist")
         return JsonResponse({'success': True})
     else :
         return JsonResponse({'success': False})
@@ -464,10 +457,8 @@ def changePass(request):
     
 
     if User.objects.filter(password=password).exists():
-        logger.info("user exist")
         return JsonResponse({'success': False})
     
-    logger.info("new pass -------> %s ", password)
 
     user.password = password
     user.save()
@@ -480,7 +471,6 @@ def toggle2fa(request):
     
     data = json.loads(request.body)
     user.dauth = data.get('dauth')
-    logger.info("test-----> %s", user.dauth)
     user.save()
     return JsonResponse({'success': True, 'dauth': user.dauth})
     

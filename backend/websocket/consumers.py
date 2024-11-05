@@ -53,6 +53,7 @@ async def sendToEveryClientsUsersList(channel_layer):
         }
         await sendToClient(channel_layer, sockets[i], friendsToSend)
         await sendToClient(channel_layer, sockets[i], dataToSend)
+        logger.info("STATUS")
         i += 1
 
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
@@ -681,7 +682,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             except:
                 raise (Exception("MOUAIS"))
         elif type == "CREATE-TOURNAMENT":
-            logger.info("User qui cree le tournoi --> %s", myUser.username)
             await sendToSocketTournament(self, "oui")
 
 
