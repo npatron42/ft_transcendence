@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
+const host = import.meta.env.VITE_HOST;
+
 const WebSocketContext = createContext(null);
 
 export const useWebSocket = () => {
@@ -20,7 +22,7 @@ export const TournamentSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://c1r1p3:8000/ws/socketUser/?token=${myJwt}`);
+        const socket = new WebSocket(`ws://${host}:8000/ws/socketUser/?token=${myJwt}`);
         setSocket(socket);
 
         const pingInterval = setInterval(() => {

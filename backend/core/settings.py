@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 from datetime import timedelta
 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 MEDIA_URL = '/media/'
@@ -45,20 +46,21 @@ INSTALLED_APPS = [
 # ALLOWED_HOSTS = ['$HOST_PART', '127.0.0.1', '$HOST_PART:5173']
 ALLOWED_HOSTS = ['*']
 
+HOST= os.getenv('HOST')
 
 
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
-    'http://c1r1p3:5173',
-    'http://c1r1p3:8000',
-	'http://localhost:5173' ,
-	'http://localhost:8000' ,
+    f'http://{HOST}:5173',
+    f'http://{HOST}:8000',
+	# 'http://localhost:5173' ,
+	# 'http://localhost:8000' ,
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://c1r1p3:5173',
-    'http://c1r1p3:8000',
+    f'http://{HOST}:5173',
+    f'http://{HOST}:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

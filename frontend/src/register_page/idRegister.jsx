@@ -6,6 +6,9 @@ import './registrer.css';
 import axios from 'axios';
 
 
+const host = import.meta.env.VITE_HOST;
+
+
 function idRegister() {
 
 		const { t } = useTranslation();
@@ -46,7 +49,7 @@ function idRegister() {
 			setErrors(newErrors);
 			return;
 		}
-		const response = await axios.post('http://c1r1p3:8000/auth/register/', {
+		const response = await axios.post(`http://${host}:8000/auth/register/`, {
 			username,
 			email,
 			password

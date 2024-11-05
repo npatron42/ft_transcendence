@@ -13,11 +13,14 @@ import Chat from './Chat';
 
 import "./components.css"
 
+const host = import.meta.env.VITE_HOST;
+
 function NavbarBS() {
   const { myUser } = useAuth();
   const [nbFriendsInvitations, setNbFriendsInvitations] = useState(0);
   const [nbGamesInvitations, setNbGameInvitations] = useState(0);
   const [notifIsClicked, setNotifClicked] = useState(false);
+  const myJwt = localStorage.getItem('jwt')
 
   const { subscribeToNotifs } = useWebSocket();
   const [profileShown, setProfile] = useState(false);
@@ -62,12 +65,14 @@ function NavbarBS() {
 
     
     const initNotifs = async () => {
-      const myFriendData = await getFriendsInvitations();
-      const myGameData = await getGamesInvitations();
-      const fn = myFriendData.length;
-      const gn = myGameData.length;
-      setNbFriendsInvitations(fn);
-      setNbGameInvitations(gn)
+      if (myJwt) {
+        const myFriendData = await getFriendsInvitations();
+        const myGameData = await getGamesInvitations();
+        const fn = myFriendData.length;
+        const gn = myGameData.length;
+        setNbFriendsInvitations(fn);
+        setNbGameInvitations(gn)
+      }
       }
     
     initNotifs();
@@ -135,7 +140,7 @@ function NavbarBS() {
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
-                src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://c1r1p3:8000/media/${myUser.profilePicture}`}
+                src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://${host}:8000/media/${myUser.profilePicture}`}
                 alt="Profile"
                 className="profile-picture-navbar"
                 onClick={handleProfile}

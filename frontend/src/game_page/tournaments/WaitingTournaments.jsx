@@ -5,6 +5,8 @@ import { useAuth } from '../../provider/UserAuthProvider'
 import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const host = import.meta.env.VITE_HOST;
+
 const WaitingTournaments = ({roomId, maxScore, powerUp}) => {
     const {myUser} = useAuth();
     const {socketUser} = useWebSocket();
@@ -13,7 +15,7 @@ const WaitingTournaments = ({roomId, maxScore, powerUp}) => {
 
 
     useEffect(() => {
-        const tournamentSocket = new WebSocket(`ws://c1r1p3:8000/ws/TournamentsConsumer/?token=${myJwt}`);
+        const tournamentSocket = new WebSocket(`ws://${host}:8000/ws/TournamentsConsumer/?token=${myJwt}`);
 
         tournamentSocket.onmessage = (event) => {
             const data = JSON.parse(event.data);
