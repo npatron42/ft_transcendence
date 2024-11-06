@@ -100,11 +100,9 @@
 .friends-list {
     height: 250px;
     border-radius: 50px;
-    border: 3px solid #161719;
+    border: 3px solid #000000;
     width: 450px;
-    background: transparent;
-    /* background: rgb(94,100,114);
-    background: linear-gradient(90deg, rgba(94,100,114,1) 0%, rgba(42,44,49,1) 80%); */
+    background: #161719;
 }
 
 .buttonAdd {

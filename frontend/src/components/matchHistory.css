@@ -24,9 +24,9 @@
 .matchHistory {
     height: 250px;
     border-radius: 50px;
-    border: 3px solid #161719;
+    border: 3px solid #000000;
     width: 450px;
-    background: transparent;
+    background: #161719;
 
     margin-left: 30px;
 }
