@@ -25,7 +25,7 @@ function WinLossChart({ matchHistory }) {
         datasets: [
             {
                 data: [wins, losses],
-                backgroundColor: ['#83c5be', '#4361ee'],
+                backgroundColor: ['#FFA69E', '#AED9E0'],
                 borderColor: ['#161719', '#161719'],
                 borderWidth: 2,
                 cutout: '70%',
