@@ -23,8 +23,8 @@
 	width: 600px;
 	height: 450px;
 	border-radius: 25px;
-	background-color: transparent;
-	border: 3px solid #161719;
+	background-color: #161719;
+	border: 4px solid #000000;
 }
 
 .showTournaments-header {
@@ -36,15 +36,19 @@
 }
 
 .modifyWriteTournament {
-	font-family: 'Millimetre-Regular', sans-serif;
+	font-family: 'Millimetre-Bold', sans-serif;
     font-size: 22px; 
-	color: #FAF3DD;
+	color: #FFA69E;
 }
 
 .showTournaments-content {
 	width: 100%;
 	height: 85%;
-}
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: flex-start;
+  }
 
 .tournament-div {
 	display: flex;
@@ -53,3 +57,314 @@
 	width: 100%;
 	height: 25%;
 }
+
+.profile-picture-tournament {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.tournamentLine {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 80%;
+	height: 20%;
+	border-radius: 25px;
+	border-bottom: 2px solid #FAF3DD;
+	border-top: 2px solid #FAF3DD;
+	border-left: 2px solid #FFA69E;
+	border-right: 2px solid #FFA69E;
+}
+
+.tournamentLine-picture {
+	width: 10%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tournamentLine-button {
+	width: 15%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modifyWritingNoIdeaCssFuck {
+	font-family: 'Millimetre-Bold', sans-serif;
+    font-size: 16px; 
+	color: #FAF3DD;
+}
+
+.modifyWritingNoIdeaCssFuck-2 {
+	font-family: 'Millimetre-Bold', sans-serif;
+    font-size: 16px; 
+	color: #FDCDBE;
+}
+
+.tournamentLine-div {
+	width: 33%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.modifyWriteTournament-2 {
+	font-family: 'Millimetre-Bold', sans-serif;
+    font-size: 22px; 
+	color: #FAF3DD;
+	padding-top: 120px;
+}
+
+.wrapper {
+	width: 160px;
+	height: 60px;
+	position: relative;
+	z-index: 1;
+	margin-top: 70px;
+
+  }
+  
+  .circle {
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	border-radius: 50%;
+	background-color: #FFA69E;
+	left: 15%;
+	transform-origin: 50%;
+	animation: circle7124 .5s alternate infinite ease;
+  }
+  
+  @keyframes circle7124 {
+	0% {
+	  top: 60px;
+	  height: 5px;
+	  border-radius: 50px 50px 25px 25px;
+	  transform: scaleX(1.7);
+	}
+  
+	40% {
+	  height: 20px;
+	  border-radius: 50%;
+	  transform: scaleX(1);
+	}
+  
+	100% {
+	  top: 0%;
+	}
+  }
+  
+  .circle:nth-child(2) {
+	left: 45%;
+	animation-delay: .2s;
+  }
+  
+  .circle:nth-child(3) {
+	left: auto;
+	right: 15%;
+	animation-delay: .3s;
+  }
+  
+  .shadow {
+	width: 20px;
+	height: 4px;
+	border-radius: 50%;
+	background-color: rgba(0,0,0,0.9);
+	position: absolute;
+	top: 62px;
+	transform-origin: 50%;
+	z-index: -1;
+	left: 15%;
+	filter: blur(1px);
+	animation: shadow046 .5s alternate infinite ease;
+  }
+  
+  @keyframes shadow046 {
+	0% {
+	  transform: scaleX(1.5);
+	}
+  
+	40% {
+	  transform: scaleX(1);
+	  opacity: .7;
+	}
+  
+	100% {
+	  transform: scaleX(.2);
+	  opacity: .4;
+	}
+  }
+  
+  .shadow:nth-child(4) {
+	left: 45%;
+	animation-delay: .1s
+  }
+  
+  .shadow:nth-child(5) {
+	left: auto;
+	right: 15%;
+	animation-delay: .2s;
+  }
+  
+
+.ui-btn {
+	background-color: transparent;
+	--btn-padding: 15px 20px;
+	--btn-hover-bg: transparent;
+	--btn-transition: .2s;
+	--btn-letter-spacing: .1rem;
+	--btn-animation-duration: 1.2s;
+	--btn-shadow-color: rgba(0, 0, 0, 0.137);
+	--btn-shadow: 0 2px 10px 0 var(--btn-shadow-color);
+	--hover-btn-color: #FFA69E;
+	--default-btn-color: #FAF3DD;
+	--font-size: 12px;
+	--font-weight: 600;
+	--font-family: Menlo,Roboto Mono,monospace;
+  }
+  
+  /* button settings 👆 */
+  
+  .ui-btn {
+	box-sizing: border-box;
+	padding: var(--btn-padding);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--default-btn-color);
+	font: var(--font-weight) var(--font-size) var(--font-family);
+	background: var(--btn-default-bg);
+	border: none;
+	cursor: pointer;
+	transition: var(--btn-transition);
+	overflow: hidden;
+	box-shadow: var(--btn-shadow);
+  }
+  
+  .ui-btn span {
+	letter-spacing: var(--btn-letter-spacing);
+	transition: var(--btn-transition);
+	box-sizing: border-box;
+	position: relative;
+	background: inherit;
+  }
+  
+  .ui-btn span::before {
+	box-sizing: border-box;
+	position: absolute;
+	content: "";
+	background: inherit;
+  }
+  
+  .ui-btn:hover, .ui-btn:focus {
+	background: var(--btn-hover-bg);
+  }
+  
+  .ui-btn:hover span, .ui-btn:focus span {
+	color: var(--hover-btn-color);
+  }
+  
+  .ui-btn:hover span::before, .ui-btn:focus span::before {
+	animation: chitchat linear both var(--btn-animation-duration);
+  }
+  
+  @keyframes chitchat {
+	0% {
+	  content: "T";
+	}
+  
+	5% {
+	  content: "A";
+	}
+  
+	10% {
+	  content: "C";
+	}
+  
+	15% {
+	  content: "-!";
+	}
+  
+	20% {
+	  content: "#$_";
+	}
+  
+	25% {
+	  content: "№:0";
+	}
+  
+	30% {
+	  content: "#{+.";
+	}
+  
+	35% {
+	  content: "@}-?";
+	}
+  
+	40% {
+	  content: "?{4@%";
+	}
+  
+	45% {
+	  content: "=.,^!";
+	}
+  
+	50% {
+	  content: "?2@%";
+	}
+  
+	55% {
+	  content: "\;1}]";
+	}
+  
+	60% {
+	  content: "?{%:%";
+	  right: 0;
+	}
+  
+	65% {
+	  content: "|{f[4";
+	  right: 0;
+	}
+  
+	70% {
+	  content: "{4%0%";
+	  right: 0;
+	}
+  
+	75% {
+	  content: "'1_0<";
+	  right: 0;
+	}
+  
+	80% {
+	  content: "{0%";
+	  right: 0;
+	}
+  
+	85% {
+	  content: "]>'";
+	  right: 0;
+	}
+  
+	90% {
+	  content: "4";
+	  right: 0;
+	}
+  
+	95% {
+	  content: "2";
+	  right: 0;
+	}
+  
+	100% {
+	  content: "";
+	  right: 0;
+	}
+  }

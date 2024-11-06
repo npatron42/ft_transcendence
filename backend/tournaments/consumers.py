@@ -166,8 +166,9 @@ class Tournament(AsyncWebsocketConsumer):
         elif type == "SHOW-TOURNAMENTS":
             await Tournament.sendAllTournaments(self)
 
-        # elif type == "JOIN-TOURNAMENT":
-        #     userInTournament[myUser.id] = idTournament
+        elif type == "JOIN-TOURNAMENT":
+            idTournamentToJoin = data.get("id")
+            logger.info("%s veut rejoindre --> %s", myUser.username, idTournamentToJoin)
 
         elif type == "LEAVE-TOURNAMENT":
             logger.info("Before usersInTournament --> %s", userInTournament)

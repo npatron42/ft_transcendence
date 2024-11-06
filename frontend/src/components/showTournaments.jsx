@@ -29,18 +29,64 @@ function ShowTournaments() {
 
     }, [subscribeToTournaments, tournamentSocket]);
 
+	const handleJoinTournament = (idTournament) => {
+		const myDataToSend = {
+			"type": "JOIN-TOURNAMENT",
+			"id": idTournament
+		}
+		if (tournamentSocket) {
+			tournamentSocket.send(JSON.stringify(myDataToSend))
+		}
+		return ;
+	}
 
 	return (
 		<div className="showTournaments">
 			<div className="showTournaments-header">
 				<span className="modifyWriteTournament">TOURNAMENTS</span>
 			</div>
-			<div className="showTournaments-content">
-				OUI
+			{myTournaments.length === 0 && (
+				<>
+				<div className="showTournaments-content">
+					<span className="modifyWriteTournament-2">There is no tournament for the moment...</span>
+				<div class="wrapper">
+					<div class="circle"></div>
+					<div class="circle"></div>
+					<div class="circle"></div>
+					<div class="shadow"></div>
+					<div class="shadow"></div>
+				<div class="shadow"></div>
+				</div>
 			</div>
-			<div className="tournament-div">
+			</>
+			)}
+			{myTournaments.length !== 0 && (
+				<div className="showTournaments-content">
+				{myTournaments.map((tournament, index) => (
+					<div key={index} className="tournamentLine">
+						<div className="tournamentLine-picture">
+							<img src={tournament.leader.profilePicture} className="profile-picture-tournament"></img>
+						</div>
+						<div className="tournamentLine-div">
+							<span className="modifyWritingNoIdeaCssFuck">{tournament.leader.username}</span>
+						</div>
+						<div className="tournamentLine-div">
+							<span className="modifyWritingNoIdeaCssFuck-2">{tournament.players.length} / 4</span>
+						</div>
+						<div className="tournamentLine-button">
+							<button class="ui-btn" onClick={() => handleJoinTournament(tournament.id)}>
+								<span>
+									JOIN 
+								</span>
+							</button>
+						</div>
+					</div>
+				))}
+				</div>
+			)}
+			{/* <div className="tournament-div">
 
-			</div>
+			</div> */}
 		</div>
   	);
 }
