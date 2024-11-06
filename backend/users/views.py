@@ -1,5 +1,6 @@
 import shutil
 import json
+from pongMulti.models import MatchHistory
 from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 from django.db import transaction
@@ -19,6 +20,7 @@ from django.core.files.storage import FileSystemStorage
 import jwt
 import logging
 import os
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -40,7 +42,10 @@ def getUserById(myId):
     serializer = UserSerializer(user)
     return serializer.data
 
-
+def getUserByUsername(request, username):
+    user = User.objects.get(username=username)
+    serializer = UserSerializer(user)
+    return JsonResponse(serializer.data)
 
     ### ALL USERS ###
 
@@ -92,6 +97,42 @@ def getMatchHistory(request):
         }
         result.append(dataToSend)
         i += 1
+    return JsonResponse(result, safe=False)
+
+def getMatchHistoryByUsername(request, username):
+    payload = middleWareAuthentication(request)
+    myUser = User.objects.filter(username=username).first()
+
+    
+    
+    matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
+    matchesSer = MatchHistorySerializer(matchesTmp, many=True)
+    matches = matchesSer.data
+
+    i = 0
+    myLen = len(matches)
+    result = []
+    while i < myLen:
+        if myUser.id == matches[i]["player1"]:
+            opponent = getUserById(matches[i]["player2"])
+            score = str(matches[i]["player1_score"]) + "  /  " + str(matches[i]["player2_score"])
+        else:
+            opponent = getUserById(matches[i]["player1"])
+            score = str(matches[i]["player2_score"]) + "  /  " + str(matches[i]["player1_score"])
+        if myUser.id == matches[i]["winner"]:
+            win = True
+        else:
+            win = False
+        date = matches[i]["date"]
+        dataToSend = {
+            "opponent": opponent,
+            "score": score,
+            "win": win,
+            "date": date
+        }
+        result.append(dataToSend)
+        i += 1
+    logger.info(result)
     return JsonResponse(result, safe=False)
 
 
@@ -243,6 +284,25 @@ def getDiscussions(request):
 
         ### FRIENDS LIST ###
 
+def getUserFriendsListById(request, id):
+    logger.info("ICCCCCCCCCCCCCIIIII LE USER")
+    myUser = User.objects.filter(id=id).first()
+    if not myUser:
+        return JsonResponse({"error": "User not found"}, status=404)
+
+    friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
+    tabFriends = []
+    for relationship in friendsRelationships:
+        userToAdd = UserSerializer(relationship.user2 if relationship.user1 == myUser else relationship.user1)
+        tabFriends.append(userToAdd.data)
+
+    usernamesBlocked = getUsernamesBlocked(request)
+    tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
+
+    logger.info("ICCCCCCCCCCCCCIIIII LE TAB %s", tabFriends)
+
+    return JsonResponse(tabFriends, safe=False)
+
 
 
 def getFriendsList(request):
@@ -354,6 +414,9 @@ def postInvite(request):
     return JsonResponse(serializer.data, safe=False)
 
 
+    ## PROFIL PAGE ## 
+
+
 @csrf_exempt
 def uploadProfilePicture(request):
     payload = middleWareAuthentication(request)
@@ -384,6 +447,11 @@ def uploadProfilePicture(request):
 def resetProfilePicture(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
+    
+    upload_directory = f'media/{user.id}/'
+
+    if os.path.exists(upload_directory):
+        shutil.rmtree(upload_directory)
 
     user.profilePicture = 'default.jpg'
     user.save()
@@ -508,4 +576,82 @@ def removeUsernameFromList(usernamesToRemove, myList):
     return myList
 
 
+##RGPD
 
+
+@csrf_exempt  
+def deleteProfile(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    while True:
+        random_number = random.randint(10000, 99999)
+        name = f"user_{random_number}"
+        email = f"{name}@delete"
+        if not user.isFrom42 :
+            password = f"{random_number}"
+        if not User.objects.filter(username=name).exists():
+            break
+    
+    logger.info("new user -------> %s", user)
+    logger.info("new mdp -------> %s ", user.password)
+    user.sup = True
+    user.username = name
+    user.profilePicture = 'default.jpg'
+    if not user.isFrom42 :
+        user.password = password
+    user.email = email
+    user.save()
+    return JsonResponse({'success': True})
+
+
+@csrf_exempt  
+def exportProfile(request):
+    
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    logger.info("requete =======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s", request)
+    
+    user_data = {
+        "username": user.username,
+        "email": user.email,
+        "status": user.status,
+        "profilePicture": user.profilePicture,
+        "isFrom42": user.isFrom42,
+        "myid42": user.myid42,
+        "langue": user.langue,
+        "dauth": user.dauth,
+        "otp_code": user.otp_code,
+        "otp_created_at": user.otp_created_at,
+        "delete_profile" : user.sup
+    }
+
+    invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
+    invitations_received = list(Invitation.objects.filter(receiver=user).values())
+    
+    friends = list(FriendsList.objects.filter(user1=user).values()) + list(FriendsList.objects.filter(user2=user).values())
+    
+    blocked = list(RelationsBlocked.objects.filter(userWhoBlocks=user).values())
+    
+    game_invitations = list(GameInvitation.objects.filter(leader=user).values()) + list(GameInvitation.objects.filter(userInvited=user).values())
+    
+    messages_sent = list(Message.objects.filter(sender=user).values())
+    messages_received = list(Message.objects.filter(receiver=user).values())
+    
+    match_history = list(MatchHistory.objects.filter(Q(player1=user) | Q(player2=user)).values())
+
+    full_data = {
+        "profile": user_data,
+        "invitations_sent": invitations_sent,
+        "invitations_received": invitations_received,
+        "friends": friends,
+        "blocked_users": blocked,
+        "game_invitations": game_invitations,
+        "messages_sent": messages_sent,
+        "messages_received": messages_received,
+        "match_history": match_history,
+    }
+    logger.info("test ----->>>> %s", full_data)
+
+    return JsonResponse(full_data, json_dumps_params={'indent': 2})

@@ -21,7 +21,6 @@ const Home = () => {
         <div id="background-container">
             <div className="custom2-cadre">
                 
-                <Languages></Languages>
                 <NavbarBS />
                 <div className="playPlacement">
                     <CadrePlay/>

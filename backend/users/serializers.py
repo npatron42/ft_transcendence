@@ -4,7 +4,7 @@ from .models import User, Invitation, FriendsList, Message, RelationsBlocked, Ga
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('id', 'username', 'email', 'profilePicture', 'isFrom42', 'status', 'langue', 'dauth')
+        fields = ('id', 'username', 'email', 'profilePicture', 'isFrom42', 'status', 'langue', 'dauth', 'myid42' ,'sup')
 
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:

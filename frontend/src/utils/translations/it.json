@@ -12,7 +12,9 @@
       "enterOtp" : "Inserisci il codice ricevuto via email.",
       "errorOtp": "Codice non valido.",                                                                                                                                                                     
       "errorOtpEx": "Codice scaduto",                                                                                                                                                                     
-      "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\"."                                                                                                                                                                     
+      "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\".",
+      "sup" : "Account eliminato",                                                                                                                                                                        
+      "sup2" : "Il tuo account è stato eliminato."                                                                                                                                                                    
     },
 
     "registerPage": {
@@ -55,6 +57,9 @@
       "enable2fa" : "Abilitare l'autenticazione a due fattori",
       "good2fa" : "Autenticazione a due fattori implementata",
       "disable2fa" : "Disabilita l'autenticazione a due fattori",
-      "blocked": "Utenti bloccati"
+      "blocked": "Utenti bloccati",
+      "sup" : "Elimina il mio account",
+      "verif" : "Sei sicuro ?",
+      "recup" : "Recupera i miei dati"
     }
   }

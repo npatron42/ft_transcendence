@@ -15,8 +15,6 @@ const ChooseGame = () => {
     const [joinIsClicked, setJoinIsClicked] = useState(true)
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
-    const [invitedPlayer, setInvitedPlayer] = useState([]);
-    const {socketUser} = useWebSocket()
     const {tournamentSocket} = useTournamentSocket();
     const idTournament = uuidv4();
     
@@ -38,15 +36,6 @@ const ChooseGame = () => {
         }
         tournamentSocket.send(JSON.stringify(myData));
         navigate("/waitingTournaments", { state: { idTournament } });
-    };
-
-    const handleJoinTournaments = (idTournament) => {
-        const myData = {
-            "type": "JOIN-TOURNAMENT",
-            "idTournament": idTournament
-        }
-        tournamentSocket.send(JSON.stringify(myData));
-        navigate("/waitingTournaments");
     };
 
     const handleJoinButton = () => {
@@ -107,7 +96,7 @@ const ChooseGame = () => {
                                             className="form-range"
                                         />
                                     </div>
-                                    <button className="start-game" onClick={handleSoloClick}>Lancer le jeu</button>
+                                    <button className="ui-btn" onClick={handleSoloClick}>Lancer le jeu</button>
                                 </div>
                             </div>
                         </div>

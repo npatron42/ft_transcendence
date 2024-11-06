@@ -90,6 +90,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	score = {}
 	max_scores = {}
 	players = {}
+	invited_players = {}
 	power_up_bool = {}
 	power_up = {}
 	power_up_active = {}
@@ -197,8 +198,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 			else:
 				winner = PongConsumer.players[self.room_id][0]
 				winnerdb = player1
+			p1_score = PongConsumer.score[self.room_id]['player1']
+			p2_score = PongConsumer.score[self.room_id]['player2']
+			logger.info(f"le score du joueur 1 est {p1_score} et le score du joueur 2 est {p2_score}")
 			if PongConsumer.send_db[self.room_id] == False:
-				await save_match(winnerdb, player1, player2, 0, 0, False)
+				await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
 				PongConsumer.send_db[self.room_id] = True
 
 			await self.channel_layer.group_send(
@@ -233,9 +237,17 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if user_name:
 			self.username = user_name
+			if self.room_id in PongConsumer.invited_players:
+				invited_player = PongConsumer.invited_players[self.room_id]
+
+				if user_name != invited_player:
+					logger.info(f"Rejet du joueur {user_name} car il ne correspond pas à l'invité {invited_player}")
+					await self.close()
+					return
+			
+
 			if user_name not in PongConsumer.players[self.room_id]:
 				PongConsumer.players[self.room_id].append(user_name)
-
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{

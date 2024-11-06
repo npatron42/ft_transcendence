@@ -51,7 +51,7 @@ const usePaddleMovement = (webSocket, playerId) => {
     }, [keysPressed, webSocket]);
 };
 
-const PongMulti = ({ roomId, maxScore, powerUp }) => {
+const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     const myJwt = localStorage.getItem('jwt');
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
@@ -81,6 +81,10 @@ const PongMulti = ({ roomId, maxScore, powerUp }) => {
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
                 ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
+                if (userSelected)   
+                    {
+                        ws.send(JSON.stringify({userSelected: userSelected.username}));
+                    }   
             };
 
             ws.onmessage = (event) => {

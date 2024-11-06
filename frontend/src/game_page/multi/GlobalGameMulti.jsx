@@ -8,17 +8,18 @@ const GlobalGameMulti = () => {
     const location = useLocation();
     const maxScore = location.state?.maxScore || 10;
     const powerUp = location.state?.powerUp;
+    const userSelected = location.state?.userSelected;
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const isRefreshed = localStorage.getItem('isRefreshed');
-        if (isRefreshed) {
-          navigate('/home');
-        } else {
-          localStorage.setItem('isRefreshed', 'true');
-        }
-        return () => localStorage.removeItem('isRefreshed');
-      }, [navigate]);
+    // useEffect(() => {
+    //     const isRefreshed = localStorage.getItem('isRefreshed');
+    //     if (isRefreshed) {
+    //       navigate('/home');
+    //     } else {
+    //       localStorage.setItem('isRefreshed', 'true');
+    //     }
+    //     return () => localStorage.removeItem('isRefreshed');
+    //   }, [navigate]);
 
     return (
         <div className="GlobalGame">
@@ -27,6 +28,7 @@ const GlobalGameMulti = () => {
                 roomId={roomId}
                 maxScore={maxScore}
                 powerUp ={powerUp}
+                userSelected= {userSelected}
             />
         </div>
     );

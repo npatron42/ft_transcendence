@@ -85,6 +85,7 @@ function NavbarBS() {
     setProfile(!profileShown);
     if (notifIsClicked === true)
       setNotifClicked(!notifIsClicked);
+    console.log(profileShown)
 
   };
 
@@ -96,6 +97,8 @@ function NavbarBS() {
   };
 
   const handleOtherLocations = () => {
+    if (profileShown === true)
+      setProfile(!profileShown);
     if (homeShown === true)
       setHomeShown(!homeShown);
     if (chatShown === true)
@@ -103,6 +106,8 @@ function NavbarBS() {
   }
 
   const handleChat = () => {
+    if (profileShown === true)
+      setProfile(!profileShown);
     setChatShown(!chatShown);
     if (profileShown === true)
       setProfile(!profileShown);

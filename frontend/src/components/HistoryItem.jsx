@@ -25,10 +25,10 @@ function HistoryItem({ match }) {
     return (
 		<div className="historyItem">
 			<div className="historyItem-part">
-				<span className="modifyUsername">{match.opponent.username}</span>
+				<span className="modifyUsernameH">{match.opponent.username}</span>
 			</div>
 			<div className="historyItem-part">
-				<span className={`modifyScore${win}`}>{match.score}</span>
+				<span className={`modifyScore`}>{match.score}</span>
 			</div>
 			<div className="historyItem-part">
 				<span className={`modify${win}`}>{win}</span>

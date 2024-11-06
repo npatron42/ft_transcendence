@@ -281,5 +281,6 @@
     left: 74vh;
     height: 35px;
     padding: 5px 20px;
+    z-index: 5;
 }
 

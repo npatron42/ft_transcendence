@@ -96,6 +96,7 @@ class Tournament(AsyncWebsocketConsumer):
         myDataToSend = {
             "allTournaments": allTournaments
         }
+
         await sendToTournamentsSocket(self, myDataToSend)
 
 
@@ -144,7 +145,6 @@ class Tournament(AsyncWebsocketConsumer):
         myUser = self.scope["user"]
         type = data.get("type")
 
-        
         # CREATION D'UN TOURNOI
 
         if type == "CREATE-TOURNAMENT":
@@ -169,14 +169,27 @@ class Tournament(AsyncWebsocketConsumer):
         elif type == "JOIN-TOURNAMENT":
             idTournamentToJoin = data.get("id")
             logger.info("%s veut rejoindre --> %s", myUser.username, idTournamentToJoin)
+            if idTournamentToJoin in allTournamentsId:
+                idTournamentToJoin = data.get("id")
+                Tournament.players[idTournamentToJoin].append(myUser.id)
+                await Tournament.sendAllTournaments(self)
+                userInTournament[myUser.id] = idTournamentToJoin
+                allTournamentsId.append(idTournamentToJoin)
 
         elif type == "LEAVE-TOURNAMENT":
-            logger.info("Before usersInTournament --> %s", userInTournament)
-            logger.info("Before allIdTournaments ---> %s", allTournamentsId)
+            idTournament = data.get("id")
+            if idTournament in allTournamentsId:
+                erasePlayerFromTournamentObject(idTournament, myUser.id)
             Tournament.clearThings(self, myUser)
-            logger.info("After usersInTournament --> %s", userInTournament)
-            logger.info("After allIdTournaments ---> %s", allTournamentsId)
             await Tournament.sendAllTournaments(self)
             
 
-        
+def erasePlayerFromTournamentObject(idTournament, idPlayer):
+    i = 0
+    myLen = len(Tournament.players[idTournament])
+    while i < myLen:
+        if idPlayer == Tournament.players[idTournament][i]:
+            del Tournament.players[idTournament][i]
+            return
+        i += 1
+    return 

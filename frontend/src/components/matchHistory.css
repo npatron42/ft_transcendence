@@ -92,7 +92,6 @@
     justify-content: flex-end;  
     width: 90%;
     margin-left: 20px;
-    border: 1px solid #FAF3DD;
     border-radius: 25px;
     margin-bottom: 12px;
 }
@@ -106,17 +105,17 @@
 
 }
 
-.modifyUsername {
+.modifyUsernameH {
 	font-family: Millimetre;
-    font-size: 22px; 
+    font-size: 18px; 
     font-weight: bold;
-	color: #cdb4db !important;
+	color: #FAF3DD !important;
 }
 
 .modifyScorewin {
     font-size: 18px; 
     font-weight: bold;
-	color: #FAF3DD;
+	color: #AED9E0;
     font-family: Millimetre;
     border-bottom: 1px solid #5E6472;
 }
@@ -133,7 +132,7 @@
 	font-family: Millimetre;
     font-size: 18px; 
     font-weight: bold;
-	color: #FFA69E;
+	color: #FDCDBE !important;
 }
 
 .modifywin {
