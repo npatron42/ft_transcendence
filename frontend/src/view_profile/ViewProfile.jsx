@@ -155,8 +155,8 @@ function ViewProfile() {
                     <div className="card">
 
                         <div className="shine"></div>
-
                         <div className="banner">
+                            
                             <img
                                 src={profileUser.profilePicture}
                                 alt="Profile Banner"
@@ -212,20 +212,21 @@ function ViewProfile() {
                                 </div>
                             )}
                         </div>
-
-                        <div className={`matchHistory-content-profile3 ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+                        <div className="matchHistory-content-profile3">
+                        <div className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
                                     {username} has not played a match
                                 </div>
                             ) : (
-                                matchHistory.map((match) => (
+                                matchHistory.slice().reverse().map((match) => (
                                     <HistoryItem
                                         key={match.id}
                                         match={match}
                                     />
                                 ))
                             )}
+                        </div>
                         </div>
                     </div>
                 </div>
