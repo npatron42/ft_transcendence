@@ -1,12 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Dropdown from 'react-bootstrap/Dropdown';
-import flagI from '../assets/login_page/italianFlag.svg';
-import flagE from '../assets/login_page/englishFlag.svg';
-import flagF from '../assets/login_page/frenchFlag.svg';
-import { getBlockedRelations2 } from '../api/api';
 import React, { useEffect, useState } from 'react';
-import { useWebSocket } from '../provider/WebSocketProvider';
-import { useAuth } from '../provider/UserAuthProvider';
 
 import './buttonBlockedUsers.css'
 

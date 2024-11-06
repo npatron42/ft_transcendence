@@ -18,6 +18,7 @@ import GlobalTournaments from './game_page/tournaments/GlobalTournaments';
 import ProfilPage from './profil_page/profilPage.jsx';
 import Check42User from './check42user/Check42User.jsx';
 import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
+import ViewProfile from './view_profile/ViewProfile.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -42,6 +43,8 @@ const App = () => {
         <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
         <Route path="/globalTournaments" element={<GlobalTournaments />} />
         <Route path="/game/options" element={<GameOptions />} />
+        <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
+        <Route path="/profile/:username" element={<ViewProfile />} />
         <Route path="/waitingTournaments" element={<GlobalTournaments />} />
       </Routes>
       </TournamentSocketProvider>

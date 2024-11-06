@@ -25,7 +25,7 @@ export const WebSocketProvider = ({ children }) => {
 
         const pingInterval = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "ping" }));
+                // socket.send(JSON.stringify({ type: "ping" }));
             }
         }, 10000);
 
@@ -42,7 +42,6 @@ export const WebSocketProvider = ({ children }) => {
 
         socket.onclose = () => {
             clearInterval(pingInterval); 
-            console.log("JE CLOSE DANS LE PROVIDER");
         };
 
         return () => {

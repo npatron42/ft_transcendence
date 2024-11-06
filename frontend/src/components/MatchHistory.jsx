@@ -24,7 +24,7 @@ function MatchHistory() {
 	return (
 		<div className="matchHistory">
 			<div className="matchHistory-header">
-				<span className="writeHistory">Match History</span>
+				<span className="writeHistory"> My Match History</span>
 			</div>
 			<div className={`matchHistory-content ${matchHistory.length >= 3 ? "scrollable" : ""}`}>
 				{matchHistory.length === 0 && (
@@ -33,7 +33,7 @@ function MatchHistory() {
 					</div>
 				)}
 				{matchHistory.length !== 0 && (
-					matchHistory.map((match) => (
+					matchHistory.slice().reverse().map((match) => (
 						<HistoryItem
 							key={match.id} 
 							match={match} 

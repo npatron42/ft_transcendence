@@ -24,12 +24,11 @@ function loginPage(){
 	return (
 		<div id="background-container">
 			<Cadre />
+			<h3 className="h1-titre">Transcendence</h3>
 			<ButtonCreate />
 			<Button42 />
-			<h3 className="h1-titre">Transcendence</h3>
 			<Log />
 			<Langue />
-			<p className="para-user">{t('loginPage.new')}</p>
 		</div>
 	);
 }

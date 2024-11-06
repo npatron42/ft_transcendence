@@ -9,6 +9,7 @@ function ShowTournaments() {
 
 	const [myTournaments, setTournaments] = useState([])
 	const {tournamentSocket, subscribeToTournaments} = useTournamentSocket()
+	const navigate = useNavigate()
 
 	useEffect(() => {
         const handleSocketTournament = (data) => {
@@ -37,6 +38,7 @@ function ShowTournaments() {
 		if (tournamentSocket) {
 			tournamentSocket.send(JSON.stringify(myDataToSend))
 		}
+		navigate("/waitingTournaments", { state: { idTournament } })
 		return ;
 	}
 
@@ -74,7 +76,7 @@ function ShowTournaments() {
 							<span className="modifyWritingNoIdeaCssFuck-2">{tournament.players.length} / 4</span>
 						</div>
 						<div className="tournamentLine-button">
-							<button class="ui-btn" onClick={() => handleJoinTournament(tournament.id)}>
+							<button className="ui-btn" onClick={() => handleJoinTournament(tournament.id)}>
 								<span>
 									JOIN 
 								</span>

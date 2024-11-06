@@ -45,48 +45,49 @@
 		cursor: default; 
 	}
 
-.custom-click1 {
-	position: absolute;
-	top: 60vh;
-	left: 57vw;
-	background-color:#5E6472;
-	color:#FDCDBE !important;
-	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
-	padding: 0.2vw 0.8vw;
-	font-size: 1vw;
-	font-family: 'Millimetre', sans-serif;
-	font-weight: bold;
-	border-radius: 10px; 
-	transition: transform 0.2s ease;
-}
-
-	.custom-click1:hover {
-		transform: translateY(-0.2vw);
-	}
-
-	.custom-click2 {
+	.custom-click1 {
+		position: absolute;
+		top: 60vh;
+		left: 57vw;
 		background-color:#5E6472;
 		color:#FDCDBE !important;
+		box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 		padding: 0.2vw 0.8vw;
 		font-size: 1vw;
 		font-family: 'Millimetre', sans-serif;
 		font-weight: bold;
 		border-radius: 10px; 
+		transition: transform 0.2s ease;
 	}
-	.custom-click3 {
-		/* background-color:#000000; */
-		background-color:rgb(255, 69, 69) ;
-		/* color:#9b5743 !important; */
-		color:#FDCDBE !important;
-		border: 1px solid #FDCDBE!important;
-		/* border :1px solid #9b5743!important; */
-		padding: 0.2vw 0.8vw;
-		font-size: 1vw;
-		font-family: 'Millimetre', sans-serif;
-		font-weight: bold;
-		border-radius: 10px; 
-	}
-  /* mdp.css */
+	
+		.custom-click1:hover {
+			transform: translateY(-0.2vw);
+		}
+	
+		.custom-click2 {
+			background-color:#5E6472;
+			color:#FDCDBE !important;
+			padding: 0.2vw 0.8vw;
+			font-size: 1vw;
+			font-family: 'Millimetre', sans-serif;
+			font-weight: bold;
+			border-radius: 10px; 
+		}
+		.custom-click3 {
+			background-color:rgb(255, 69, 69) !important;
+			color:#FDCDBE!important;
+			border: 1px solid #FDCDBE!important;
+			padding: 0.2vw 0.8vw;
+			font-size: 1vw;
+			font-family: 'Millimetre', sans-serif;
+			font-weight: bold;
+			border-radius: 10px; 
+		}
+
+		.custom-click3:hover {
+			background-color: rgb(255, 69, 69) !important;
+			color: #FDCDBE!important;
+		}
 
 .modal-custom {
 	position: center;
@@ -104,7 +105,6 @@
 
 
 .modal-content-custom {
-	background-color: transparent; 
 	padding: 5px;
 	width: 20vw !important;
 	max-width: 20vw !important;

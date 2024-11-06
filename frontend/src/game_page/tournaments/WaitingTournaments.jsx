@@ -15,6 +15,8 @@ const WaitingTournaments = () => {
     const idTournament = location.state?.idTournament;
     const navigate = useNavigate()
 
+    console.log("myId -->", idTournament)
+
     useEffect(() => {
 
         const isRefreshed = localStorage.getItem('isRefreshed');

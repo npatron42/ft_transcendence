@@ -8,6 +8,8 @@ import Upload from './upload.jsx';
 import Pseudo from './pseudo.jsx';
 import Mail from './mail.jsx';
 import Mdp from './mdp.jsx';
+import DelProfil from './delProfil.jsx';
+import RecProfil from './recProfil.jsx';
 import ButtonDef from './buttonDef.jsx';
 import ButtonBlockedUsers from './buttonBlockedUsers.jsx';
 import { useWebSocket } from '../provider/WebSocketProvider.jsx';
@@ -19,7 +21,6 @@ function profilPage() {
 	const [Actif, setActif] = useState(false);
 	const {myUser} = useAuth();
 	const {socketUser, subscribeToMessages} = useWebSocket();
-
 	const [blockedUsers, setBlockedUsers] = useState([]);
 
 	const initBlockedUsers = async () => {
@@ -56,7 +57,9 @@ function profilPage() {
 		<Pseudo Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
+		<DelProfil/>
 		<Bt2fa />
+		<RecProfil />
 		<ButtonDef />
 		<Langue />
 	</div>

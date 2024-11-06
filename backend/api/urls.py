@@ -1,7 +1,21 @@
 from django.urls import path, include
-# from users.views import toggle2fa, checkPass, changePass, changeMail, changeName, changeLangue, resetProfilePicture,getUser, getAllUsers, postInvite, getFriendsList, uploadProfilePicture
-# from users.views import getUser, getAllUsers, postInvite, getMatchHistory, getFriendsInvitations, getGamesInvitations, getDiscussions, getBlockedUsers, getUsersList, getFriendsList, getUserBlockedRelations
 from users import views
+
+# urlpatterns = [
+# 	path('user/', getUser, name="getUser"),
+# 	path('users/', getAllUsers, name="getAllUsers"),
+# 	path('blockedUsers/', getBlockedUsers, name="getBlockedUsers"),
+# 	path('blockedUsers2/', getUserBlockedRelations, name="getUserBlockedRelations"),
+# 	path('user/friendsInvitations/', getFriendsInvitations, name="getFriendsInvitations"),
+# 	path('user/matchHistory/', getMatchHistory, name="getMatchHistory"),
+# 	path('user/gamesInvitations/', getGamesInvitations, name="getFriendsInvitations"),
+# 	path('user/discussions/', getDiscussions, name="getDiscussions"),
+# 	path('sendInvite/', postInvite, name="postInvite"),
+# 	path('friendsList/', getFriendsList, name="getFriendsList"),
+# 	path('usersList/', getUsersList, name="getUsersList"),
+# 	path('user/matchHistory/<str:username>/', getMatchHistoryByUsername, name="getMatchHistoryByUsername"),
+#     path('user/<str:username>/', getUserByUsername, name="getUserByUsername"),
+#     path('user/friendsList/<str:id>/', getUserFriendsListById, name="getUserFriendsListById")
 
 
 urlpatterns = [
@@ -24,5 +38,10 @@ urlpatterns = [
 	path('checkPass/', views.checkPass, name='checkPass'),
 	path('toggle2fa/', views.toggle2fa, name='toggle2fa'),
 	path('friendsList/', views.getFriendsList, name="getFriendsList"),
-	path('usersList/', views.getUsersList, name="getUsersList")
+	path('usersList/', views.getUsersList, name="getUsersList"),
+	path('delProfile/', views.deleteProfile, name="delProfil"),
+	path('exportProfile/', views.exportProfile, name="exportProfil"),
+    path('user/matchHistory/<str:username>/', views.getMatchHistoryByUsername, name="getMatchHistoryByUsername"),
+    path('user/<str:username>/', views.getUserByUsername, name="getUserByUsername"),
+    path('user/friendsList/<str:id>/', views.getUserFriendsListById, name="getUserFriendsListById")
 ]
