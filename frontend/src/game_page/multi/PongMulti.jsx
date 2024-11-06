@@ -65,6 +65,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     const [webSocket, setWebSocket] = useState(null);
     const { myUser } = useAuth();
     const [powerUpType, setPowerUpType] = useState(null);
+    const [displayPowerUpBool, setDisplayPowerUpBool] = useState(false);
+    const [boardBackground, setBoardBackground] = useState('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
 
     useEffect(() => {
         console.log("le voila", powerUpType);
@@ -81,14 +83,18 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
                 ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
-                if (userSelected)   
-                    {
-                        ws.send(JSON.stringify({userSelected: userSelected.username}));
-                    }   
+                if (userSelected) {
+                    ws.send(JSON.stringify({ userSelected: userSelected.username }));
+                }
             };
 
             ws.onmessage = (event) => {
+
+
                 const data = JSON.parse(event.data);
+                if (!data.players) {
+                    console.log('Received:', data);
+                }
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
@@ -122,6 +128,15 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                     setPowerUpPosition({ x: 0, y: 0 });
                     setPowerUpType(null);
                 }
+                if (data.status === "keeped") {
+                    setDisplayPowerUpBool(true);
+                    setPowerUpPosition({ x: 0, y: 0 });
+                    // setPowerUpType(null);
+                }
+                if (data.power_up_release) {
+                    console.log("power up realase");
+                    setDisplayPowerUpBool(false);
+                }
             };
 
             ws.onclose = (event) => {
@@ -144,6 +159,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
 
     usePaddleMovement(webSocket, roomPlayers);
 
+
     const renderPowerUp = () => {
         switch (powerUpType) {
             case 'increase_paddle':
@@ -156,10 +172,34 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 return null;
         }
     };
+    // const displayPowerUp = () => {
 
+    // };
+
+    useEffect(() => {
+        console.log("je suis la %s", powerUpType);
+        switch (powerUpType) {
+            case 'increase_paddle':
+                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
+                break;
+            case 'inversed_control':
+                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
+                break;
+            case 'decrease_paddle':
+                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
+                break;
+            default:
+                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
+                break
+        }
+
+        console.log("le background", boardBackground);
+    }, [displayPowerUpBool]);
+
+ 
     return (
         <div className="pong-container">
-            <div className="board">
+          <div className={"board"} style={{ background: boardBackground }}>  {/* faire changer couleur puls en fonction power up */  }
                 <ScoreBoard
                     score1={scores.player1}
                     score2={scores.player2}

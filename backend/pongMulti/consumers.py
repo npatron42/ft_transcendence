@@ -510,7 +510,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 					'max_score': max_score
 				}
 			)
-			await asyncio.sleep(1 / 60)
+			await asyncio.sleep(1 / 120)
 
 	def calculate_speed(self, max_score):
 
@@ -625,13 +625,22 @@ class PongConsumer(AsyncWebsocketConsumer):
 				'type': 'new_power_up',
 				'position': None,
 				'power_up': None,
-				'status': "erase"
+				'status': "keeped"
 			}
 		)
 		
 		await asyncio.sleep(20)
 		PongConsumer.power_up_active[self.room_id] = False
 		self.reset_effect()
+		logger.info("Power up effect reset")
+
+		await self.channel_layer.group_send(
+			self.room_group_name,
+			{
+				'type': 'sendPowerUpRelease',
+				'power_up_release': True
+			}
+		)
 	
 	def reset_effect(self):
 		PongConsumer.paddle_left_height[self.room_id] = 90
@@ -642,6 +651,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 		# HANDLER #
 		###########
 
+	async def sendPowerUpRelease(self, event):
+		await self.send(text_data=json.dumps({'power_up_release': event['power_up_release']}))
+	
 	async def updatePlayers(self, event):
 		await self.send(text_data=json.dumps({'players': event['players']}))
 
@@ -656,7 +668,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def new_power_up(self, event):
 		position = event['position']
 		status = event['status']
-		powerUp = event['power_up']#la
+		powerUp = event['power_up']
 		await self.send(text_data=json.dumps({'power_up_position': position, "status": status, "power_up": powerUp }))
 
 	async def game_state(self, event):
