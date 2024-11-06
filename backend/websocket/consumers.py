@@ -538,6 +538,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data);
 
         type = data["type"]
+        logger.info("MES WEBSOCKETS USERS ----> %s", data)
         myUser = self.scope["user"]
         # INVITE METHODE
         if (type == "INVITE"):
