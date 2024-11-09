@@ -7,15 +7,24 @@ import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const WaitingTournaments = () => {
+    const [myTournament, setTournament] = useState()
+    const [tournamentFull, setTournamentFull] = useState(false)
     const { myUser } = useAuth();
     const { socketUser } = useWebSocket();
-    const { tournamentSocket } = useTournamentSocket();
+    const { tournamentSocket, subscribeToTournaments } = useTournamentSocket();
     const location = useLocation();
     const myJwt = localStorage.getItem("jwt");
     const idTournament = location.state?.idTournament;
     const navigate = useNavigate()
+    const [showFullTournament, setShowFullTournament] = useState(false);
 
-    console.log("myId -->", idTournament)
+
+
+    useEffect(() => {
+      if (myTournament && myTournament.players.length === 4) {
+        setShowFullTournament(true);
+      }
+    }, [myTournament]);
 
     useEffect(() => {
 
@@ -54,11 +63,151 @@ const WaitingTournaments = () => {
     };
   }, [idTournament, tournamentSocket, location]);
 
+    useEffect(() => {
+        const handleSocketTournament = (data) => {
+        if (data.message["allTournaments"]) {
+            setTournament(data.message["allTournaments"]);
+            let i = 0;
+            let tournaments = data.message["allTournaments"]
+            console.log("mon objet tournaments --> ", tournaments)
+            let myLen = tournaments.length
+            while (i < myLen) {
+                if (idTournament == tournaments[i].id) {
+                    setTournament(tournaments[i])
+                    console.log(tournaments[i].players[i].username)
+                    console.log(tournaments[i])
+                    return ;
+                }
+                i++;
+            }
+            }
+            if (data.message["TOURNAMENT-FULL"]) {
+                setTournamentFull(true)
+            }
+        };
+
+        const unsubscribeMess = subscribeToTournaments(handleSocketTournament);
+
+        return () => {
+            unsubscribeMess();
+        };
+
+    }, [subscribeToTournaments, tournamentSocket]);
+
+
+
+
+
   return (
     <div id="background-container">
-      TEST
+        {myTournament && myTournament.players.length !== 4 && (
+        <div className={`waitingTournament ${showFullTournament ? 'fadeOut' : ''}`}>
+            {myTournament !== undefined && (
+                <>
+                <div className="playerWaiting playerWaiting-leftTop">
+                    <div className="top">
+                        <img src={myTournament.players[0].profilePicture} className="picture"></img>   
+                    </div>
+                    <div className="bot">
+                        <span className="usernamePlacement">{myTournament.players[0].username}</span>
+                    </div>
+                </div>
+                {!myTournament.players[1] && (
+                <div className="playerWaiting playerWaiting-rightTop">
+                    <div className="top">
+                        <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                    </div>
+                    <div className="bot">
+                        <div className="loader-2">
+                        </div>
+                    </div>
+                </div>
+                )}
+                {myTournament.players[1] && (
+                <div className="playerWaiting playerWaiting-rightTop">
+                    <div className="top">
+                        <img src={myTournament.players[1].profilePicture} className="picture"></img>   
+                    </div>
+                    <div className="bot">
+                        <span className="usernamePlacement">{myTournament.players[1].username}</span>
+                    </div>
+                </div>
+                )}
+
+                {!myTournament.players[2] && (
+                <div className="playerWaiting playerWaiting-leftDown">
+                    <div className="top">
+                    <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                    </div>
+                    <div className="bot">
+                        <div className="loader-2">
+                        </div>
+                    </div>
+                </div>
+                )}
+                {myTournament.players[2] && (
+                <div className="playerWaiting playerWaiting-leftDown">
+                    <div className="top">
+                        <img src={myTournament.players[2].profilePicture} className="picture"></img>   
+                    </div>
+                    <div className="bot">
+                        <span className="usernamePlacement">{myTournament.players[2].username}</span>
+                    </div>
+                </div>
+                )}
+
+                {!myTournament.players[3] && (
+                <div className="playerWaiting playerWaiting-rightDown">
+                    <div className="top">
+                        <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                    </div>
+                    <div className="bot">
+                        <div className="loader-2">
+                        </div>
+                    </div>
+                </div>
+                )}
+                {myTournament.players[3] && (
+                <div className="playerWaiting playerWaiting-rightDown">
+                    <div className="top">
+                        <img src={myTournament.players[3].profilePicture} className="picture"></img>   
+                    </div>
+                    <div className="bot">
+                        <span className="usernamePlacement">{myTournament.players[3].username}</span>
+                    </div>
+                </div>
+                )}
+                </>
+            )}
+        </div>
+        )}
+        {showFullTournament && (
+            <div className="waitingTournament-full fadeIn">
+                <div className="topFull">
+                    <span className="tournamentWriting">Tournament will start</span>
+                </div>
+                <div className="headsTournament">
+                    <div className="headPlayer">
+                        <img src={myTournament.players[0].profilePicture} className="picture"></img>
+                    </div> 
+                    <div className="headPlayer">
+                        <img src={myTournament.players[1].profilePicture} className="picture"></img>
+                    </div> 
+                    <div className="headPlayer">
+                        <img src={myTournament.players[2].profilePicture} className="picture"></img>
+                    </div> 
+                    <div className="headPlayer">
+                        <img src={myTournament.players[3].profilePicture} className="picture"></img>
+                    </div> 
+                </div>
+                <div className="loaderBot">
+                    <div className="loader-2"></div>
+                </div>
+            </div>
+        )}
     </div>
   );
 };
 
 export default WaitingTournaments;
+

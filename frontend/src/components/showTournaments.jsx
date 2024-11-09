@@ -15,8 +15,6 @@ function ShowTournaments() {
         const handleSocketTournament = (data) => {
 			if (data.message["allTournaments"]) {
 				setTournaments(data.message["allTournaments"]);
-				console.log("data --> ", data.message["allTournaments"])
-				console.log("NB de tournois --> ", data.message["allTournaments"].length)
             }
         };
 
@@ -67,14 +65,15 @@ function ShowTournaments() {
 				{myTournaments.map((tournament, index) => (
 					<div key={index} className="tournamentLine">
 						<div className="tournamentLine-picture">
-							<img src={tournament.leader.profilePicture} className="profile-picture-tournament"></img>
+						<img src={tournament.players[0].profilePicture.startsWith('http') ? tournament.players[0].profilePicture : `http://localhost:8000/media/${tournament.players[0].profilePicture}`} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
 						</div>
 						<div className="tournamentLine-div">
-							<span className="modifyWritingNoIdeaCssFuck">{tournament.leader.username}</span>
+							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].username}</span>
 						</div>
 						<div className="tournamentLine-div">
 							<span className="modifyWritingNoIdeaCssFuck-2">{tournament.players.length} / 4</span>
 						</div>
+						{tournament.players.length !== 4 && (
 						<div className="tournamentLine-button">
 							<button className="ui-btn" onClick={() => handleJoinTournament(tournament.id)}>
 								<span>
@@ -82,6 +81,16 @@ function ShowTournaments() {
 								</span>
 							</button>
 						</div>
+						)}
+						{tournament.players.length === 4 && (
+						<div className="tournamentLine-button">
+							<button className="ui-btn">
+								<span>
+									FULL 
+								</span>
+							</button>
+						</div>
+						)}
 					</div>
 				))}
 				</div>
