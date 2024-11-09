@@ -17,6 +17,7 @@ allTournamentsId = []
 allSockets = {}
 allUsers = []
 
+
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
     userSer = UserSerializer(userTmp)
@@ -34,9 +35,24 @@ async def sendToTournamentsSocket(self, message):
         i = 0
         while i < myLen:
             myUser = allUsers[i]
-            mySocket = allSockets.get(myUser)
+            mySocket = allSockets.get(myUser.username)
             await sendToSocket(self, mySocket, message)
             i += 1
+        return
+
+async def sendToPlayersInTournament(self, message, idTournament):
+        myTournament = await giveTournament(idTournament)
+        myPlayers = myTournament["players"]
+        i = 0
+        myLen = len(userInTournament)
+        while i < myLen:
+            myUsername = myPlayers[i].get("username")
+            logger.info("username --> %s", myUsername)
+            mySocket = allSockets.get(myUsername)
+            logger.info("LA SOCKET DE MOMO --> %s", mySocket)
+            await sendToSocket(self, mySocket, message)
+            i += 1
+        logger.info("MOMO IS DONE")
         return
 
 
@@ -66,13 +82,20 @@ async def returnAllTournaments():
         i += 1
     return result
 
-def addSocketToUser(socket, myUser):
-    allSockets[myUser] = socket
 
-def deleteSocketToUser(myUser):
-    del allSockets[myUser]
+def addSocketToUser(socket, username):
+    allSockets[username] = socket
 
-        
+def deleteSocketToUser(username):
+    del allSockets[username]
+
+async def addPlayerToTournament(self, myUser, idTournamentToJoin):
+    if idTournamentToJoin in allTournamentsId:
+        userInTournament[myUser.id] = idTournamentToJoin
+        Tournament.players[idTournamentToJoin].append(myUser.id)
+        await Tournament.sendAllTournaments(self)
+
+
 class Tournament(AsyncWebsocketConsumer):
     players = {}
     leader = {}
@@ -85,7 +108,7 @@ class Tournament(AsyncWebsocketConsumer):
             myLen = len(allTournamentsId)
             i = 0
             while i < myLen:
-                if idTournament == allTournamentsId[i]:
+                if idTournament == allTournamentsId[i] and len(Tournament.players[idTournament]) == 0:
                     del allTournamentsId[i]
                     return
                 i += 1
@@ -93,10 +116,13 @@ class Tournament(AsyncWebsocketConsumer):
 
     async def sendAllTournaments(self):
         allTournaments = await returnAllTournaments()
+        myLen = len(allTournamentsId)
+        logger.info("Mes tournois dans mon back --> %s", allTournaments)
+        logger.info("Le nombre de tournois --> %d", myLen)
         myDataToSend = {
             "allTournaments": allTournaments
         }
-
+        
         await sendToTournamentsSocket(self, myDataToSend)
 
 
@@ -130,7 +156,7 @@ class Tournament(AsyncWebsocketConsumer):
             await self.channel_layer.group_add("shareSocket", self.channel_name)
             await self.channel_layer.group_add("socketTournament", self.channel_name)
             await self.accept()
-            addSocketToUser(self.channel_name, myUser)
+            addSocketToUser(self.channel_name, myUser.username)
             allUsers.append(myUser)
 
 
@@ -167,19 +193,29 @@ class Tournament(AsyncWebsocketConsumer):
             await Tournament.sendAllTournaments(self)
 
         elif type == "JOIN-TOURNAMENT":
+
             idTournamentToJoin = data.get("id")
-            logger.info("%s veut rejoindre --> %s", myUser.username, idTournamentToJoin)
-            if idTournamentToJoin in allTournamentsId:
-                idTournamentToJoin = data.get("id")
-                Tournament.players[idTournamentToJoin].append(myUser.id)
-                await Tournament.sendAllTournaments(self)
-                userInTournament[myUser.id] = idTournamentToJoin
-                allTournamentsId.append(idTournamentToJoin)
+            nbPlayersInTournament = len(Tournament.players[idTournamentToJoin])
+            if nbPlayersInTournament == 3:
+                await addPlayerToTournament(self, myUser, idTournamentToJoin)
+                dataToSend = {
+                    "TOURNAMENT-FULL": "MOMO"
+                }
+                await sendToPlayersInTournament(self, dataToSend, idTournamentToJoin)
+                return
+
+
+            if (nbPlayersInTournament == 4):
+                return
+            await addPlayerToTournament(self, myUser, idTournamentToJoin)
+            
 
         elif type == "LEAVE-TOURNAMENT":
             idTournament = data.get("id")
             if idTournament in allTournamentsId:
                 erasePlayerFromTournamentObject(idTournament, myUser.id)
+
+
             Tournament.clearThings(self, myUser)
             await Tournament.sendAllTournaments(self)
             
