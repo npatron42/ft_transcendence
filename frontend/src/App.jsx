@@ -18,6 +18,7 @@ import ProfilPage from './profil_page/profilPage.jsx';
 import Check42User from './check42user/Check42User.jsx';
 import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
 import ViewProfile from './view_profile/ViewProfile.jsx';
+import GameSettings from './game_page/settings/GameSettings.jsx';
 
 const App = () => {
   const location = useLocation();
@@ -44,6 +45,7 @@ const App = () => {
         <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
         <Route path="/profile/:username" element={<ViewProfile />} />
         <Route path="/waitingTournaments" element={<GlobalTournaments />} />
+        <Route path="/game-settings" element={<GameSettings />} />
       </Routes>
       </WebSocketProvider>
     )}

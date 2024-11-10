@@ -141,7 +141,7 @@ function ViewProfile() {
             "in-game": "#D9F3E2"
         };
 
-        if (!profileUser) {
+        if (!profileUser || !matchHistory) {
             return (
                 <div id="background-container">
                     <div className="loader"></div>
