@@ -227,3 +227,16 @@
     border-color: #2421bd !important;
     color: #5E6472 !important;
 }
+
+.row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+}

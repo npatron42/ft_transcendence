@@ -3,6 +3,7 @@ import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
+import { useRef } from 'react';
 
 const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({})
@@ -53,20 +54,32 @@ const usePaddleMovement = (webSocket, playerId) => {
 
 const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     const myJwt = localStorage.getItem('jwt');
+    const [webSocket, setWebSocket] = useState(null);
+    const { myUser } = useAuth();
+
+    // Game state
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [scores, setScores] = useState({ player1: 0, player2: 0 });
-    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
-    const [webSocket, setWebSocket] = useState(null);
-    const { myUser } = useAuth();
+
+    // Power Up gestion
     const [powerUpType, setPowerUpType] = useState(null);
+    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [displayPowerUpBool, setDisplayPowerUpBool] = useState(false);
-    const [boardBackground, setBoardBackground] = useState('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
+    const [boardClass, setBoardClass] = useState('board');
+    const [powerUpClass, setPowerUpClass] = useState(null);
+    const [playerHasPowerUp, setPlayerHasPowerUp] = useState(null);
+    const [soloPlayActive, setSoloPlayActive] = useState(false);
+    const [centerLineClass, setCenterLineClass] = useState('center-line');
+    const [angle, setAngle] = useState(0);
+    const [length, setLength] = useState(0);
+    const [velocity, setVelocity] = useState({ x: 0, y: 0 }); 
+    const prevBallPos = useRef(ballPos);
 
     useEffect(() => {
         console.log("le voila", powerUpType);
@@ -89,8 +102,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
             };
 
             ws.onmessage = (event) => {
-
-
                 const data = JSON.parse(event.data);
                 if (!data.players) {
                     console.log('Received:', data);
@@ -108,6 +119,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                     setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
+                    
                     setBallPos(data.ball);
                 }
                 if (data.score) {
@@ -120,10 +132,21 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                     setIsGameOver(true);
                     setWinner(data.winner);
                 }
+                if (data.power_up) {
+                    setPowerUpType(data.power_up);
+                    if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
+                        console.log ("power up class", powerUpClass);
+                        setPowerUpClass('power-up-bonus');
+                    }
+                    else {
+                        setPowerUpClass('power-up-malus');
+                    }
+                }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
-                    setPowerUpType(data.power_up);
+                    console.log("power up type", data.power_up);
                 }
+
                 if (data.status === "erase") {
                     setPowerUpPosition({ x: 0, y: 0 });
                     setPowerUpType(null);
@@ -131,11 +154,19 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 if (data.status === "keeped") {
                     setDisplayPowerUpBool(true);
                     setPowerUpPosition({ x: 0, y: 0 });
-                    // setPowerUpType(null);
                 }
                 if (data.power_up_release) {
-                    console.log("power up realase");
+                    console.log("power up release voici ;e bool", displayPowerUpBool);
                     setDisplayPowerUpBool(false);
+                    setPowerUpType(null);
+                    setCenterLineClass('center-line');
+                }
+                if (data.player_has_power_up) {
+                    console.log("player has power up", data.player_has_power_up);
+                    setPlayerHasPowerUp(data.player_has_power_up);
+                }
+                if (data.solo_play_active) {
+                    setSoloPlayActive(true);
                 }
             };
 
@@ -159,7 +190,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
 
     usePaddleMovement(webSocket, roomPlayers);
 
-
     const renderPowerUp = () => {
         switch (powerUpType) {
             case 'increase_paddle':
@@ -168,50 +198,62 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 return <img src="../../src/assets/game/inversed_control.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
             case 'decrease_paddle':
                 return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'x2':
+                return <img src="../../src/assets/game/x2.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'solo_play': 
+                return <img src="../../src/assets/game/solo_play.svg" alt="solo play" style={{ width: '40px', height: '40px' }} />;
             default:
                 return null;
         }
     };
-    // const displayPowerUp = () => {
-
-    // };
 
     useEffect(() => {
-        console.log("je suis la %s", powerUpType);
-        switch (powerUpType) {
-            case 'increase_paddle':
-                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
-                break;
-            case 'inversed_control':
-                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
-                break;
-            case 'decrease_paddle':
-                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
-                break;
-            default:
-                setBoardBackground('radial-gradient(circle, #5E6472 0%, #24272c 100%)');
-                break
+        console.log("pif le powr", playerHasPowerUp);
+        console.log("paf le bool", displayPowerUpBool);
+        if (displayPowerUpBool && playerHasPowerUp == myUser.username) {
+            setBoardClass('board-bonus');
         }
+        else if (displayPowerUpBool && playerHasPowerUp !== myUser.username) {
+            setBoardClass('board-malus');
+        }
+        else {
+            setBoardClass('board');
+        }
+    }, [displayPowerUpBool, playerHasPowerUp]);
 
-        console.log("le background", boardBackground);
-    }, [displayPowerUpBool]);
+    useEffect(() => {
+        if (powerUpType === 'solo_play') {
+            if (soloPlayActive) {
+                setCenterLineClass('center-line-solo');
+            }
+            else {
+                setCenterLineClass('center-line');
+            }
+        }
+    }, [soloPlayActive, powerUpType]);
 
- 
+
     return (
         <div className="pong-container">
-          <div className={"board"} style={{ background: boardBackground }}>  {/* faire changer couleur puls en fonction power up */  }
+            <div className={boardClass}>
                 <ScoreBoard
                     score1={scores.player1}
                     score2={scores.player2}
                     maxScoreToUse={maxScoreToUse}
                 />
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
-                <div className="center-line"></div>
+                <div className={centerLineClass}></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
                 <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
+                {/* <div className="direction-line" style={{
+                    left: `${ballPos.x}px`,
+                    top: `${ballPos.y}px`,
+                    transform: `rotate(${10}deg)`,
+                    width: `${length}px`
+                }}></div> */}
                 {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
-                    <div className="power-up" style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
+                    <div className={powerUpClass} style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
                         {renderPowerUp()}
                     </div>
                 )}

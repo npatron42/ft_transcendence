@@ -46,7 +46,7 @@ const ChooseGame = () => {
     };
 
     return (
-        <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
+        <div id="ChooseGame" className="d-flex flex-column align-items-center vh-100">
             <div className="row">
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
@@ -151,6 +151,7 @@ const ChooseGame = () => {
                     </div>
                 </div>
             </div>
+            <button className="settings" onClick={() => navigate('/game-settings')}>Settings</button>
         </div>
     );
 };
