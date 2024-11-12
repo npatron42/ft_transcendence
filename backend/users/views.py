@@ -684,11 +684,19 @@ def updateGameSettings(request):
         try:
             payload = middleWareAuthentication(request)
             user = User.objects.filter(id=payload['id']).first()
+
             gameSettings = GameSettings.objects.filter(user=user).first()
+
             data = json.loads(request.body)
+            up = data.get('up')
+            down = data.get('down')
+            paddleSkin = data.get('paddleSkin')
+            logger.info("keyBind %s", data)
             if gameSettings:
-                gameSettings.keyBind = data.get('keyBind')
-                gameSettings.paddleSkin = data.get('paddleSkin')
+                gameSettings.up = up
+                gameSettings.down = down
+                gameSettings.paddleSkin = paddleSkin 
+
                 gameSettings.save()
 
                 return JsonResponse({'success': True})
@@ -697,5 +705,6 @@ def updateGameSettings(request):
 
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=400)
+
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=405)
