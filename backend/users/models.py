@@ -48,4 +48,9 @@ class Message(models.Model):
     class Meta:
         ordering = ['date']
 
+class GameSettings(models.Model):
+    user = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE, default=None)
+    keyBind = models.CharField(models.CharField(max_length=10), default="w,s")
+    paddleSkin = models.CharField(max_length=125, default="default")
+
 

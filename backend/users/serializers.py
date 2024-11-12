@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Invitation, FriendsList, Message, RelationsBlocked, GameInvitation
+from .models import User, Invitation, FriendsList, Message, RelationsBlocked, GameInvitation, GameSettings
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,5 +38,10 @@ class GameInvitationSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameInvitation
         fields = ('leader', 'userInvited', 'roomId')
+
+class GameSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GameSettings
+        fields = ('user', 'keyBind', 'paddleSkin')
 
 
