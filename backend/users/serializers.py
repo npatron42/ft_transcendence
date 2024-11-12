@@ -42,6 +42,6 @@ class GameInvitationSerializer(serializers.ModelSerializer):
 class GameSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = GameSettings
-        fields = ('user', 'keyBind', 'paddleSkin')
+        fields = ('user', 'up', 'down', 'paddleSkin')
 
 

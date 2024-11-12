@@ -116,7 +116,8 @@ def attributeToUserJWT(myUser: User):
 def setDefaultGameSettings (myUser: User):
 	data = {
 		"user": myUser.id,
-		"keyBind": "w,s",
+		"up": "w",
+		"down": "s",
 		"paddleSkin": "default"
 	}
 	logger.info("Adding GameSettings to DB")
