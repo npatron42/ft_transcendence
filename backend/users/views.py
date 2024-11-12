@@ -8,8 +8,8 @@ from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from django.db.models import Q
-from users.models import User, FriendsList, Invitation, Message, RelationsBlocked, GameInvitation
-from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer, RelationsBlockedSerializer, GameInvitationSerializer
+from users.models import User, FriendsList, Invitation, Message, RelationsBlocked, GameInvitation, GameSettings
+from users.serializers import UserSerializer, FriendsListSerializer, InvitationSerializer, MessageSerializer, RelationsBlockedSerializer, GameInvitationSerializer, GameSettingsSerializer
 from django.http import JsonResponse
 from pongMulti.models import MatchHistory
 from pongMulti.serializers import MatchHistorySerializer
@@ -665,3 +665,37 @@ def exportProfile(request):
     logger.info("test ----->>>> %s", full_data)
 
     return JsonResponse(full_data, json_dumps_params={'indent': 2})
+
+
+
+def getGameSettings(request):
+    logger.info("getGameSettings")
+    payload = middleWareAuthentication(request)
+    logger.info("payload %s", payload)
+    user = User.objects.filter(id = payload['id']).first()
+    gameSettings = GameSettings.objects.filter(user=user).first()
+    serializer = GameSettingsSerializer(gameSettings)
+    return JsonResponse(serializer.data)
+
+#cets de la merde ?? 
+@csrf_exempt
+def updateGameSettings(request):
+    if request.method == 'POST':
+        try:
+            payload = middleWareAuthentication(request)
+            user = User.objects.filter(id=payload['id']).first()
+            gameSettings = GameSettings.objects.filter(user=user).first()
+            data = json.loads(request.body)
+            if gameSettings:
+                gameSettings.keyBind = data.get('keyBind')
+                gameSettings.paddleSkin = data.get('paddleSkin')
+                gameSettings.save()
+
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'error': 'Game settings not found'}, status=404)
+
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=400)
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=405)

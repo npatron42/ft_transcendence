@@ -1,23 +1,6 @@
 from django.urls import path, include
 from users import views
 
-# urlpatterns = [
-# 	path('user/', getUser, name="getUser"),
-# 	path('users/', getAllUsers, name="getAllUsers"),
-# 	path('blockedUsers/', getBlockedUsers, name="getBlockedUsers"),
-# 	path('blockedUsers2/', getUserBlockedRelations, name="getUserBlockedRelations"),
-# 	path('user/friendsInvitations/', getFriendsInvitations, name="getFriendsInvitations"),
-# 	path('user/matchHistory/', getMatchHistory, name="getMatchHistory"),
-# 	path('user/gamesInvitations/', getGamesInvitations, name="getFriendsInvitations"),
-# 	path('user/discussions/', getDiscussions, name="getDiscussions"),
-# 	path('sendInvite/', postInvite, name="postInvite"),
-# 	path('friendsList/', getFriendsList, name="getFriendsList"),
-# 	path('usersList/', getUsersList, name="getUsersList"),
-# 	path('user/matchHistory/<str:username>/', getMatchHistoryByUsername, name="getMatchHistoryByUsername"),
-#     path('user/<str:username>/', getUserByUsername, name="getUserByUsername"),
-#     path('user/friendsList/<str:id>/', getUserFriendsListById, name="getUserFriendsListById")
-
-
 urlpatterns = [
 	path('user/', views.getUser, name="getUser"),
 	path('users/', views.getAllUsers, name="getAllUsers"),
@@ -43,5 +26,7 @@ urlpatterns = [
 	path('exportProfile/', views.exportProfile, name="exportProfil"),
     path('user/matchHistory/<str:username>/', views.getMatchHistoryByUsername, name="getMatchHistoryByUsername"),
     path('user/<str:username>/', views.getUserByUsername, name="getUserByUsername"),
-    path('user/friendsList/<str:id>/', views.getUserFriendsListById, name="getUserFriendsListById")
+    path('user/friendsList/<str:id>/', views.getUserFriendsListById, name="getUserFriendsListById"),
+    path('gameSettings/', views.getGameSettings, name="getGameSettings"),
+    path('gameSettings/update/', views.updateGameSettings, name="updateGameSettings"),
 ]
