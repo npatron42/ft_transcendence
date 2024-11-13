@@ -691,11 +691,16 @@ def updateGameSettings(request):
             up = data.get('up')
             down = data.get('down')
             paddleSkin = data.get('paddleSkin')
+            boardSkin = data.get('boardSkin')
+            ballSkin = data.get('ballSkin')
+            
             logger.info("keyBind %s", data)
             if gameSettings:
                 gameSettings.up = up
                 gameSettings.down = down
                 gameSettings.paddleSkin = paddleSkin 
+                gameSettings.boardSkin = boardSkin
+                gameSettings.ballSkin = ballSkin
 
                 gameSettings.save()
 

@@ -1,116 +1,239 @@
+@font-face {
+  font-family: 'Millimetre';
+  src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 .gameSettingsGlobalContainer {
-    height: 100vh;
-    width: 100vw;
-    margin: 0;
-    padding: 0;
-    background-image: url("../../assets/background.png");
-    background-size: cover;
-    display: flex;
-    justify-content: center;
-    /* Centrer le conteneur principal */
-    align-items: center;
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-image: url("../../assets/background.png");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .gameSettingsContainer {
-    position: absolute;
-    display: flex;
-    margin-top: 110px !important;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    height: 80vh;
-    width: 80vw;
-    backdrop-filter: blur(10px);
-    border: 2px solid #000000;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
-    padding: 40px;
-    border-radius: 10px;
+  position: absolute;
+  display: flex;
+  margin-top: 110px !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 80vh;
+  width: 80vw;
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 2px solid #FFA69E;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+  padding: 40px;
+  border-radius: 10px;
 }
 
 .gameSettings {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  height: 100%;
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 100%;
 }
 
 h1 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 30px;
-    color: #FAF3DD;
-    width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 30px;
+  color: #FAF3DD;
+  width: 100%;
 }
 
 h2 {
-    text-align: center;
-    margin-bottom: 30px;
-    font-size: 20px;
-    color: #FAF3DD;
-    width: 100%;
+  text-align: center;
+  font-size: 20px;
+  color: #FAF3DD;
+  width: 100%;
 }
 
-.keyBindContainer,
-.paddleSkinContainer {
-    width: 100%;
-    margin-bottom: 20px;
+.leftContainer { 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  margin-right: 10px;
+}
+
+.miniPongContainer {
+  border-radius: 50px;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.keyBindContainer {
+  border-radius: 50px;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+}
+
+.SkinContainer {
+  border-radius: 50px;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  width: 80%;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
 }
 
 input {
-    margin-top: 10px;
-    padding: 8px;
-    border-radius: 5px;
-    width: 100%;
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100%;
 }
 
-/* From Uiverse.io by mnikita7767 */ 
 .container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .container label {
-    cursor: pointer;
-    position: relative;
-    width: 80px;
-    height: 80px;
-    display: flex;
-    justify-content: center !important;
-    align-items: center;
-  }
-  label input {
-    appearance: none;
-  }
-  label span {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(#555353, #363535, #303030);
-    border: 2px solid #222;
-    border-top-width: 4px;
-    border-radius: 6px;
-    box-shadow: inset 0 5px 1px rgba(0, 0, 0, 0.23), 0 5px 5px rgba(0, 0, 0, 0.5),
-      0 15px 25px rgba(0, 0, 0, 0.35);
-  }
-  .container label span::before {
-    content: "";
-    position: absolute;
-    border-top: 1px solid #fff;
-    inset: 5px 3px;
-    filter: blur(5px);
-  }
-  .container label input:checked ~ span {
-    box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.35),
-      inset 0 5px 5px rgba(0, 0, 0, 0.5), inset 0 15px 25px rgba(0, 0, 0, 0.35);
-  }
-  label p {
-    position: relative;
-    z-index: 10;
-    font-size: 3rem;
-    color: #111;
-  }
-  .container label input:checked ~ p {
-    color: #fff;
-    text-shadow: 0 0 5px #219cf3, 0 0 8px #219cf3;
-  }
-  
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container label {
+  cursor: pointer;
+  position: relative;
+  width: 120px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+label input {
+  appearance: none;
+}
+
+.container label span {
+  position: absolute;
+  width: auto;
+  min-width: 150px;
+  height: 100%;
+  background: linear-gradient(#555353, #363535, #303030);
+  border: 2px solid #222;
+  border-top-width: 4px;
+  border-radius: 6px;
+  box-shadow: inset 0 5px 1px rgba(0, 0, 0, 0.23), 0 5px 5px rgba(0, 0, 0, 0.5),
+    0 15px 25px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-family: 'Millimetre';
+  color: #111;
+  padding: 0 10px;
+}
+
+.container label span::before {
+  content: "";
+  position: absolute;
+  border-top: 1px solid #fff;
+  inset: 5px 3px;
+  filter: blur(5px);
+}
+
+.container label input:checked ~ span {
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.35),
+    inset 0 5px 5px rgba(0, 0, 0, 0.5), inset 0 15px 25px rgba(0, 0, 0, 0.35);
+  color: #fff;
+  text-shadow: 0 0 5px #219cf3, 0 0 8px #219cf3;
+}
+
+.container label span i {
+  margin-top: 5px;
+  margin-right: 20px;
+}
+
+
+.paddle {
+  width: 90px;
+  height: 10px;
+  position: absolute;
+  display: block;
+}
+
+.carouselContainer {
+
+  display: flex;
+  align-items: center;
+  justify-content:space-between;
+  position: relative;
+  width: 100%;
+  height: 30%;
+}
+
+.carouselButton {
+  background-color: #FF69B4;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: white;
+}
+
+.carouselContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.skinName {
+  margin-top: 10px;
+  font-size: 18px;
+  color: white;
+}
+
+.selectSkinButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #219cf3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.classicSkin {
+  background-color: #ffffff;
+}
+
+.neonSkin {
+  background-color: #00FF00;
+}
+
+.fireSkin {
+  background-color: #FF4500;
+}
