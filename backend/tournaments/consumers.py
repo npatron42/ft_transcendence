@@ -4,6 +4,7 @@ import json
 import logging
 from users.serializers import UserSerializer
 from users.models import User
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -117,8 +118,6 @@ class Tournament(AsyncWebsocketConsumer):
     async def sendAllTournaments(self):
         allTournaments = await returnAllTournaments()
         myLen = len(allTournamentsId)
-        logger.info("Mes tournois dans mon back --> %s", allTournaments)
-        logger.info("Le nombre de tournois --> %d", myLen)
         myDataToSend = {
             "allTournaments": allTournaments
         }
@@ -186,8 +185,6 @@ class Tournament(AsyncWebsocketConsumer):
             Tournament.leader[idTournament] = myUser.id
             Tournament.players[idTournament].append(myUser.id)
             await Tournament.sendAllTournaments(self)
-            # await sendToTournamentsSocket(self, "test")
-            # SEND TO EVERY CLIENTS THE TOURNAMENT EXISTING
 
         elif type == "SHOW-TOURNAMENTS":
             await Tournament.sendAllTournaments(self)
@@ -198,6 +195,7 @@ class Tournament(AsyncWebsocketConsumer):
             nbPlayersInTournament = len(Tournament.players[idTournamentToJoin])
             if nbPlayersInTournament == 3:
                 await addPlayerToTournament(self, myUser, idTournamentToJoin)
+                logger.info("JOUEUR AJOUTE")
                 dataToSend = {
                     "TOURNAMENT-FULL": "MOMO"
                 }

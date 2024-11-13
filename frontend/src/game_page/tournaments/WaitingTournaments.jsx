@@ -8,23 +8,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const WaitingTournaments = () => {
     const [myTournament, setTournament] = useState()
-    const [tournamentFull, setTournamentFull] = useState(false)
-    const { myUser } = useAuth();
-    const { socketUser } = useWebSocket();
     const { tournamentSocket, subscribeToTournaments } = useTournamentSocket();
     const location = useLocation();
-    const myJwt = localStorage.getItem("jwt");
     const idTournament = location.state?.idTournament;
     const navigate = useNavigate()
-    const [showFullTournament, setShowFullTournament] = useState(false);
-
-
-
-    useEffect(() => {
-      if (myTournament && myTournament.players.length === 4) {
-        setShowFullTournament(true);
-      }
-    }, [myTournament]);
 
     useEffect(() => {
 
@@ -82,7 +69,7 @@ const WaitingTournaments = () => {
             }
             }
             if (data.message["TOURNAMENT-FULL"]) {
-                setTournamentFull(true)
+                console.log(data.message)
             }
         };
 
@@ -101,7 +88,7 @@ const WaitingTournaments = () => {
   return (
     <div id="background-container">
         {myTournament && myTournament.players.length !== 4 && (
-        <div className={`waitingTournament ${showFullTournament ? 'fadeOut' : ''}`}>
+        <div className="waitingTournament">
             {myTournament !== undefined && (
                 <>
                 <div className="playerWaiting playerWaiting-leftTop">
@@ -181,7 +168,7 @@ const WaitingTournaments = () => {
             )}
         </div>
         )}
-        {showFullTournament && (
+        {myTournament && myTournament.players.length === 4 && (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
                     <span className="tournamentWriting">Tournament will start</span>
