@@ -118,7 +118,9 @@ def setDefaultGameSettings (myUser: User):
 		"user": myUser.id,
 		"up": "w",
 		"down": "s",
-		"paddleSkin": "default"
+		"paddleSkin": "default",
+		"boardSkin": "default",
+		"ballSkin": "default",
 	}
 	logger.info("Adding GameSettings to DB")
 	newSettings = GameSettingsSerializer(data=data)
