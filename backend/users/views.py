@@ -100,11 +100,8 @@ def getMatchHistory(request):
     return JsonResponse(result, safe=False)
 
 def getMatchHistoryByUsername(request, username):
-    payload = middleWareAuthentication(request)
     myUser = User.objects.filter(username=username).first()
 
-    
-    
     matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
     matchesSer = MatchHistorySerializer(matchesTmp, many=True)
     matches = matchesSer.data
