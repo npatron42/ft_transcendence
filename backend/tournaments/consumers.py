@@ -5,6 +5,7 @@ import logging
 from users.serializers import UserSerializer
 from users.models import User
 import time
+import random
 
 logger = logging.getLogger(__name__)
 
@@ -48,12 +49,9 @@ async def sendToPlayersInTournament(self, message, idTournament):
         myLen = len(userInTournament)
         while i < myLen:
             myUsername = myPlayers[i].get("username")
-            logger.info("username --> %s", myUsername)
             mySocket = allSockets.get(myUsername)
-            logger.info("LA SOCKET DE MOMO --> %s", mySocket)
             await sendToSocket(self, mySocket, message)
             i += 1
-        logger.info("MOMO IS DONE")
         return
 
 
@@ -84,6 +82,60 @@ async def returnAllTournaments():
     return result
 
 
+async def sendFirstMatch(self, myPlayer, match00, match01):
+
+    match0 = list(match00)
+    match1 = list(match01)
+    myRealPlayer = await getUserById(myPlayer)
+    if myPlayer in match00:
+        match0.remove(myPlayer)
+        myOpponent = await getUserById(match0[0])
+
+        otherPlayer = await getUserById(match1[0])
+        otherPlayer2 = await getUserById(match1[1])
+
+        otherMatch = []
+        otherMatch.append(otherPlayer)
+        otherMatch.append(otherPlayer2)
+        dataToSend = {
+            "opponent": myOpponent,
+            "otherMatch": otherMatch
+        }
+
+        dataToSendBis = {
+            "DISPLAY-MATCH": dataToSend
+        }
+        myUsername = myRealPlayer.get("username")
+        mySocket = allSockets.get(myUsername)
+
+        logger.info("SENT ----> %s", dataToSendBis)
+        await sendToSocket(self, mySocket, dataToSendBis)
+    elif myPlayer in match01:
+        match1.remove(myPlayer)
+        myOpponent = await getUserById(match1[0])
+
+        otherPlayer = await getUserById(match0[0])
+        otherPlayer2 = await getUserById(match0[1])
+
+        otherMatch = []
+        otherMatch.append(otherPlayer)
+        otherMatch.append(otherPlayer2)
+        dataToSend = {
+            "opponent": myOpponent,
+            "otherMatch": otherMatch
+        }
+
+        dataToSendBis = {
+            "DISPLAY-MATCH": dataToSend
+        }
+        myUsername = myRealPlayer.get("username")
+        mySocket = allSockets.get(myUsername)
+
+        logger.info("SENT ----> %s", dataToSendBis)
+        await sendToSocket(self, mySocket, dataToSendBis)
+
+    return 
+    
 def addSocketToUser(socket, username):
     allSockets[username] = socket
 
@@ -95,6 +147,32 @@ async def addPlayerToTournament(self, myUser, idTournamentToJoin):
         userInTournament[myUser.id] = idTournamentToJoin
         Tournament.players[idTournamentToJoin].append(myUser.id)
         await Tournament.sendAllTournaments(self)
+
+
+async def sendInfosTournamentsToUser(self, idTournament, match00, match01):
+    myPlayers = list(Tournament.players[idTournament])
+    i = 0
+    while i < 4:
+        await sendFirstMatch(self, myPlayers[i], match00, match01)
+        i += 1
+    return
+
+def createRandomMatches(idTournament):
+    myPlayers = list(Tournament.players[idTournament])
+    match00 = []
+    
+    count = 0
+
+
+    while count != 2:
+        myRandomNumber = random.randint(0, 3)
+        lenPlayers = len(myPlayers)
+        if (myRandomNumber < lenPlayers):
+            playerToAdd = myPlayers[myRandomNumber]
+            del myPlayers[myRandomNumber]
+            match00.append(playerToAdd)
+            count += 1
+    return match00, myPlayers
 
 
 class Tournament(AsyncWebsocketConsumer):
@@ -117,7 +195,6 @@ class Tournament(AsyncWebsocketConsumer):
 
     async def sendAllTournaments(self):
         allTournaments = await returnAllTournaments()
-        myLen = len(allTournamentsId)
         myDataToSend = {
             "allTournaments": allTournaments
         }
@@ -143,7 +220,7 @@ class Tournament(AsyncWebsocketConsumer):
         logger.info("----------------------------------------")
         logger.info("| ID : %s", id)
         logger.info("| Players ---> %s", Tournament.players[id])
-        logger.info("| Players.username ---> %s", Tournament.players[id][0].username)
+        logger.info("| Players.username ---> %s", Tournament.players[id][0])
         logger.info("| Leader ---> %s", Tournament.leader[id])
         logger.info("----------------------------------------")
 
@@ -194,14 +271,17 @@ class Tournament(AsyncWebsocketConsumer):
             idTournamentToJoin = data.get("id")
             nbPlayersInTournament = len(Tournament.players[idTournamentToJoin])
             if nbPlayersInTournament == 3:
+                idTournamentToJoin = data.get("id")
                 await addPlayerToTournament(self, myUser, idTournamentToJoin)
-                logger.info("JOUEUR AJOUTE")
                 dataToSend = {
                     "TOURNAMENT-FULL": "MOMO"
                 }
                 await sendToPlayersInTournament(self, dataToSend, idTournamentToJoin)
-                return
+                self.printMyTournament(idTournamentToJoin)
+                match00, match01 = createRandomMatches(idTournamentToJoin)
+                await sendInfosTournamentsToUser(self, idTournamentToJoin, match00, match01)
 
+                return
 
             if (nbPlayersInTournament == 4):
                 return
