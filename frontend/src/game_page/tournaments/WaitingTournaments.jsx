@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useWebSocket } from '../../provider/WebSocketProvider'
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
-import { useAuth } from '../../provider/UserAuthProvider'
 import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -71,6 +69,9 @@ const WaitingTournaments = () => {
             if (data.message["TOURNAMENT-FULL"]) {
                 console.log(data.message)
             }
+        if (data.message["DISPLAY-MATCH"]) {
+                console.log(data.message["DISPLAY-MATCH"])
+        }
         };
 
         const unsubscribeMess = subscribeToTournaments(handleSocketTournament);
