@@ -1,11 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
+import { useAuth } from '../../provider/UserAuthProvider'
+import Countdown from '../../components/Coutdown';
 import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+
+
 const WaitingTournaments = () => {
+    const {myUser} = useAuth()
     const [myTournament, setTournament] = useState()
+    const [myOpponent, setOpponent] = useState()
+    const [myRoomId, setRoomId] = useState()
+    const [otherMatch, setOtherMatch] = useState()
     const { tournamentSocket, subscribeToTournaments } = useTournamentSocket();
     const location = useLocation();
     const idTournament = location.state?.idTournament;
@@ -49,12 +57,12 @@ const WaitingTournaments = () => {
   }, [idTournament, tournamentSocket, location]);
 
     useEffect(() => {
+    
         const handleSocketTournament = (data) => {
         if (data.message["allTournaments"]) {
             setTournament(data.message["allTournaments"]);
             let i = 0;
             let tournaments = data.message["allTournaments"]
-            console.log("mon objet tournaments --> ", tournaments)
             let myLen = tournaments.length
             while (i < myLen) {
                 if (idTournament == tournaments[i].id) {
@@ -66,12 +74,26 @@ const WaitingTournaments = () => {
                 i++;
             }
             }
-            if (data.message["TOURNAMENT-FULL"]) {
+        if (data.message["TOURNAMENT-FULL"]) {
                 console.log(data.message)
-            }
+                console.log("RECEIVED NOW")
+        }
         if (data.message["DISPLAY-MATCH"]) {
                 console.log(data.message["DISPLAY-MATCH"])
+                const myOpponent = data.message["DISPLAY-MATCH"]["opponent"]
+                const otherMatch = data.message["DISPLAY-MATCH"]["otherMatch"]
+                const roomId = data.message["DISPLAY-MATCH"]["room"]
+                console.log("opponent ---> ", myOpponent.profilePicture)
+                setOpponent(myOpponent)
+                setOtherMatch(otherMatch)
+                setRoomId(roomId)
         }
+        if (data.message["CANCEL-MATCH"]) {
+            const myOpponent = undefined;
+            const otherMatch = undefined;
+            setOpponent(myOpponent)
+            setOtherMatch(otherMatch)
+    }
         };
 
         const unsubscribeMess = subscribeToTournaments(handleSocketTournament);
@@ -88,7 +110,7 @@ const WaitingTournaments = () => {
 
   return (
     <div id="background-container">
-        {myTournament && myTournament.players.length !== 4 && (
+        {myTournament && myTournament.players.length !== 4 && !myOpponent && !otherMatch &&  (
         <div className="waitingTournament">
             {myTournament !== undefined && (
                 <>
@@ -169,7 +191,7 @@ const WaitingTournaments = () => {
             )}
         </div>
         )}
-        {myTournament && myTournament.players.length === 4 && (
+        {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined &&  (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
                     <span className="tournamentWriting">Tournament will start</span>
@@ -190,6 +212,33 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="loaderBot">
                     <div className="loader-2"></div>
+                </div>
+            </div>
+        )}
+        {myTournament && myTournament.players.length === 4 && myOpponent && otherMatch && (
+            <div className="waitingTournament-bis fadeIn">
+                <div className="displayMatch">
+                    <div className="displayUser-left">
+                        <img src={myUser.profilePicture} className="picture"></img>   
+                    </div>
+                    <div className="versus-left">
+                        <span className="vsModified">VS</span>
+                    </div>
+                    <div className="displayUser-left">
+                        <img src={myOpponent.profilePicture} className="picture"></img>
+                    </div>
+                    <Countdown roomId={myRoomId}/>
+                </div>
+                <div className="displayMatch">
+                    <div className="displayUser-right">
+                        <img src={otherMatch[0].profilePicture} className="picture"></img>
+                    </div>
+                    <div className="versus-right">
+                        <span className="vsModified">VS</span>
+                    </div>
+                    <div className="displayUser-right">
+                        <img src={otherMatch[1].profilePicture} className="picture"></img>
+                    </div>
                 </div>
             </div>
         )}

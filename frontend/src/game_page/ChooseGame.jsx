@@ -17,7 +17,7 @@ const ChooseGame = () => {
     const [maxScore, setMaxScore] = useState(10);
     const {tournamentSocket} = useTournamentSocket();
     const idTournament = uuidv4();
-    
+    const isTournament = false
     const [powerUp, setPowerUp] = useState(false);
 
     const handleSoloClick = () => {
@@ -26,7 +26,7 @@ const ChooseGame = () => {
 
     const handleMultiClick = () => {
         const roomId = uuidv4();
-        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp } });
+        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament } });
     };
 
     const handleCreateTournaments = () => {
