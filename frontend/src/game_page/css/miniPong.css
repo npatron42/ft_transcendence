@@ -1,4 +1,19 @@
-.boardMiniPong {
+.centerLineMiniPong {
+    width: 0.5%;
+    height: 100%;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    background: repeating-linear-gradient(to bottom,
+            transparent,
+            transparent 10px,
+            white 10px,
+            white 20px);
+    opacity: 0.5;
+}
+/* Skin Board */
+
+.defaultBoardMiniPong {
     width: 100%;
     aspect-ratio: 4 / 3;
     position: relative;
@@ -8,41 +23,134 @@
     overflow: hidden;
 }
 
-.ballMiniPong {
+.oldBoardMiniPong {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background: black;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.pingPongBoardMiniPong {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background: #008000;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.npatronBoardMiniPong {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    background-image: url("../../assets/game/npatron.png");
+    background-size: cover;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+/* Skin Ball */
+
+.defaultBallMiniPong {
     width: 3%;
-    height: 4%;
+    aspect-ratio: 1 / 1;
     background-color: #ffffff;
     border-radius: 50%;
     position: absolute;
 }
 
-.paddleMiniPong {
+.blueBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    border-radius: 50%;
+    position: absolute;
+}
+
+.neonBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: neonGlow 2s infinite alternate;
+}
+
+.oldBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    background: rgb(255, 255, 255);
+    position: absolute;
+}
+
+.pingPongBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    background: #FFD700;
+    border-radius: 50%;
+    position: absolute;
+}
+
+.radientBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    border-radius: 50%;
+    position: absolute;
+}
+
+/* Skin Paddle */
+
+.defaultPaddleMiniPong {
     width: 1.5%;
     height: 20%;
     background-color: #FFFFFF;
     position: absolute;
 }
 
-.paddleleftMiniPong {
-    left: 1.5%;
-}
-
-.paddlerightMiniPong {
-    right: 1.5%;
-}
-
-.centerLineMiniPong {
-    width: 0.5%;
-    height: 100%;
+.radientPaddleMiniPong {
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    width: 1.5%;
+    height: 20%;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 10px,
-        white 10px,
-        white 20px
-    );
-    opacity: 0.5;
+}
+
+.neonPaddleMiniPong {
+    background: black;
+    width: 1.5%;
+    height: 20%;
+    position: absolute;
+    display: block;
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: neonGlow 2s infinite alternate;
+}
+
+@keyframes neonGlow {
+    0% {
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    }
+
+    50% {
+        box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff, 0 0 40px #00ffff;
+    }
+
+    100% {
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    }
+}
+
+.redPaddleMiniPong {
+    background: #FF0000;
+    width: 1.5%;
+    height: 20%;
+    position: absolute;
 }

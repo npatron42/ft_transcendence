@@ -1,48 +1,52 @@
 import React, { useEffect, useState } from 'react';
 import '../css/gameSettings.css';
+import '../css/miniPong.css';
 import { useWebSocket } from '../../provider/WebSocketProvider';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { getGameSettings, updateGameSettings } from '../../api/api';
-import MiniPong from './MiniPong';
+import { MiniPong } from './MiniPong';
 
-const Carousel = ({ items, currentItem, onSelectItem, type }) => {
-    const [currentIndex, setCurrentIndex] = useState(0);
+const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
+    const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
-    if (!items) {
+    if (!className) {
         return <div>Loading...</div>;
     }
 
     const handleNext = () => {
         setCurrentIndex((prevIndex) => {
-            const nextIndex = (prevIndex + 1) % items.length;
-            onSelectItem(items[nextIndex].name, type);
+            const nextIndex = (prevIndex + 1) % className.length;
+            onSelectItem(className[nextIndex].className, type);
             return nextIndex;
         });
     };
 
     const handlePrev = () => {
         setCurrentIndex((prevIndex) => {
-            const prevIndexTmp = (prevIndex - 1 + items.length) % items.length;
-            onSelectItem(items[prevIndexTmp].name, type);
+            const prevIndexTmp = (prevIndex - 1 + className.length) % className.length;
+            onSelectItem(className[prevIndexTmp].className, type);
             return prevIndexTmp;
         });
     };
 
+    useEffect(() => {
+        // Si initialIndex change, synchronisez l'index
+        setCurrentIndex(initialIndex);
+    }, [initialIndex]);
+
     return (
         <div className="carouselContainer">
-            <button onClick={handlePrev} className="carouselButton">Prev</button>
+            <button onClick={handlePrev} className="carouselButtonRight"><i class="bi bi-caret-left-square-fill"></i></button>
             <div className="carouselContent">
                 <div
-                    className={`carouselItem ${items[currentIndex].className}`}
-                    style={items[currentIndex].style}
+                    className={`carouselItem ${className[currentIndex].className}`}
+                    style={className[currentIndex].style}
                 ></div>
-                <div className="itemName">{items[currentIndex].name}</div>
             </div>
-            <button onClick={handleNext} className="carouselButton">Next</button>
+            <button onClick={handleNext} className="carouselButtonLeft"> <i class="bi bi-caret-right-square-fill"></i> </button>
         </div>
     );
 };
-
 
 const GameSettings = () => {
     const { myUser } = useAuth();
@@ -50,22 +54,29 @@ const GameSettings = () => {
     const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
 
     const paddleSkin = [
-        { name: 'Classic', className: 'classicSkin', style: { backgroundColor: '#ffffff' }},
-        { name: 'Neon', className: 'neonSkin', style: { backgroundColor: '#00FF00' }},
-        { name: 'Fire', className: 'fireSkin', style: { backgroundColor: '#FF4500' }},
+        { className: 'defaultPaddle' },
+        { className: 'radientPaddle' },
+        { className: 'neonPaddle' },
+        { className: 'redPaddle' },
     ];
 
     const ballSkin = [
-        { name: 'Blue', className: 'blueBall', style: { backgroundColor: '#0000FF' } },
-        { name: 'Red', className: 'redBall', style: { backgroundColor: '#FF0000' } },
-        { name: 'Green', className: 'greenBall', style: { backgroundColor: '#00FF00' } },
+        { className: 'defaultBall' },
+        { className: 'radientBall' },
+        { className: 'neonBall' },
+        { className: 'oldBall' },
+        { className: 'pingPongBall' },
     ];
 
     const boardSkin = [
-        { name: 'Black', className: 'blackBoard', style: { backgroundColor: '#000000' } },
-        { name: 'Gray', className: 'grayBoard', style: { backgroundColor: '#808080' } },
-        { name: 'White', className: 'whiteBoard', style: { backgroundColor: '#FFFFFF' } },
+        { className: 'defaultBoard' },
+        { className: 'oldBoard' },
+        { className: 'pingPongBoard' },
+        { className: 'npatronBoard' },
     ];
+
+    const findIndex = (skins, selectedClass) =>
+        skins.findIndex((skin) => skin.className === selectedClass);
 
     useEffect(() => {
         (async () => {
@@ -74,7 +85,7 @@ const GameSettings = () => {
                 setGameSettings(settings);
                 setKeyBind({ up: settings.up, down: settings.down });
             } catch (error) {
-                console.error("Erreur lors du chargement des paramètres du jeu :", error);
+                console.error("Erreur :", error);
             }
         })();
     }, []);
@@ -85,13 +96,13 @@ const GameSettings = () => {
                 up: keyBind.up,
                 down: keyBind.down,
                 paddleSkin: gameSettings.paddleSkin,
-                ballColor: gameSettings.ballColor,
-                boardColor: gameSettings.boardColor,
+                ballSkin: gameSettings.ballSkin,
+                boardSkin: gameSettings.boardSkin,
             };
             await updateGameSettings(updatedSettings);
-            console.log("updatedSettings", updatedSettings);
+            console.log("Settings sauvegardés :", updatedSettings);
         } catch (error) {
-            console.error("Erreur lors de la sauvegarde des paramètres du jeu :", error);
+            console.error("Erreur :", error);
         }
     };
 
@@ -105,8 +116,8 @@ const GameSettings = () => {
         });
     };
 
-    const handleSelectItem = (itemName, type) => {
-        setGameSettings({ ...gameSettings, [type]: itemName });
+    const handleSelectItem = (className, type) => {
+        setGameSettings({ ...gameSettings, [type]: className });
     };
 
     if (!gameSettings) {
@@ -119,7 +130,11 @@ const GameSettings = () => {
                 <div className="gameSettings">
                     <div className="leftContainer">
                         <div className="miniPongContainer">
-                            <MiniPong />
+                            <MiniPong
+                                paddleSkin={gameSettings.paddleSkin}
+                                boardSkin={gameSettings.boardSkin}
+                                ballSkin={gameSettings.ballSkin}
+                            />
                         </div>
                         <div className="keyBindContainer">
                             <div className="sectionHeader">
@@ -141,47 +156,45 @@ const GameSettings = () => {
                     </div>
                     <div className="SkinContainer">
                         <div className="sectionHeader">
-                            <h2>Skin</h2>
+                            <h2>Paddle Skin</h2>
                         </div>
-                    <div className="PaddleSkinContainer">
-                        <Carousel
-                            items={paddleSkin}
-                            currentSkin={gameSettings.paddleSkin}
-                            onSelectItem={handleSelectItem}
-                            type="paddleSkin"
-                        />
-                    </div>
-
-                    <div className="BallSkinContainer">
-                        <div className="sectionHeader">
-                            <h2>Ball Color</h2>
+                        <div className="paddleSkinContainer">
+                            <Carousel
+                                className={paddleSkin}
+                                initialIndex={findIndex(paddleSkin, gameSettings.paddleSkin)}
+                                onSelectItem={handleSelectItem}
+                                type="paddleSkin"
+                            />
                         </div>
-                        <Carousel
-                            items={ballSkin}
-                            currentItem={gameSettings.ballSkin}
-                            onSelectItem={handleSelectItem}
-                            type="ballSkin"
-                        />
-                    </div>
 
-                    <div className="BoardSkinContainer">
-                        <div className="sectionHeader">
-                            <h2>Board Color</h2>
+                        <div className="ballSkinContainer">
+                            <div className="sectionHeader">
+                                <h2>Skin Ball</h2>
+                            </div>
+                            <Carousel
+                                className={ballSkin}
+                                initialIndex={findIndex(ballSkin, gameSettings.ballSkin)}
+                                onSelectItem={handleSelectItem}
+                                type="ballSkin"
+                            />
                         </div>
-                        <Carousel
-                            items={ boardSkin}
-                            currentItem={gameSettings.boardSkin}
-                            onSelectItem={handleSelectItem}
-                            type="boardSkin"
-                        />
-                    </div>
-                    </div>
 
+                        <div className="boardSkinContainer">
+                            <div className="sectionHeader">
+                                <h2>Skin Board</h2>
+                            </div>
+                            <Carousel
+                                className={boardSkin}
+                                initialIndex={findIndex(boardSkin, gameSettings.boardSkin)}
+                                onSelectItem={handleSelectItem}
+                                type="boardSkin"
+                            />
+                        </div>
+                    </div>
                 </div>
                 <button
                     className="buttonSaveSettings"
-                    onClick={handleSaveSettings}
-                >
+                    onClick={handleSaveSettings}>
                     Save Settings
                 </button>
             </div>
