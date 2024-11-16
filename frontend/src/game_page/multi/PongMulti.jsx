@@ -51,7 +51,7 @@ const usePaddleMovement = (webSocket, playerId) => {
     }, [keysPressed, webSocket]);
 };
 
-const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
+const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) => {
     const myJwt = localStorage.getItem('jwt');
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
@@ -72,7 +72,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     }, [powerUpType, powerUpPosition]);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/?token=${myJwt}`);
+        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/${isTournament}/?token=${myJwt}`);
 
         if (myUser) {
             ws.onopen = () => {

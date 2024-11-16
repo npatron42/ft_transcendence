@@ -53,7 +53,6 @@ async def sendToEveryClientsUsersList(channel_layer):
         }
         await sendToClient(channel_layer, sockets[i], friendsToSend)
         await sendToClient(channel_layer, sockets[i], dataToSend)
-        logger.info("STATUS")
         i += 1
 
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
