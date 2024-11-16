@@ -4,6 +4,26 @@ import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { useRef } from 'react';
+import { getGameSettings } from '../../api/api';
+
+const getBoardBackground = (boardSkin) => {
+    switch (boardSkin) {
+        case 'defaultBoard':
+            return { background: "radial-gradient(circle, #5E6472 0%, #24272c 100%)" };
+        case 'oldBoard':
+            return { background: "black" };
+        case 'pingPongBoard':
+            return { background: "#008000" };
+        case 'npatronBoard':
+            return {
+                backgroundImage: 'url("../../assets/game/npatron.png")',
+                backgroundSize: 'cover',
+            };
+        default:
+            return { background: "radial-gradient(circle, #5E6472 0%, #24272c 100%)" };
+    }
+};
+
 
 const usePaddleMovement = (webSocket, playerId) => {
     const [keysPressed, setKeysPressed] = useState({})
@@ -56,6 +76,11 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     const myJwt = localStorage.getItem('jwt');
     const [webSocket, setWebSocket] = useState(null);
     const { myUser } = useAuth();
+    const [gameSettings, setGameSettings] = useState();
+    const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
+    const [boardBackground, setBoardBackground] = useState({
+        background: "black"
+    });
 
     // Game state
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
@@ -76,15 +101,27 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     const [playerHasPowerUp, setPlayerHasPowerUp] = useState(null);
     const [soloPlayActive, setSoloPlayActive] = useState(false);
     const [centerLineClass, setCenterLineClass] = useState('center-line');
-    const [angle, setAngle] = useState(0);
-    const [length, setLength] = useState(0);
-    const [velocity, setVelocity] = useState({ x: 0, y: 0 }); 
-    const prevBallPos = useRef(ballPos);
 
     useEffect(() => {
         console.log("le voila", powerUpType);
         console.log("la pos", powerUpPosition);
     }, [powerUpType, powerUpPosition]);
+
+    // Fetch game settings
+    useEffect(() => {
+        (async () => {
+            try {
+                const settings = await getGameSettings();
+                setGameSettings(settings);
+                setKeyBind({ up: settings.up, down: settings.down });
+                const tmpBoard = getBoardBackground(settings.boardSkin);
+                setBoardBackground(tmpBoard);
+                console.log("Settings récupérés :", settings);
+            } catch (error) {
+                console.error("Erreur :", error);
+            }
+        })();
+    }, []);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/?token=${myJwt}`);
@@ -232,10 +269,14 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
         }
     }, [soloPlayActive, powerUpType]);
 
+    if (!gameSettings) {
+        return <div>Loading...</div>;
+    }
+
 
     return (
         <div className="pong-container">
-            <div className={boardClass}>
+            <div className={boardClass} style={boardBackground}>
                 <ScoreBoard
                     score1={scores.player1}
                     score2={scores.player2}
@@ -243,9 +284,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 />
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className={centerLineClass}></div>
-                <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
-                <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
-                <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
+                <div className={gameSettings.ballSkin + "Pong"} style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px`, left : '10px' }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px`, right :'10px' }}></div>
                 {/* <div className="direction-line" style={{
                     left: `${ballPos.x}px`,
                     top: `${ballPos.y}px`,

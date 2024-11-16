@@ -64,7 +64,7 @@ h2 {
   width: 100%;
 }
 
-.leftContainer { 
+.leftContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -74,8 +74,8 @@ h2 {
 
 .miniPongContainer {
   border-radius: 50px;
-  color: #FAF3DD;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border: 3px solid #161719;
+  background: transparent;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -88,8 +88,8 @@ h2 {
 
 .keyBindContainer {
   border-radius: 50px;
-  color: #FAF3DD;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border: 3px solid #161719;
+    background: transparent;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
@@ -100,11 +100,11 @@ h2 {
 
 .SkinContainer {
   border-radius: 50px;
-  color: #FAF3DD;
-  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border: 3px solid #161719;
+  background: transparent;
   border-radius: 20px;
   width: 80%;
-  padding: 40px;
+  padding:20px;
   display: flex;
   flex-direction: column;
 }
@@ -165,7 +165,7 @@ label input {
   filter: blur(5px);
 }
 
-.container label input:checked ~ span {
+.container label input:checked~span {
   box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.35),
     inset 0 5px 5px rgba(0, 0, 0, 0.5), inset 0 15px 25px rgba(0, 0, 0, 0.35);
   color: #fff;
@@ -177,30 +177,29 @@ label input {
   margin-right: 20px;
 }
 
-
-.paddle {
-  width: 90px;
-  height: 10px;
-  position: absolute;
-  display: block;
-}
-
 .carouselContainer {
 
   display: flex;
   align-items: center;
-  justify-content:space-between;
+  justify-content: space-between;
   position: relative;
   width: 100%;
   height: 30%;
+ 
 }
 
-.carouselButton {
-  background-color: #FF69B4;
+.carouselButtonLeft {
+  background-color: #cdb4db ;
   border: none;
   padding: 10px;
   cursor: pointer;
-  color: white;
+}
+
+.carouselButtonRight {
+  background-color: #cdb4db ;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
 }
 
 .carouselContent {
@@ -226,14 +225,167 @@ label input {
   border-radius: 5px;
 }
 
-.classicSkin {
+
+.paddleSkinContainer {
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 20%;
+  border-radius: 20px;
+  margin: 5px;
+}
+
+.boardSkinContainer {
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 60%;
+  border-radius: 20px;
+  margin: 5px;
+}
+
+.ballSkinContainer {
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  width: 100%;
+  height: 20%;
+  margin: 5px;
+}
+
+/* Padlle Skin */
+
+.defaultPaddle {
   background-color: #ffffff;
+  width: 90px;
+  height: 10px;
+  position: absolute;
+  display: block;
 }
 
-.neonSkin {
-  background-color: #00FF00;
+.radientPaddle {
+  background: rgb(238, 174, 202);
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+  width: 90px;
+  height: 10px;
+  position: absolute;
+  display: block;
 }
 
-.fireSkin {
-  background-color: #FF4500;
+.neonPaddle {
+  background: black;
+  width: 90px;
+  height: 10px;
+  position: absolute;
+  display: block;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  animation: neonGlow 2s infinite alternate;
+}
+
+@keyframes neonGlow {
+  0% {
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  }
+  50% {
+    box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff, 0 0 40px #00ffff;
+  }
+  100% {
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  }
+}
+
+.redPaddle {
+  background-color: #FF0000;
+  width: 90px;
+  height: 10px;
+  position: absolute;
+  display: block;
+}
+
+
+/* Board Skin */
+
+.defaultBoard {
+  background: radial-gradient(circle, #5E6472 0%, #24272c 100%);
+  width: 180px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.oldBoard {
+  background: black;
+  width: 180px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pingPongBoard {
+  background: #008000;
+  width: 180px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.npatronBoard{
+  background-image: url("../../assets/game/npatron.png");
+  background-size: cover;
+  width: 180px;
+  height: 120px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/* Ball Skin */
+
+.defaultBall {
+  width: 15px;
+  height: 15px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+}
+
+.radientBall {
+  width: 15px;
+  height: 15px;
+  background: rgb(238, 174, 202);
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+  border-radius: 50%;
+  position: absolute;
+}
+
+.neonBall {
+  width: 15px;
+  height: 15px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  animation: neonGlow 2s infinite alternate;
+}
+
+.oldBall {
+  width: 15px;
+  height: 15px;
+  background: white;
+  position: absolute;
+}
+
+.pingPongBall {
+  width: 15px;
+  height: 15px;
+  background: #FFCC00;
+  position: absolute;
+  border-radius: 50%;
 }

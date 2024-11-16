@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css/miniPong.css';
+// import '../css/gameSettings.css';
 
 const useBallMovement = (boardRef, ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle) => {
     useEffect(() => {
@@ -69,7 +70,7 @@ const usePaddleAI = (ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, s
     }, [ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, setPaddleRightPos, lastPaddle]);
 };
 
-const MiniPong = () => {
+export const MiniPong = ({ paddleSkin, boardSkin, ballSkin }) => {
     const [paddleLeftPos, setPaddleLeftPos] = useState(50);
     const [paddleRightPos, setPaddleRightPos] = useState(50);
     const [ballPos, setBallPos] = useState({ x: 50, y: 50 });
@@ -80,23 +81,34 @@ const MiniPong = () => {
     usePaddleAI(ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, setPaddleRightPos, lastPaddle);
     useBallMovement(boardRef, ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle);
 
+
+    useEffect(() => {
+        console.log("MiniPong props updated:", { paddleSkin, boardSkin, ballSkin });
+    }, [paddleSkin, boardSkin, ballSkin]);
+    
+
     return (
-        <div className="boardMiniPong" ref={boardRef}>
+        <div className={boardSkin + "MiniPong"}>
             <div className="centerLineMiniPong"></div>
             <div
-                className="ballMiniPong"
+                className={ballSkin + "MiniPong"}
                 style={{ left: `${ballPos.x}%`, top: `${ballPos.y}%` }}
             ></div>
             <div
-                className="paddleMiniPong paddleleftMiniPong"
-                style={{ top: `${paddleLeftPos}%` }}
+                className={paddleSkin + "MiniPong"}
+                style={{
+                    top: `${paddleLeftPos}%`,
+                    left: '1.5%'
+                }}
             ></div>
             <div
-                className="paddleMiniPong paddlerightMiniPong"
-                style={{ top: `${paddleRightPos}%` }}
+                className={paddleSkin + "MiniPong"}
+                style={{
+                    top: `${paddleRightPos}%`,
+                    right: '1.5%'
+                }}
             ></div>
         </div>
     );
 };
 
-export default MiniPong;
