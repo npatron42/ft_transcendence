@@ -85,8 +85,6 @@ async def getUserByUsername(name):
 
 usersInGame = []
 
-
-
 class PongConsumer(AsyncWebsocketConsumer):
 	paddles_pos = {}
 	paddle_right_height = {}
@@ -110,10 +108,18 @@ class PongConsumer(AsyncWebsocketConsumer):
 	send_db = {}
 	matchIsPlayed = {}
 	isTournament = {}
+	bool = {}
 
 		###########
 		# CONNECT #
 		###########
+
+	def printMyObj(self):
+		logger.info("---------GAME OBJECT---------")
+		logger.info("| Players --> %s", PongConsumer.players[self.room_id])
+		logger.info("| Match is played ? --> %s", PongConsumer.matchIsPlayed[self.room_id])
+		logger.info("| Is Tournament ?  --> %s", PongConsumer.isTournament[self.room_id])
+		logger.info("| Paddle pos  --> %s", PongConsumer.paddles_pos[self.room_id])
 
 	async def shareSocket(self, event):
 		message = event['message']
@@ -126,6 +132,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:
+			logger.info("User connected --> %s", myUser.username)
+			logger.info("SON SCOPE	 --> %s", self.scope)
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
 			self.room_group_name = f'game_{self.room_id}'
 			if self.room_id not in PongConsumer.players:
@@ -137,6 +145,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			if self.room_id not in PongConsumer.paddles_pos:
 				PongConsumer.paddles_pos[self.room_id] = {'left': 300, 'right': 300}
+				PongConsumer.paddle_right_height[self.room_id] = 90
+				PongConsumer.paddle_left_height[self.room_id] = 90
+				PongConsumer.bool[self.room_id] = False
 
 			if self.room_id not in PongConsumer.ball_pos:
 				PongConsumer.ball_pos[self.room_id] = {'x': 450, 'y': 300}
@@ -168,6 +179,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			self.isTournament = self.scope['url_route']['kwargs']['isTournament']
 			PongConsumer.isTournament[self.room_id] = self.isTournament
+			if PongConsumer.isTournament[self.room_id] == "true":
+				logger.info("SOCKET IN TOURNAMENT")
+			else:
+				logger.info("SOCKET NOT IN TOURNAMENT")
 
 			await self.channel_layer.group_add(
 				self.room_group_name,
@@ -286,9 +301,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 				)
 
 				if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.max_scores.get(self.room_id):
-					if not hasattr(self, 'game_task'):
+					logger.info("Mes players --> %s, dans la room --> %s", PongConsumer.players[self.room_id], self.room_id)
+					if PongConsumer.bool[self.room_id] == False:
+						PongConsumer.bool[self.room_id] = True
 						self.game_task = asyncio.create_task(self.update_ball(PongConsumer.max_scores[self.room_id]))
 						PongConsumer.matchIsPlayed[self.room_id] = True
+						logger.info("Task created for --> %s ---> %s", PongConsumer.players[self.room_id], id(self))
+					else:
+						logger.info("Task NOT created for --> %s ---> %s", PongConsumer.players[self.room_id], id(self))
+
 
 		if action == 'set_max_score':
 			if self.room_id in PongConsumer.max_scores:
@@ -388,6 +409,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 		########
 
 	async def update_ball(self, max_score):
+		logger.info("JE RENTRE DANS LA TACHE")
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.paddle_left_height[self.room_id] = 90
 		speed = 3
@@ -401,10 +423,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 		ball_radius = 15
 		last_player = None
 
+		# self.printMyObj()
 		while True:
-
+			# logger.info("Update Ball true pour : %s", myUser.username)
 			if PongConsumer.end[self.room_id] == True:
-				logger.info("JE SORS DANS CE END")
 				return
 
 				#active PowerUp if is true#
