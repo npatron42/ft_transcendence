@@ -56,7 +56,10 @@ async def removeClientFromUsers(self, username):
 			await sendToShareSocket(self, dataToSend)
 			return
 		i += 1
-	
+	# if PongConsumer.power_up_visible[room_id] == True:
+				# 	if self.check_collision(PongConsumer.ball_pos[room_id], PongConsumer.power_up_position[room_id], ball_radius):
+				# 		asyncio.create_task(self.apply_effect(last_player))
+
 	return
 
 		###############
@@ -83,7 +86,177 @@ async def getUserByUsername(name):
 		# CONSUMER #
 		############
 
+async def update_ball(self, max_score, room_id):
+		try:
+
+			PongConsumer.paddle_right_height[room_id] = 90
+			PongConsumer.paddle_left_height[room_id] = 90
+			speed = 3
+			ball = PongConsumer.ball_pos[room_id]
+			direction = PongConsumer.ball_dir[room_id]
+			PongConsumer.ball_dir[room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([speed, -speed])}
+			acceleration = 0.50
+			max_speed = 25
+			max_angle = 65
+			paddle_width = 10
+			ball_radius = 15
+			last_player = None
+
+			try:
+				PongConsumer.printMyObj(room_id)
+			except Exception as i:
+				logger.info("Exception de ma fonction bizrre --> %s", i)
+
+			while True:
+				if PongConsumer.end[room_id] == True:
+					return
+
+					#active PowerUp if is true#
+				if PongConsumer.power_up_bool[room_id] == True and PongConsumer.power_up_visible[room_id] == False and last_player != None and PongConsumer.power_up_timeout[room_id] == False and PongConsumer.power_up_active[room_id] == False:
+					asyncio.create_task(self.generate_power_up())
+
+						#Gestion Ball#
+				ball['x'] += direction['x']
+				ball['y'] += direction['y']
+				if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
+					# if ball['y'] <= 0 + ball_radius:			#<-- voir comment empecher la balle de rentrerre dans le mur
+					# 	ball['y'] = 15
+					# if ball['y'] <= 600 - ball_radius:
+					# 	ball['y'] = 585
+					direction['y'] *= -1
+
+					#Colision paddle gauche#
+				left_paddle_y = PongConsumer.paddles_pos[room_id]['left']
+
+				if (ball['x'] <= 10 + paddle_width + ball_radius and 
+					left_paddle_y - PongConsumer.paddle_left_height[room_id] // 2 <= ball['y'] <= left_paddle_y + PongConsumer.paddle_left_height[room_id] // 2):
+
+					impact_position = (ball['y'] - left_paddle_y) / (PongConsumer.paddle_left_height[room_id] / 2)
+
+					reflection_angle = impact_position * max_angle
+
+					angle_radians = math.radians(reflection_angle)
+
+					direction['x'] = abs(speed) * math.cos(angle_radians)
+					direction['y'] = speed * math.sin(angle_radians)
+
+					speed = min(speed + acceleration, max_speed)
+					
+					last_player = PongConsumer.players[room_id][0]
+
+					# Colision paddle droite
+				right_paddle_y = PongConsumer.paddles_pos[room_id]['right']
+
+				if (ball['x'] >= 890 - paddle_width - ball_radius and 
+					right_paddle_y - PongConsumer.paddle_right_height[room_id] // 2 <= ball['y'] <= right_paddle_y + PongConsumer.paddle_right_height[room_id] // 2):
+
+					impact_position = (ball['y'] - right_paddle_y) / (PongConsumer.paddle_right_height[room_id] / 2)
+
+					reflection_angle = impact_position * max_angle
+
+					angle_radians = math.radians(reflection_angle)
+
+					direction['x'] = -abs(speed) * math.cos(angle_radians)
+					direction['y'] = speed * math.sin(angle_radians)
+
+					speed = min(speed + acceleration, max_speed)
+
+					last_player = PongConsumer.players[room_id][1]
+
+					#Colision power up#
+
+				if PongConsumer.power_up_visible[room_id] == True:
+					if self.check_collision(PongConsumer.ball_pos[room_id], PongConsumer.power_up_position[room_id], ball_radius):
+						asyncio.create_task(self.apply_effect(last_player))
+
+					#reset ball#
+
+				if ball['x'] <= 0 or ball['x'] >= 900:
+					speed = 4
+					if ball['x'] <= 0:
+						PongConsumer.score[room_id]['player2'] += 1
+						direction['x'] = -speed
+						direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
+					elif ball['x'] >= 900:
+						PongConsumer.score[room_id]['player1'] += 1
+						direction['x'] = speed
+						direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
+					ball['x'] = 450
+					ball['y'] = 300
+
+					#reset powerup#
+					if PongConsumer.power_up_bool[room_id] == True:
+						self.reset_effect()
+						PongConsumer.power_up_visible[room_id] = False
+						PongConsumer.power_up_timeout[room_id] = False
+						PongConsumer.power_up[room_id] = None
+						PongConsumer.power_up_position[room_id] = None
+						last_player = None
+
+						await self.channel_layer.group_send(
+							self.room_group_name,
+							{
+								'type': 'new_power_up',
+								'position': None,
+								'power_up': None,
+								'status' : "erase"
+							}
+						)
+
+					#Win condition#
+				if PongConsumer.score[room_id]['player1'] >= max_score or PongConsumer.score[room_id]['player2'] >= max_score:
+
+					if PongConsumer.score[room_id]['player1'] >= max_score:
+						winner = PongConsumer.players[room_id][0]
+						winnerdb = await getUserByUsername(PongConsumer.players[room_id][0])
+					else:
+						winner = PongConsumer.players[room_id][1]
+						winnerdb = await getUserByUsername(PongConsumer.players[room_id][1])
+
+					PongConsumer.end[room_id] = True
+
+					await self.channel_layer.group_send(
+						self.room_group_name,
+						{
+							'type': 'game_over',
+							'winner': winner,
+							'score': PongConsumer.score[room_id]
+						}
+					)
+
+					p1_score = PongConsumer.score[room_id]['player1']
+					p2_score = PongConsumer.score[room_id]['player2']
+					p2 = await getUserByUsername(PongConsumer.players[room_id][1])
+					p1 = await getUserByUsername(PongConsumer.players[room_id][0])
+					if PongConsumer.send_db[room_id] == False:
+						await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
+						PongConsumer.send_db[room_id] = True
+						# logger.info("SORTIE DU WHILE POUR %s", PongConsumer.players[room_id])
+					break
+
+					#send game state#
+
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'game_state',
+						'paddles_pos': PongConsumer.paddles_pos[room_id],
+						'paddle_left_height': PongConsumer.paddle_left_height[room_id],
+						'paddle_right_height': PongConsumer.paddle_right_height[room_id],
+						'ball': PongConsumer.ball_pos[room_id],
+						'score': PongConsumer.score[room_id],
+						'max_score': max_score
+					}
+				)
+				await asyncio.sleep(1 / 60)
+		except Exception as i:
+			logger.info("BONJOURqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
+			logger.info("HUGOOOOOOOOOOOOOOO ---> %s", i)
+
+
 usersInGame = []
+myMatches = {}
+
 
 class PongConsumer(AsyncWebsocketConsumer):
 	paddles_pos = {}
@@ -108,18 +281,40 @@ class PongConsumer(AsyncWebsocketConsumer):
 	send_db = {}
 	matchIsPlayed = {}
 	isTournament = {}
-	bool = {}
+	myTasks = {}
 
 		###########
 		# CONNECT #
 		###########
 
-	def printMyObj(self):
+	async def createGameTask(self, room_id, myUser):
+		if room_id not in PongConsumer.myTasks:
+			PongConsumer.myTasks[room_id] = asyncio.Lock()
+			logger.info("LOCK for %s\nRoom --> %s", myUser.username, PongConsumer.players[room_id])
+		async with PongConsumer.myTasks[room_id]:
+			if room_id in myMatches:
+				return
+			if room_id not in myMatches:
+				try:
+					if PongConsumer.isTournament[room_id] == "true":
+						max_score = 8
+					else:
+						max_score = PongConsumer.max_scores[room_id]
+					self.game_task = asyncio.create_task(update_ball(self, max_score, room_id))
+				except Exception as i:
+					logger.info(i)
+				logger.info("Task created for %s", PongConsumer.players[room_id])
+				myMatches[room_id] = "launched"
+		logger.info("UNLOCK for %s", myUser.username)
+		return
+
+
+	def printMyObj(room_id):
 		logger.info("---------GAME OBJECT---------")
-		logger.info("| Players --> %s", PongConsumer.players[self.room_id])
-		logger.info("| Match is played ? --> %s", PongConsumer.matchIsPlayed[self.room_id])
-		logger.info("| Is Tournament ?  --> %s", PongConsumer.isTournament[self.room_id])
-		logger.info("| Paddle pos  --> %s", PongConsumer.paddles_pos[self.room_id])
+		logger.info("| Players --> %s", PongConsumer.players[room_id])
+		logger.info("| Match is played ? --> %s", PongConsumer.matchIsPlayed[room_id])
+		logger.info("| Is Tournament ?  --> %s", PongConsumer.isTournament[room_id])
+		logger.info("| Paddle pos  --> %s", PongConsumer.paddles_pos[room_id])
 
 	async def shareSocket(self, event):
 		message = event['message']
@@ -132,8 +327,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:
-			logger.info("User connected --> %s", myUser.username)
-			logger.info("SON SCOPE	 --> %s", self.scope)
+			logger.info("User %s connected", myUser.username)
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
 			self.room_group_name = f'game_{self.room_id}'
 			if self.room_id not in PongConsumer.players:
@@ -147,7 +341,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				PongConsumer.paddles_pos[self.room_id] = {'left': 300, 'right': 300}
 				PongConsumer.paddle_right_height[self.room_id] = 90
 				PongConsumer.paddle_left_height[self.room_id] = 90
-				PongConsumer.bool[self.room_id] = False
 
 			if self.room_id not in PongConsumer.ball_pos:
 				PongConsumer.ball_pos[self.room_id] = {'x': 450, 'y': 300}
@@ -214,7 +407,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.game_task.cancel()
 		if PongConsumer.isTournament[self.room_id] == "false":
 
-
 			await self.channel_layer.group_discard(
 				self.room_group_name,
 				self.channel_name
@@ -259,6 +451,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.players[self.room_id].remove(self.username)
 			return
 		else:
+			await self.channel_layer.group_discard(
+				self.room_group_name,
+				self.channel_name
+			)
 			dataToSend = {
 				"type": "SCORES",
 				"user": myUser.username
@@ -278,6 +474,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 		data = json.loads(text_data)
 		action = data.get('action', '')
 		user_name = data.get('name', None)
+
+
+		myUser = self.scope["user"]
 
 		if user_name:
 			self.username = user_name
@@ -300,16 +499,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 					}
 				)
 
-				if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.max_scores.get(self.room_id):
-					logger.info("Mes players --> %s, dans la room --> %s", PongConsumer.players[self.room_id], self.room_id)
-					if PongConsumer.bool[self.room_id] == False:
-						PongConsumer.bool[self.room_id] = True
-						self.game_task = asyncio.create_task(self.update_ball(PongConsumer.max_scores[self.room_id]))
-						PongConsumer.matchIsPlayed[self.room_id] = True
-						logger.info("Task created for --> %s ---> %s", PongConsumer.players[self.room_id], id(self))
-					else:
-						logger.info("Task NOT created for --> %s ---> %s", PongConsumer.players[self.room_id], id(self))
-
+				if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.max_scores.get(self.room_id) and PongConsumer:
+					await self.createGameTask(self.room_id, myUser)
+					PongConsumer.matchIsPlayed[self.room_id] = True
 
 		if action == 'set_max_score':
 			if self.room_id in PongConsumer.max_scores:
@@ -408,161 +600,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		# BALL #
 		########
 
-	async def update_ball(self, max_score):
-		logger.info("JE RENTRE DANS LA TACHE")
-		PongConsumer.paddle_right_height[self.room_id] = 90
-		PongConsumer.paddle_left_height[self.room_id] = 90
-		speed = 3
-		ball = PongConsumer.ball_pos[self.room_id]
-		direction = PongConsumer.ball_dir[self.room_id]
-		PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([speed, -speed])}
-		acceleration = 0.50
-		max_speed = 25
-		max_angle = 65
-		paddle_width = 10
-		ball_radius = 15
-		last_player = None
-
-		# self.printMyObj()
-		while True:
-			# logger.info("Update Ball true pour : %s", myUser.username)
-			if PongConsumer.end[self.room_id] == True:
-				return
-
-				#active PowerUp if is true#
-			if PongConsumer.power_up_bool[self.room_id] == True and PongConsumer.power_up_visible[self.room_id] == False and last_player != None and PongConsumer.power_up_timeout[self.room_id] == False and PongConsumer.power_up_active[self.room_id] == False:
-				asyncio.create_task(self.generate_power_up())
-
-				#Gestion Ball#
-			ball['x'] += direction['x']
-			ball['y'] += direction['y']
-
-			if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
-				# if ball['y'] <= 0 + ball_radius:			#<-- voir comment empecher la balle de rentrerre dans le mur
-				# 	ball['y'] = 15
-				# if ball['y'] <= 600 - ball_radius:
-				# 	ball['y'] = 585
-				direction['y'] *= -1
-
-				#Colision paddle gauche#
-			left_paddle_y = PongConsumer.paddles_pos[self.room_id]['left']
-			if (ball['x'] <= 10 + paddle_width + ball_radius and 
-				left_paddle_y - PongConsumer.paddle_left_height[self.room_id] // 2 <= ball['y'] <= left_paddle_y + PongConsumer.paddle_left_height[self.room_id] // 2):
-
-				impact_position = (ball['y'] - left_paddle_y) / (PongConsumer.paddle_left_height[self.room_id] / 2)
-
-				reflection_angle = impact_position * max_angle
-
-				angle_radians = math.radians(reflection_angle)
-
-				direction['x'] = abs(speed) * math.cos(angle_radians)
-				direction['y'] = speed * math.sin(angle_radians)
-
-				speed = min(speed + acceleration, max_speed)
-				
-
-				last_player = PongConsumer.players[self.room_id][0]
-
-				# Colision paddle droite
-			right_paddle_y = PongConsumer.paddles_pos[self.room_id]['right']
-			if (ball['x'] >= 890 - paddle_width - ball_radius and 
-				right_paddle_y - PongConsumer.paddle_right_height[self.room_id] // 2 <= ball['y'] <= right_paddle_y + PongConsumer.paddle_right_height[self.room_id] // 2):
-
-				impact_position = (ball['y'] - right_paddle_y) / (PongConsumer.paddle_right_height[self.room_id] / 2)
-
-				reflection_angle = impact_position * max_angle
-
-				angle_radians = math.radians(reflection_angle)
-
-				direction['x'] = -abs(speed) * math.cos(angle_radians)
-				direction['y'] = speed * math.sin(angle_radians)
-
-				speed = min(speed + acceleration, max_speed)
-
-				last_player = PongConsumer.players[self.room_id][1]
-
-				#Colision power up#
-			if PongConsumer.power_up_visible[self.room_id] == True:
-				if self.check_collision(PongConsumer.ball_pos[self.room_id], PongConsumer.power_up_position[self.room_id], ball_radius):
-					asyncio.create_task(self.apply_effect(last_player))
-
-				#reset ball#
-			if ball['x'] <= 0 or ball['x'] >= 900:
-				speed = self.calculate_speed(max_score)
-				if ball['x'] <= 0:
-					PongConsumer.score[self.room_id]['player2'] += 1
-					direction['x'] = -speed
-					direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
-				elif ball['x'] >= 900:
-					PongConsumer.score[self.room_id]['player1'] += 1
-					direction['x'] = speed
-					direction['y'] = random.choice([-3, -2, -1, 1, 2, 3])
-				ball['x'] = 450
-				ball['y'] = 300
-
-				#reset powerup#
-				if PongConsumer.power_up_bool[self.room_id] == True:
-					self.reset_effect()
-					PongConsumer.power_up_visible[self.room_id] = False
-					PongConsumer.power_up_timeout[self.room_id] = False
-					PongConsumer.power_up[self.room_id] = None
-					PongConsumer.power_up_position[self.room_id] = None
-					last_player = None
-
-					await self.channel_layer.group_send(
-						self.room_group_name,
-						{
-							'type': 'new_power_up',
-							'position': None,
-							'power_up': None,
-							'status' : "erase"
-						}
-					)
-
-				#Win condition#
-			if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
-
-				if PongConsumer.score[self.room_id]['player1'] >= max_score:
-					winner = PongConsumer.players[self.room_id][0]
-					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
-				else:
-					winner = PongConsumer.players[self.room_id][1]
-					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
-
-				PongConsumer.end[self.room_id] = True
-
-				await self.channel_layer.group_send(
-					self.room_group_name,
-					{
-						'type': 'game_over',
-						'winner': winner,
-						'score': PongConsumer.score[self.room_id]
-					}
-				)
-
-				p1_score = PongConsumer.score[self.room_id]['player1']
-				p2_score = PongConsumer.score[self.room_id]['player2']
-				p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
-				p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
-				if PongConsumer.send_db[self.room_id] == False:
-					await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
-					PongConsumer.send_db[self.room_id] = True
-				break
-
-				#send game state#
-			await self.channel_layer.group_send(
-				self.room_group_name,
-				{
-					'type': 'game_state',
-					'paddles_pos': PongConsumer.paddles_pos[self.room_id],
-					'paddle_left_height': PongConsumer.paddle_left_height[self.room_id],
-					'paddle_right_height': PongConsumer.paddle_right_height[self.room_id],
-					'ball': PongConsumer.ball_pos[self.room_id],
-					'score': PongConsumer.score[self.room_id],
-					'max_score': max_score
-				}
-			)
-			await asyncio.sleep(1 / 60)
 
 	def calculate_speed(self, max_score):
 
