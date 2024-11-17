@@ -156,7 +156,7 @@ const GameSettings = () => {
                     </div>
                     <div className="SkinContainer">
                         <div className="sectionHeader">
-                            <h2>Paddle Skin</h2>
+                            <h2>Skin</h2>
                         </div>
                         <div className="paddleSkinContainer">
                             <Carousel
@@ -166,11 +166,7 @@ const GameSettings = () => {
                                 type="paddleSkin"
                             />
                         </div>
-
                         <div className="ballSkinContainer">
-                            <div className="sectionHeader">
-                                <h2>Skin Ball</h2>
-                            </div>
                             <Carousel
                                 className={ballSkin}
                                 initialIndex={findIndex(ballSkin, gameSettings.ballSkin)}
@@ -180,9 +176,6 @@ const GameSettings = () => {
                         </div>
 
                         <div className="boardSkinContainer">
-                            <div className="sectionHeader">
-                                <h2>Skin Board</h2>
-                            </div>
                             <Carousel
                                 className={boardSkin}
                                 initialIndex={findIndex(boardSkin, gameSettings.boardSkin)}
