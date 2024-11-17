@@ -4,7 +4,7 @@ import { useTournamentSocket } from "../provider/TournamentSocketProvider";
 import { v4 as uuidv4 } from 'uuid';
 import "./countdown.css"
 const Countdown = ({roomId}) => {
-	const [seconds, setSeconds] = useState(5);
+	const [seconds, setSeconds] = useState(2);
 	const {tournamentSocket} = useTournamentSocket();
 	const navigate = useNavigate();
 	const isTournament = true;
@@ -25,7 +25,7 @@ const Countdown = ({roomId}) => {
 	}
 	tournamentSocket.send(JSON.stringify(dataToSend))
 	const maxScore = 5;
-	const powerUp = true;
+	const powerUp = false;
 	navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament } });
 	return ;
   }
