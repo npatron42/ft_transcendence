@@ -227,7 +227,7 @@ const WaitingTournaments = () => {
                     <div className="displayUser-left">
                         <img src={myOpponent.profilePicture} className="picture"></img>
                     </div>
-                    <Countdown roomId={myRoomId}/>
+                    <Countdown roomId={myRoomId} idTournament={idTournament}/>
                 </div>
                 <div className="displayMatch">
                     <div className="displayUser-right">

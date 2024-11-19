@@ -10,6 +10,7 @@ from users.models import Invitation, User, FriendsList
 from users.serializers import UserSerializer
 import math
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -88,24 +89,18 @@ async def getUserByUsername(name):
 
 async def update_ball(self, max_score, room_id):
 		try:
-
 			PongConsumer.paddle_right_height[room_id] = 90
 			PongConsumer.paddle_left_height[room_id] = 90
 			speed = 3
 			ball = PongConsumer.ball_pos[room_id]
 			direction = PongConsumer.ball_dir[room_id]
 			PongConsumer.ball_dir[room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([speed, -speed])}
-			acceleration = 0.50
+			acceleration = 5
 			max_speed = 25
 			max_angle = 65
 			paddle_width = 10
 			ball_radius = 15
 			last_player = None
-
-			try:
-				PongConsumer.printMyObj(room_id)
-			except Exception as i:
-				logger.info("Exception de ma fonction bizrre --> %s", i)
 
 			while True:
 				if PongConsumer.end[room_id] == True:
@@ -205,7 +200,6 @@ async def update_ball(self, max_score, room_id):
 
 					#Win condition#
 				if PongConsumer.score[room_id]['player1'] >= max_score or PongConsumer.score[room_id]['player2'] >= max_score:
-
 					if PongConsumer.score[room_id]['player1'] >= max_score:
 						winner = PongConsumer.players[room_id][0]
 						winnerdb = await getUserByUsername(PongConsumer.players[room_id][0])
@@ -214,25 +208,45 @@ async def update_ball(self, max_score, room_id):
 						winnerdb = await getUserByUsername(PongConsumer.players[room_id][1])
 
 					PongConsumer.end[room_id] = True
+					if PongConsumer.isTournament[room_id] == False:
+						await self.channel_layer.group_send(
+							self.room_group_name,
+							{
+								'type': 'game_over',
+								'winner': winner,
+								'score': PongConsumer.score[room_id]
+							}
+						)
 
-					await self.channel_layer.group_send(
-						self.room_group_name,
-						{
-							'type': 'game_over',
-							'winner': winner,
-							'score': PongConsumer.score[room_id]
+						p1_score = PongConsumer.score[room_id]['player1']
+						p2_score = PongConsumer.score[room_id]['player2']
+						p2 = await getUserByUsername(PongConsumer.players[room_id][1])
+						p1 = await getUserByUsername(PongConsumer.players[room_id][0])
+						if PongConsumer.send_db[room_id] == False:
+							await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
+							PongConsumer.send_db[room_id] = True
+						break
+					else:
+						if PongConsumer.score[room_id]['player1'] >= max_score:
+							myWinner = PongConsumer.players[room_id][0]
+							myLoser = PongConsumer.players[room_id][1]
+						else:
+							myWinner = PongConsumer.players[room_id][1]
+							myLoser = PongConsumer.players[room_id][0]
+
+						myPlayers = []
+						myPlayers.append(PongConsumer.players[room_id][0])
+						myPlayers.append(PongConsumer.players[room_id][1])
+						dataToSend = {
+							"type": "RESULTS",
+							"idTournament": PongConsumer.idTournament[room_id],
+							"myWinner": myWinner,
+							"myLoser": myLoser,
+							"score": PongConsumer.score[room_id],
+							"players": myPlayers,
 						}
-					)
-
-					p1_score = PongConsumer.score[room_id]['player1']
-					p2_score = PongConsumer.score[room_id]['player2']
-					p2 = await getUserByUsername(PongConsumer.players[room_id][1])
-					p1 = await getUserByUsername(PongConsumer.players[room_id][0])
-					if PongConsumer.send_db[room_id] == False:
-						await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
-						PongConsumer.send_db[room_id] = True
-						# logger.info("SORTIE DU WHILE POUR %s", PongConsumer.players[room_id])
-					break
+						logger.info("[PONG CONSUMER] DatatoSend de %s--> %s", PongConsumer.players[room_id], dataToSend)
+						await PongConsumer.sendData(self, room_id, dataToSend)
 
 					#send game state#
 
@@ -256,6 +270,7 @@ async def update_ball(self, max_score, room_id):
 
 usersInGame = []
 myMatches = {}
+dataIsSent = {}
 
 
 class PongConsumer(AsyncWebsocketConsumer):
@@ -282,6 +297,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 	matchIsPlayed = {}
 	isTournament = {}
 	myTasks = {}
+	myTasks2 = {}
+	idTournament = {}
 
 		###########
 		# CONNECT #
@@ -297,7 +314,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if room_id not in myMatches:
 				try:
 					if PongConsumer.isTournament[room_id] == "true":
-						max_score = 8
+						max_score = 1
 					else:
 						max_score = PongConsumer.max_scores[room_id]
 					self.game_task = asyncio.create_task(update_ball(self, max_score, room_id))
@@ -306,6 +323,17 @@ class PongConsumer(AsyncWebsocketConsumer):
 				logger.info("Task created for %s", PongConsumer.players[room_id])
 				myMatches[room_id] = "launched"
 		logger.info("UNLOCK for %s", myUser.username)
+		return
+	
+	async def sendData(self, room_id, dataToSend):
+		if room_id not in PongConsumer.myTasks2:
+			PongConsumer.myTasks2[room_id] = asyncio.Lock()
+		async with PongConsumer.myTasks2[room_id]:
+			if room_id in dataIsSent:
+				return
+			if room_id not in dataIsSent:
+				await sendToTournamentSocket(self, dataToSend)
+				dataIsSent[room_id] = "sent"
 		return
 
 
@@ -359,6 +387,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				PongConsumer.end[self.room_id] = False
 				PongConsumer.power_up_visible[self.room_id] = False
 				PongConsumer.power_up_timeout[self.room_id] = False
+				PongConsumer.power_up_bool[self.room_id] = False
 
 			
 			if self.room_id not in PongConsumer.send_db:
@@ -372,10 +401,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			self.isTournament = self.scope['url_route']['kwargs']['isTournament']
 			PongConsumer.isTournament[self.room_id] = self.isTournament
-			if PongConsumer.isTournament[self.room_id] == "true":
-				logger.info("SOCKET IN TOURNAMENT")
-			else:
-				logger.info("SOCKET NOT IN TOURNAMENT")
+			self.idTournament = self.scope['url_route']['kwargs']['idTournament']
+			PongConsumer.idTournament[self.room_id] = self.idTournament
+
+			logger.info("idTOurnament ---> %s", self.scope['url_route']['kwargs']['idTournament'])
 
 			await self.channel_layer.group_add(
 				self.room_group_name,

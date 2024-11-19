@@ -7,7 +7,7 @@ from tournaments.consumers import Tournament
 
 
 websocket_urlpatterns = [
-    path('ws/pong/<str:room_id>/<str:isTournament>/', middleware.JWTAuthMiddleware(PongConsumer.as_asgi())),
+    path('ws/pong/<str:room_id>/<str:isTournament>/<str:idTournament>/', middleware.JWTAuthMiddleware(PongConsumer.as_asgi())),
     path('ws/tournamentsConsumer/', middleware.JWTAuthMiddleware(Tournament.as_asgi())),
     path('ws/socketUser/', middleware.JWTAuthMiddleware(consumers.handleSocketConsumer.as_asgi())),
 ]

@@ -7,6 +7,7 @@ const GlobalGameMulti = () => {
     const { roomId } = useParams();
     const location = useLocation();
     const isTournament = location.state?.isTournament;
+    const idTournament = location.state?.idTournament;
     const maxScore = location.state?.maxScore || 10;
     const powerUp = location.state?.powerUp;
     const userSelected = location.state?.userSelected;
@@ -24,13 +25,13 @@ const GlobalGameMulti = () => {
 
     return (
         <div className="GlobalGame">
-            <InviteFriend/>
             <PongMulti
                 roomId={roomId}
                 maxScore={maxScore}
                 powerUp ={powerUp}
                 userSelected= {userSelected}
                 isTournament={isTournament}
+                idTournament={idTournament}
             />
         </div>
     );

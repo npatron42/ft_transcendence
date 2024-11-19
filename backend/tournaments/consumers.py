@@ -13,16 +13,16 @@ logger = logging.getLogger(__name__)
 
 
 
-# OBJ ---> {"id": id of tournament}
-userInTournament = {}
 
-# OBJ ---> [id1, id2, id3, ...] (tournois)
-allTournamentsId = []
-allSockets = {}
-allUsers = []
+
 
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
+    userSer = UserSerializer(userTmp)
+    return userSer.data
+
+async def getUserByUsername(myUsername):
+    userTmp = await sync_to_async(User.objects.get)(username=myUsername)
     userSer = UserSerializer(userTmp)
     return userSer.data
 
@@ -143,6 +143,20 @@ def addSocketToUser(socket, username):
 def deleteSocketToUser(username):
     del allSockets[username]
 
+def findMatch(players):
+    i = 0
+    logger.info("Find match --> %s players", players)
+    myLen = len(myMatches)
+    logger.info("myLen --> %s", myLen)
+    logger.info("myMatces --> %s", myMatches)
+    while i < myLen:
+        myPlayers = myMatches[i]["players"]
+        if players[0] in myPlayers or players[1] in myPlayers:
+            logger.info("players %s, myPlayers %s", players, myPlayers)
+            return myMatches[i]
+        i += 1
+    return None
+
 async def addPlayerToTournament(self, myUser, idTournamentToJoin):
     if idTournamentToJoin in allTournamentsId:
         userInTournament[myUser.id] = idTournamentToJoin
@@ -175,7 +189,131 @@ def createRandomMatches(idTournament):
             del myPlayers[myRandomNumber]
             match00.append(playerToAdd)
             count += 1
+    myMatch00 = {
+        "idTournament": idTournament,
+        "players": match00,
+        "type": "00",
+        "winner": None,
+        "loser": None
+    }
+
+    myMatch01 = {
+        "idTournament": idTournament,
+        "players": myPlayers,
+        "type": "00",
+        "winner": None,
+        "loser": None
+    }
+
+
+    myMatches.append(myMatch00)
+    myMatches.append(myMatch01)
+    tournamentMatchsEnded[idTournament] = 0
     return match00, myPlayers
+
+
+def modifyMatchObjet(players, name, value):
+    i = 0;
+    myLen = len(myMatches)
+    while i < myLen:
+        myMatch = myMatches[i]
+        myPlayers = myMatch["players"]
+        if players[0] in myPlayers or players[1] in myPlayers:
+            myMatch[name] = value
+            return myMatch
+        i += 1
+    return None
+
+
+def createFinalsMatches(idTournament):
+    i = 0
+    myLen = len(myMatches)
+
+    match00, match01, myLosers, myWiners = [], [], [], []
+
+    while i < myLen:
+        logger.info("i %d myLen %d", i, myLen)
+        myMatch = myMatches[i]
+        if idTournament == myMatch["idTournament"]:
+            match00 = myMatch
+            del myMatches[i]
+            break
+        i += 1
+
+    i = 0
+    myLen = len(myMatches)
+    while i < myLen:
+        myMatch = myMatches[i]
+        if idTournament == myMatch["idTournament"]:
+            match01 = myMatch
+            del myMatches[i]
+            break
+        i += 1
+    
+    loser0 = match00["loser"]
+    loser1 = match01["loser"]
+
+    winner0 = match00["winner"]
+    winner1 = match01["winner"]
+
+    myLosers.extend((loser0, loser1))
+    myWiners.extend((winner0, winner1))
+
+    logger.info("Mes losers --> %s", myLosers)
+    logger.info("Mes winners --> %s", myWiners)
+    
+
+
+
+
+
+def printMyMatches():
+    i = 0
+
+    myLen = len(myMatches)
+    while i < myLen:
+        match = myMatches[i]
+        players = match["players"]
+        logger.info("|----------MATCH %d----------|", i)
+        logger.info("| %s VS %s ", players[0], players[1])
+        logger.info("| Type : %s", match["type"])
+        logger.info("| Winner: %s", match["winner"])
+        logger.info("| Loser: %s", match["loser"])
+        logger.info("\n\n\n")
+        i += 1
+
+
+def printMatch(match):
+    players = match["players"]
+    logger.info("|----------MATCH----------|")
+    logger.info("| %s VS %s ", players[0], players[1])
+    logger.info("| Type : %s", match["type"])
+    logger.info("| Winner: %s", match["winner"])
+    logger.info("| Loser: %s", match["loser"])
+    logger.info("\n\n\n")
+
+
+def removeMatch(match):
+    i = 0
+    myLen = len(myMatches)
+    while i < myLen:
+        if match == myMatches[i]:
+            del myMatches[i]
+            return
+        i += 1
+    return
+
+
+# OBJ ---> {"id": id of tournament}
+userInTournament = {}
+
+# OBJ ---> [id1, id2, id3, ...] (tournois)
+allTournamentsId = []
+myMatches = []
+allSockets = {}
+allUsers = []
+
+tournamentMatchsEnded = {}
 
 
 class Tournament(AsyncWebsocketConsumer):
@@ -198,6 +336,7 @@ class Tournament(AsyncWebsocketConsumer):
                 i += 1
         return
 
+
     async def sendAllTournaments(self):
         allTournaments = await returnAllTournaments()
         myDataToSend = {
@@ -214,8 +353,54 @@ class Tournament(AsyncWebsocketConsumer):
             'message': data
         }))
         type = data.get("type")
-        if type == "SCORES":
-            logger.info("SOCKET TOURNAMENT JE RECOIS --> %s", data)
+        usernames = data.get("players")
+        idTournament = data.get("idTournament")
+        
+        myLeader = Tournament.leader[idTournament]
+
+        if (myUser.id != myLeader):
+            return
+        elif type == "RESULTS":
+            # FIND MATCH
+            logger.info("[TOURNAMENT CONSUMER] What I received--> %s to %s", data, myUser.username)
+            myPlayersUsernames = data.get("players")
+
+            myPlayers = []
+
+            myPlayer00 = await getUserByUsername(myPlayersUsernames[0])
+            myPlayer01 = await getUserByUsername(myPlayersUsernames[1])
+
+            myPlayers.append(myPlayer00["id"])
+            myPlayers.append(myPlayer01["id"])
+
+            myMatch = findMatch(myPlayers)
+            logger.info(myMatch)
+
+
+            if myMatch != None:
+                idTournament = myMatch["idTournament"]
+                whatMatch = myMatch["type"]
+                value = tournamentMatchsEnded.get(idTournament)
+                value = value + 1
+                tournamentMatchsEnded[idTournament] = value
+
+                ## FIRST MATCHS --> 
+
+                if whatMatch == "00":
+                    myWinner = data["myWinner"]
+                    myLoser = data["myLoser"]
+
+                    modifyMatchObjet(myPlayers, "winner", myWinner)
+                    modifyMatchObjet(myPlayers, "loser", myLoser)
+
+                    matchsPlayed = tournamentMatchsEnded.get(idTournament)
+                    if matchsPlayed == 2: ## MATCHS PLAYED
+                        createFinalsMatches(idTournament)
+                        tournamentMatchsEnded[idTournament] == 0
+
+
+
+
 
     async def socketTournament(self, event):
         myUser = self.scope["user"]
@@ -223,10 +408,6 @@ class Tournament(AsyncWebsocketConsumer):
         await self.send(text_data=json.dumps({
             'message': data
         }))
-
-    async def shareTournaments(self, event):
-        message = event['message']
-        await self.send(text_data=json.dumps(message))
 
     async def shareSocket(self, event):
         data = event['message']
@@ -297,6 +478,7 @@ class Tournament(AsyncWebsocketConsumer):
                 logger.info("SENT HERE BABY")
                 self.printMyTournament(idTournamentToJoin)
                 match00, match01 = createRandomMatches(idTournamentToJoin)
+                
                 await sendInfosTournamentsToUser(self, idTournamentToJoin, match00, match01)
                 return 
 

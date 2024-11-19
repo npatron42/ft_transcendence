@@ -51,7 +51,7 @@ const usePaddleMovement = (webSocket, playerId) => {
     }, [keysPressed, webSocket]);
 };
 
-const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) => {
+const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTournament }) => {
     const myJwt = localStorage.getItem('jwt');
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
@@ -67,14 +67,10 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) =>
     const [powerUpType, setPowerUpType] = useState(null);
 
     useEffect(() => {
-        console.log("le voila", powerUpType);
-        console.log("la pos", powerUpPosition);
     }, [powerUpType, powerUpPosition]);
 
     useEffect(() => {
-        console.log("ROOM ID --> ", roomId)
-        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/${isTournament}/?token=${myJwt}`);
-
+        const ws = new WebSocket(`ws://localhost:8000/ws/pong/${roomId}/${isTournament}/${idTournament}/?token=${myJwt}`);
         if (myUser) {
             ws.onopen = () => {
                 const powerUpBool = Boolean(powerUp);
@@ -158,6 +154,13 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) =>
         }
     };
 
+    // IF TOURNAMENT --> REDIRECT TO WAITING
+
+    const handleTest = () => {
+    }
+
+    console.log(isTournament)
+
     return (
         <div className="pong-container">
             <div className="board">
@@ -166,7 +169,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) =>
                     score2={scores.player2}
                     maxScoreToUse={maxScoreToUse}
                 />
-                {isGameOver && winner ? <WinComp winner={winner} /> : null}
+                {isGameOver && winner ? <WinComp winner={winner} /> : null }
                 <div className="center-line"></div>
                 <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
                 <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
@@ -175,6 +178,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament }) =>
                     <div className="power-up" style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
                         {renderPowerUp()}
                     </div>
+                )}
+                {isTournament === true && isGameOver === true && (
+                    <div>{handleTest()}</div>
                 )}
             </div>
         </div>

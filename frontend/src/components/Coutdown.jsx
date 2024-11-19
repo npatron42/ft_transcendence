@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useTournamentSocket } from "../provider/TournamentSocketProvider";
 import { v4 as uuidv4 } from 'uuid';
 import "./countdown.css"
-const Countdown = ({roomId}) => {
-	const [seconds, setSeconds] = useState(2);
+const Countdown = ({roomId, idTournament}) => {
+	const [seconds, setSeconds] = useState(1);
 	const {tournamentSocket} = useTournamentSocket();
 	const navigate = useNavigate();
 	const isTournament = true;
@@ -24,9 +24,9 @@ const Countdown = ({roomId}) => {
 		"type": "NAVIGATE-TO-MATCH",
 	}
 	tournamentSocket.send(JSON.stringify(dataToSend))
-	const maxScore = 5;
+	const maxScore = 1;
 	const powerUp = false;
-	navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament } });
+	navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament, idTournament } });
 	return ;
   }
 
