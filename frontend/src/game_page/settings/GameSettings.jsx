@@ -30,20 +30,23 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     };
 
     useEffect(() => {
-        // Si initialIndex change, synchronisez l'index
         setCurrentIndex(initialIndex);
     }, [initialIndex]);
 
     return (
         <div className="carouselContainer">
-            <button onClick={handlePrev} className="carouselButtonRight"><i class="bi bi-caret-left-square-fill"></i></button>
+            <button onClick={handlePrev} className="carouselButtonRight">
+                <i className="bi bi-caret-left-square-fill"></i>
+            </button>
             <div className="carouselContent">
                 <div
                     className={`carouselItem ${className[currentIndex].className}`}
                     style={className[currentIndex].style}
                 ></div>
             </div>
-            <button onClick={handleNext} className="carouselButtonLeft"> <i class="bi bi-caret-right-square-fill"></i> </button>
+            <button onClick={handleNext} className="carouselButtonLeft">
+                <i className="bi bi-caret-right-square-fill"></i>
+            </button>
         </div>
     );
 };
@@ -52,12 +55,16 @@ const GameSettings = () => {
     const { myUser } = useAuth();
     const [gameSettings, setGameSettings] = useState();
     const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
+    const [isCheckedUp, setIsCheckedUp] = useState(false);
+    const [isCheckedDown, setIsCheckedDown] = useState(false);
 
     const paddleSkin = [
         { className: 'defaultPaddle' },
         { className: 'radientPaddle' },
         { className: 'neonPaddle' },
         { className: 'redPaddle' },
+        { className: 'glassPaddle' },
+        { className: 'firePaddle' },
     ];
 
     const ballSkin = [
@@ -66,6 +73,7 @@ const GameSettings = () => {
         { className: 'neonBall' },
         { className: 'oldBall' },
         { className: 'pingPongBall' },
+        { className: 'glassBall' },
     ];
 
     const boardSkin = [
@@ -73,6 +81,11 @@ const GameSettings = () => {
         { className: 'oldBoard' },
         { className: 'pingPongBoard' },
         { className: 'npatronBoard' },
+        { className: 'galaxyBoard' },
+        { className: 'retroGridBoard' },
+        { className: 'gradientBoard' },
+        { className: 'ballBoard' },
+        { className: 'ball2Board' },
     ];
 
     const findIndex = (skins, selectedClass) =>
@@ -110,8 +123,10 @@ const GameSettings = () => {
         document.addEventListener("keydown", (event) => {
             if (key === "up") {
                 setKeyBind({ up: event.key, down: keyBind.down });
+                setIsCheckedUp(false);
             } else {
                 setKeyBind({ up: keyBind.up, down: event.key });
+                setIsCheckedDown(false);
             }
         });
     };
@@ -142,14 +157,34 @@ const GameSettings = () => {
                             </div>
                             <section className="container">
                                 <label>
-                                    <input type="checkbox" name="check" onClick={() => handleKeyBindClick("up")} />
-                                    <span> <i className="bi bi-caret-up-square"></i> {keyBind.up}</span>
+                                    <input
+                                        type="checkbox"
+                                        name="check"
+                                        checked={isCheckedUp}
+                                        onChange={() => {
+                                            setIsCheckedUp(true);
+                                            handleKeyBindClick("up");
+                                        }}
+                                    />
+                                    <span>
+                                        <i className="bi bi-caret-up-square"></i> {keyBind.up}
+                                    </span>
                                 </label>
                             </section>
                             <section className="container">
                                 <label>
-                                    <input type="checkbox" name="check" onClick={() => handleKeyBindClick("down")} />
-                                    <span> <i className="bi bi-caret-down-square"></i> {keyBind.down}</span>
+                                    <input
+                                        type="checkbox"
+                                        name="check"
+                                        checked={isCheckedDown}
+                                        onChange={() => {
+                                            setIsCheckedDown(true);
+                                            handleKeyBindClick("down");
+                                        }}
+                                    />
+                                    <span>
+                                        <i className="bi bi-caret-down-square"></i> {keyBind.down}
+                                    </span>
                                 </label>
                             </section>
                         </div>
@@ -174,7 +209,6 @@ const GameSettings = () => {
                                 type="ballSkin"
                             />
                         </div>
-
                         <div className="boardSkinContainer">
                             <Carousel
                                 className={boardSkin}

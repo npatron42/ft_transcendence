@@ -188,31 +188,39 @@ label input {
  
 }
 
-.carouselButtonLeft {
-  background-color: #cdb4db ;
+.carouselButtonLeft,
+.carouselButtonRight {
+  background-color: transparent;
   border: none;
-  padding: 10px;
   cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
 }
 
-.carouselButtonRight {
-  background-color: #cdb4db ;
-  border: none;
-  padding: 10px;
-  cursor: pointer;
+.carouselButtonLeft:hover,
+.carouselButtonRight:hover {
+  background-color: transparent;
+  transform: scale(1.1);
 }
+
+.carouselButtonLeft i,
+.carouselButtonRight i {
+  font-size: 2rem;
+  color: #219cf3;
+  transition: color 0.3s ease;
+}
+
+.carouselButtonLeft:hover i,
+.carouselButtonRight:hover i {
+  color: #fff;
+}
+
 
 .carouselContent {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0 20px;
-}
-
-.skinName {
-  margin-top: 10px;
-  font-size: 18px;
-  color: white;
 }
 
 .selectSkinButton {
@@ -271,7 +279,9 @@ label input {
   padding-right: 100px;
 }
 
-/* Padlle Skin */
+/*|-------------|*/
+/*| Paddle Skin |*/
+/*|-------------|*/
 
 .defaultPaddle {
   background-color: #ffffff;
@@ -332,8 +342,51 @@ label input {
   transform: translate(-50%, -50%);
 }
 
+.glassPaddle {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 255, 255, 0.074);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+}
 
-/* Board Skin */
+.firePaddle {
+  background: linear-gradient(90deg, #ff4500, #ffa500, #ff4500);
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
+  animation: fireGlow 2s infinite alternate;
+}
+
+@keyframes fireGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 1), 0 0 40px rgba(255, 165, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.5);
+  }
+}
+
+
+
+
+/*|------------|*/
+/*| Board Skin |*/
+/*|------------|*/
 
 .defaultBoard {
   background: radial-gradient(circle, #5E6472 0%, #24272c 100%);
@@ -377,7 +430,64 @@ label input {
   overflow: hidden;
 }
 
-/* Ball Skin */
+.galaxyBoard {
+  background: radial-gradient(circle, #1a1a2e 0%, #16213e 70%, #0f3460 100%);
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.retroGridBoard {
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.gradientBoard {
+  background-image: url("../../assets/game/gradient.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ballBoard {
+  background-image: url("../../assets/game/ball.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ball2Board {
+  background-image: url("../../assets/game/ball2.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/*|-----------|*/
+/*| Ball Skin |*/
+/*|-----------|*/
 
 .defaultBall {
   width: 30px;
@@ -435,3 +545,18 @@ label input {
   top: 50%; 
   transform: translate(-50%, -50%);
 }
+
+.glassBall {
+  width: 30px;
+  height: 30px;
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 255, 255, 0.074);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
