@@ -54,6 +54,61 @@
     overflow: hidden;
 }
 
+.galaxyBoardMiniPong {
+    background: radial-gradient(circle, #1a1a2e 0%, #16213e 70%, #0f3460 100%);
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+.retroGridBoardMiniPong {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+    background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                      linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .gradientBoardMiniPong {
+    background-image: url("../../assets/game/gradient.png");
+    background-size: cover;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .ballBoardMiniPong {
+    background-image: url("../../assets/game/ball.png");
+    background-size: cover;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .ball2BoardMiniPong {
+    background-image: url("../../assets/game/ball2.png");
+    background-size: cover;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
 /* Skin Ball */
 
 .defaultBallMiniPong {
@@ -107,6 +162,20 @@
     position: absolute;
 }
 
+.glassBallMiniPong {
+    width: 3%;
+    aspect-ratio: 1 / 1;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 255, 255, 0.074);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
 /* Skin Paddle */
 
 .defaultPaddleMiniPong {
@@ -154,3 +223,23 @@
     height: 20%;
     position: absolute;
 }
+
+.glassPaddleMiniPong {
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 255, 255, 0.074);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    width: 1.5%;
+    height: 20%;
+    position: absolute;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .firePaddleMiniPong {
+    background: linear-gradient(90deg, #ff4500, #ffa500, #ff4500);
+    width: 1.5%;
+    height: 20%;
+    position: absolute;
+    display: block;
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
+    animation: fireGlow 2s infinite alternate;
+  }

@@ -1,13 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../css/miniPong.css';
-// import '../css/gameSettings.css';
 
 const useBallMovement = (boardRef, ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle) => {
+    const animationFrameId = useRef(null);
+
     useEffect(() => {
-        let animationFrameId;
-
         const updateBallPosition = () => {
-
             let { x, y } = ballPos;
             let { x: dx, y: dy } = ballDir;
 
@@ -37,16 +35,19 @@ const useBallMovement = (boardRef, ballPos, setBallPos, ballDir, setBallDir, pad
 
             setBallPos({ x, y });
             setBallDir({ x: dx, y: dy });
-            animationFrameId = requestAnimationFrame(updateBallPosition);
+
+            animationFrameId.current = requestAnimationFrame(updateBallPosition);
         };
 
-        animationFrameId = requestAnimationFrame(updateBallPosition);
+        animationFrameId.current = requestAnimationFrame(updateBallPosition);
 
-        return () => cancelAnimationFrame(animationFrameId);
-    }, [boardRef, ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle]);
+        return () => cancelAnimationFrame(animationFrameId.current);
+    }, [ballPos, ballDir, setBallPos, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle]);
 };
 
 const usePaddleAI = (ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, setPaddleRightPos, lastPaddle) => {
+    const animationFrameId = useRef(null);
+
     useEffect(() => {
         const movePaddleAI = () => {
             const paddleSpeed = 2;
@@ -63,10 +64,12 @@ const usePaddleAI = (ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, s
                 setPaddleRightPos(prevPos => Math.min(prevPos + paddleSpeed, 85));
             }
 
-            requestAnimationFrame(movePaddleAI);
+            animationFrameId.current = requestAnimationFrame(movePaddleAI);
         };
 
-        requestAnimationFrame(movePaddleAI);
+        animationFrameId.current = requestAnimationFrame(movePaddleAI);
+
+        return () => cancelAnimationFrame(animationFrameId.current);
     }, [ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, setPaddleRightPos, lastPaddle]);
 };
 
@@ -81,11 +84,9 @@ export const MiniPong = ({ paddleSkin, boardSkin, ballSkin }) => {
     usePaddleAI(ballPos, paddleLeftPos, paddleRightPos, setPaddleLeftPos, setPaddleRightPos, lastPaddle);
     useBallMovement(boardRef, ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle);
 
-
     useEffect(() => {
         console.log("MiniPong props updated:", { paddleSkin, boardSkin, ballSkin });
     }, [paddleSkin, boardSkin, ballSkin]);
-    
 
     return (
         <div className={boardSkin + "MiniPong"}>
@@ -111,4 +112,3 @@ export const MiniPong = ({ paddleSkin, boardSkin, ballSkin }) => {
         </div>
     );
 };
-
