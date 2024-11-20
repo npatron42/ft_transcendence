@@ -6,6 +6,7 @@ import Countdown from '../../components/Coutdown';
 import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
+const host = import.meta.env.VITE_HOST;
 
 
 const WaitingTournaments = () => {

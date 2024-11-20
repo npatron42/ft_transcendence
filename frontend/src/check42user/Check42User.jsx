@@ -19,7 +19,7 @@ const Check42User = () => {
             const params = new URLSearchParams(window.location.search);
             const codeFromUrl = params.get('code');
             if (codeFromUrl) {
-                await setJwt(codeFromUrl);
+                const response = await setJwt(codeFromUrl);
                 const newJwt = localStorage.getItem("jwt");
                 setMyJwt(newJwt)
                 const user = await getUser();

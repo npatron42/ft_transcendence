@@ -7,6 +7,9 @@ import '../register_page/registrer.css'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
+// const host = import.meta.env.VITE_HOST;
+const host = import.meta.env.VITE_HOST;
+
 function IdPass() {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -20,12 +23,15 @@ function IdPass() {
     const handleShowOtpModal = () => setShowOtpModal(true);
     const handleCloseOtpModal = () => setShowOtpModal(false);
 
+
+    console.log("test du host ", host )
+
     const handleClick = async (e) => {
         e.preventDefault();
         setIsLoading(true);
         
         try {
-            const response = await axios.post('http://localhost:8000/auth/login/', {
+            const response = await axios.post(`http://${host}:8000/auth/login/`, {
                 username,
                 password
             });
@@ -61,7 +67,7 @@ function IdPass() {
         try {
             console.log("usersane == ",  username)
             console.log("otp == ", otp)
-            const response = await axios.post('http://localhost:8000/auth/verif/', {
+            const response = await axios.post(`http://${host}:8000/auth/verif/`, {
                 otp,
                 username
             });
