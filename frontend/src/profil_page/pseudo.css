@@ -1,0 +1,85 @@
+.para-ps {
+	position: absolute;
+	left: 40.5vw;
+	top: 35vh;
+	color: #FAF3DD;
+	font-size: 1.1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 600;
+}
+
+.input-ps {
+	position: absolute;
+	left: 40vw;
+	top: 38.5vh;
+	font-size: 1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 600;
+	background-color: rgba(0, 0, 0, 0.35);
+	box-shadow: 0px 0px 2vw rgba(0, 0, 0, 1);
+}
+
+.input-ps input {
+	width: 15vw;
+	color: #869FA9;
+	padding: 0.9vw;
+	border-radius: 0.58vw;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 0.1vw solid #222222;
+	transition: background-color 0.3s ease, border 0.3s ease;
+}
+
+.input-ps input:focus {
+	color: #869FA9;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 0.1vw solid #222222;
+	box-shadow: none;
+	outline: none;
+}
+.input-ps input[readonly] {
+	background-color: rgba(0, 0, 0, 0.35);
+	color: #5E6472;
+	border: 0.1vw solid #222222;
+	opacity: 1;
+	cursor: default; .error-pseudo {
+		position: absolute;
+		top: 43vh;
+		left: 40.5vw;
+		color: #fc00008e;
+		font-size: 0.9vw;
+		font-style: italic;
+		font-family: 'Millimetre', sans-serif;
+		font-weight: 200;
+	}
+	
+}
+
+.custom-pseudo {
+	position: absolute;
+	top: 38.5vh;
+	left: 57vw;
+	background-color:#5E6472;
+	color:#FDCDBE !important;
+	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
+	padding: 0.2vw 0.8vw;
+	font-size: 1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold;
+	border-radius: 10px; 
+	transition: transform 0.2s ease;
+}
+
+	.custom-pseudo:hover {
+		transform: translateY(-0.2vw);
+	}
+
+.error-pseudo {
+	position: absolute;
+	top: 43vh;
+	left: 40.5vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}

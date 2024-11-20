@@ -1,0 +1,138 @@
+
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.nameUserComponent-active,
+.nameFriendComponent-active {
+        font-family: 'Millimetre', sans-serif;
+        font-size: 18px;
+        text-align: center;
+        color: #AED9E0;
+        padding: 8px;
+        padding-bottom: 3px;
+        width: 85px;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+}
+  
+.invite-center-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+  }
+  
+
+.btn-outline-dark {
+    padding-bottom: 3px;
+    border: 1px solid #5E6472;
+}
+
+.status.online {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #B8F2E6;
+}
+
+.status.offline {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #FFA69E;
+}
+
+.invite-friends-list {
+    position: fixed;
+    top: 50%;
+    left: 10%; 
+    transform: translate(-50%, -50%);
+    height: 600px;
+    border-radius: 50px;
+    border: 4px solid #ffa69e;
+    width: 300px; 
+    background-color: transparent;
+}
+
+.invite-buttonAdd {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    color: #ffa69e;
+    margin-right: 15px;
+
+}
+
+.invite-friend-item {
+    height: 60px;
+    width: 250px;
+    border-radius: 50px;
+    border-top: 2px solid #FAF3DD;
+    border-bottom: 2px solid #FAF3DD;
+    border-left: 2px solid #FAF3DD;
+    border-right: 2px solid #FAF3DD;;
+
+    background-color: transparent;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.invite-friend-item td {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 90px;
+}
+
+.invite-profile-picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.noUsers {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 20px;
+    text-align: center;
+    margin-top: 60px;
+    color: #FAF3DD;
+}
+
+.invite-users-list {
+	max-height: 200px;
+	overflow-x: hidden;
+    margin-right: 5px;
+}
+  
+  .users-list.scroll {
+	overflow-y: auto;
+  }
+  
+  .users-list.scroll::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #2a2c31;
+  }
+  
+  .users-list.scroll::-webkit-scrollbar-thumb
+  {
+	border: 2px solid #000000;
+	border-radius: 20px;
+	background-color: #AED9E0;
+  }

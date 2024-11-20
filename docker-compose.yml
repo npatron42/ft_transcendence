@@ -1,4 +1,5 @@
 services:
+
   db:
     container_name: postgresql
     build:
@@ -8,6 +9,7 @@ services:
       - 5432:5432
     env_file:
       - .env
+
   backend:
     container_name: backend
     build:
@@ -23,6 +25,7 @@ services:
       - ./backend:/backend
     ports:
       - 8000:8000
+  
   frontend:
     container_name: frontend
     build:

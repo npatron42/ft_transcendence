@@ -4,8 +4,21 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv('DEBUG')
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True 
+EMAIL_HOST_USER = 'ft.transcendence.42nice@gmail.com'
+EMAIL_HOST_PASSWORD =  'lgqm xtii tpjs jqqb'
+DEFAULT_FROM_EMAIL = 'ft.transcendence.42nice@gmail.com'
+
 
 ALLOWED_HOSTS = []
 
@@ -16,6 +29,7 @@ INSTALLED_APPS = [
     'authentication',
 	'api',
 	'oauth',
+    'pongMulti',
 	'rest_framework',
 	'rest_framework_simplejwt',
 	'corsheaders',
@@ -28,7 +42,9 @@ INSTALLED_APPS = [
 ]
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
+# ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'localhost:5173']
+ALLOWED_HOSTS = ['*']
+
 
 
 AUTH_USER_MODEL = 'users.User'
@@ -36,11 +52,15 @@ AUTH_USER_MODEL = 'users.User'
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000', 
 ]
 
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000',
+    'http://10.11.1.7:5173',
+    'http://10.11.1.7:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'
@@ -99,6 +119,16 @@ DATABASES = {
         'PORT': os.getenv('POSTGRES_PORT'),
     }
 }
+
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django_redis.cache.RedisCache',
+#         'LOCATION': 'redis://localhost:6379/1',  # Adresse Redis
+#         'OPTIONS': {
+#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+#         }
+#     }
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -163,6 +193,16 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+		'pongMulti': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+        'tournaments': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
         # Add other apps here if needed
     },
 }
@@ -185,3 +225,7 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+print("Settings:")
+print(f"DEBUG: {DEBUG}")
+print(f"POSTGRES_DB: {os.getenv('POSTGRES_DB')}")

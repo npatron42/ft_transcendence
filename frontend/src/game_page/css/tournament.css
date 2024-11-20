@@ -1,0 +1,6 @@
+.createJoinButton {
+	width: 90px;
+	height: 40px;
+	background-color: transparent !important;
+	border: 2px solid #cdb4db !important;
+}

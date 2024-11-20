@@ -1,37 +1,40 @@
 import "../index.css";
 import "./Home.css";
 import "../App.css";
-import { fetchData, getAllUsers, getUser } from '../api/api'
-import axios from 'axios';
+import Languages from "../login_page/languages";
+import { useAuth } from "../provider/UserAuthProvider";
+import NavbarBS from "../components/Navbar";
 import React, { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import UsersList  from "../UsersList/UsersList";
-import FriendsList from "../UsersList/FriendsList";
+import UsersFriendsList  from "../UsersList/UsersFriendsList";
+import Loading from "../loading_page/Loading";
+import MatchHistory from "../components/MatchHistory";
+import HomeCadre from "./HomeCadre";
+import CadrePlay from "./CadrePlay";
 
 const Home = () => {
 
-    const [myUser, setUser] = useState(null);
-    useEffect(() => {
-        
-        const fetchDataAndGetUser = async () => {
-            const params = new URLSearchParams(window.location.search);
-            const codeFromUrl = params.get('code');
-            if (codeFromUrl)
-                await fetchData(codeFromUrl);
-            const userData = await getUser();
-            setUser(userData);
-        };
+    const {myUser} = useAuth()
 
-        fetchDataAndGetUser();
-        
-    }, []);
 
     return (
-    <div className="background-container">
-        <UsersList/>
-        <FriendsList/>
-    </div>
-    )
-}
+        <div id="background-container">
+            <div className="custom2-cadre">
+                
+                <NavbarBS />
+                <div className="playPlacement">
+                    <CadrePlay/>
+                </div>
+                <div className="usersFriendsListPlacement">
+                    <UsersFriendsList />
+                </div>
+                <div className="matchHistoryPlacement">
+                    <MatchHistory/>
+                </div>
+            </div>
+        </div>
+        )
+};
 
 export default Home;
+

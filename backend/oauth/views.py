@@ -16,9 +16,9 @@ import logging
 logger = logging.getLogger(__name__)
 
 myId = "u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122"
-mySecret = "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"
-url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5174%2Fhome&response_type=code"
-myRedirect = "http://localhost:5173/home"
+mySecret = "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"
+url_42 = "https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2Flocalhost%3A5173%2Fcheck42user&response_type=code"
+myRedirect = "http://localhost:5173/check42user"
 
 class OAuthView(APIView):
     def post(self, request):
@@ -28,9 +28,8 @@ class OAuthView(APIView):
         try:
             access_token = giveMe42Token(code)
             myJson = doRequestTo42(access_token, "/v2/me")
-            myUser = add42UserToDB(myJson)
+            myUser =  add42UserToDB(myJson)
             response = attributeToUserJWT(myUser)
-            logger.info(response)
             return response
         except Exception as e:
             return Response({"Error": "Failed during creation proccess, to DB"})
@@ -66,15 +65,21 @@ def	doRequestTo42(access_token: str, endpoint: str):
     return response.json()
 
 
-
-
 def add42UserToDB(jsonFile):
+    myId42 = jsonFile.get("id")
     login42 = jsonFile.get("login")
     email42 = jsonFile.get("email")
     picture = jsonFile.get("image", {}).get("link")
     bool42 = True
 
+    try:
+        isExistingUser = User.objects.get(myid42=myId42)
+        return (isExistingUser)
+    except:
+        User.DoesNotExist
+
     data42 = {
+        "myid42" : myId42,
         "username": login42 + "_42",
         "email": email42,
         "isFrom42": bool42,
