@@ -1,4 +1,8 @@
+# setup_env:
+# 	bash setup_env.sh
+
 all:
+	./setup_env.sh 
 	docker-compose up --build -d
 
 clean:

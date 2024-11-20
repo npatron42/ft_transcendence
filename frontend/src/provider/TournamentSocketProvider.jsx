@@ -6,6 +6,8 @@ export const useTournamentSocket = () => {
     return useContext(TournamentContext);
 };
 
+const host = import.meta.env.VITE_HOST;
+
 export const TournamentSocketProvider = ({ children }) => {
     const [tournamentSocket, setSocket] = useState(null);
 
@@ -18,7 +20,7 @@ export const TournamentSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://localhost:8000/ws/tournamentsConsumer/?token=${myJwt}`);
+        const socket = new WebSocket(`ws://${host}:8000/ws/tournamentsConsumer/?token=${myJwt}`);
         setSocket(socket);
 
         socket.onmessage = (event) => {

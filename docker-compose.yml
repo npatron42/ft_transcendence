@@ -39,6 +39,10 @@ services:
       - /app/node_modules
     ports:
       - 5173:5173
+    env_file:
+      - ./frontend/.env
+    environment:
+      - VITE_API_URL=http://${HOST}:8000/api/users 
 
   adminer:
     image: adminer
