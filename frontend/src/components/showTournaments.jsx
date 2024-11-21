@@ -65,7 +65,7 @@ function ShowTournaments() {
 				{myTournaments.map((tournament, index) => (
 					<div key={index} className="tournamentLine">
 						<div className="tournamentLine-picture">
-						<img src={tournament.players[0].profilePicture.startsWith('http') ? tournament.players[0].profilePicture : `http://localhost:8000/media/${tournament.players[0].profilePicture}`} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
+						<img src={tournament.players[0].profilePicture.startsWith('http') ? tournament.players[0].profilePicture : `http://${host}:8000/media/${tournament.players[0].profilePicture}`} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
 						</div>
 						<div className="tournamentLine-div">
 							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].username}</span>
