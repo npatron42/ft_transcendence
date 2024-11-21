@@ -23,6 +23,8 @@ const GlobalGameMulti = () => {
     //     return () => localStorage.removeItem('isRefreshed');
     //   }, [navigate]);
 
+    
+
     return (
         <div className="GlobalGame">
             <PongMulti

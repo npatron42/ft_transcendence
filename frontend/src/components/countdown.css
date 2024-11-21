@@ -31,9 +31,22 @@
     transform: translate(-50%, -50%);
 }
 
+.countdownLoser {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
 
 .seconds {
 	font-family: Millimetre-Bold;
 	font-size: 70px;
+	color: #FAF3DD;
+}
+
+.secondsLoser {
+	font-family: Millimetre-Bold;
+	font-size: 25px;
 	color: #FAF3DD;
 }

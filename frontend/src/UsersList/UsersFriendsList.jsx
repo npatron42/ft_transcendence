@@ -75,7 +75,6 @@ const UsersFriendsList = () => {
         setFriendsList(myFriendsList);
         setUsersList(myUsersList);
         await defineAllUsersStatus();
-        console.log("C ESCET APPEL")
     };
 
     useEffect(() => {

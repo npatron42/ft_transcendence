@@ -36,12 +36,8 @@ function ModalUserChat(userSelected) {
       "userWhoBlocks": myUser,
       "userBlocked": userSelected["userSelected"],
     }
-    console.log("Data sent --> ", myData);
     if (socketUser.OPEN) {
       socketUser.send(JSON.stringify(myData));
-    }
-    else {
-      console.log("socket closed baby")
     }
     if (show === true)
       setShow(false);

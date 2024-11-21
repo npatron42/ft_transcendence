@@ -214,7 +214,8 @@ async def update_ball(self, max_score, room_id):
 							{
 								'type': 'game_over',
 								'winner': winner,
-								'score': PongConsumer.score[room_id]
+								'score': PongConsumer.score[room_id],
+								'idTournament': PongConsumer.idTournament[room_id]
 							}
 						)
 
@@ -227,7 +228,24 @@ async def update_ball(self, max_score, room_id):
 							PongConsumer.send_db[room_id] = True
 						break
 					else:
-						if PongConsumer.score[room_id]['player1'] >= max_score:
+						if PongConsumer.score[room_id]['player1'] >= max_score or PongConsumer.score[room_id]['player2'] >= max_score:
+							if PongConsumer.score[room_id]['player1'] >= max_score:
+								winner = PongConsumer.players[room_id][0]
+								winnerdb = await getUserByUsername(PongConsumer.players[room_id][0])
+							else:
+								winner = PongConsumer.players[room_id][1]
+								winnerdb = await getUserByUsername(PongConsumer.players[room_id][1])
+							logger.info("SENT TO %s", PongConsumer.players[room_id])
+							logger.info("Le ID TOURNOI --> %s", PongConsumer.idTournament[room_id])
+							await self.channel_layer.group_send(
+								self.room_group_name,
+								{
+									'type': 'game_over',
+									'winner': winner,
+									'score': PongConsumer.score[room_id],
+									'idTournament': PongConsumer.idTournament[room_id]
+								}
+							)
 							myWinner = PongConsumer.players[room_id][0]
 							myLoser = PongConsumer.players[room_id][1]
 						else:
@@ -264,8 +282,7 @@ async def update_ball(self, max_score, room_id):
 				)
 				await asyncio.sleep(1 / 60)
 		except Exception as i:
-			logger.info("BONJOURqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqq")
-			logger.info("HUGOOOOOOOOOOOOOOO ---> %s", i)
+			logger.info(i)
 
 
 usersInGame = []
@@ -307,7 +324,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def createGameTask(self, room_id, myUser):
 		if room_id not in PongConsumer.myTasks:
 			PongConsumer.myTasks[room_id] = asyncio.Lock()
-			logger.info("LOCK for %s\nRoom --> %s", myUser.username, PongConsumer.players[room_id])
 		async with PongConsumer.myTasks[room_id]:
 			if room_id in myMatches:
 				return
@@ -322,7 +338,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 					logger.info(i)
 				logger.info("Task created for %s", PongConsumer.players[room_id])
 				myMatches[room_id] = "launched"
-		logger.info("UNLOCK for %s", myUser.username)
 		return
 	
 	async def sendData(self, room_id, dataToSend):
@@ -404,7 +419,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.idTournament = self.scope['url_route']['kwargs']['idTournament']
 			PongConsumer.idTournament[self.room_id] = self.idTournament
 
-			logger.info("idTOurnament ---> %s", self.scope['url_route']['kwargs']['idTournament'])
+			logger.info("idTournament ---> %s", self.scope['url_route']['kwargs']['idTournament'])
 
 			await self.channel_layer.group_add(
 				self.room_group_name,
@@ -484,14 +499,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.room_group_name,
 				self.channel_name
 			)
-			dataToSend = {
-				"type": "SCORES",
-				"user": myUser.username
-			}
-			await sendToTournamentSocket(self, dataToSend)
 			await removeClientFromUsers(self, myUser.username)
 			PongConsumer.players[self.room_id].remove(self.username)
-			logger.info("Deconnection de ma socket PONGMULTI, j'evoie les donnees au TOURNAMENT SOCKET")
 			return
 		
 		

@@ -4,7 +4,7 @@ import { useTournamentSocket } from "../provider/TournamentSocketProvider";
 import { v4 as uuidv4 } from 'uuid';
 import "./countdown.css"
 const Countdown = ({roomId, idTournament}) => {
-	const [seconds, setSeconds] = useState(1);
+	const [seconds, setSeconds] = useState(5);
 	const {tournamentSocket} = useTournamentSocket();
 	const navigate = useNavigate();
 	const isTournament = true;

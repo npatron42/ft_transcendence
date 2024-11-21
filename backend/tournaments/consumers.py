@@ -145,14 +145,13 @@ def deleteSocketToUser(username):
 
 def findMatch(players):
     i = 0
-    logger.info("Find match --> %s players", players)
+    printMyMatches()
     myLen = len(myMatches)
-    logger.info("myLen --> %s", myLen)
-    logger.info("myMatces --> %s", myMatches)
     while i < myLen:
         myPlayers = myMatches[i]["players"]
+        logger.info("players --> %s", players)
+        logger.info("myPlayers --> %s", myPlayers)
         if players[0] in myPlayers or players[1] in myPlayers:
-            logger.info("players %s, myPlayers %s", players, myPlayers)
             return myMatches[i]
         i += 1
     return None
@@ -220,52 +219,63 @@ def modifyMatchObjet(players, name, value):
         myPlayers = myMatch["players"]
         if players[0] in myPlayers or players[1] in myPlayers:
             myMatch[name] = value
+            myLen = len(myMatches)
             return myMatch
         i += 1
     return None
 
 
-def createFinalsMatches(idTournament):
+async def createFinalMatch(idTournament):
     i = 0
     myLen = len(myMatches)
 
     match00, match01, myLosers, myWiners = [], [], [], []
+    count = 0
 
     while i < myLen:
-        logger.info("i %d myLen %d", i, myLen)
         myMatch = myMatches[i]
-        if idTournament == myMatch["idTournament"]:
+        if idTournament == myMatch["idTournament"] and count == 0:
             match00 = myMatch
             del myMatches[i]
-            break
-        i += 1
-
-    i = 0
-    myLen = len(myMatches)
-    while i < myLen:
-        myMatch = myMatches[i]
-        if idTournament == myMatch["idTournament"]:
-            match01 = myMatch
-            del myMatches[i]
-            break
+            myLen -= 1
+            count += 1
+            while i < myLen:
+                myMatch = myMatches[i]
+                if idTournament == myMatch["idTournament"] and count == 1:
+                    match01 = myMatch
+                    del myMatches[i]
+                    myLen -= 1
+                    break
         i += 1
     
     loser0 = match00["loser"]
     loser1 = match01["loser"]
-
     winner0 = match00["winner"]
     winner1 = match01["winner"]
 
+    winnerUser1 = await getUserByUsername(winner0)
+    winnerUser2 = await getUserByUsername(winner1)
+
+    idUser1 = winnerUser1.get("id")
+    idUser2 = winnerUser2.get("id")
+
     myLosers.extend((loser0, loser1))
-    myWiners.extend((winner0, winner1))
+    myWiners.extend((idUser1, idUser2))
 
-    logger.info("Mes losers --> %s", myLosers)
-    logger.info("Mes winners --> %s", myWiners)
+
+
+    myMatchFinal = {
+        "idTournament": idTournament,
+        "players": myWiners,
+        "type": "final",
+        "winner": None,
+        "loser": None
+    }
+
+    myMatches.append(myMatchFinal)
+    return myWiners, myLosers
+
     
-
-
-
-
 
 def printMyMatches():
     i = 0
@@ -304,6 +314,69 @@ def removeMatch(match):
     return
 
 
+async def sendNextStepToUsers(self, myWinners, myLosers, idTournament):
+    players = Tournament.players[idTournament]
+    i = 0
+    myLen = len(players)
+
+    win1 = myWinners[0]
+    win2 = myWinners[1]
+
+    los1 = myLosers[0]
+    los2 = myLosers[1]
+
+    logger.info("win1, win2 --> %s, %s", win1, win2)
+
+    myRealWinner1 = await getUserById(win1)
+    myRealWinner2 = await getUserById(win2)
+
+    myRealLoser1 = await getUserByUsername(los1)
+    myRealLoser2 = await getUserByUsername(los2)
+
+    realsWinners = []
+    realsWinners.extend((myRealWinner1, myRealWinner2))
+
+    realsLosers = []
+    realsLosers.extend((myRealLoser1, myRealLoser2))
+    myRoomId = str(uuid.uuid4())
+
+    while i < myLen:
+        myPlayerId = players[i]
+        myUser = await getUserById(myPlayerId)
+        myUsername = myUser.get("username")
+        if myPlayerId in myWinners:
+            if myPlayerId == myWinners[0]:
+                opponentUsername = myWinners[1]
+                opponent = await getUserById(opponentUsername)
+            else:
+                opponentUsername = myWinners[0]
+                opponent = await getUserById(opponentUsername)
+            dataToSend = {
+                "status": "winner",
+                "opponent": opponent,
+                "playersEliminated": realsLosers,
+                "roomId": myRoomId,
+                "idTournament": idTournament
+
+            }
+            dataToSendBis = {
+            "AFTER-00-WINNER": dataToSend
+            }
+        else:
+            dataToSend = {
+                "status": "loser",
+                "finalists": realsWinners,
+                "playersEliminated": realsLosers
+            }
+            dataToSendBis = {
+            "AFTER-00-LOSER": dataToSend
+            }
+        
+        mySocket = allSockets.get(myUsername)
+        await sendToSocket(self, mySocket, dataToSendBis)
+        i += 1
+
+
 # OBJ ---> {"id": id of tournament}
 userInTournament = {}
 
@@ -315,6 +388,26 @@ allUsers = []
 
 tournamentMatchsEnded = {}
 
+
+def destroyMyTournament(idTournament):
+    i = 0
+    myLen = len(myMatches)
+    while i < myLen:
+        myMatch = myMatches[i]
+        if myMatch["idTournament"] == idTournament:
+            del myMatches[i]
+            myLen -= 1
+    
+    i = 0
+    myLen = len(allTournamentsId)
+    while i < myLen:
+        if allTournamentsId[i] == idTournament:
+            del allTournamentsId[i]
+            myLen -= 1
+    
+
+    del Tournament.players[idTournament]
+    del Tournament.leader[idTournament]
 
 class Tournament(AsyncWebsocketConsumer):
     players = {}
@@ -362,7 +455,7 @@ class Tournament(AsyncWebsocketConsumer):
             return
         elif type == "RESULTS":
             # FIND MATCH
-            logger.info("[TOURNAMENT CONSUMER] What I received--> %s to %s", data, myUser.username)
+            logger.info("JE RECOIS LES RESULTATS DE LA FINALE ---> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -374,8 +467,6 @@ class Tournament(AsyncWebsocketConsumer):
             myPlayers.append(myPlayer01["id"])
 
             myMatch = findMatch(myPlayers)
-            logger.info(myMatch)
-
 
             if myMatch != None:
                 idTournament = myMatch["idTournament"]
@@ -394,10 +485,44 @@ class Tournament(AsyncWebsocketConsumer):
                     modifyMatchObjet(myPlayers, "loser", myLoser)
 
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
+                    logger.info("matchsPlayed --> %d", matchsPlayed)
                     if matchsPlayed == 2: ## MATCHS PLAYED
-                        createFinalsMatches(idTournament)
                         tournamentMatchsEnded[idTournament] == 0
+                        myWiners, myLosers = await createFinalMatch(idTournament)
+                        await sendNextStepToUsers(self, myWiners, myLosers, idTournament)
+                if whatMatch == "final":
+                    myTournamentWinner = data.get("myWinner")
+                    myTournamentSecond = data.get("myLoser")
+                    logger.info("LE VAINQUEUR --> %s", myTournamentWinner)
+                    logger.info("LE SECOND --> %s", myTournamentSecond)
+                    socketTournamentWinner = allSockets.get(myTournamentWinner)
+                    socketTournamentSecond = allSockets.get(myTournamentSecond)
 
+                    userWinner = await getUserByUsername(myTournamentWinner)
+                    userSecond = await getUserByUsername(myTournamentSecond)
+
+                    dataToSendToWinner = {
+                        "SECOND": userSecond
+                    }
+                    
+                    dataToSendWIN = {
+                        "WINNER": dataToSendToWinner
+                    }
+
+
+                    dataToSendToSecond = {
+                        "WINNER": userWinner
+                    }
+
+                    dataToSendSECOND = {
+                        "SECOND": dataToSendToSecond
+                    }
+
+                    await sendToSocket(self, socketTournamentWinner, dataToSendWIN)
+                    await sendToSocket(self, socketTournamentSecond, dataToSendSECOND)
+                    destroyMyTournament(idTournament)
+                    # await Tournament.sendAllTournaments(self)
+                    
 
 
 
@@ -475,7 +600,6 @@ class Tournament(AsyncWebsocketConsumer):
                     "TOURNAMENT-FULL": "MOMO"
                 }
                 await sendToPlayersInTournament(self, dataToSend, idTournamentToJoin)
-                logger.info("SENT HERE BABY")
                 self.printMyTournament(idTournamentToJoin)
                 match00, match01 = createRandomMatches(idTournamentToJoin)
                 
@@ -507,7 +631,10 @@ class Tournament(AsyncWebsocketConsumer):
             idTournament = userInTournament.get(myUser.id)
             Tournament.isLaunched[idTournament] = True
             return 
-
+        elif type == "COMEBACK-TOURNAMENT":
+            idTournament = data.get("idTournament")
+        elif type == "WANT-TO-SEE-RESULTS":
+            logger.info("oui")
             
 
 def erasePlayerFromTournamentObject(idTournament, idPlayer):

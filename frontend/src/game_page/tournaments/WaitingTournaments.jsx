@@ -3,10 +3,10 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
 import { useAuth } from '../../provider/UserAuthProvider'
 import Countdown from '../../components/Coutdown';
+import CountdownToHome from '../../components/CountdownToHome';
 import '../css/waitTournaments.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-const host = import.meta.env.VITE_HOST;
+import { v4 as uuidv4 } from 'uuid';
 
 
 const WaitingTournaments = () => {
@@ -19,6 +19,11 @@ const WaitingTournaments = () => {
     const location = useLocation();
     const idTournament = location.state?.idTournament;
     const navigate = useNavigate()
+    const [userIsLoser, setUserIsLoser] = useState()
+    const [userIsWinner, setUserIsWinner] = useState()
+    const [end, setEnd] = useState(false)
+    const [winner, setWinner] = useState(null)
+    const [second, setSecond] = useState(null)
 
     useEffect(() => {
 
@@ -60,6 +65,12 @@ const WaitingTournaments = () => {
     useEffect(() => {
     
         const handleSocketTournament = (data) => {
+        if (data.message["AFTER-00-LOSER"]) {
+            setUserIsLoser(data.message["AFTER-00-LOSER"])
+        }
+        if (data.message["AFTER-00-WINNER"]) {
+            setUserIsWinner(data.message["AFTER-00-WINNER"])
+        }
         if (data.message["allTournaments"]) {
             setTournament(data.message["allTournaments"]);
             let i = 0;
@@ -68,23 +79,14 @@ const WaitingTournaments = () => {
             while (i < myLen) {
                 if (idTournament == tournaments[i].id) {
                     setTournament(tournaments[i])
-                    console.log(tournaments[i].players[i].username)
-                    console.log(tournaments[i])
-                    return ;
                 }
                 i++;
             }
-            }
-        if (data.message["TOURNAMENT-FULL"]) {
-                console.log(data.message)
-                console.log("RECEIVED NOW")
         }
         if (data.message["DISPLAY-MATCH"]) {
-                console.log(data.message["DISPLAY-MATCH"])
                 const myOpponent = data.message["DISPLAY-MATCH"]["opponent"]
                 const otherMatch = data.message["DISPLAY-MATCH"]["otherMatch"]
                 const roomId = data.message["DISPLAY-MATCH"]["room"]
-                console.log("opponent ---> ", myOpponent.profilePicture)
                 setOpponent(myOpponent)
                 setOtherMatch(otherMatch)
                 setRoomId(roomId)
@@ -94,7 +96,17 @@ const WaitingTournaments = () => {
             const otherMatch = undefined;
             setOpponent(myOpponent)
             setOtherMatch(otherMatch)
-    }
+        }
+        if (data.message["WINNER"]) {
+            console.log("WINNER --> ", data.message["WINNER"])
+            setEnd(true)
+            setSecond[data.message["SECOND"]]
+        }
+        if (data.message["SECOND"]) {
+            console.log("SECOND --> ", data.message)
+            setEnd(true)
+            setWinner[data.message["WINNER"]]
+        }
         };
 
         const unsubscribeMess = subscribeToTournaments(handleSocketTournament);
@@ -106,12 +118,12 @@ const WaitingTournaments = () => {
     }, [subscribeToTournaments, tournamentSocket]);
 
 
-
+    console.log("idTournament ---> ", idTournament)
 
 
   return (
     <div id="background-container">
-        {myTournament && myTournament.players.length !== 4 && !myOpponent && !otherMatch &&  (
+        {myTournament && myTournament.players.length !== 4 && !myOpponent && !otherMatch && end === false &&   (
         <div className="waitingTournament">
             {myTournament !== undefined && (
                 <>
@@ -192,7 +204,7 @@ const WaitingTournaments = () => {
             )}
         </div>
         )}
-        {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined &&  (
+        {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
                     <span className="tournamentWriting">Tournament will start</span>
@@ -216,7 +228,10 @@ const WaitingTournaments = () => {
                 </div>
             </div>
         )}
-        {myTournament && myTournament.players.length === 4 && myOpponent && otherMatch && (
+
+
+
+        {myTournament && myTournament.players.length === 4 && myOpponent && otherMatch && end === false && (
             <div className="waitingTournament-bis fadeIn">
                 <div className="displayMatch">
                     <div className="displayUser-left">
@@ -242,6 +257,64 @@ const WaitingTournaments = () => {
                     </div>
                 </div>
             </div>
+        )}
+
+
+
+        {userIsLoser && end === false && (
+            <div className="waitingTournament-full fadeIn">
+                <div className="finalistsWrite">
+                    <span className="finalists">FINALISTS</span>
+                </div>
+                <div className="winnersMatchs">
+                    <div className="headPlayer">
+                        <img src={userIsLoser.finalists[0].profilePicture} className="picture"></img>
+                    </div>
+                    <div>
+                        <span className="vsModified">VS</span>
+                    </div>
+                    <div className="headPlayer">
+                        <img src={userIsLoser.finalists[1].profilePicture} className="picture"></img>
+                    </div>
+                </div>
+                <div className="fuckingLoser">
+                    <CountdownToHome />
+                </div>
+            </div>
+        )}
+        {userIsWinner && end === false && (
+            <div className="waitingTournament-full fadeIn">
+                <div className="finalistsWrite">
+                    <span className="finalists">FINALISTS</span>
+                </div>
+                <div className="winnersMatchs">
+                    <div className="headPlayer">
+                        <img src={myUser.profilePicture} className="picture"></img>
+                    </div>
+                    <div>
+                        <span className="vsModified">VS</span>
+                    </div>
+                    <div className="headPlayer">
+                        <img src={userIsWinner.opponent.profilePicture} className="picture"></img>
+                    </div>
+                    <Countdown roomId={userIsWinner.roomId} idTournament={userIsWinner.idTournament}/>
+                </div>
+                <div className="fuckingLoser">
+                    <span className="eliminated">ELIMINATED</span>
+                    <div className="headPlayer">
+                        <img src={userIsWinner.playersEliminated[0].profilePicture} className="picture"></img>
+                    </div>
+                    <div className="headPlayer">
+                        <img src={userIsWinner.playersEliminated[1].profilePicture} className="picture"></img>
+                    </div>
+                </div>
+            </div>
+        )}
+        {end === true && winner !== null && (
+            <div className="waitingTournament-full fadeIn">C EST TOI LE FIRST BB</div>
+        )}
+        {end === true && second !== null && (
+            <div>C EST TOI LE SECOND BB</div>
         )}
     </div>
   );

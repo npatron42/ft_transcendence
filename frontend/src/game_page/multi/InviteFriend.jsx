@@ -55,7 +55,6 @@ export const InviteFriend = () => {
     };
 
     const chooseStatus = (username) => {
-        console.log(socketMessage);
         if (socketMessage[username] === true)
           return ("online")
         return ("offline")

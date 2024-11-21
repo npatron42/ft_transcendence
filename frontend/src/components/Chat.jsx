@@ -37,7 +37,6 @@ function Chat() {
         if (event.key === 'Enter' && inputMessage.length !== 0) { 
             event.preventDefault();
             setInputMessage('')
-            console.log("InputMessage ---> ", inputMessage)
             if (inputMessage.length > 250) {
                 alert("TOO LONG MESSAGE") ;
                 setInputMessage(null)
@@ -148,7 +147,6 @@ function Chat() {
             myResult[username] = hisStatusTmp;
         }
         setUsersStatus(myResult);
-        console.log("result --> ", myResult)
     }
 
 
@@ -216,7 +214,6 @@ function Chat() {
                 }
                 try {
                     const response = await getDiscussions(myData);
-                    console.log("HTTP DISCUSS --> ", myDiscuss)
                     setDiscuss(response["allDiscussion"]);
                 } catch (error) {
                     console.error("Erreur lors de la récupération des messages:", error);

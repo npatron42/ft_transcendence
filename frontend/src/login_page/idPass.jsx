@@ -24,7 +24,6 @@ function IdPass() {
     const handleCloseOtpModal = () => setShowOtpModal(false);
 
 
-    console.log("test du host ", host )
 
     const handleClick = async (e) => {
         e.preventDefault();
@@ -65,8 +64,6 @@ function IdPass() {
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
         try {
-            console.log("usersane == ",  username)
-            console.log("otp == ", otp)
             const response = await axios.post(`http://${host}:8000/auth/verif/`, {
                 otp,
                 username
@@ -88,7 +85,6 @@ function IdPass() {
 
                 navigate('/home');
             } else {
-                console.log("test du otp", response.data.noValid)
                 setOtp('');
                 if (response.data.noValid === true)
                     alert(t('loginPage.errorOtpExp'))
