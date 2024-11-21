@@ -323,7 +323,7 @@ export const getUserMatchHistory = async (username) => {
 			}
 		};
 
-		const response = await axios.get(`http://localhost:8000/api/user/matchHistory/${username}/`, config);
+		const response = await axios.get(`http://${host}:8000/api/user/matchHistory/${username}/`, config);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user's match history:", error);
@@ -425,7 +425,7 @@ export const getBlockedRelations = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/blockedUsers/", config);
+		const response = await axios.get(`http://${host}:8000/api/blockedUsers/`, config);
 
 		return response.data;
 	} catch (error) {
