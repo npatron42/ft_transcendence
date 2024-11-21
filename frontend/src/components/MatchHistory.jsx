@@ -18,7 +18,6 @@ function MatchHistory() {
 	const initMyMatchs = async () => {
 		const matchTmp = await getMatchHistory();
 		setMatchHistory(matchTmp);
-		console.log(matchTmp)
 	}
 
 	return (

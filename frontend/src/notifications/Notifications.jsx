@@ -41,8 +41,6 @@ function Notifications() {
 			setIsLoading(true)
 			const myFriendData = await getFriendsInvitations();
 			const myGameData = await getGamesInvitations();
-			console.log("friendInvitations --> ", myFriendData);
-			console.log("gameInvitations --> ", myGameData);
 			setFriendsNotifs(myFriendData);
 			setGameNotifs(myGameData);
 			setIsLoading(false)

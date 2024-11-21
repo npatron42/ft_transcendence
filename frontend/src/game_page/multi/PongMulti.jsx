@@ -3,7 +3,8 @@ import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
-
+import { useNavigate} from 'react-router-dom'
+import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
 const host = import.meta.env.VITE_HOST;
 
 const usePaddleMovement = (webSocket, playerId) => {
@@ -13,12 +14,10 @@ const usePaddleMovement = (webSocket, playerId) => {
         if (!webSocket) return;
 
         const handleKeyDown = (e) => {
-            console.log(`Key pressed: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
         };
 
         const handleKeyUp = (e) => {
-            console.log(`Key released: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: false }));
         };
 
@@ -65,8 +64,11 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
     const [webSocket, setWebSocket] = useState(null);
+    const [idTournament2, setIdTournament2] = useState(undefined)
     const { myUser } = useAuth();
     const [powerUpType, setPowerUpType] = useState(null);
+    const navigate = useNavigate();
+    const { tournamentSocket, subscribeToTournaments } = useTournamentSocket();
 
     useEffect(() => {
     }, [powerUpType, powerUpPosition]);
@@ -122,14 +124,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                     setPowerUpPosition({ x: 0, y: 0 });
                     setPowerUpType(null);
                 }
-            };
-
-            ws.onclose = (event) => {
-                console.log('WebSocket closed, code:', event.code);
-            };
-
-            ws.onerror = (error) => {
-                console.error('WebSocket error:', error);
+                if (data.idTournament) {
+                    setIdTournament2(data.idTournament)
+                }
             };
         }
 
@@ -159,10 +156,16 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
 
     // IF TOURNAMENT --> REDIRECT TO WAITING
 
-    const handleTest = () => {
-    }
+    const handleJoinTournament = (idTournament2) => {
+        const data = {
+            "type": "WANT-TO-SEE-RESULTS"
+        }
+        tournamentSocket.send(JSON.stringify(data))
+		navigate("/waitingTournaments", { state: { idTournament2 } })
+		return ;
+	}
 
-    console.log(isTournament)
+    console.log("isTournament, isGameOver", isTournament, isGameOver)
 
     return (
         <div className="pong-container">
@@ -183,7 +186,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                     </div>
                 )}
                 {isTournament === true && isGameOver === true && (
-                    <div>{handleTest()}</div>
+                    <div>{handleJoinTournament(idTournament2)}</div>
                 )}
             </div>
         </div>

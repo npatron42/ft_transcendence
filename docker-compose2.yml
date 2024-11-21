@@ -1,4 +1,5 @@
 services:
+
   db:
     container_name: postgresql
     build:
@@ -24,7 +25,7 @@ services:
       - ./backend:/backend
     ports:
       - 8000:8000
-
+  
   frontend:
     container_name: frontend
     build:
@@ -38,10 +39,6 @@ services:
       - /app/node_modules
     ports:
       - 5173:5173
-    env_file:
-      - ./frontend/.env
-    environment:
-      - VITE_API_URL=http://${HOST}:8000/api/users
 
   adminer:
     image: adminer

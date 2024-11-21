@@ -54,7 +54,6 @@ const useBallMovement = (ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos
         let animationFrameId;
         const acceleration = 1.10;
         const maxSpeed = 10;
-        console.log(maxScore);
 
         if (isGameOver)
             return;

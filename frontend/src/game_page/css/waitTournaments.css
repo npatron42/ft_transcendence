@@ -299,8 +299,48 @@
     align-items: center;
     justify-content: center;
   }
-  
 
   .positionCountdown {
     margin-bottom: 400px;
+  }
+
+  .eliminated {
+    font-family: Millimetre-Bold;
+    font-size: 35px;
+    color: #FFA69E;
+    border-bottom: 2px solid #FFA69E;
+  }
+
+  .finalists {
+    margin-top: 20px;
+    font-family: Millimetre-Bold;
+    font-size: 35px;
+    color: #FAF3DD;
+    border-bottom: 2px solid #FFA69E;
+  }
+
+  .fuckingLoser {
+    width: 100%;
+    height: 30%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .winnersMatchs {
+    width: 100%;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 4px solid #000000;
+
+  }
+
+  .finalistsWrite {
+    width: 100%;
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
