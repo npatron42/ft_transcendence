@@ -23,7 +23,8 @@ const GlobalGameMulti = () => {
 
     return (
         <div className="GlobalGame">
-            <InviteFriend/>
+            <InviteFriend
+                roomId={roomId}/>
             <PongMulti
                 roomId={roomId}
                 maxScore={maxScore}

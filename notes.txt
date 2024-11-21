@@ -1,0 +1,5 @@
+- enlever le bouton invite pour lautre jouer
+- verifier dans le back que le bon joueur a rejoint la partie
+- empecher 2 fis la meme touche
+- pong solo
+- bug ligne power up

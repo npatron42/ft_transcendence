@@ -164,9 +164,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
-                if (!data.players) {
-                    console.log('Received:', data);
-                }
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
@@ -288,6 +285,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 setCenterLineClass('center-line-solo');
             }
             else {
+                console.log("je suis la");
                 setCenterLineClass('center-line');
             }
         }

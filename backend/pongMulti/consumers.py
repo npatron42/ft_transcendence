@@ -115,6 +115,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps(message))
 
 	async def connect(self):
+		logger.info("Scope details: %s", id(self.scope))
+
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
