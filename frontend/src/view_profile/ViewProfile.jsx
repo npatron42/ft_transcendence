@@ -141,7 +141,7 @@ function ViewProfile() {
             "in-game": "#cdb4db"
         };
 
-        if (!profileUser) {
+        if (!profileUser || !matchHistory) {
             return (
                 <div id="background-container">
                     <div className="loader"></div>

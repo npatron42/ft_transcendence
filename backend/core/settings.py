@@ -198,6 +198,11 @@ LOGGING = {
             'level': 'INFO',
             'propagate': True,
         },
+        'pongSolo': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'tournaments': {
             'handlers': ['console'],
             'level': 'DEBUG',

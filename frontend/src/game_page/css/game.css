@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
-    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
@@ -23,15 +23,24 @@
     left: 50%;
     width: 2px;
     height: 100%;
-    background: repeating-linear-gradient(
-        to bottom,
-        transparent,
-        transparent 10px,
-        white 10px,
-        white 20px
-    );
+    background: repeating-linear-gradient(to bottom,
+            transparent,
+            transparent 10px,
+            white 10px,
+            white 20px);
     opacity: 0.5;
 }
+
+.center-line-solo {
+    position: absolute;
+    top: 0%;
+    left: 50%;
+    width: 5px;
+    height: 100%;
+    background-color: #FF8A82;
+    animation: pulse-malus 2s infinite;
+}
+
 
 
 .pong-container {
@@ -41,70 +50,218 @@
 }
 
 
+/*|------------|*/
+/*| Board Skin |*/
+/*|------------|*/
+
 .board {
     width: 900px;
     height: 600px;
-    background: radial-gradient(circle, #5E6472 0%, #24272c 100%);
     position: relative;
     margin: 0 auto;
     border-radius: 10px;
-
-    /* Bordure initiale avec une des couleurs de la palette */
-    border: 3px solid #869FA9; 
-    
-    /* Animation de pulsation lumineuse */
+    border: 3px solid #869FA9;
     animation: pulse 2s infinite;
 }
 
-/* Animation pour créer un effet de pulsation lumineuse */
 @keyframes pulse {
     0% {
-        box-shadow: 
+        box-shadow:
             0 0 20px rgba(184, 242, 230, 0.6),
             0 0 40px rgba(179, 230, 227, 0.4),
             0 10px 20px rgba(0, 0, 0, 0.5),
             inset 0 0 15px rgba(255, 255, 255, 0.1);
-        border-color: #869FA9; /* Couleur initiale de la bordure */
+        border-color: #869FA9;
     }
+
     50% {
-        box-shadow: 
-            0 0 30px rgba(174, 217, 224, 0.8), /* Couleur #AED9E0 */
-            0 0 60px rgba(179, 230, 227, 0.6), /* Couleur #B3E6E3 */
+        box-shadow:
+            0 0 30px rgba(174, 217, 224, 0.8),
+            0 0 60px rgba(179, 230, 227, 0.6),
             0 15px 30px rgba(0, 0, 0, 0.7),
             inset 0 0 20px rgba(255, 255, 255, 0.15);
-        border-color: #B8F2E6; /* Bordure changeant au milieu de l'animation */
+        border-color: #B8F2E6;
     }
+
     100% {
-        box-shadow: 
-            0 0 20px rgba(184, 242, 230, 0.6), /* Couleur #B8F2E6 */
-            0 0 40px rgba(174, 217, 224, 0.4), /* Couleur #AED9E0 */
+        box-shadow:
+            0 0 20px rgba(184, 242, 230, 0.6),
+            0 0 40px rgba(174, 217, 224, 0.4),
             0 10px 20px rgba(0, 0, 0, 0.5),
             inset 0 0 15px rgba(255, 255, 255, 0.1);
-        border-color: #869FA9; /* Retour à la couleur initiale */
+        border-color: #869FA9;
     }
 }
 
+    /* bonus board */
+.board-bonus {
+    width: 900px;
+    height: 600px;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    border: 3px solid #869FA9;
+    animation: pulse-bonus 2s infinite;
+}
 
-.paddle {
+@keyframes pulse-bonus {
+    0% {
+        box-shadow:
+            0 0 20px rgba(173, 243, 202, 0.6),
+            0 0 40px rgba(163, 233, 192, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        border-color: #92C7A1;
+    }
+
+    50% {
+        box-shadow:
+            0 0 30px rgba(143, 223, 182, 0.8),
+            0 0 60px rgba(163, 233, 192, 0.6),
+            0 15px 30px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(255, 255, 255, 0.15);
+        border-color: #B9E3C8;
+    }
+
+    100% {
+        box-shadow:
+            0 0 20px rgba(173, 243, 202, 0.6),
+            0 0 40px rgba(143, 223, 182, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        border-color: #92C7A1;
+    }
+}
+
+    /* malus board */
+.board-malus {
+    width: 900px;
+    height: 600px;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 10px;
+    border: 3px solid #FF8A82;
+    animation: pulse-malus 2s infinite;
+}
+
+@keyframes pulse-malus {
+    0% {
+        box-shadow:
+            0 0 20px rgba(255, 166, 158, 0.6),
+            0 0 40px rgba(255, 136, 128, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        border-color: #FF8A82;
+    }
+
+    50% {
+        box-shadow:
+            0 0 30px rgba(255, 136, 128, 0.8),
+            0 0 60px rgba(255, 166, 158, 0.6),
+            0 15px 30px rgba(0, 0, 0, 0.7),
+            inset 0 0 20px rgba(255, 255, 255, 0.15);
+        border-color: #FFA69E;
+    }
+
+    100% {
+        box-shadow:
+            0 0 20px rgba(255, 166, 158, 0.6),
+            0 0 40px rgba(255, 136, 128, 0.4),
+            0 10px 20px rgba(0, 0, 0, 0.5),
+            inset 0 0 15px rgba(255, 255, 255, 0.1);
+        border-color: #FF8A82;
+    }
+}
+
+/*|-------------|*/
+/*| Padlle Skin |*/
+/*|-------------|*/
+
+.defaultPaddlePong {
     width: 10px;
     height: 90px;
     background-color: #ffffff;
     position: absolute;
-}
-
-.paddleleft {
-    left: 10px;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.paddleright {
-    right: 10px;
+.neonPaddlePong {
+
+    width: 10px;
+    height: 90px;
+    background-color: #000000;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: neonGlow 2s infinite alternate;
+}
+
+.redPaddlePong {
+    background-color: #FF0000;
+    width: 10px;
+    height: 90px;
+    position: absolute;
     top: 50%;
     transform: translateY(-50%);
 }
 
-.ball {
+.radientPaddlePong {
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    width: 10px;
+    height: 90px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.glassPaddlePong {
+    background-color: rgba(0, 255, 255, 0.074);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(4px);
+    width: 10px;
+    height: 90px;
+    position: absolute;
+    top: 50%; 
+    transform: translateY(-50%);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  .firePaddlePong {
+    background: linear-gradient(90deg, #ff4500, #ffa500, #ff4500);
+    width: 10px;
+    height: 90px;
+    position: absolute;
+    display: block;
+    top: 50%; 
+    transform: translateY(-50%);
+    box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
+    animation: fireGlow 2s infinite alternate;
+  }
+
+
+@keyframes neonGlow {
+    0% {
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    }
+
+    50% {
+        box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff, 0 0 40px #00ffff;
+    }
+
+    100% {
+        box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    }
+}
+
+
+/*|-----------|*/
+/*| Ball Skin |*/
+/*|-----------|*/
+
+.defaultBallPong {
     width: 15px;
     height: 15px;
     background-color: #fff;
@@ -115,7 +272,80 @@
     transform: translate(-50%, -50%);
 }
 
-.score_1, .score_2 {
+.neonBallPong {
+    width: 15px;
+    height: 15px;
+    background: black;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+    animation: neonGlow 2s infinite alternate;
+}
+
+.blueBallPong {
+    width: 15px;
+    height: 15px;
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    border-radius: 50%;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.oldBallPong {
+    width: 15px;
+    height: 15px;
+    background: rgb(255, 255, 255);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+
+.pingPongBallPong {
+    width: 15px;
+    height: 15px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    background: #FFD700;
+    border-radius: 50%;
+}
+
+.radientBallPong {
+    width: 15px;
+    height: 15px;
+    background: rgb(238, 174, 202);
+    background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.glassBallPong {
+    width: 15px;
+    height: 15px;
+    backdrop-filter: blur(4px);
+    background-color: rgba(0, 255, 255, 0.074);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%; 
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+  }
+
+.score_1,
+.score_2 {
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
@@ -125,52 +355,78 @@
     top: 50%;
     transform: translateY(-50%);
     height: 400px;
-  }
-  
-  .score_1 {
+}
+
+.score_1 {
     left: -120px;
-  }
-  
-  .score_2 {
+}
+
+.score_2 {
     right: -120px;
-  }
-  
-  .score-square {
+}
+
+.score-square {
     width: 30px;
     height: 30px;
     background-color: #5E6472;
     margin: 5px;
-    border-radius: 5px;  
+    border-radius: 5px;
     transition: background-color 0.3s, box-shadow 0.3s;
 }
 
 .score-square.active {
     background-color: #D9F3E2;
-    
-    box-shadow: 0 0 10px #d9f3e279, 
-                0 0 10px #d9f3e279;
+
+    box-shadow: 0 0 10px #d9f3e279,
+        0 0 10px #d9f3e279;
 }
 
-.power-up {
+.power-up-bonus {
     position: absolute;
     width: 40px;
     height: 40px;
-    animation: border-blink 1s infinite alternate;
+    animation: border-blink-bonus 1s infinite alternate;
     border-radius: 50%;
-    border: 22px solid #FFA69E;
-    
-    /* Ajout pour centrer l'image à l'intérieur */
+    border: 23px solid #869FA9;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+@keyframes border-blink-bonus {
+    0% {
+        box-shadow: 0 0 10px rgba(217, 243, 226, 0.5);
+        border-color: #869FA9;
+    }
+
+    100% {
+        box-shadow: 0 0 15px rgba(174, 225, 201, 0.8);
+        border-color: #D9F3E2;
+    }
+}
+
+
+.power-up-malus {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    animation: border-blink-malus 1s infinite alternate;
+    border-radius: 50%;
+    border: 23px solid #FFA69E;
+
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 
-@keyframes border-blink {
+@keyframes border-blink-malus {
     0% {
         box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
         border-color: #FFA69E;
     }
+
     100% {
         box-shadow: 0 0 15px rgba(255, 0, 0, 0.8);
         border-color: #FDCDBE;
@@ -182,4 +438,11 @@
 .testpong {
     background-color: #B8F2E6;
     border: 5px solid #FFA69E;
+}
+.direction-line {
+    position: absolute;
+    height: 2px;
+    background-color: red;
+    transform-origin: left center;
+    z-index: 1;
 }

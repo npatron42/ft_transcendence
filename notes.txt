@@ -1,0 +1,3 @@
+- verifier dans le back que le bon joueur a rejoint la partie
+- empecher 2 fis la meme touche
+
