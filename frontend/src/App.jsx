@@ -19,42 +19,45 @@ import ProfilPage from './profil_page/profilPage.jsx';
 import Check42User from './check42user/Check42User.jsx';
 import WaitingTournaments from './game_page/tournaments/WaitingTournaments';
 import ViewProfile from './view_profile/ViewProfile.jsx';
+import GameSettings from './game_page/settings/GameSettings.jsx';
+import Error404 from './errors_pages/404.jsx';
 
 const App = () => {
   const location = useLocation();
-  return (
-    <>
-      
-      <Routes>
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        <Route path="/check42user" element={<Check42User />} />
-      </Routes>
-      <UserAuthProvider>
-      {!["/", "/register", "check42user"].includes(location.pathname) && (
-      <WebSocketProvider>
-      <TournamentSocketProvider>
-      <NavbarBS/>
-      <Routes>
-        <Route path="/profile" element={<ProfilPage/>} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/ChooseGame" element={<ChooseGame />} />
-        <Route path="/GlobalGameSolo" element={<GlobalGameSolo />} />
-        <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
-        <Route path="/globalTournaments" element={<GlobalTournaments />} />
-        <Route path="/game/options" element={<GameOptions />} />
-        <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
-        <Route path="/profile/:username" element={<ViewProfile />} />
-        <Route path="/waitingTournaments" element={<GlobalTournaments />} />
-      </Routes>
-      </TournamentSocketProvider>
-      </WebSocketProvider>
+  const publicPaths = ["/", "/register", "/check42user"];
+  const isPublicRoute = publicPaths.includes(location.pathname);
 
+  return (
+    <UserAuthProvider>
+      {isPublicRoute ? (
+        <Routes>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+          <Route path="/check42user" element={<Check42User />} />
+        </Routes>
+      ) : (
+        <WebSocketProvider>
+          <TournamentSocketProvider>
+      <NavbarBS />
+          <Routes>
+            <Route path="/profile" element={<ProfilPage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/ChooseGame" element={<ChooseGame />} />
+            <Route path="/GlobalGameSolo/:roomId" element={<GlobalGameSolo />} />
+            <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
+            <Route path="/globalTournaments" element={<GlobalTournaments />} />
+            <Route path="/game/options" element={<GameOptions />} />
+            <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
+            <Route path="/profile/:username" element={<ViewProfile />} />
+            <Route path="/game-settings" element={<GameSettings />} />
+            <Route path="*" element={<Error404 />} />
+          </Routes>
+        </TournamentSocketProvider>
+      </WebSocketProvider>
+  
     )}
-      </UserAuthProvider>
-    </>  
+    </UserAuthProvider>
   );
 };
-
 
 export default App;

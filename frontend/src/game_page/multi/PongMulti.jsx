@@ -6,8 +6,59 @@ import { useAuth } from '../../provider/UserAuthProvider';
 import { useNavigate} from 'react-router-dom'
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
 const host = import.meta.env.VITE_HOST;
+import { useRef } from 'react';
+import { getGameSettings } from '../../api/api';
+import npatronImage from '../../assets/game/npatron.png';
+import gradientImage from '../../assets/game/gradient.png';
+import ballImage from '../../assets/game/ball.png';
+import ballImage2 from '../../assets/game/ball2.png';
 
-const usePaddleMovement = (webSocket, playerId) => {
+
+const getBoardBackground = (boardSkin) => {
+    switch (boardSkin) {
+        case 'defaultBoard':
+            return { background: "radial-gradient(circle, #5E6472 0%, #24272c 100%)" };
+        case 'oldBoard':
+            return { background: "black" };
+        case 'pingPongBoard':
+            return { background: "#008000" };
+        case 'npatronBoard':
+            return {
+                backgroundImage: `url(${npatronImage})`,
+                backgroundSize: 'cover',
+            };
+        case 'galaxyBoard':
+            return {
+                background: 'radial-gradient(circle, #1a1a2e 0%, #16213e 70%, #0f3460 100%)',
+            };
+        case 'retroGridBoard':
+            return {
+                backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px)',
+                backgroundSize: '20px 20px',
+            };
+        case 'gradientBoard':
+            return {
+                backgroundImage: `url(${gradientImage})`,
+                backgroundSize: 'cover',
+            };
+        case 'ballBoard':
+            return {
+                backgroundImage: `url(${ballImage})`,
+                backgroundSize: 'cover',
+            };
+        case 'ball2Board':
+            return {
+                backgroundImage: `url(${ballImage2})`,
+                backgroundSize: 'cover',
+            };
+
+        default:
+            return { background: "radial-gradient(circle, #5E6472 0%, #24272c 100%)" };
+    }
+};
+
+
+const usePaddleMovement = (webSocket, keyBind) => {
     const [keysPressed, setKeysPressed] = useState({})
 
     useEffect(() => {
@@ -34,16 +85,10 @@ const usePaddleMovement = (webSocket, playerId) => {
         if (!webSocket) return;
 
         const interval = setInterval(() => {
-            if (keysPressed['w'] || keysPressed['W']) {
+            if (keysPressed[keyBind.up]) {
                 webSocket.send(JSON.stringify({ action: 'paddleup' }));
             }
-            if (keysPressed['s'] || keysPressed['S']) {
-                webSocket.send(JSON.stringify({ action: 'paddledown' }));
-            }
-            if (keysPressed['ArrowUp']) {
-                webSocket.send(JSON.stringify({ action: 'paddleup' }));
-            }
-            if (keysPressed['ArrowDown']) {
+            if (keysPressed[keyBind.down]) {
                 webSocket.send(JSON.stringify({ action: 'paddledown' }));
             }
         }, 11);
@@ -54,24 +99,55 @@ const usePaddleMovement = (webSocket, playerId) => {
 
 const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTournament }) => {
     const myJwt = localStorage.getItem('jwt');
+    const [webSocket, setWebSocket] = useState(null);
+    const { myUser } = useAuth();
+    const [gameSettings, setGameSettings] = useState();
+    const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
+    const [boardBackground, setBoardBackground] = useState({
+        background: "black"
+    });
+
+    // Game state
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
     const [scores, setScores] = useState({ player1: 0, player2: 0 });
-    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [isGameOver, setIsGameOver] = useState(false);
     const [winner, setWinner] = useState(null);
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
-    const [webSocket, setWebSocket] = useState(null);
+
     const [idTournament2, setIdTournament2] = useState(undefined)
-    const { myUser } = useAuth();
+    // Power Up gestion
     const [powerUpType, setPowerUpType] = useState(null);
+    const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
+    const [displayPowerUpBool, setDisplayPowerUpBool] = useState(false);
+    const [boardClass, setBoardClass] = useState('board');
+    const [powerUpClass, setPowerUpClass] = useState(null);
+    const [playerHasPowerUp, setPlayerHasPowerUp] = useState(null);
+    const [soloPlayActive, setSoloPlayActive] = useState(false);
+    const [centerLineClass, setCenterLineClass] = useState('center-line');
     const navigate = useNavigate();
     const { tournamentSocket, subscribeToTournaments } = useTournamentSocket();
 
     useEffect(() => {
     }, [powerUpType, powerUpPosition]);
+
+    // Fetch game settings
+    useEffect(() => {
+        (async () => {
+            try {
+                const settings = await getGameSettings();
+                setGameSettings(settings);
+                setKeyBind({ up: settings.up, down: settings.down });
+                const tmpBoard = getBoardBackground(settings.boardSkin);
+                setBoardBackground(tmpBoard);
+                console.log("Settings récupérés :", settings);
+            } catch (error) {
+                console.error("Erreur :", error);
+            }
+        })();
+    }, []);
 
     useEffect(() => {
         const ws = new WebSocket(`ws://${host}:8000/ws/pong/${roomId}/${isTournament}/${idTournament}/?token=${myJwt}`);
@@ -83,10 +159,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
                 ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
-                if (userSelected)   
-                    {
-                        ws.send(JSON.stringify({userSelected: userSelected.username}));
-                    }   
+                if (userSelected) {
+                    ws.send(JSON.stringify({ userSelected: userSelected.username }));
+                }
             };
 
             ws.onmessage = (event) => {
@@ -94,6 +169,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
+                if (!data.players)
+                    console.log("data", data);
                 if (data.paddles_pos) {
                     setPaddlePos(data.paddles_pos);
                 }
@@ -104,6 +181,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                     setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
+
                     setBallPos(data.ball);
                 }
                 if (data.score) {
@@ -116,17 +194,33 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                     setIsGameOver(true);
                     setWinner(data.winner);
                 }
+                if (data.power_up) {
+                    setPowerUpType(data.power_up);
+                    if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
+                        console.log("power up class", powerUpClass);
+                        setPowerUpClass('power-up-bonus');
+                    }
+                    else {
+                        setPowerUpClass('power-up-malus');
+                    }
+                }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
-                    setPowerUpType(data.power_up);
+                    console.log("power up type", data.power_up);
                 }
+
                 if (data.status === "erase") {
                     setPowerUpPosition({ x: 0, y: 0 });
                     setPowerUpType(null);
                 }
-                if (data.idTournament) {
-                    setIdTournament2(data.idTournament)
-                }
+            };
+
+            ws.onclose = (event) => {
+                console.log('WebSocket closed, code:', event.code);
+            };
+
+            ws.onerror = (error) => {
+                console.error('WebSocket error:', error);
             };
         }
 
@@ -139,7 +233,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
         };
     }, [roomId, maxScore]);
 
-    usePaddleMovement(webSocket, roomPlayers);
+    usePaddleMovement(webSocket, keyBind);
 
     const renderPowerUp = () => {
         switch (powerUpType) {
@@ -149,10 +243,43 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 return <img src="../../src/assets/game/inversed_control.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
             case 'decrease_paddle':
                 return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'x2':
+                return <img src="../../src/assets/game/x2.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+            case 'solo_play':
+                return <img src="../../src/assets/game/solo_play.svg" alt="solo play" style={{ width: '40px', height: '40px' }} />;
             default:
                 return null;
         }
     };
+
+    useEffect(() => {
+        if (displayPowerUpBool && playerHasPowerUp == myUser.username) {
+            setBoardClass('board-bonus');
+        }
+        else if (displayPowerUpBool && playerHasPowerUp !== myUser.username) {
+            setBoardClass('board-malus');
+        }
+        else {
+            setBoardClass('board');
+        }
+    }, [displayPowerUpBool, playerHasPowerUp]);
+
+    useEffect(() => {
+        if (powerUpType === 'solo_play') {
+            if (soloPlayActive) {
+                setCenterLineClass('center-line-solo');
+            }
+            else {
+                console.log("je suis la");
+                setCenterLineClass('center-line');
+            }
+        }
+    }, [soloPlayActive, powerUpType]);
+
+    if (!gameSettings) {
+        return <div>Loading...</div>;
+    }
+
 
     // IF TOURNAMENT --> REDIRECT TO WAITING
 
@@ -169,19 +296,25 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
 
     return (
         <div className="pong-container">
-            <div className="board">
+            <div className={boardClass} style={boardBackground}>
                 <ScoreBoard
                     score1={scores.player1}
                     score2={scores.player2}
                     maxScoreToUse={maxScoreToUse}
                 />
-                {isGameOver && winner ? <WinComp winner={winner} /> : null }
-                <div className="center-line"></div>
-                <div className="ball" style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
-                <div className="paddle paddleleft" style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px` }}></div>
-                <div className="paddle paddleright" style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px` }}></div>
+                {isGameOver && winner ? <WinComp winner={winner} /> : null}
+                <div className={centerLineClass}></div>
+                <div className={gameSettings.ballSkin + "Pong"} style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px`, left: '10px' }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px`, right: '10px' }}></div>
+                {/* <div className="direction-line" style={{
+                    left: `${ballPos.x}px`,
+                    top: `${ballPos.y}px`,
+                    transform: `rotate(${10}deg)`,
+                    width: `${length}px`
+                }}></div> */}
                 {powerUpPosition.x !== 0 && powerUpPosition.y !== 0 && (
-                    <div className="power-up" style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
+                    <div className={powerUpClass} style={{ left: `${powerUpPosition.x - 20}px`, top: `${powerUpPosition.y - 20}px` }}>
                         {renderPowerUp()}
                     </div>
                 )}
