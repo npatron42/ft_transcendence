@@ -115,8 +115,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps(message))
 
 	async def connect(self):
-		logger.info("Scope details: %s", id(self.scope))
-
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
@@ -230,8 +228,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			}
 			await sendToShareSocket(self, dataToSend)
 		await removeClientFromUsers(self, myUser.username)
-					
-		
 		PongConsumer.players[self.room_id].remove(self.username)
 		
 		###########
@@ -376,8 +372,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 		speed = 4
 		ball = PongConsumer.ball_pos[self.room_id] 
 		direction = PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([-4, 4])}
-		acceleration = 0.2
-		max_speed = 100
+		acceleration = 0.3
+		max_speed = 35
 		max_angle = 55
 		paddle_width = 10
 		ball_radius = 15
@@ -407,14 +403,18 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
 				direction['y'] *= -1
 
-			# if ball['y'] >= 90 or ball['y'] <= 510:
-			# 	if ball['x'] <= 40 or ball['x'] >= 860:
-			# 		PongConsumer.paddles_pos[self.room_id]['right'] = ball['y'] + random.randint(30, -30)
-			# 		PongConsumer.paddles_pos[self.room_id]['left'] = ball['y'] + random.randint(30, -30)
-			# 	else :
-			# 		PongConsumer.paddles_pos[self.room_id]['right'] = ball['y']
-			# 		PongConsumer.paddles_pos[self.room_id]['left'] = ball['y']
+			if ball['y'] >= 90 or ball['y'] <= 510:
+				if ball['x'] <= 40 or ball['x'] >= 860:
+					PongConsumer.paddles_pos[self.room_id]['right'] = ball['y']
+					# PongConsumer.paddles_pos[self.room_id]['left'] = ball['y']
+				else :
+					PongConsumer.paddles_pos[self.room_id]['right'] = ball['y']
+					# PongConsumer.paddles_pos[self.room_id]['left'] = ball['y']
 
+			if ball['y'] < 0 + ball_radius:
+				ball['y'] = 0 + ball_radius
+			if ball['y'] > 600 - ball_radius:
+				ball['y'] = 600 - ball_radius 
 
 				#Solo Play Colision#
 			if PongConsumer.solo_play_power[self.room_id]['bool'] == True:
@@ -617,7 +617,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if random.random() < 0.01:
 			PongConsumer.power_up_visible[self.room_id] = True
-			power_ups = ['inversed_control', 'increase_paddle', 'decrease_paddle', 'x2', 'solo_play']
+			power_ups = ['solo_play']
 			selected_power_up = random.choice(power_ups)
 			PongConsumer.power_up_position[self.room_id] = {
 				'x': random.randint(100, 800),

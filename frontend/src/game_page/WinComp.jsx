@@ -6,11 +6,7 @@ import './css/chooseGame.css';
 
 export const WinComp = ({ winner }) => {
     const navigate = useNavigate();
-    
-    const handleRematchClick = () => {
-        navigate('/globalGameSolo');
-    };
-    
+
     const handleMenuClick = () => {
         navigate('/chooseGame');
     };
@@ -25,7 +21,6 @@ export const WinComp = ({ winner }) => {
                     </div>
                     <div className="flip-card-back">
                         <div className="flip-card-content">
-                            <button className="start-game" onClick={handleRematchClick}>Rematch</button>
                             <button className="start-game" onClick={handleMenuClick}>Return to menu</button>
                         </div>
                     </div>

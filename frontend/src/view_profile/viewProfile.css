@@ -361,7 +361,6 @@
     background-color: #cdb4db;
     border: none;
     border-radius: 50px;
-    margin-top: 60px;
     cursor: pointer;
     transition: background-color 0.3s;
     width: 35%;
@@ -372,4 +371,11 @@
 .card .invite-button:hover {
     background-color: #b39cd0;
     transform: scale(1.05);
+}
+
+.card .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
 }

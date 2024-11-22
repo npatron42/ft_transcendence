@@ -8,6 +8,7 @@ const GlobalGameMulti = () => {
     const location = useLocation();
     const maxScore = location.state?.maxScore || 10;
     const powerUp = location.state?.powerUp;
+    const mustInvite = location.state?.mustInvite || false;
     const userSelected = location.state?.userSelected;
     const navigate = useNavigate();
 
@@ -20,16 +21,18 @@ const GlobalGameMulti = () => {
     //     }
     //     return () => localStorage.removeItem('isRefreshed');
     //   }, [navigate]);
-
+    
+    console.log("uaerSelected", userSelected);
     return (
         <div className="GlobalGame">
-            <InviteFriend
-                roomId={roomId}/>
+            {mustInvite && (
+                <InviteFriend roomId={roomId} />
+            )}
             <PongMulti
                 roomId={roomId}
                 maxScore={maxScore}
-                powerUp ={powerUp}
-                userSelected= {userSelected}
+                powerUp={powerUp}
+                userSelected={userSelected}
             />
         </div>
     );
