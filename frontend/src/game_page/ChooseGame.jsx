@@ -27,6 +27,7 @@ const ChooseGame = () => {
 
     const handleMultiClick = () => {
         const roomId = uuidv4();
+        const mustInvite = true;
         navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament, mustInvite} });
     };
 

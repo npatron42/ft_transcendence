@@ -143,7 +143,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 						max_score = 1
 					else:
 						max_score = PongConsumer.max_scores[room_id]
-					self.game_task = asyncio.create_task(update_ball(self, max_score, room_id))
+					self.game_task = asyncio.create_task(self.update_ball(max_score))
 				except Exception as i:
 					logger.info(i)
 				logger.info("Task created for %s", PongConsumer.players[room_id])

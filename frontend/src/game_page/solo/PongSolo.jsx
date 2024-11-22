@@ -9,6 +9,7 @@ import npatronImage from '../../assets/game/npatron.png';
 import gradientImage from '../../assets/game/gradient.png';
 import ballImage from '../../assets/game/ball.png';
 import ballImage2 from '../../assets/game/ball2.png';
+const host = import.meta.env.VITE_HOST;
 
 
 const getBoardBackground = (boardSkin) => {
@@ -154,7 +155,7 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     }, []);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://localhost:8000/ws/pongSolo/${roomId}/?token=${myJwt}`);
+        const ws = new WebSocket(`ws://${host}:8000/ws/pongSolo/${roomId}/?token=${myJwt}`);
 
         if (myUser) {
             ws.onopen = () => {
