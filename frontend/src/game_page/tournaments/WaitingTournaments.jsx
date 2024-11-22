@@ -22,8 +22,8 @@ const WaitingTournaments = () => {
     const [userIsLoser, setUserIsLoser] = useState()
     const [userIsWinner, setUserIsWinner] = useState()
     const [end, setEnd] = useState(false)
-    const [winner, setWinner] = useState(null)
-    const [second, setSecond] = useState(null)
+    const [winner, setWinner] = useState()
+    const [second, setSecond] = useState()
 
     useEffect(() => {
 
@@ -91,21 +91,27 @@ const WaitingTournaments = () => {
                 setOtherMatch(otherMatch)
                 setRoomId(roomId)
         }
+
         if (data.message["CANCEL-MATCH"]) {
             const myOpponent = undefined;
             const otherMatch = undefined;
             setOpponent(myOpponent)
             setOtherMatch(otherMatch)
         }
+
         if (data.message["WINNER"]) {
-            console.log("WINNER --> ", data.message["WINNER"])
             setEnd(true)
-            setSecond[data.message["SECOND"]]
+            const secondTmp = data.message["WINNER"]
+            setSecond(secondTmp)
+            console.log("tmp --> ", secondTmp["WINNER"])
+            console.log("secondTmp --> ", secondTmp)
         }
+
         if (data.message["SECOND"]) {
-            console.log("SECOND --> ", data.message)
             setEnd(true)
-            setWinner[data.message["WINNER"]]
+            const winnerTmp = data.message["SECOND"]
+            setWinner(winnerTmp)
+            console.log("WinnerTmp --> ", winnerTmp)
         }
         };
 
@@ -310,12 +316,47 @@ const WaitingTournaments = () => {
                 </div>
             </div>
         )}
-        {end === true && winner !== null && (
-            <div className="waitingTournament-full fadeIn">C EST TOI LE FIRST BB</div>
+    
+
+
+        {end === true && (
+            <div className="waitingTournament-full fadeIn">
+                {winner && (
+                    <>
+
+                    <div className="header-result">
+                        <span className="results">RESULTS</span>
+                    </div>
+
+                    <div className="bigHead">
+                        <img src={winner["WINNER"].profilePicture} className="picture"></img>
+                    </div>
+
+                    <div className="sentenceWin">
+                        <span className="results-2">{winner["WINNER"].username}   won !</span>
+                    </div>
+
+                    
+                    </>
+                )}
+                {second && (
+                    <>
+                    <div className="header-result">
+                        <span className="results">RESULTS</span>
+                    </div>
+                    <div className="bigHead">
+                        <img src={myUser.profilePicture} className="picture"></img>
+                    </div>
+                    <div className="sentenceWin">
+                        <span className="results-2">you won !</span>
+                    </div>
+                    </>
+                )}
+            </div>
         )}
-        {end === true && second !== null && (
-            <div>C EST TOI LE SECOND BB</div>
-        )}
+
+
+
     </div>
   );
 };
