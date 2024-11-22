@@ -47,7 +47,7 @@ const App = () => {
             <Route path="/GlobalGameMulti/:roomId" element={<GlobalGameMulti />} />
             <Route path="/globalTournaments" element={<GlobalTournaments />} />
             <Route path="/game/options" element={<GameOptions />} />
-            <Route path="/waitingTournaments/:waitRoomId" element={<WaitingTournaments />} />
+            <Route path="/waitingTournaments" element={<GlobalTournaments />} />
             <Route path="/profile/:username" element={<ViewProfile />} />
             <Route path="/game-settings" element={<GameSettings />} />
             <Route path="*" element={<Error404 />} />
