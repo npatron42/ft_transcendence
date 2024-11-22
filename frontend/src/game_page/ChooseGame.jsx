@@ -17,12 +17,14 @@ const ChooseGame = () => {
     const [powerUp, setPowerUp] = useState(false);
 
     const handleSoloClick = () => {
-        navigate('/globalGameSolo', { state: { maxScore, powerUp } });
+        const roomId = uuidv4();
+        navigate(`/globalGameSolo/${roomId}`, { state: { maxScore, powerUp} });
     };
 
     const handleMultiClick = () => {
         const roomId = uuidv4();
-        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp } });
+        const mustInvite = true;
+        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, mustInvite } });
     };
 
     const handleCreateTournaments = () => {

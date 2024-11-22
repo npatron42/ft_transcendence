@@ -1,6 +1,6 @@
 @font-face {
-    font-family: 'Millimetre'; /* Nom de la police */
-    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }

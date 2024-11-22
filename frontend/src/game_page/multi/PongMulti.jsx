@@ -19,11 +19,11 @@ const getBoardBackground = (boardSkin) => {
             return { background: "black" };
         case 'pingPongBoard':
             return { background: "#008000" };
-            case 'npatronBoard':
-                return {
-                    backgroundImage: `url(${npatronImage})`,
-                    backgroundSize: 'cover',
-                };            
+        case 'npatronBoard':
+            return {
+                backgroundImage: `url(${npatronImage})`,
+                backgroundSize: 'cover',
+            };
         case 'galaxyBoard':
             return {
                 background: 'radial-gradient(circle, #1a1a2e 0%, #16213e 70%, #0f3460 100%)',
@@ -167,6 +167,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
+                if (!data.players)
+                    console.log("data", data);
                 if (data.paddles_pos) {
                     setPaddlePos(data.paddles_pos);
                 }
@@ -177,7 +179,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                     setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
-                    
+
                     setBallPos(data.ball);
                 }
                 if (data.score) {
@@ -193,7 +195,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 if (data.power_up) {
                     setPowerUpType(data.power_up);
                     if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
-                        console.log ("power up class", powerUpClass);
+                        console.log("power up class", powerUpClass);
                         setPowerUpClass('power-up-bonus');
                     }
                     else {
@@ -218,6 +220,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                     setDisplayPowerUpBool(false);
                     setPowerUpType(null);
                     setCenterLineClass('center-line');
+                    setSoloPlayActive(false);
                 }
                 if (data.player_has_power_up) {
                     console.log("player has power up", data.player_has_power_up);
@@ -258,7 +261,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
             case 'x2':
                 return <img src="../../src/assets/game/x2.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
-            case 'solo_play': 
+            case 'solo_play':
                 return <img src="../../src/assets/game/solo_play.svg" alt="solo play" style={{ width: '40px', height: '40px' }} />;
             default:
                 return null;
@@ -266,8 +269,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
     };
 
     useEffect(() => {
-        console.log("pif le powr", playerHasPowerUp);
-        console.log("paf le bool", displayPowerUpBool);
         if (displayPowerUpBool && playerHasPowerUp == myUser.username) {
             setBoardClass('board-bonus');
         }
@@ -307,8 +308,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected }) => {
                 {isGameOver && winner ? <WinComp winner={winner} /> : null}
                 <div className={centerLineClass}></div>
                 <div className={gameSettings.ballSkin + "Pong"} style={{ left: `${ballPos.x}px`, top: `${ballPos.y}px` }}></div>
-                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px`, left : '10px'}}></div>
-                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px`, right :'10px'  }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['left']}px`, height: `${paddleSizes.left}px`, left: '10px' }}></div>
+                <div className={gameSettings.paddleSkin + "Pong"} style={{ top: `${paddlePos['right']}px`, height: `${paddleSizes.right}px`, right: '10px' }}></div>
                 {/* <div className="direction-line" style={{
                     left: `${ballPos.x}px`,
                     top: `${ballPos.y}px`,
