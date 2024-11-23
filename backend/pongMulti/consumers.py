@@ -146,7 +146,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 					self.game_task = asyncio.create_task(self.update_ball(max_score))
 				except Exception as i:
 					logger.info(i)
-				logger.info("Task created for %s", PongConsumer.players[room_id])
 				myMatches[room_id] = "launched"
 		return
 	
@@ -180,7 +179,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def connect(self):
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:
-			logger.info("User %s connected", myUser.username)
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
 			self.room_group_name = f'game_{self.room_id}'
 			if self.room_id not in PongConsumer.players:
@@ -233,8 +231,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.idTournament = self.scope['url_route']['kwargs']['idTournament']
 			PongConsumer.idTournament[self.room_id] = self.idTournament
 
-			logger.info("idTournament ---> %s", self.scope['url_route']['kwargs']['idTournament'])
-
 			await self.channel_layer.group_add(
 				self.room_group_name,
 				self.channel_name
@@ -284,7 +280,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 					winnerdb = player1
 				p1_score = PongConsumer.score[self.room_id]['player1']
 				p2_score = PongConsumer.score[self.room_id]['player2']
-				logger.info(f"le score du joueur 1 est {p1_score} et le score du joueur 2 est {p2_score}")
 				if PongConsumer.send_db[self.room_id] == False:
 					await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
 					PongConsumer.send_db[self.room_id] = True
@@ -336,7 +331,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				invited_player = PongConsumer.invited_players[self.room_id]
 
 				if user_name != invited_player:
-					logger.info(f"Rejet du joueur {user_name} car il ne correspond pas à l'invité {invited_player}")
 					await self.close()
 					return
 			
@@ -458,7 +452,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def update_ball(self, max_score):
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.paddle_left_height[self.room_id] = 90
-		speed = 4
+		speed = 2
 		ball = PongConsumer.ball_pos[self.room_id] 
 		direction = PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([-4, 4])}
 		acceleration = 0.3
@@ -473,7 +467,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		direction['x'] = (direction['x'] / initial_magnitude) * speed
 		direction['y'] = (direction['y'] / initial_magnitude) * speed
 		initial_hypotenuse = math.sqrt(direction['x']**2 + direction['y']**2)
-		logger.info(f" hypotenuse de debbutu: {initial_hypotenuse}")
 
 
 		while True:
@@ -540,7 +533,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				last_player = PongConsumer.players[self.room_id][0]
 
 				new_hypotenuse2 = math.sqrt(direction['x']**2 + direction['y']**2)
-				logger.info(f"new hypotenuse: {new_hypotenuse2}")
 
 				# Colision paddle droite
 			right_paddle_y = PongConsumer.paddles_pos[self.room_id]['right']
@@ -561,7 +553,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				last_player = PongConsumer.players[self.room_id][1]
 
 				new_hypotenuse2 = math.sqrt(direction['x']**2 + direction['y']**2)
-				logger.info(f"new hypotenuse: {new_hypotenuse2}")
 
 				#Colision power up#
 			if PongConsumer.power_up_visible[self.room_id] == True:
@@ -635,11 +626,16 @@ class PongConsumer(AsyncWebsocketConsumer):
 							if PongConsumer.score[self.room_id]['player1'] >= max_score:
 								winner = PongConsumer.players[self.room_id][0]
 								winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
+								myWinner = PongConsumer.players[self.room_id][0]
+								myLoser = PongConsumer.players[self.room_id][1]
+
 							else:
 								winner = PongConsumer.players[self.room_id][1]
 								winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
-							logger.info("SENT TO %s", PongConsumer.players[self.room_id])
-							logger.info("Le ID TOURNOI --> %s", PongConsumer.idTournament[self.room_id])
+								myWinner = PongConsumer.players[self.room_id][1]
+								myLoser = PongConsumer.players[self.room_id][0]
+			
+
 							await self.channel_layer.group_send(
 								self.room_group_name,
 								{
@@ -649,12 +645,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 									'idTournament': PongConsumer.idTournament[self.room_id]
 								}
 							)
-							myWinner = PongConsumer.players[self.room_id][0]
-							myLoser = PongConsumer.players[self.room_id][1]
-						else:
-							myWinner = PongConsumer.players[self.room_id][1]
-							myLoser = PongConsumer.players[self.room_id][0]
-
+						
 						myPlayers = []
 						myPlayers.append(PongConsumer.players[self.room_id][0])
 						myPlayers.append(PongConsumer.players[self.room_id][1])
@@ -814,11 +805,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 		await asyncio.sleep(20)
 		PongConsumer.power_up_active[self.room_id] = False
 		await self.reset_effect()
-		logger.info("Power up effect reset")
 
 	
 	async def reset_effect(self):
-		logger.info("Reset effect")
 		PongConsumer.paddle_left_height[self.room_id] = 90
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.inversed_controls[self.room_id] = [False, False]
