@@ -10,7 +10,10 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
     if (!className) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+        <div className="loader"> 
+        </div>
+    </div>
     }
 
     const handleNext = () => {
@@ -136,7 +139,10 @@ const GameSettings = () => {
     };
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+        <div className="loader"> 
+        </div>
+    </div>
     }
 
     return (
@@ -152,9 +158,9 @@ const GameSettings = () => {
                             />
                         </div>
                         <div className="keyBindContainer">
-                            <div className="sectionHeader">
+                            {/* <div className="sectionHeader">
                                 <h2>Key Bind</h2>
-                            </div>
+                            </div> */}
                             <section className="container">
                                 <label>
                                     <input
@@ -190,9 +196,9 @@ const GameSettings = () => {
                         </div>
                     </div>
                     <div className="SkinContainer">
-                        <div className="sectionHeader">
+                        {/* <div className="sectionHeader">
                             <h2>Skin</h2>
-                        </div>
+                        </div> */}
                         <div className="paddleSkinContainer">
                             <Carousel
                                 className={paddleSkin}
@@ -220,7 +226,7 @@ const GameSettings = () => {
                     </div>
                 </div>
                 <button
-                    className="buttonSaveSettings"
+                    className="createJoinButton"
                     onClick={handleSaveSettings}>
                     Save Settings
                 </button>

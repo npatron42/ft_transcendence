@@ -5,6 +5,7 @@ import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { useRef } from 'react';
 import { getGameSettings } from '../../api/api';
+import Loading from "../../loading_page/Loading";
 import npatronImage from '../../assets/game/npatron.png';
 import gradientImage from '../../assets/game/gradient.png';
 import ballImage from '../../assets/game/ball.png';
@@ -301,7 +302,7 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     }, [soloPlayActive, powerUpType]);
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     return (

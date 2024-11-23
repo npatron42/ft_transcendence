@@ -3,7 +3,7 @@ import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
 const host = import.meta.env.VITE_HOST;
 import { useRef } from 'react';
@@ -277,7 +277,10 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
     }, [soloPlayActive, powerUpType]);
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+            <div className="loader">
+            </div>
+        </div>
     }
 
 
@@ -288,9 +291,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
             "type": "WANT-TO-SEE-RESULTS"
         }
         tournamentSocket.send(JSON.stringify(data))
-		navigate("/waitingTournaments", { state: { idTournament2 } })
-		return ;
-	}
+        navigate("/waitingTournaments", { state: { idTournament2 } })
+        return;
+    }
 
     console.log("isTournament, isGameOver", isTournament, isGameOver)
 
