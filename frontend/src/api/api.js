@@ -425,7 +425,7 @@ export const getBlockedRelations = async () => {
 			}
 		};
 		
-		const response = await axios.get("http://localhost:8000/api/blockedUsers/", config);
+		const response = await axios.get(`http://${host}:8000/api/blockedUsers/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -491,3 +491,37 @@ export const recupProfil = async () => {
 		throw error;
 	}
 };
+
+export const getGameSettings = async () => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		
+		const response = await axios.get(`http://${host}:8000/api/gameSettings/`, config);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user gameSettings:", error);
+		throw error;
+	}
+}
+
+export const updateGameSettings = async (myData) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+
+		const response = await axios.post(`http://${host}:8000/api/gameSettings/update/`, myData, config);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching user gameSettings:", error);
+		throw error;
+	}
+}

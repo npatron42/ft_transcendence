@@ -56,7 +56,7 @@ const Check42User = () => {
 
     return (
         <div id="background-container">
-            <div class="loader"></div>
+            <div className="loader"></div>
         </div>
     );
 }

@@ -48,4 +48,12 @@ class Message(models.Model):
     class Meta:
         ordering = ['date']
 
+class GameSettings(models.Model):
+    user = models.ForeignKey(User, related_name="user", on_delete=models.CASCADE, default=None)
+    up = models.CharField(models.CharField(max_length=10), default="w")
+    down = models.CharField(models.CharField(max_length=10), default="s")
+    paddleSkin = models.CharField(max_length=125, default="default")
+    boardSkin = models.CharField(max_length=125, default="default")
+    ballSkin = models.CharField(max_length=125, default="default")
+
 

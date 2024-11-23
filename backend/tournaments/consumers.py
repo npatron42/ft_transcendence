@@ -397,6 +397,7 @@ def destroyMyTournament(idTournament):
         if myMatch["idTournament"] == idTournament:
             del myMatches[i]
             myLen -= 1
+        i += 1
     
     i = 0
     myLen = len(allTournamentsId)
@@ -404,6 +405,7 @@ def destroyMyTournament(idTournament):
         if allTournamentsId[i] == idTournament:
             del allTournamentsId[i]
             myLen -= 1
+        i += 1
     
 
     del Tournament.players[idTournament]
@@ -455,7 +457,6 @@ class Tournament(AsyncWebsocketConsumer):
             return
         elif type == "RESULTS":
             # FIND MATCH
-            logger.info("JE RECOIS LES RESULTATS DE LA FINALE ---> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -475,6 +476,8 @@ class Tournament(AsyncWebsocketConsumer):
                 value = value + 1
                 tournamentMatchsEnded[idTournament] = value
 
+                matchsPlayed = tournamentMatchsEnded.get(idTournament)
+                logger.info("[TOURNAMENT CONSUMER] matchPlayed : %d", matchsPlayed)
                 ## FIRST MATCHS --> 
 
                 if whatMatch == "00":
@@ -487,6 +490,7 @@ class Tournament(AsyncWebsocketConsumer):
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
                     logger.info("matchsPlayed --> %d", matchsPlayed)
                     if matchsPlayed == 2: ## MATCHS PLAYED
+                        logger.info("TWO MATCHES PLAYED --> %d", matchsPlayed)
                         tournamentMatchsEnded[idTournament] == 0
                         myWiners, myLosers = await createFinalMatch(idTournament)
                         await sendNextStepToUsers(self, myWiners, myLosers, idTournament)
