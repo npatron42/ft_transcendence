@@ -16,6 +16,8 @@ import random
 import string
 from django.utils import timezone
 from datetime import timedelta
+from oauth.views import setDefaultGameSettings
+from users.serializers import GameSettingsSerializer
 
 
 logger = logging.getLogger(__name__)
@@ -95,6 +97,8 @@ def registerPage(request):
             })
 
         user = user.objects.create_user(username=username, email=email, password=password)
+        setDefaultGameSettings(user)
+        
 
         return JsonResponse({
             'success': True,

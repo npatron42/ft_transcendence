@@ -61,7 +61,10 @@ export const UserAuthProvider = ({ children }) => {
     }, []);
 
     if (isLoading) {
-        return <div>Loading baby...</div>;
+        return <div id="background-container">
+                    <div className="loader"> 
+                    </div>
+                </div>
     }
 
     return (
