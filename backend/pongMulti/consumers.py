@@ -139,7 +139,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				return
 			if room_id not in myMatches:
 				try:
-					if PongConsumer.isTournament[room_id] == "true":
+					if PongConsumer.isTournament[room_id] == True:
 						max_score = 1
 					else:
 						max_score = PongConsumer.max_scores[room_id]
@@ -225,15 +225,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if self.room_id not in PongConsumer.matchIsPlayed:
 				PongConsumer.matchIsPlayed[self.room_id] = False
 
-			if self.room_id not in PongConsumer.isTournament:
+			# if self.room_id not in PongConsumer.isTournament:
+			# 	PongConsumer.isTournament[self.room_id] = False
+			
+			if self.scope['url_route']['kwargs']['isTournament'] != "true":
 				PongConsumer.isTournament[self.room_id] = False
+			else:
+				PongConsumer.isTournament[self.room_id] = True
 
-			self.isTournament = self.scope['url_route']['kwargs']['isTournament']
-			PongConsumer.isTournament[self.room_id] = self.isTournament
-			self.idTournament = self.scope['url_route']['kwargs']['idTournament']
-			PongConsumer.idTournament[self.room_id] = self.idTournament
-
-			logger.info("idTournament ---> %s", self.scope['url_route']['kwargs']['idTournament'])
+			PongConsumer.idTournament[self.room_id] = self.scope['url_route']['kwargs']['idTournament']
 
 			await self.channel_layer.group_add(
 				self.room_group_name,
@@ -263,8 +263,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 		myUser = self.scope["user"]
 		if hasattr(self, 'game_task'):
 			self.game_task.cancel()
-		if PongConsumer.isTournament[self.room_id] == "false":
-
+		logger.info("voici le is tournament %s", PongConsumer.isTournament[self.room_id])
+		if PongConsumer.isTournament[self.room_id] == False:
+			logger.info("je passe ici")
 			await self.channel_layer.group_discard(
 				self.room_group_name,
 				self.channel_name
@@ -309,6 +310,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.players[self.room_id].remove(self.username)
 			return
 		else:
+			logger.info("je passe la")
 			await self.channel_layer.group_discard(
 				self.room_group_name,
 				self.channel_name
@@ -639,6 +641,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 								winner = PongConsumer.players[self.room_id][1]
 								winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
 							logger.info("SENT TO %s", PongConsumer.players[self.room_id])
+							logger.info( " le winner est %s", winnerdb)
+							logger.info("teste")
 							logger.info("Le ID TOURNOI --> %s", PongConsumer.idTournament[self.room_id])
 							await self.channel_layer.group_send(
 								self.room_group_name,
@@ -651,6 +655,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 							)
 							myWinner = PongConsumer.players[self.room_id][0]
 							myLoser = PongConsumer.players[self.room_id][1]
+							logger.info("IIIIIIIIIIIIIIIIIISSSSSSSSSSSSSss SENT TO %s", PongConsumer.players[self.room_id])
 						else:
 							myWinner = PongConsumer.players[self.room_id][1]
 							myLoser = PongConsumer.players[self.room_id][0]

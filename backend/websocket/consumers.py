@@ -383,6 +383,7 @@ async def sendToClient(channel_layer, socket, message):
 
 
 async def findGameInvitationToErase(myUser):
+    logger.info("je passe icicicicicic")
     try:
         myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUser)
         myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
