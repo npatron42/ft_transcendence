@@ -5,7 +5,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/api/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
@@ -52,15 +52,17 @@ HOST= os.getenv('HOST')
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
-    f'http://{HOST}:5173',
-    f'http://{HOST}:8000',
+    f'https://{HOST}:4343',
+    # f'https://{HOST}:5173',
+    # f'https://{HOST}:8000',
 	# 'http://localhost:5173' ,
 	# 'http://localhost:8000' ,
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    f'http://{HOST}:5173',
-    f'http://{HOST}:8000',
+    f'https://{HOST}:4343',
+    # f'https://{HOST}:5173',
+    # f'https://{HOST}:8000',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

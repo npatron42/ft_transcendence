@@ -13,7 +13,7 @@ function UserItem({ user, handleInvitation, chooseStatus}) {
     return (
         <tr className="friend-item">
             <td className="friend-item.td">
-                <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `http://${host}:8000/media/${user.profilePicture}`}
+                <img src={user.profilePicture.startsWith('http') ? user.profilePicture : `https://${host}:8000/media/${user.profilePicture}`}
                 alt={`${user.username}'s profile`} className="profile-picture" />
             </td>
             <td className="friend-item.td">

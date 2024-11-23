@@ -143,7 +143,7 @@ function NavbarBS() {
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
-                src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://${host}:8000/media/${myUser.profilePicture}`}
+                src={myUser.profilePicture.startsWith('https') ? myUser.profilePicture : `https://${location.host}/media/${myUser.profilePicture}`}
                 alt="Profile"
                 className="profile-picture-navbar"
                 onClick={handleProfile}

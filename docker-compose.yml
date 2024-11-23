@@ -1,14 +1,13 @@
 services:
-
   db:
     container_name: postgresql
     build:
       context: ./postgresql
       dockerfile: Dockerfile
-    ports:
-      - 5432:5432
     env_file:
       - .env
+    networks:
+      - app_network
 
   backend:
     container_name: backend
@@ -21,10 +20,9 @@ services:
     env_file:
       - ./backend/.env
     volumes:
-      - /ft_transcendence/backend
       - ./backend:/backend
-    ports:
-      - 8000:8000
+    networks:
+      - app_network
   
   frontend:
     container_name: frontend
@@ -37,28 +35,42 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    ports:
-      - 5173:5173
     env_file:
       - ./frontend/.env
     environment:
-      - VITE_API_URL=http://${HOST}:8000/api/users 
+      - VITE_API_URL=https://nginx/api/users
+    networks:
+      - app_network
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    ports:
+      # - "8090:80"
+      - "4343:443"
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - app_network
 
   adminer:
     image: adminer
     container_name: adminer
     ports:
       - "8080:8080"
+    networks:
+      - app_network
 
   redis:
     image: redis
     container_name: redis
-    ports:
-      - "6380:6379"
+    # ports:
+    #   - "6380:6379"
+    networks:
+      - app_network
 
-
-
-
-
-
-
+networks:
+  app_network:
+    driver: bridge
