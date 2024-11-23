@@ -1,3 +1,7 @@
 - verifier dans le back que le bon joueur a rejoint la partie
 - empecher 2 fis la meme touche
 
+- avec curl changement de nom _ parse
+- avec curl envoie dune requete sans jwt 
+- proteger mes gamesettings
+- changement de nom du user --> le faire aussi dans la friend list

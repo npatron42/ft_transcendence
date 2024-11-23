@@ -149,8 +149,6 @@ def findMatch(players):
     myLen = len(myMatches)
     while i < myLen:
         myPlayers = myMatches[i]["players"]
-        logger.info("players --> %s", players)
-        logger.info("myPlayers --> %s", myPlayers)
         if players[0] in myPlayers or players[1] in myPlayers:
             return myMatches[i]
         i += 1
@@ -325,7 +323,6 @@ async def sendNextStepToUsers(self, myWinners, myLosers, idTournament):
     los1 = myLosers[0]
     los2 = myLosers[1]
 
-    logger.info("win1, win2 --> %s, %s", win1, win2)
 
     myRealWinner1 = await getUserById(win1)
     myRealWinner2 = await getUserById(win2)
@@ -457,6 +454,7 @@ class Tournament(AsyncWebsocketConsumer):
             return
         elif type == "RESULTS":
             # FIND MATCH
+            logger.info("[TOURNAMENT CONSUMER] --> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -477,8 +475,8 @@ class Tournament(AsyncWebsocketConsumer):
                 tournamentMatchsEnded[idTournament] = value
 
                 matchsPlayed = tournamentMatchsEnded.get(idTournament)
-                logger.info("[TOURNAMENT CONSUMER] matchPlayed : %d", matchsPlayed)
                 ## FIRST MATCHS --> 
+
 
                 if whatMatch == "00":
                     myWinner = data["myWinner"]
@@ -488,12 +486,13 @@ class Tournament(AsyncWebsocketConsumer):
                     modifyMatchObjet(myPlayers, "loser", myLoser)
 
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
-                    logger.info("matchsPlayed --> %d", matchsPlayed)
                     if matchsPlayed == 2: ## MATCHS PLAYED
-                        logger.info("TWO MATCHES PLAYED --> %d", matchsPlayed)
                         tournamentMatchsEnded[idTournament] == 0
                         myWiners, myLosers = await createFinalMatch(idTournament)
+                        logger.info("WINNERS  ---> %s, LOSERS ---> %s", myWiners, myLosers)
                         await sendNextStepToUsers(self, myWiners, myLosers, idTournament)
+
+
                 if whatMatch == "final":
                     myTournamentWinner = data.get("myWinner")
                     myTournamentSecond = data.get("myLoser")
