@@ -12,7 +12,7 @@ const host = import.meta.env.VITE_HOST;
 
 export const setJwt = async (codeFromUrl) => {
 	try {
-		const response = await axios.post(`http://${host}:8000/oauth2/login/`, {
+		const response = await axios.post(`https://${location.host}/api/oauth2/login/`, {
 			code: codeFromUrl,
 		});
 
@@ -37,7 +37,7 @@ export const getUser = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/`, config);
 
 		// console.log("Response from getUser :", response.data);
 
@@ -57,7 +57,7 @@ export const postPicture = async (myData) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/uploadProfilePicture/`, myData, config);
+		const response = await axios.post(`https://${host}:4343/api/uploadProfilePicture/`, myData, config);
 
 		// console.log(response.data);
 
@@ -76,7 +76,7 @@ export const resetPicture = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/resetProfilePicture/`, {}, config);
+		const response = await axios.post(`https://${location.host}/api/resetProfilePicture/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
@@ -97,7 +97,7 @@ export const sendLangue = async (langue) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/changeLangue/`, { langue } , config);
+		const response = await axios.post(`https://${location.host}/api/changeLangue/`, { langue } , config);
 
 		console.log(response.data);
 
@@ -117,7 +117,7 @@ export const sendName = async (name) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/changeName/`, { name } , config);
+		const response = await axios.post(`https://${location.host}/api/changeName/`, { name } , config);
 
 		console.log(response.data);
 
@@ -137,7 +137,7 @@ export const sendMail = async (mail) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/changeMail/`, { mail } , config);
+		const response = await axios.post(`https://${location.host}/api/changeMail/`, { mail } , config);
 
 		console.log(response.data);
 
@@ -157,7 +157,7 @@ export const sendPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/changePass/`, { pass } , config);
+		const response = await axios.post(`https://${location.host}/api/changePass/`, { pass } , config);
 
 		console.log(response.data);
 
@@ -177,7 +177,7 @@ export const checkPass = async (pass) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/checkPass/`, { pass } , config);
+		const response = await axios.post(`https://${location.host}/api/checkPass/`, { pass } , config);
 
 		console.log(response.data);
 
@@ -198,7 +198,7 @@ export const getAllUsers = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/users/`, config);
+		const response = await axios.get(`https://${location.host}/api/users/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -216,7 +216,7 @@ export const getFriendsList = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/friendsList/`, config);
+		const response = await axios.get(`https://${location.host}/api/friendsList/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -234,7 +234,7 @@ export const getUserByUsername = async (username) => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/${username}/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/${username}/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -252,7 +252,7 @@ export const getUserFriendsListById = async (id) => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/friendsList/${id}/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/friendsList/${id}/`, config);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user data:", error);
@@ -269,7 +269,7 @@ export const getUsersList = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/usersList/`, config);
+		const response = await axios.get(`https://${location.host}/api/usersList/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -287,7 +287,7 @@ export const getGamesInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/gamesInvitations/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/gamesInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -305,7 +305,7 @@ export const getMatchHistory = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/matchHistory/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/matchHistory/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -323,7 +323,7 @@ export const getUserMatchHistory = async (username) => {
 			}
 		};
 
-		const response = await axios.get(`http://${host}:8000/api/user/matchHistory/${username}/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/matchHistory/${username}/`, config);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user's match history:", error);
@@ -341,7 +341,7 @@ export const getFriendsInvitations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/user/friendsInvitations/`, config);
+		const response = await axios.get(`https://${location.host}/api/user/friendsInvitations/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -362,7 +362,7 @@ export const getDiscussions = async (myData) => {
 		
 
 		console.log(`myData GD ---> `, myData)
-		const response = await axios.get(`http://${host}:8000/api/user/discussions/`, {
+		const response = await axios.get(`https://${location.host}/api/user/discussions/`, {
 			params: myData,
 			...config
 		});
@@ -386,7 +386,7 @@ export const postInvite = async (myData) => {
 			}
 		};
 		
-		const response = await axios.post(`http://${host}:8000/api/sendInvite/`, myData, config);
+		const response = await axios.post(`https://${location.host}/api/sendInvite/`, myData, config);
 
 		return response.data;
 	} catch (error) {
@@ -404,7 +404,7 @@ export const toggle2fa = async (dauth) => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/toggle2fa/`, { dauth } , config);
+		const response = await axios.post(`https://${location.host}/api/toggle2fa/`, { dauth } , config);
 
 		console.log(response.data);
 
@@ -425,7 +425,7 @@ export const getBlockedRelations = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/blockedUsers/`, config);
+		const response = await axios.get(`https://${location.host}/api/blockedUsers/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -443,7 +443,7 @@ export const getBlockedRelations2 = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/blockedUsers2/`, config);
+		const response = await axios.get(`https://${location.host}/api/blockedUsers2/`, config);
 
 		return response.data;
 	} catch (error) {
@@ -462,7 +462,7 @@ export const deleteProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/delProfile/`, {}, config);
+		const response = await axios.post(`https://${location.host}/api/delProfile/`, {}, config);
 
 		// console.log(response.data);
 		return(response.data);
@@ -481,7 +481,7 @@ export const recupProfil = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		const response = await axios.post(`http://${host}:8000/api/exportProfile/`, {}, config);
+		const response = await axios.post(`https://${location.host}/api/exportProfile/`, {}, config);
 
 		console.log(response.data);
 		return(response);
@@ -491,3 +491,7 @@ export const recupProfil = async () => {
 		throw error;
 	}
 };
+
+export function getMediaUrl(pic) {
+	return pic.startsWith('https') ? pic : `https://${location.host}/api/media/${pic}`;
+}

@@ -20,7 +20,7 @@ export const TournamentSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`ws://${host}:8000/ws/tournamentsConsumer/?token=${myJwt}`);
+        const socket = new WebSocket(`wss:////${location.host}/api/ws/tournamentsConsumer/?token=${myJwt}`);
         setSocket(socket);
 
         socket.onmessage = (event) => {
