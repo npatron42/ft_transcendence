@@ -492,14 +492,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if ball['y'] <= 0 + ball_radius or ball['y'] >= 600 - ball_radius:
 				direction['y'] *= -1
 
-			if ball['y'] >= 90 or ball['y'] <= 510:
-				if ball['x'] <= 40 or ball['x'] >= 860:
-					PongConsumer.paddles_pos[self.room_id]['right'] = ball['y']
-					# PongConsumer.paddles_pos[self.room_id]['left'] = ball['y']
-				else :
-					PongConsumer.paddles_pos[self.room_id]['right'] = ball['y']
-					# PongConsumer.paddles_pos[self.room_id]['left'] = ball['y']
-
 			if ball['y'] < 0 + ball_radius:
 				ball['y'] = 0 + ball_radius
 			if ball['y'] > 600 - ball_radius:
@@ -610,34 +602,71 @@ class PongConsumer(AsyncWebsocketConsumer):
 					)
 
 				#Win condition#
-			if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
+				if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
+					if PongConsumer.score[self.room_id]['player1'] >= max_score:
+						winner = PongConsumer.players[self.room_id][0]
+						winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
+					else:
+						winner = PongConsumer.players[self.room_id][1]
+						winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
 
-				if PongConsumer.score[self.room_id]['player1'] >= max_score:
-					winner = PongConsumer.players[self.room_id][0]
-					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
-				else:
-					winner = PongConsumer.players[self.room_id][1]
-					winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
+					PongConsumer.end[self.room_id] = True
+					if PongConsumer.isTournament[self.room_id] == False:
+						await self.channel_layer.group_send(
+							self.room_group_name,
+							{
+								'type': 'game_over',
+								'winner': winner,
+								'score': PongConsumer.score[self.room_id],
+								'idTournament': PongConsumer.idTournament[self.room_id]
+							}
+						)
 
-				PongConsumer.end[self.room_id] = True
+						p1_score = PongConsumer.score[self.room_id]['player1']
+						p2_score = PongConsumer.score[self.room_id]['player2']
+						p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
+						p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
+						if PongConsumer.send_db[self.room_id] == False:
+							await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
+							PongConsumer.send_db[self.room_id] = True
+						break
+					else:
+						if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
+							if PongConsumer.score[self.room_id]['player1'] >= max_score:
+								winner = PongConsumer.players[self.room_id][0]
+								winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
+							else:
+								winner = PongConsumer.players[self.room_id][1]
+								winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
+							logger.info("SENT TO %s", PongConsumer.players[self.room_id])
+							logger.info("Le ID TOURNOI --> %s", PongConsumer.idTournament[self.room_id])
+							await self.channel_layer.group_send(
+								self.room_group_name,
+								{
+									'type': 'game_over',
+									'winner': winner,
+									'score': PongConsumer.score[self.room_id],
+									'idTournament': PongConsumer.idTournament[self.room_id]
+								}
+							)
+							myWinner = PongConsumer.players[self.room_id][0]
+							myLoser = PongConsumer.players[self.room_id][1]
+						else:
+							myWinner = PongConsumer.players[self.room_id][1]
+							myLoser = PongConsumer.players[self.room_id][0]
 
-				await self.channel_layer.group_send(
-					self.room_group_name,
-					{
-						'type': 'game_over',
-						'winner': winner,
-						'score': PongConsumer.score[self.room_id]
-					}
-				)
-
-				p1_score = PongConsumer.score[self.room_id]['player1']
-				p2_score = PongConsumer.score[self.room_id]['player2']
-				p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
-				p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
-				if PongConsumer.send_db[self.room_id] == False:
-					await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
-					PongConsumer.send_db[self.room_id] = True
-				break
+						myPlayers = []
+						myPlayers.append(PongConsumer.players[self.room_id][0])
+						myPlayers.append(PongConsumer.players[self.room_id][1])
+						dataToSend = {
+							"type": "RESULTS",
+							"idTournament": PongConsumer.idTournament[self.room_id],
+							"myWinner": myWinner,
+							"myLoser": myLoser,
+							"score": PongConsumer.score[self.room_id],
+							"players": myPlayers,
+						}
+						await PongConsumer.sendData(self, self.room_id, dataToSend)
 
 				#send game state#
 			await self.channel_layer.group_send(
