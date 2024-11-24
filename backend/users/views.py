@@ -21,6 +21,11 @@ import jwt
 import logging
 import os
 import random
+from .utils import checkValidGameSettings
+from .utils import checkValidUsername
+from .utils import checkValidEmail
+from .utils import checkValidPassword
+
 
 logger = logging.getLogger(__name__)
 
@@ -473,6 +478,9 @@ def changeName(request):
     name = data.get('name')
     
 
+    if checkValidUsername(name) == False:
+        return JsonResponse({'error': 'Invalid data llll'}, status=400)
+    
     if User.objects.filter(username=name).exists():
         return JsonResponse({'success': False})
     
@@ -493,6 +501,9 @@ def changeMail(request):
     if User.objects.filter(email=mail).exists():
         return JsonResponse({'success': False})
     
+    if checkValidEmail(mail) == False:
+        return JsonResponse({'error': 'Invalid data'}, status=400)
+    
 
     user.email = mail
     user.save()
@@ -505,6 +516,9 @@ def checkPass(request):
     
     data = json.loads(request.body)
     password = data.get('pass')
+
+    if checkValidPassword(password) == False:
+        return JsonResponse({'error': 'Invalid data'}, status=400)
     
 
     if (password==user.password):
@@ -664,7 +678,7 @@ def getGameSettings(request):
     serializer = GameSettingsSerializer(gameSettings)
     return JsonResponse(serializer.data)
 
-#cets de la merde ?? 
+
 @csrf_exempt
 def updateGameSettings(request):
     if request.method == 'POST':
@@ -675,6 +689,15 @@ def updateGameSettings(request):
             gameSettings = GameSettings.objects.filter(user=user).first()
 
             data = json.loads(request.body)
+
+            if data.get('up') and data.get('down') and data.get('paddleSkin') and data.get('boardSkin') and data.get('ballSkin'):
+                logger.info("je suis la")
+                if checkValidGameSettings(data) == False:
+                    return JsonResponse({'error': 'Invalid data'}, status=400)
+            else:
+                logger.info("Invalid data")
+                return JsonResponse({'error': 'Invalid data'}, status=400)
+
             up = data.get('up')
             down = data.get('down')
             paddleSkin = data.get('paddleSkin')

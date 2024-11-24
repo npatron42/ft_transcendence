@@ -18,6 +18,7 @@ from django.utils import timezone
 from datetime import timedelta
 from oauth.views import setDefaultGameSettings
 from users.serializers import GameSettingsSerializer
+from users.utils import  checkValidUsername, checkValidEmail, checkValidPassword
 
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,6 @@ def loginPage(request):
         if user is not None:
 
             user = User.objects.get(username=username)
-            
             if user.dauth:
 
                 user.otp_code = ''.join(random.choices(string.digits, k=6))
@@ -80,6 +80,14 @@ def registerPage(request):
         email = data.get('email')
         password = data.get('password')
 
+        if checkValidEmail(email) == False or checkValidPassword(password) == False or checkValidUsername(username) == False:
+            return JsonResponse({
+                'success': False,
+                'username': checkValidUsername(username),
+                'email': checkValidEmail(email),
+                'password': checkValidPassword(password)
+            })
+        
         user = get_user_model()
 
         if user.objects.filter(username=username).exists():
