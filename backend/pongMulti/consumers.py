@@ -261,7 +261,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		myUser = self.scope["user"]
 		if hasattr(self, 'game_task'):
 			self.game_task.cancel()
-		logger.info("voici le is tournament %s", PongConsumer.isTournament[self.room_id])
 		if PongConsumer.isTournament[self.room_id] == False:
 			logger.info("je passe ici")
 			await self.channel_layer.group_discard(
@@ -306,12 +305,54 @@ class PongConsumer(AsyncWebsocketConsumer):
 			await removeClientFromUsers(self, myUser.username)
 			PongConsumer.players[self.room_id].remove(self.username)
 			return
+		
+		# DISCONNECTION INTO TOURNAMENTS
+
 		else:
-			logger.info("je passe la")
+
+
 			await self.channel_layer.group_discard(
 				self.room_group_name,
 				self.channel_name
 			)
+			if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.end[self.room_id] == False:
+				disconnected = self.username
+				player1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
+				player2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
+
+
+				if disconnected == PongConsumer.players[self.room_id][0]:
+					myWinner = PongConsumer.players[self.room_id][1]
+					myLoser = PongConsumer.players[self.room_id][0]
+					winnerdb = player2
+					logger.info("User disconnected -> %s, WINNER : %s", myUser.username, myWinner)
+				else:
+					myWinner = PongConsumer.players[self.room_id][0]
+					myLoser = PongConsumer.players[self.room_id][1]
+					winnerdb = player1
+					logger.info("User disconnected -> %s, WINNER : %s", myUser.username, myWinner)
+
+				await self.channel_layer.group_send(
+					self.room_group_name,
+					{
+						'type': 'game_over',
+						'winner': myWinner,
+						'score': PongConsumer.score[self.room_id]
+					}
+				)
+
+				myPlayers = []
+				myPlayers.append(PongConsumer.players[self.room_id][0])
+				myPlayers.append(PongConsumer.players[self.room_id][1])
+				dataToSend = {
+					"type": "RESULTS",
+					"idTournament": PongConsumer.idTournament[self.room_id],
+					"myWinner": myWinner,
+					"myLoser": myLoser,
+					"score": PongConsumer.score[self.room_id],
+					"players": myPlayers,
+				}
+				await PongConsumer.sendData(self, self.room_id, dataToSend)
 			await removeClientFromUsers(self, myUser.username)
 			PongConsumer.players[self.room_id].remove(self.username)
 			return

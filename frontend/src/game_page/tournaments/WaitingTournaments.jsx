@@ -24,6 +24,7 @@ const WaitingTournaments = () => {
     const [end, setEnd] = useState(false)
     const [winner, setWinner] = useState()
     const [second, setSecond] = useState()
+    const [tournamentIsCancelled, setTournamentCancelled] = useState(false)
 
     useEffect(() => {
 
@@ -112,6 +113,9 @@ const WaitingTournaments = () => {
             const winnerTmp = data.message["SECOND"]
             setWinner(winnerTmp)
             console.log("WinnerTmp --> ", winnerTmp)
+        }
+        if (data.message["CANCEL-TOURNAMENT"]) {
+            setTournamentCancelled(true)
         }
         };
 
@@ -265,7 +269,14 @@ const WaitingTournaments = () => {
             </div>
         )}
 
-
+        {!myTournament && !userIsLoser && !userIsWinner && end === false && (
+            <>
+                <div className="waitingNextMatch">
+                    <span className="finalists">Waiting for next match...</span>
+                <div className="loader"></div>
+                </div>
+            </>
+        )}
 
         {userIsLoser && end === false && (
             <div className="waitingTournament-full fadeIn">
@@ -352,6 +363,13 @@ const WaitingTournaments = () => {
                     </div>
                     </>
                 )}
+            </div>
+        )}
+        {tournamentIsCancelled === true && (
+            <div className="waitingTournament-full fadeIn">
+                <div className="bigHead">
+                    <span className="results">Tournament cancelled, please go HOME</span>
+                </div>
             </div>
         )}
 
