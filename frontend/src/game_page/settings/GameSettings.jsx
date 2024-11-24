@@ -11,9 +11,9 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
 
     if (!className) {
         return <div id="background-container">
-        <div className="loader"> 
+            <div className="loader">
+            </div>
         </div>
-    </div>
     }
 
     const handleNext = () => {
@@ -125,10 +125,26 @@ const GameSettings = () => {
     const handleKeyBindClick = (key) => {
         document.addEventListener("keydown", (event) => {
             if (key === "up") {
-                setKeyBind({ up: event.key, down: keyBind.down });
+                if (!checkKey(event.key)) {
+                    return;
+                }
+                if (event.key != keyBind.down) {
+                    setKeyBind({ up: event.key, down: keyBind.down });
+                }
+                else {
+                    return;
+                }
                 setIsCheckedUp(false);
             } else {
-                setKeyBind({ up: keyBind.up, down: event.key });
+                if (!checkKey(event.key)) {
+                    return;
+                }
+                if (event.key != keyBind.up) {
+                    setKeyBind({ up: keyBind.up, down: event.key });
+                }
+                else {
+                    return;
+                }
                 setIsCheckedDown(false);
             }
         });
@@ -140,10 +156,21 @@ const GameSettings = () => {
 
     if (!gameSettings) {
         return <div id="background-container">
-        <div className="loader"> 
+            <div className="loader">
+            </div>
         </div>
-    </div>
     }
+
+    const checkKey = (key) => {
+        const allowedKeys = [
+            "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+            ...Array.from("abcdefghijklmnopqrstuvwxyz"),
+            ...Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+            ...Array.from("0123456789"),
+        ];
+        return allowedKeys.includes(key);
+    };
+
 
     return (
         <div className="gameSettingsGlobalContainer">

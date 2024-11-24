@@ -1,6 +1,7 @@
 #!/bin/bash
 
-new_host=$(hostname | cut -d'.' -f1)
+# new_host=$(hostname | cut -d'.' -f1)
+new_host="localhost"
 
 env_files=(".env" "./frontend/.env" "./backend/.env")
 
