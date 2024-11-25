@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { useWebSocket } from '../provider/WebSocketProvider';
+// import { getMediaUrl } from '../api/api';
 import { useTournamentSocket } from '../provider/TournamentSocketProvider';
 
 import "./showTournaments.css"
@@ -65,7 +66,7 @@ export default function ShowTournaments() {
 				{myTournaments.map((tournament, index) => (
 					<div key={index} className="tournamentLine">
 						<div className="tournamentLine-picture">
-						<img src={getMediaUrl(tournament.players[0].profilePicture).startsWith('https') ? tournament.players[0].profilePicture : `https://${location.host}/api/media/${tournament.players[0].profilePicture}`} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
+						<img src={getMediaUrl(tournament.players[0].profilePicture)} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
 						</div>
 						<div className="tournamentLine-div">
 							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].username}</span>

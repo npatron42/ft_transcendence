@@ -6,11 +6,11 @@ import { useAuth } from '../provider/UserAuthProvider';
 import { getGamesInvitations, getFriendsInvitations } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
+import { getMediaUrl } from '../api/api';
 import Notifications from '../notifications/Notifications';
 import logo from "../assets/logos/transcendence-logo.png"
 import logoActive from "../assets/logos/transcendence-logo-active.png"
 import Chat from './Chat';
-
 import "./components.css"
 
 const host = import.meta.env.VITE_HOST;
@@ -59,7 +59,7 @@ function NavbarBS() {
       }
     };
 
-    const unsubscribe = subscribeToNotifs(handleNotif);
+    const unsubscribe = subscribeToNotifs(handleNotif)
 
     
     const initNotifs = async () => {
@@ -143,7 +143,7 @@ function NavbarBS() {
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
-                src={myUser.profilePicture.startsWith('https') ? myUser.profilePicture : `https://${location.host}/media/${myUser.profilePicture}`}
+                src={getMediaUrl(myUser.profilePicture)}
                 alt="Profile"
                 className="profile-picture-navbar"
                 onClick={handleProfile}

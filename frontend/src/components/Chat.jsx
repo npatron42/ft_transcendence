@@ -3,7 +3,7 @@ import "./chat.css"
 import React, { useEffect, useState, useRef } from 'react';
 import { useAuth } from "../provider/UserAuthProvider";
 import { useWebSocket } from '../provider/WebSocketProvider';
-import { getAllUsers } from "../api/api";
+import { getAllUsers, getMediaUrl } from "../api/api";
 import { useNavigate } from 'react-router-dom';
 import { getDiscussions, getFriendsList, getUsersList } from "../api/api";
 
@@ -268,7 +268,7 @@ function Chat() {
                                 {usersList && usersList.map((user) => (
                                     <div key={user.username} onClick={() => handleClickDiscuss(user)} className="friend-presentation">
                                         <div className="friend-separate">
-                                            <img src={user.profilePicture.startsWith('https') ? user.profilePicture : `https://${location.host}/api/media/${user.profilePicture}`} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
+                                            <img src={getMediaUrl(user.profilePicture)} alt={`${user.username}'s profile`} className="profile-picture-discuss"/>
                                         </div>
                                         <div className="friend-name">
                                             <span className="friend-name-center">{user.username}</span>
