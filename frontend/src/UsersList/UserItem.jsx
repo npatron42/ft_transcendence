@@ -25,7 +25,7 @@ function UserItem({ user, handleInvitation, chooseStatus}) {
                     {user.username}
                 </span>
             </td>
-			<td className="friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
+			<td className="friend-item.td"><span className={`status ${chooseStatus(user.id)}`}>{chooseStatus(user.id)}</span></td>
             <td className="friend-item.td">
                     <i className="bi bi-person-plus modifyTrash" onClick={() => handleInvitation(user)}></i>
             </td>

@@ -27,7 +27,6 @@ myRedirect = f"http://{myRedirect}:5173/check42user"
 class OAuthView(APIView):
     def post(self, request):
         code = request.data.get('code')
-        # logger.info("JE RECOIS BIEN LA REQUETE")
         if not code:
             return Response({"error": "Code is required"}, status=status.HTTP_401_UNAUTHORIZED)
         try:
@@ -94,7 +93,6 @@ def add42UserToDB(jsonFile):
 
 	newUser42 = UserSerializer(data=data42)
 	try:
-		logger.info("Adding User to DB")
 		newUser42.is_valid()
 		myReturnUser = newUser42.save()
 		setDefaultGameSettings(myReturnUser)
@@ -126,7 +124,6 @@ def setDefaultGameSettings (myUser: User):
 		"boardSkin": "defaultBoard",
 		"ballSkin": "defaultBall",
 	}
-	logger.info("Adding GameSettings to DB")
 	newSettings = GameSettingsSerializer(data=data)
 	try:
 		newSettings.is_valid()

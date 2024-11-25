@@ -121,10 +121,10 @@ const UsersFriendsList = () => {
         }
     };
 
-    const chooseStatus = (username) => {
-        if (socketMessage[username] === true)
+    const chooseStatus = (id) => {
+        if (socketMessage[id] === true)
             return ("online")
-        else if (socketMessage[username] === "in-game")
+        else if (socketMessage[id] === "in-game")
             return ("in-game")
         return ("offline")
     };

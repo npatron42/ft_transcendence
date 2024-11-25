@@ -39,9 +39,10 @@ async def sendToEveryClientsUsersList(channel_layer):
     size = len(socketsUsers)
     i = 0
     usersConnected = list(socketsUsers.keys())
+    logger.info("usersConnected --> %s", usersConnected)
     sockets = list(socketsUsers.values())
     while i < size:
-        myUser = await getUserByUsername(usersConnected[i])
+        myUser = await getUserById(usersConnected[i])
         myUsersList, myFriendsList, blockedUsers = await getFinalUsersListAndFriendsList(myUser)
         
         dataToSend = {
@@ -383,7 +384,6 @@ async def sendToClient(channel_layer, socket, message):
 
 
 async def findGameInvitationToErase(myUser):
-    logger.info("je passe icicicicicic")
     try:
         myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUser)
         myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
@@ -496,10 +496,11 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             mySocket = self.channel_name
             myUser = self.scope['user']
 
-            socketsUsers[myUser.username] = mySocket
+            idUser = str(myUser.id)
+            socketsUsers[idUser] = mySocket
 
             await addToPool(myUser, self.channel_name)
-            await changeUserStatus(myUser.username, True)
+            await changeUserStatus(idUser, True)
             await self.accept()
 
             await self.send_status_to_all()
@@ -515,17 +516,19 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         myUser = self.scope['user']
 
-        if myUser.username in socketsUsers:
-            del socketsUsers[myUser.username]
+        if myUser.id in socketsUsers:
+            del socketsUsers[myUser.id]
         pass
         
         myUser = await getUserById(myUser.id)
+
+        userId = str(myUser.id)
         await removeFromPool(myUser)
-        await changeUserStatus(myUser.username, False)
+        await changeUserStatus(userId, False)
         await self.channel_layer.group_discard("status_updates", self.channel_name)
 
         await self.send_status_to_all()
-        socketsUsers.pop(myUser.username, None)
+        socketsUsers.pop(userId, None)
         await update_user_status(myUser, "offline")
 
     
@@ -538,7 +541,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         data = json.loads(text_data);
 
         type = data["type"]
-        logger.info("MES WEBSOCKETS USERS ----> %s", data)
         myUser = self.scope["user"]
         # INVITE METHODE
         if (type == "INVITE"):

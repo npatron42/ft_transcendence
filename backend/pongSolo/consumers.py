@@ -129,7 +129,6 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 
 		if action == 'join':
 			if not hasattr(self, 'game_task'):
-				logger.info(f"ca part")
 				self.game_task = asyncio.create_task(self.update_ball(PongSoloConsumer.max_scores[self.room_id]))
 				PongSoloConsumer.players[self.room_id].append('player1')
 				PongSoloConsumer.players[self.room_id].append('player2')
@@ -245,7 +244,6 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 		direction['x'] = (direction['x'] / initial_magnitude) * speed
 		direction['y'] = (direction['y'] / initial_magnitude) * speed
 		initial_hypotenuse = math.sqrt(direction['x']**2 + direction['y']**2)
-		logger.info(f" hypotenuse de debbutu: {initial_hypotenuse}")
 
 
 		while True:
@@ -313,7 +311,6 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 				last_player = PongSoloConsumer.players[self.room_id][0]
 
 				new_hypotenuse2 = math.sqrt(direction['x']**2 + direction['y']**2)
-				logger.info(f"new hypotenuse: {new_hypotenuse2}")
 
 				# Colision paddle droite
 			right_paddle_y = PongSoloConsumer.paddles_pos[self.room_id]['right']
@@ -334,7 +331,6 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 				last_player = PongSoloConsumer.players[self.room_id][1]
 
 				new_hypotenuse2 = math.sqrt(direction['x']**2 + direction['y']**2)
-				logger.info(f"new hypotenuse: {new_hypotenuse2}")
 
 				#Colision power up#
 			if PongSoloConsumer.power_up_visible[self.room_id] == True:
@@ -540,11 +536,9 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 		await asyncio.sleep(20)
 		PongSoloConsumer.power_up_active[self.room_id] = False
 		await self.reset_effect()
-		logger.info("Power up effect reset")
 
 	
 	async def reset_effect(self):
-		logger.info("Reset effect")
 		PongSoloConsumer.paddle_left_height[self.room_id] = 90
 		PongSoloConsumer.paddle_right_height[self.room_id] = 90
 		PongSoloConsumer.inversed_controls[self.room_id] = [False, False]

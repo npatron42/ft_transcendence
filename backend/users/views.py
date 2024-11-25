@@ -99,6 +99,9 @@ def getMatchHistory(request):
         i += 1
     return JsonResponse(result, safe=False)
 
+
+
+
 def getMatchHistoryByUsername(request, username):
     myUser = User.objects.filter(username=username).first()
 
@@ -129,7 +132,6 @@ def getMatchHistoryByUsername(request, username):
         }
         result.append(dataToSend)
         i += 1
-    logger.info(result)
     return JsonResponse(result, safe=False)
 
 
@@ -282,7 +284,6 @@ def getDiscussions(request):
         ### FRIENDS LIST ###
 
 def getUserFriendsListById(request, id):
-    logger.info("ICCCCCCCCCCCCCIIIII LE USER")
     myUser = User.objects.filter(id=id).first()
     if not myUser:
         return JsonResponse({"error": "User not found"}, status=404)
@@ -295,8 +296,6 @@ def getUserFriendsListById(request, id):
 
     usernamesBlocked = getUsernamesBlocked(request)
     tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
-
-    logger.info("ICCCCCCCCCCCCCIIIII LE TAB %s", tabFriends)
 
     return JsonResponse(tabFriends, safe=False)
 
@@ -589,9 +588,6 @@ def deleteProfile(request):
             password = f"{random_number}"
         if not User.objects.filter(username=name).exists():
             break
-    
-    logger.info("new user -------> %s", user)
-    logger.info("new mdp -------> %s ", user.password)
     user.sup = True
     user.username = name
     user.profilePicture = 'default.jpg'
@@ -608,7 +604,6 @@ def exportProfile(request):
     payload = middleWareAuthentication(request)
     user = User.objects.filter(id = payload['id']).first()
     
-    logger.info("requete =======>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> %s", request)
     
     user_data = {
         "username": user.username,
@@ -649,16 +644,13 @@ def exportProfile(request):
         "messages_received": messages_received,
         "match_history": match_history,
     }
-    logger.info("test ----->>>> %s", full_data)
 
     return JsonResponse(full_data, json_dumps_params={'indent': 2})
 
 
 
 def getGameSettings(request):
-    logger.info("getGameSettings")
     payload = middleWareAuthentication(request)
-    logger.info("payload %s", payload)
     user = User.objects.filter(id = payload['id']).first()
     gameSettings = GameSettings.objects.filter(user=user).first()
     serializer = GameSettingsSerializer(gameSettings)
@@ -681,7 +673,6 @@ def updateGameSettings(request):
             boardSkin = data.get('boardSkin')
             ballSkin = data.get('ballSkin')
             
-            logger.info("keyBind %s", data)
             if gameSettings:
                 gameSettings.up = up
                 gameSettings.down = down
