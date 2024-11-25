@@ -262,7 +262,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 		if hasattr(self, 'game_task'):
 			self.game_task.cancel()
 		if PongConsumer.isTournament[self.room_id] == False:
-			logger.info("je passe ici")
 			await self.channel_layer.group_discard(
 				self.room_group_name,
 				self.channel_name
@@ -325,12 +324,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 					myWinner = PongConsumer.players[self.room_id][1]
 					myLoser = PongConsumer.players[self.room_id][0]
 					winnerdb = player2
-					logger.info("User disconnected -> %s, WINNER : %s", myUser.username, myWinner)
 				else:
 					myWinner = PongConsumer.players[self.room_id][0]
 					myLoser = PongConsumer.players[self.room_id][1]
 					winnerdb = player1
-					logger.info("User disconnected -> %s, WINNER : %s", myUser.username, myWinner)
 
 				await self.channel_layer.group_send(
 					self.room_group_name,

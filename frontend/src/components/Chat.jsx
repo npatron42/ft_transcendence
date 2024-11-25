@@ -118,10 +118,10 @@ function Chat() {
     }, [subscribeToMessages, subscribeToStatus, socketUser, userSelected, myDiscuss]);
 
 
-    const chooseStatus = (username) => {
-        if (usersStatus[username] === true)
+    const chooseStatus = (id) => {
+        if (usersStatus[id] === true)
             return ("online")
-        else if (usersStatus[username] === "in-game")
+        else if (usersStatus[id] === "in-game")
             return ("in-game")
         return ("offline")
     };
@@ -380,7 +380,7 @@ function Chat() {
                                 <span onClick={() => handleProfile()} className="header-discuss-name-custom">{userSelected.username}</span>
                             </div>
                             <div className="header-status">
-                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
+                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.id)}`}></i>
                             </div>
                         </div>
                         <div className="core-discussion">
