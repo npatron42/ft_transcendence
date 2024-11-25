@@ -149,7 +149,7 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     }, []);
 
     useEffect(() => {
-        const ws = new WebSocket(`ws://${host}:8000/ws/pongSolo/${roomId}/?token=${myJwt}`);
+        const ws = new WebSocket(`wss://${location.host}/ws/pongSolo/${roomId}/?token=${myJwt}`);
 
         if (myUser) {
             ws.onopen = () => {
