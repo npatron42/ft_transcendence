@@ -86,8 +86,11 @@ async def save_match(winner, player1, player2, player2_score, player1_score, com
 	except Exception as e:
 		logger.error("Erreur lors de la sauvegarde du match: %s", e)
 
-async def getUserByUsername(name):
-	return await sync_to_async(User.objects.get)(username=name)
+async def getUserById(id):
+	return await sync_to_async(User.objects.get)(id=id)
+
+async def getUserByUsername(username):
+	return await sync_to_async(User.objects.get)(username=username)
 
 		############
 		# CONSUMER #
@@ -270,9 +273,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 			)
 
 			if len(PongConsumer.players[self.room_id]) == 2:
-				disconnected = self.username
-				player1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
-				player2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
+				logger.info("sel username %s", self.username)
+				logger.info("self id %s", self.id)
+				disconnected = self.id
+				player1 = await getUserById(PongConsumer.players[self.room_id][0])
+				player2 = await getUserById(PongConsumer.players[self.room_id][1])
 
 
 				if disconnected == PongConsumer.players[self.room_id][0]:
@@ -291,7 +296,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 					self.room_group_name,
 					{
 						'type': 'game_over',
-						'winner': winner,
+						'winner': winnerdb.username,
 						'score': PongConsumer.score[self.room_id]
 					}
 				)
@@ -304,7 +309,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				}
 				await sendToShareSocket(self, dataToSend)
 			await removeClientFromUsers(self, myUser.username)
-			PongConsumer.players[self.room_id].remove(self.username)
+			PongConsumer.players[self.room_id].remove(self.id)
 			return
 		else:
 			logger.info("je passe la")
@@ -313,7 +318,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.channel_name
 			)
 			await removeClientFromUsers(self, myUser.username)
-			PongConsumer.players[self.room_id].remove(self.username)
+			PongConsumer.players[self.room_id].remove(self.id)
 			return
 		
 		
@@ -324,23 +329,25 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def receive(self, text_data):
 		data = json.loads(text_data)
 		action = data.get('action', '')
-		user_name = data.get('name', None)
+		playerId = data.get('id', None)
 
 
 		myUser = self.scope["user"]
 
-		if user_name:
-			self.username = user_name
+		if playerId:
+			self.id = playerId
+			tmpUser = await getUserById(playerId)
+			self.username = tmpUser.username
 			if self.room_id in PongConsumer.invited_players:
 				invited_player = PongConsumer.invited_players[self.room_id]
 
-				if user_name != invited_player:
+				if playerId != invited_player:
 					await self.close()
 					return
 			
 
-			if user_name not in PongConsumer.players[self.room_id]:
-				PongConsumer.players[self.room_id].append(user_name)
+			if playerId not in PongConsumer.players[self.room_id]:
+				PongConsumer.players[self.room_id].append(playerId)
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
@@ -354,6 +361,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 					PongConsumer.matchIsPlayed[self.room_id] = True
 
 		if action == 'set_max_score':
+			logger.info("Max score set to %s", data.get('maxScore'))
 			if self.room_id in PongConsumer.max_scores:
 				logger.warning(f"Le max_score ne peut pas être réinitialisé après le début du jeu pour la room {self.room_id}")
 				await self.channel_layer.group_send(
@@ -386,15 +394,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 			)
 
 		if action in ['paddleup', 'paddledown']:
-			if hasattr(self, 'username') and self.username in PongConsumer.players[self.room_id]:
-				player_index = PongConsumer.players[self.room_id].index(self.username)
+			if hasattr(self, 'id') and self.id in PongConsumer.players[self.room_id]:
+				player_index = PongConsumer.players[self.room_id].index(self.id)
 				if player_index == 0:
 					side = 'left' 
 				else: 
 					side = 'right'
 				self.move_paddle(action, side)
 			else:
-				logger.warning(f"Action reçue pour un utilisateur non enregistré: {self.username}")
+				logger.warning(f"Action reçue pour un utilisateur non enregistré: {self.id}")
 
 		await self.channel_layer.group_send(
 			self.room_group_name,
@@ -591,10 +599,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 				if PongConsumer.score[self.room_id]['player1'] >= max_score or PongConsumer.score[self.room_id]['player2'] >= max_score:
 					if PongConsumer.score[self.room_id]['player1'] >= max_score:
 						winner = PongConsumer.players[self.room_id][0]
-						winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][0])
+						winnerdb = await getUserById(PongConsumer.players[self.room_id][0])
 					else:
 						winner = PongConsumer.players[self.room_id][1]
-						winnerdb = await getUserByUsername(PongConsumer.players[self.room_id][1])
+						winnerdb = await getUserById(PongConsumer.players[self.room_id][1])
 
 					PongConsumer.end[self.room_id] = True
 					if PongConsumer.isTournament[self.room_id] == False:
@@ -602,7 +610,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 							self.room_group_name,
 							{
 								'type': 'game_over',
-								'winner': winner,
+								'winner': winnerdb.username,
 								'score': PongConsumer.score[self.room_id],
 								'idTournament': PongConsumer.idTournament[self.room_id]
 							}
@@ -610,8 +618,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 						p1_score = PongConsumer.score[self.room_id]['player1']
 						p2_score = PongConsumer.score[self.room_id]['player2']
-						p2 = await getUserByUsername(PongConsumer.players[self.room_id][1])
-						p1 = await getUserByUsername(PongConsumer.players[self.room_id][0])
+						p2 = await getUserById(PongConsumer.players[self.room_id][1])
+						p1 = await getUserById(PongConsumer.players[self.room_id][0])
 						if PongConsumer.send_db[self.room_id] == False:
 							await save_match(winnerdb, p1, p2, p2_score, p1_score, True)
 							PongConsumer.send_db[self.room_id] = True

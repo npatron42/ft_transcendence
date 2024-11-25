@@ -9,6 +9,7 @@ import GoalChart from './GoalChart';
 import './viewProfile.css';
 import HistoryItem from '../components/HistoryItem';
 import FriendItem from '../UsersList/FriendItem';
+import { useTranslation } from 'react-i18next';
 
 function ViewProfile() {
     const navigate = useNavigate();
@@ -22,6 +23,7 @@ function ViewProfile() {
     const [itsFriend, setItsFriend] = useState(false);
     const [goalsConceded, setGoalsConceded] = useState(0);
     const [goalsScored, setGoalsScored] = useState(0);
+    const { t } = useTranslation();
 
     useEffect(() => {
         const handleSocketMessage = (message) => {
@@ -167,32 +169,36 @@ function ViewProfile() {
                         <div className="margin-card"></div>
                         <p className="name">{profileUser.username}</p>
                         <div className="follow-info row">
+                        <p className="info-profile">{t('viewProfile.stats')} </p>
                             <div className="col-md-6">
-                                <p className="info-profile">Match : {nbMatch}</p>
+                                <p className="info-profile">{t('viewProfile.matchWin')} {nbMatch}</p>
                             </div>
                             <div className="col-md-6">
-                                <p className="info-profile">Tournament : {nbMatch}</p>
+                                <p className="info-profile">{t('viewProfile.tournamentsWin')} {nbMatch}</p>
                             </div>
+                        </div>
+                        <div className="follow-info row">
+                            <p className="info-profile">{t('viewProfile.infomations')}</p>
                             <div className="col-md-6">
-                                <p className="info-profile">Friends : {friendsList.length}</p>
+                                <p className="info-profile">{t('viewProfile.friends')} {friendsList.length}</p>
                             </div>
                             <div className="col-md-6">
                                 <p className="info-profile" style={{ color: statusColor[profileUser.status] || "white" }}
-                                > Status : {profileUser.status} </p>
+                                > {t('viewProfile.status')}{profileUser.status} </p>
                             </div>
                         </div>
                         <div className="button-container">
                             {!itsFriend ? (
                                 <button onClick={handleInvitation} className="invite-button">
-                                    <i className="bi bi-person-plus"></i> ADD
+                                    <i className="bi bi-person-plus"></i> {t('viewProfile.addFriend')}
                                 </button>
                             ) : (
                                 <>
                                     <button onClick={() => deleteFriend(profileUser)} className="invite-button">
-                                        <i className="bi bi-trash3 "></i> DELETE
+                                        <i className="bi bi-trash3 "></i> {t('viewProfile.deleteFriend')}
                                     </button>
                                     <button onClick={() => handlePlay(profileUser)} className="invite-button">
-                                        <i className="bi bi-controller"></i> PLAY
+                                        <i className="bi bi-controller"></i> {t('viewProfile.play')}
                                     </button>
                                 </>
                             )}
@@ -203,7 +209,7 @@ function ViewProfile() {
                         <div className="matchHistory-content-profile2">
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
-                                    {username} has not played a match
+                                    {username} {t('viewProfile.noMatch')}
                                 </div>
                             ) : (
                                 <div className="chart-container">
@@ -216,7 +222,7 @@ function ViewProfile() {
                         <div className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
-                                    {username} has not played a match
+                                    {username} {t('viewProfile.noMatch')}
                                 </div>
                             ) : (
                                 matchHistory.slice().reverse().map((match) => (

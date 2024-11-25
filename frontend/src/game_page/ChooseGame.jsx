@@ -10,6 +10,7 @@ import './css/tournament.css';
 import Button from 'react-bootstrap/Button';
 import ShowTournaments from '../components/showTournaments';
 import "../home_page/HomeCadre.css"
+import { useTranslation } from 'react-i18next';
 
 const ChooseGame = () => {
     const [joinIsClicked, setJoinIsClicked] = useState(true)
@@ -19,6 +20,7 @@ const ChooseGame = () => {
     const idTournament = uuidv4();
     const isTournament = false
     const [powerUp, setPowerUp] = useState(false);
+    const { t } = useTranslation();
 
     const handleSoloClick = () => {
         const roomId = uuidv4();
@@ -60,30 +62,30 @@ const ChooseGame = () => {
     return (
         <div id="ChooseGame">
             {joinIsClicked === true && (
-                <div className="row">
+                <div className="rowContainer">
                     <div className="col-md-4 mb-3">
                         <div className="flip-card">
                             <div className="flip-card-inner">
                                 <div className="flip-card-front">
                                     <div className="flip-card-content">
-                                        <p className="title2">Solo</p>
-                                        <p>Play Alone</p>
+                                        <p className="title2">{t('chooseGame.soloTitle')}</p>
+                                        <p>{t('chooseGame.soloDesc')}</p>
                                     </div>
                                 </div>
                                 <div className="flip-card-back">
                                     <div className="flip-card-content">
-                                        <p className="title2">Settings</p>
+                                        <p className="title2">{t('chooseGame.settings')}</p>
 
                                         <Button
                                             type="button"
                                             variant={powerUp ? "success" : "danger"}
                                             onClick={handlePowerUp}
                                         >
-                                            Power Up
+                                            {t('chooseGame.powerUp')}
                                         </Button>
 
                                         <div className="slider-container">
-                                            <label htmlFor="maxScoreSolo">Max Score: {maxScore}</label>
+                                            <label htmlFor="maxScoreSolo">{t('chooseGame.scoreMax')} {maxScore}</label>
                                             <input
                                                 type="range"
                                                 id="maxScoreSolo"
@@ -95,7 +97,7 @@ const ChooseGame = () => {
                                                 className="form-range"
                                             />
                                         </div>
-                                        <button className="createJoinButton" onClick={handleSoloClick}>Lancer le jeu</button>
+                                        <button className="createJoinButton" onClick={handleSoloClick}>{t('chooseGame.start')}</button>
                                     </div>
                                 </div>
                             </div>
@@ -108,24 +110,24 @@ const ChooseGame = () => {
                             <div className="flip-card-inner">
                                 <div className="flip-card-front">
                                     <div className="flip-card-content">
-                                        <p className="title2">Multi</p>
-                                        <p>Play with Others</p>
+                                        <p className="title2">{t('chooseGame.multiTitle')}</p>
+                                        <p>{t('chooseGame.multiDesc')}</p>
                                     </div>
                                 </div>
                                 <div className="flip-card-back">
                                     <div className="flip-card-content">
-                                        <p className="title2">Settings</p>
+                                    <p className="title2">{t('chooseGame.settings')}</p>
 
                                         <Button
                                             type="button"
                                             variant={powerUp ? "success" : "danger"}
                                             onClick={handlePowerUp}
                                         >
-                                            Power Up
+                                            {t('chooseGame.powerUp')}
                                         </Button>
 
                                         <div className="slider-container">
-                                            <label htmlFor="maxScoreMulti">Max Score: {maxScore}</label>
+                                            <label htmlFor="maxScoreMulti">{t('chooseGame.scoreMax')} {maxScore}</label>
                                             <input
                                                 type="range"
                                                 id="maxScoreMulti"
@@ -137,7 +139,7 @@ const ChooseGame = () => {
                                                 className="form-range"
                                             />
                                         </div>
-                                        <button className="createJoinButton" onClick={handleMultiClick}>Lancer le jeu</button>
+                                        <button className="createJoinButton" onClick={handleMultiClick}>{t('chooseGame.start')}</button>
                                     </div>
                                 </div>
                             </div>
@@ -150,14 +152,14 @@ const ChooseGame = () => {
                             <div className="flip-card-inner">
                                 <div className="flip-card-front">
                                     <div className="flip-card-content">
-                                        <p className="title2">Tournament</p>
-                                        <p>Create / Join</p>
+                                        <p className="title2">{t('chooseGame.tournoiTitle')}</p>
+                                        <p>{t('chooseGame.tournoiDesc')}</p>
                                     </div>
                                 </div>
                                 <div className="flip-card-back">
                                     <div className="flip-card-content">
-                                        <button className="createJoinButton" onClick={() => handleCreateTournaments()}>CREATE</button>
-                                        <button className="createJoinButton" onClick={() => handleJoinButton()}>JOIN</button>
+                                        <button className="createJoinButton" onClick={() => handleCreateTournaments()}>{t('chooseGame.tournoiCreate')}</button>
+                                        <button className="createJoinButton" onClick={() => handleJoinButton()}>{t('chooseGame.tournoiJoin')}</button>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +172,7 @@ const ChooseGame = () => {
             )}
             {joinIsClicked === true && (
             <div className="settings-container">
-                <button className="createJoinButton" onClick={() => navigate('/game-settings')}>Settings</button>
+                <button className="createJoinButton" onClick={() => navigate('/game-settings')}>{t('chooseGame.settings')}</button>
             </div>
             )}
         </div>

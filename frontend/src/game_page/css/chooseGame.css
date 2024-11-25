@@ -230,7 +230,7 @@
     color: #5E6472 !important;
 }
 
-.row {
+.rowContainer {
     display: flex;
     justify-content: center;
     align-items: center;
