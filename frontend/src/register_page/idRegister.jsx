@@ -49,7 +49,7 @@ function idRegister() {
 			setErrors(newErrors);
 			return;
 		}
-		const response = await axios.post(`http://${host}:8000/auth/register/`, {
+		const response = await axios.post(`https://${location.host}/api/auth/register/`, {
 			username,
 			email,
 			password

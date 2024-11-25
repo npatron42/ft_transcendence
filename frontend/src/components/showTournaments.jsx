@@ -1,11 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
-import { useWebSocket } from '../provider/WebSocketProvider';
+import { getMediaUrl } from '../api/api'
 import { useTournamentSocket } from '../provider/TournamentSocketProvider';
 
 import "./showTournaments.css"
 
-function ShowTournaments() {
+export default function ShowTournaments() {
 
 	const [myTournaments, setTournaments] = useState([])
 	const {tournamentSocket, subscribeToTournaments} = useTournamentSocket()
@@ -15,7 +15,7 @@ function ShowTournaments() {
         const handleSocketTournament = (data) => {
 			if (data.message["allTournaments"]) {
 				setTournaments(data.message["allTournaments"]);
-				console.log("MES TOURNOIS --> ", data.message["allTournaments"])
+				console.log(data.message["allTournaments"])
             }
         };
 
@@ -66,7 +66,7 @@ function ShowTournaments() {
 				{myTournaments.map((tournament, index) => (
 					<div key={index} className="tournamentLine">
 						<div className="tournamentLine-picture">
-						<img src={tournament.players[0].profilePicture.startsWith('http') ? tournament.players[0].profilePicture : `http://localhost:8000/media/${tournament.players[0].profilePicture}`} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
+							<img src={getMediaUrl(tournament.players[0].profilePicture)} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
 						</div>
 						<div className="tournamentLine-div">
 							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].username}</span>
@@ -102,5 +102,3 @@ function ShowTournaments() {
 		</div>
   	);
 }
-
-export default ShowTournaments

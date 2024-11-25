@@ -181,8 +181,8 @@ async def removeFriend(parse_value):
         pass
 
 
-async def getFriendsListByUsername(username):
-    user = await sync_to_async(User.objects.get)(username=username)
+async def getFriendsListById(myId):
+    user = await sync_to_async(User.objects.get)(id=myId)
     friends_relationships = await sync_to_async(lambda: list(
         FriendsList.objects.filter(Q(user1=user) | Q(user2=user))
     ))()
@@ -780,7 +780,7 @@ async def getUsersList(myUser):
     return allUsers
 
 async def getFriendsList(myUser):
-    friendsListTmp = await getFriendsListByUsername(myUser.username)
+    friendsListTmp = await getFriendsListById(myUser.id)
     friendsListSer = FriendsListSerializer(friendsListTmp, many=True)
     friendsList = friendsListSer.data
 

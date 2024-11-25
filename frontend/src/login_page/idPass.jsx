@@ -30,7 +30,7 @@ function IdPass() {
         setIsLoading(true);
         
         try {
-            const response = await axios.post(`http://${host}:8000/auth/login/`, {
+            const response = await axios.post(`https://${host}:4343/api/auth/login/`, {
                 username,
                 password
             });
@@ -64,7 +64,7 @@ function IdPass() {
     const handleOtpSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`http://${host}:8000/auth/verif/`, {
+            const response = await axios.post(`https://${location.host}/api/auth/verif/`, {
                 otp,
                 username
             });
