@@ -277,8 +277,9 @@
     background-color: #161719;
     border-bottom: solid 3px #000000;
     border-radius: 20px;
-    bottom: 40vh;
-    left: 74vh;
+    position: fixed;
+    bottom: 750px;
+    left: 1605px;
     height: 35px;
     padding: 5px 20px;
     z-index: 5;

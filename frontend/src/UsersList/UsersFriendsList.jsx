@@ -54,6 +54,7 @@ const UsersFriendsList = () => {
         for (let i = 0; i < allUsers.length; i++) {
             const username = allUsers[i].username;
             const hisStatus = allUsers[i].status;
+            const id = allUsers[i].id;
             let hisStatusTmp;
 
             if (hisStatus === "online")
@@ -62,7 +63,7 @@ const UsersFriendsList = () => {
                 hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
-            myResult[username] = hisStatusTmp;
+            myResult[id] = hisStatusTmp;
         }
         setSocketMessage(myResult);
     }
@@ -96,10 +97,11 @@ const UsersFriendsList = () => {
             setIsInviting(true);
             const data = {
                 type: "INVITE",
-                invitationFrom: myUser.username,
-                to: userInvited.username,
-                parse: myUser.username + "|" + userInvited.username
+                invitationFrom: myUser.id,
+                to: userInvited.id,
+                parse: myUser.id + "|" + userInvited.id
             };
+            console.log("data --> ", data)
             socketUser.send(JSON.stringify(data));
             setIsInviting(false);
         } else {
@@ -111,9 +113,9 @@ const UsersFriendsList = () => {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
                 type: "DELETE",
-                userWhoDelete: myUser.username,
-                userDeleted: userDeleted.username,
-                parse: myUser.username + "|" + userDeleted.username
+                userWhoDelete: myUser.id,
+                userDeleted: userDeleted.id,
+                parse: myUser.id + "|" + userDeleted.id
             };
             socketUser.send(JSON.stringify(data));
         } else {

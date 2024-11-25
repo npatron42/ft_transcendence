@@ -15,6 +15,7 @@ function ShowTournaments() {
         const handleSocketTournament = (data) => {
 			if (data.message["allTournaments"]) {
 				setTournaments(data.message["allTournaments"]);
+				console.log("MES TOURNOIS --> ", data.message["allTournaments"])
             }
         };
 

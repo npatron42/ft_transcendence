@@ -134,7 +134,7 @@ function Chat() {
         const allUsers = await getAllUsers();
         const myResult = []
         for (let i = 0; i < allUsers.length; i++) {
-            const username = allUsers[i].username;
+            const id = allUsers[i].id;
             const hisStatus = allUsers[i].status;
             let hisStatusTmp;
 
@@ -144,7 +144,7 @@ function Chat() {
                 hisStatusTmp = "in-game"
             else
                 hisStatusTmp = false
-            myResult[username] = hisStatusTmp;
+            myResult[id] = hisStatusTmp;
         }
         setUsersStatus(myResult);
     }

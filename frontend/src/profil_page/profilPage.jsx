@@ -15,6 +15,7 @@ import ButtonBlockedUsers from './buttonBlockedUsers.jsx';
 import { useWebSocket } from '../provider/WebSocketProvider.jsx';
 import { useAuth } from '../provider/UserAuthProvider.jsx';
 import { getBlockedRelations2 } from '../api/api.js';
+import NavbarBS from '../components/Navbar.jsx'
 
 function profilPage() {
 
@@ -50,6 +51,7 @@ function profilPage() {
 	<div id="background-container">
 		{/* <div className="custom-cadre-pic"></div> */}
 		{/* <div className="custom-cadre-change"></div> */}
+		<NavbarBS />
 		<Upload />
 		<Image />
 		<Del />

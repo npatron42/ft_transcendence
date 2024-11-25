@@ -47,6 +47,8 @@ function Languages() {
 
 	};
 	
+	console.log("TEST")
+
 	return (
 	  <div>
 		<img 
