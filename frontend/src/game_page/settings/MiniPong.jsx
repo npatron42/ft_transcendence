@@ -85,7 +85,6 @@ export const MiniPong = ({ paddleSkin, boardSkin, ballSkin }) => {
     useBallMovement(boardRef, ballPos, setBallPos, ballDir, setBallDir, paddleLeftPos, paddleRightPos, setLastPaddle);
 
     useEffect(() => {
-        console.log("MiniPong props updated:", { paddleSkin, boardSkin, ballSkin });
     }, [paddleSkin, boardSkin, ballSkin]);
 
     return (

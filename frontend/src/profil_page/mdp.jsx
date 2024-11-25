@@ -50,8 +50,6 @@ function Mdp({Actif, setActif}) {
           setOldPassword('');
 				} else if (response.success === false) {
 					setErrorMessage("profilPage.errorPass");
-				} else {
-					console.log("marche pas");
 				}
 			} catch (error) {
 				console.log('Failed user');

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import "./countdown.css"
 
 const CountdownToHome = () => {
-	const [seconds, setSeconds] = useState(1);
+	const [seconds, setSeconds] = useState(5);
 	const navigate = useNavigate();
 
   useEffect(() => {

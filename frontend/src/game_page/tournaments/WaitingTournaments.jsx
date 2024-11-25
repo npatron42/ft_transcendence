@@ -105,15 +105,12 @@ const WaitingTournaments = () => {
             setEnd(true)
             const secondTmp = data.message["WINNER"]
             setSecond(secondTmp)
-            console.log("tmp --> ", secondTmp["WINNER"])
-            console.log("secondTmp --> ", secondTmp)
         }
 
         if (data.message["SECOND"]) {
             setEnd(true)
             const winnerTmp = data.message["SECOND"]
             setWinner(winnerTmp)
-            console.log("WinnerTmp --> ", winnerTmp)
         }
         if (data.message["CANCEL-TOURNAMENT"]) {
             setTournamentCancelled(true)
@@ -127,9 +124,6 @@ const WaitingTournaments = () => {
         };
 
     }, [subscribeToTournaments, tournamentSocket]);
-
-
-    console.log("idTournament ---> ", idTournament)
 
 
   return (

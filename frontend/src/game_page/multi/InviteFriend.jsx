@@ -10,7 +10,6 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
 
     const { myUser } = useAuth();
 
-    console.log("mes ifomations", roomId);
     const roomIdStr = roomId.roomId;
     const InviteFriendGame = () => {
         const dataToSend = {
@@ -19,7 +18,6 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
 			"userInvited": user,
 			"roomId": roomIdStr
 		}
-        console.log("InviteFriendGame", dataToSend);
         socketUser.send(JSON.stringify(dataToSend));
         setIsInviting(true);
         return;

@@ -2,6 +2,8 @@ import { Pie } from 'react-chartjs-2';
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import './viewProfile.css';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 Chart.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
@@ -20,6 +22,8 @@ const calculateWinLossRatio = (matchHistory) => {
 
 function WinLossChart({ matchHistory }) {
     const { wins, losses } = calculateWinLossRatio(matchHistory);
+    const { t } = useTranslation();
+    const [textPercent] = useState(t('viewProfile.percent'));
 
     const data = {
         datasets: [
@@ -43,7 +47,7 @@ function WinLossChart({ matchHistory }) {
             },
             title: {
                 display: true,
-                text: 'Percent of Win',
+                text: textPercent,
                 font: {
                     family: 'Millimetre-Light',
                     size: 16,

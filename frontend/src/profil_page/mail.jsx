@@ -38,8 +38,6 @@ function mail({Actif, setActif}) {
 					setErrorMessage('');
 				}else if (response.success === false) {
 					setErrorMessage("profilPage.errorMail");
-				} else {
-					console.log("marche pas");
 				}
 			} catch (error) {
 				console.log('Failed mail');

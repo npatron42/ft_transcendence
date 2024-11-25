@@ -2,10 +2,12 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/winComp.css';
 import './css/chooseGame.css';
+import {useTranslation} from 'react-i18next';
 
 
 export const WinComp = ({ winner }) => {
     const navigate = useNavigate();
+    const { t } = useTranslation();
 
     const handleMenuClick = () => {
         navigate('/chooseGame');
@@ -21,7 +23,7 @@ export const WinComp = ({ winner }) => {
                     </div>
                     <div className="flip-card-back">
                         <div className="flip-card-content">
-                            <button className="start-game" onClick={handleMenuClick}>Return to menu</button>
+                            <button className="start-game" onClick={handleMenuClick}>{t('game.menu')} </button>
                         </div>
                     </div>
                 </div>

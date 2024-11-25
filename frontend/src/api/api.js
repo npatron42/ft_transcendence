@@ -18,8 +18,6 @@ export const setJwt = async (codeFromUrl) => {
 
 		if (response.data.Error === `Failed during creation proccess, to DB`)
 			return ;
-
-		console.log("wesh JWT", response.data.jwt);
 		
 		const myJWT = localStorage.setItem(`jwt`, response.data.jwt);
 	} catch (error) {
@@ -39,8 +37,6 @@ export const getUser = async () => {
 		
 		const response = await axios.get(`https://${location.host}/api/user/`, config);
 
-		// console.log("Response from getUser :", response.data);
-
 		return response.data;
 	} catch (error) {
 		console.error(`Error fetching user data:`, error);
@@ -58,9 +54,6 @@ export const postPicture = async (myData) => {
 			}
 		};
 		const response = await axios.post(`https://${host}:4343/api/uploadProfilePicture/`, myData, config);
-
-		// console.log(response.data);
-
 		return response.data;
 	} catch (error) {
 		console.error(`Error fetching user data:`, error);
@@ -78,7 +71,6 @@ export const resetPicture = async () => {
 		};
 		const response = await axios.post(`https://${location.host}/api/resetProfilePicture/`, {}, config);
 
-		// console.log(response.data);
 		return(response.data);
 
 	} catch (error) {
@@ -99,8 +91,6 @@ export const sendLangue = async (langue) => {
 		};
 		const response = await axios.post(`https://${location.host}/api/changeLangue/`, { langue } , config);
 
-		console.log(response.data);
-
 		return(response.data);
 
 	} catch (error) {
@@ -118,8 +108,6 @@ export const sendName = async (name) => {
 			}
 		};
 		const response = await axios.post(`https://${location.host}/api/changeName/`, { name } , config);
-
-		console.log(response.data);
 
 		return(response.data);
 
@@ -139,8 +127,6 @@ export const sendMail = async (mail) => {
 		};
 		const response = await axios.post(`https://${location.host}/api/changeMail/`, { mail } , config);
 
-		console.log(response.data);
-
 		return(response.data);
 
 	} catch (error) {
@@ -159,8 +145,6 @@ export const sendPass = async (pass) => {
 		};
 		const response = await axios.post(`https://${location.host}/api/changePass/`, { pass } , config);
 
-		console.log(response.data);
-
 		return(response.data);
 
 	} catch (error) {
@@ -178,8 +162,6 @@ export const checkPass = async (pass) => {
 			}
 		};
 		const response = await axios.post(`https://${location.host}/api/checkPass/`, { pass } , config);
-
-		console.log(response.data);
 
 		return(response.data);
 
@@ -340,15 +322,25 @@ export const getFriendsInvitations = async () => {
 				Authorization: `Bearer ${token}`
 			}
 		};
-		
-		const response = await axios.get(`https://${location.host}/api/user/friendsInvitations/`, config);
 
+		const response = await axios.get(`https://${location.host}/api/user/friendsInvitations/`, config);
 		return response.data;
 	} catch (error) {
-		console.error(`Error fetching user data:`, error);
+		if (error.response) {
+			if (error.response.status === 403) {
+				console.warn('Access forbidden: Redirection to forbidden page');
+				localStorage.removeItem("jwt")
+				window.location.href = '/forbidden';
+			} else {
+				console.error(`Error with status ${error.response.status}:`, error.response.data);
+			}
+		} else {
+			console.error('Error occurred:', error.message);
+		}
 		throw error;
 	}
 };
+
 
 export const getDiscussions = async (myData) => {
 
@@ -360,8 +352,6 @@ export const getDiscussions = async (myData) => {
 			}
 		};
 		
-
-		console.log(`myData GD ---> `, myData)
 		const response = await axios.get(`https://${location.host}/api/user/discussions/`, {
 			params: myData,
 			...config
@@ -396,7 +386,6 @@ export const postInvite = async (myData) => {
 };
 
 export const toggle2fa = async (dauth) => {
-	console.log(`test`)
 	try {
 		const token = localStorage.getItem('jwt');
 		const config = {
@@ -405,8 +394,6 @@ export const toggle2fa = async (dauth) => {
 			}
 		};
 		const response = await axios.post(`https://${location.host}/api/toggle2fa/`, { dauth } , config);
-
-		console.log(response.data);
 
 		return(response.data);
 
@@ -464,7 +451,6 @@ export const deleteProfil = async () => {
 		};
 		const response = await axios.post(`https://${location.host}/api/delProfile/`, {}, config);
 
-		// console.log(response.data);
 		return(response.data);
 
 	} catch (error) {
@@ -483,7 +469,6 @@ export const recupProfil = async () => {
 		};
 		const response = await axios.post(`https://${location.host}/api/exportProfile/`, {}, config);
 
-		console.log(response.data);
 		return(response);
 
 	} catch (error) {
@@ -501,7 +486,7 @@ export const getGameSettings = async () => {
 			}
 		};
 		
-		const response = await axios.get(`http://${host}:8000/api/gameSettings/`, config);
+		const response = await axios.get(`https://${location.host}/api/gameSettings/`, config);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user gameSettings:", error);
@@ -518,7 +503,7 @@ export const updateGameSettings = async (myData) => {
 			}
 		};
 
-		const response = await axios.post(`http://${host}:8000/api/gameSettings/update/`, myData, config);
+		const response = await axios.post(`https://${location.host}/api/gameSettings/update/`, myData, config);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching user gameSettings:", error);

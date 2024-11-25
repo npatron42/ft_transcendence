@@ -3,7 +3,7 @@ import '../css/game.css';
 import { WinComp } from '../WinComp';
 import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
-import { useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useTournamentSocket } from '../../provider/TournamentSocketProvider';
 const host = import.meta.env.VITE_HOST;
 import { useRef } from 'react';
@@ -142,7 +142,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 setKeyBind({ up: settings.up, down: settings.down });
                 const tmpBoard = getBoardBackground(settings.boardSkin);
                 setBoardBackground(tmpBoard);
-                console.log("Settings récupérés :", settings);
             } catch (error) {
                 console.error("Erreur :", error);
             }
@@ -154,12 +153,15 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
 
         if (myUser) {
             ws.onopen = () => {
-                const powerUpBool = Boolean(powerUp);
                 const maxScoreNum = Number(maxScore);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
-                ws.send(JSON.stringify({ name: myUser.username }));
-                ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
-                if (userSelected) {
+                ws.send(JSON.stringify({ id: myUser.id }));
+                if (powerUp !== undefined)
+                    {
+                        const powerUpBool = Boolean(powerUp);
+                    ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
+                }
+                if (userSelected !== undefined) {
                     ws.send(JSON.stringify({ userSelected: userSelected.username }));
                 }
             };
@@ -169,8 +171,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
-                if (!data.players)
-                    console.log("data", data);
                 if (data.paddles_pos) {
                     setPaddlePos(data.paddles_pos);
                 }
@@ -197,7 +197,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 if (data.power_up) {
                     setPowerUpType(data.power_up);
                     if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
-                        console.log("power up class", powerUpClass);
                         setPowerUpClass('power-up-bonus');
                     }
                     else {
@@ -206,7 +205,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
-                    console.log("power up type", data.power_up);
                 }
 
                 if (data.status === "erase") {
@@ -270,14 +268,16 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 setCenterLineClass('center-line-solo');
             }
             else {
-                console.log("je suis la");
                 setCenterLineClass('center-line');
             }
         }
     }, [soloPlayActive, powerUpType]);
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+            <div className="loader">
+            </div>
+        </div>
     }
 
 
@@ -288,11 +288,9 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
             "type": "WANT-TO-SEE-RESULTS"
         }
         tournamentSocket.send(JSON.stringify(data))
-		navigate("/waitingTournaments", { state: { idTournament2 } })
-		return ;
-	}
-
-    console.log("isTournament, isGameOver", isTournament, isGameOver)
+        navigate("/waitingTournaments", { state: { idTournament2 } })
+        return;
+    }
 
     return (
         <div className="pong-container">

@@ -5,12 +5,16 @@ import { useWebSocket } from '../../provider/WebSocketProvider';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { getGameSettings, updateGameSettings } from '../../api/api';
 import { MiniPong } from './MiniPong';
+import { useTranslation } from 'react-i18next';
 
 const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
     if (!className) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+            <div className="loader">
+            </div>
+        </div>
     }
 
     const handleNext = () => {
@@ -57,6 +61,7 @@ const GameSettings = () => {
     const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
     const [isCheckedUp, setIsCheckedUp] = useState(false);
     const [isCheckedDown, setIsCheckedDown] = useState(false);
+    const { t } = useTranslation();
 
     const paddleSkin = [
         { className: 'defaultPaddle' },
@@ -113,7 +118,6 @@ const GameSettings = () => {
                 boardSkin: gameSettings.boardSkin,
             };
             await updateGameSettings(updatedSettings);
-            console.log("Settings sauvegardés :", updatedSettings);
         } catch (error) {
             console.error("Erreur :", error);
         }
@@ -122,10 +126,26 @@ const GameSettings = () => {
     const handleKeyBindClick = (key) => {
         document.addEventListener("keydown", (event) => {
             if (key === "up") {
-                setKeyBind({ up: event.key, down: keyBind.down });
+                if (!checkKey(event.key)) {
+                    return;
+                }
+                if (event.key != keyBind.down) {
+                    setKeyBind({ up: event.key, down: keyBind.down });
+                }
+                else {
+                    return;
+                }
                 setIsCheckedUp(false);
             } else {
-                setKeyBind({ up: keyBind.up, down: event.key });
+                if (!checkKey(event.key)) {
+                    return;
+                }
+                if (event.key != keyBind.up) {
+                    setKeyBind({ up: keyBind.up, down: event.key });
+                }
+                else {
+                    return;
+                }
                 setIsCheckedDown(false);
             }
         });
@@ -136,8 +156,22 @@ const GameSettings = () => {
     };
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <div id="background-container">
+            <div className="loader">
+            </div>
+        </div>
     }
+
+    const checkKey = (key) => {
+        const allowedKeys = [
+            "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight",
+            ...Array.from("abcdefghijklmnopqrstuvwxyz"),
+            ...Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ"),
+            ...Array.from("0123456789"),
+        ];
+        return allowedKeys.includes(key);
+    };
+
 
     return (
         <div className="gameSettingsGlobalContainer">
@@ -152,9 +186,9 @@ const GameSettings = () => {
                             />
                         </div>
                         <div className="keyBindContainer">
-                            <div className="sectionHeader">
+                            {/* <div className="sectionHeader">
                                 <h2>Key Bind</h2>
-                            </div>
+                            </div> */}
                             <section className="container">
                                 <label>
                                     <input
@@ -190,9 +224,9 @@ const GameSettings = () => {
                         </div>
                     </div>
                     <div className="SkinContainer">
-                        <div className="sectionHeader">
+                        {/* <div className="sectionHeader">
                             <h2>Skin</h2>
-                        </div>
+                        </div> */}
                         <div className="paddleSkinContainer">
                             <Carousel
                                 className={paddleSkin}
@@ -220,9 +254,9 @@ const GameSettings = () => {
                     </div>
                 </div>
                 <button
-                    className="buttonSaveSettings"
+                    className="createJoinButton"
                     onClick={handleSaveSettings}>
-                    Save Settings
+                    {t('gameSettings.save')}
                 </button>
             </div>
         </div>
