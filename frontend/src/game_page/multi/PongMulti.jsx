@@ -154,12 +154,16 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
 
         if (myUser) {
             ws.onopen = () => {
-                const powerUpBool = Boolean(powerUp);
                 const maxScoreNum = Number(maxScore);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
                 ws.send(JSON.stringify({ name: myUser.username }));
-                ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
-                if (userSelected) {
+                if (powerUp !== undefined)
+                    {
+                        console.log("power up bool send", powerUp);
+                        const powerUpBool = Boolean(powerUp);
+                    ws.send(JSON.stringify({ action: 'set_power_up', powerUp: powerUpBool }));
+                }
+                if (userSelected !== undefined) {
                     ws.send(JSON.stringify({ userSelected: userSelected.username }));
                 }
             };
@@ -294,8 +298,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
         navigate("/waitingTournaments", { state: { idTournament2 } })
         return;
     }
-
-    console.log("isTournament, isGameOver", isTournament, isGameOver)
 
     return (
         <div className="pong-container">
