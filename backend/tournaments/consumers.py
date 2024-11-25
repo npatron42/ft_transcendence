@@ -425,6 +425,7 @@ class Tournament(AsyncWebsocketConsumer):
 
 
     async def connect(self):
+        logger.info("JE RENTRE ICI")
         myUser = self.scope["user"]
         if myUser.is_authenticated:
             await self.channel_layer.group_add("shareSocket", self.channel_name)

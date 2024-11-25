@@ -23,7 +23,7 @@ export const WebSocketProvider = ({ children }) => {
             return;
         }
 
-        const socket = new WebSocket(`wss://${location.host}/api/ws/socketUser/?token=${myJwt}`);
+        const socket = new WebSocket(`wss://${location.host}/ws/socketUser/?token=${myJwt}`);
         setSocket(socket);
 
         const pingInterval = setInterval(() => {

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import { getAllUsers, getFriendsList, getUser } from '../../api/api';
 import { useAuth } from '../../provider/UserAuthProvider';
 import Loading from '../../loading_page/Loading';
+// import { getMediaUrl } from '../api/api';"../api/api.js";
 import { useWebSocket } from '../../provider/WebSocketProvider';
 import '../css/inviteFriend.css';
 
@@ -9,7 +10,7 @@ function InviteFriendItem({ user, chooseStatus}) {
   return (
       <tr className="invite-friend-item">
           <td className="invite-friend-item.td">
-              <img src={user.profilePicture} alt={`${user.username}'s profile`} className="invite-profile-picture" />
+              <img src={getMediaUrl(user.profilePicture)} alt={`${user.username}'s profile`} className="invite-profile-picture" />
           </td>
     <td className="invite-friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
           <td className="invite-friend-item.td">

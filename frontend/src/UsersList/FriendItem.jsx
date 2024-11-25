@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+// import { getMediaUrl } from '../api/api';
 
 function FriendItem({ user, chooseStatus, deleteFriend }) {
 
@@ -11,7 +12,7 @@ function FriendItem({ user, chooseStatus, deleteFriend }) {
     return (
         <tr className="friend-item">
             <td className="friend-item.td">
-                <img src={user.profilePicture} alt={`${user.username}'s profile`} className="profile-picture" />
+                <img src={getMediaUrl(user.profilePicture)} alt={`${user.username}'s profile`} className="profile-picture" />
             </td>
             <td className="friend-item.td">
                 <span

@@ -17,7 +17,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True 
 EMAIL_HOST_USER = 'ft.transcendence.42nice@gmail.com'
-EMAIL_HOST_PASSWORD =  'lgqm xtii tpjs jqqb'
+EMAIL_HOST_PASSWORD =  os.getenv('PASS_EMAIL')
 DEFAULT_FROM_EMAIL = 'ft.transcendence.42nice@gmail.com'
 
 
