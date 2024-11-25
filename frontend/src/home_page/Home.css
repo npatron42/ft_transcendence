@@ -228,6 +228,11 @@
     margin-bottom: 300px;
 }
 
+.languagesPlacement {
+    display: fixed;
+    margin-top: 0%;
+    z-index: 5;
+}
 .playPlacement {
     position: absolute;
     margin-right: 700px;

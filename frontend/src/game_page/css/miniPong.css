@@ -183,6 +183,7 @@
     height: 20%;
     background-color: #FFFFFF;
     position: absolute;
+    border-radius: 30%;
 }
 
 .radientPaddleMiniPong {
@@ -191,6 +192,7 @@
     width: 1.5%;
     height: 20%;
     position: absolute;
+    border-radius: 30%;
 }
 
 .neonPaddleMiniPong {
@@ -201,6 +203,7 @@
     display: block;
     box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
     animation: neonGlow 2s infinite alternate;
+    border-radius: 30%;
 }
 
 @keyframes neonGlow {
@@ -222,6 +225,7 @@
     width: 1.5%;
     height: 20%;
     position: absolute;
+    border-radius: 30%;
 }
 
 .glassPaddleMiniPong {
@@ -232,6 +236,7 @@
     height: 20%;
     position: absolute;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 30%;
   }
 
   .firePaddleMiniPong {
@@ -242,4 +247,5 @@
     display: block;
     box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
     animation: fireGlow 2s infinite alternate;
+    border-radius: 30%;
   }

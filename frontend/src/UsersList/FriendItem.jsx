@@ -22,7 +22,7 @@ function FriendItem({ user, chooseStatus, deleteFriend }) {
                     {user.username}
                 </span>
             </td>
-            <td className="friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
+            <td className="friend-item.td"><span className={`status ${chooseStatus(user.id)}`}>{chooseStatus(user.id)}</span></td>
             <td className="friend-item.td">
                     <i className="bi bi-trash3 modifyTrash2" onClick={() => deleteFriend(user)}></i>
             </td>

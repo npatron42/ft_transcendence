@@ -4,8 +4,6 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Metrophobic&display=swap');
 
-
-
 @font-face {
     font-family: 'Millimetre';
     src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
@@ -95,7 +93,6 @@
 		border-radius: 0.58vw;
 		border: 0.1vw solid #222222; }
 
-
 .para-login {
 		position: absolute;
 		top: 44vh;
@@ -116,7 +113,6 @@
 	font-style: italic;
 }
 
-
 .para-user {
 	position: absolute;
 	top: 62vh;
@@ -126,7 +122,6 @@
 	font-family: 'Millimetre', sans-serif;
 	font-weight: 600;
 }
-
 
 .img-custom {
 	position: absolute;

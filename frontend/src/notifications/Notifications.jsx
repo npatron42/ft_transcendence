@@ -76,8 +76,8 @@ function Notifications() {
             const data = {
                 type: "DECLINE",
                 invitationFrom: senderUser,
-                to: myUser.username,
-                parse: senderUser.username + "|" + myUser.username
+                to: myUser.id,
+                parse: senderUser.id + "|" + myUser.id
             };
             socketUser.send(JSON.stringify(data));
         } else {
@@ -89,9 +89,9 @@ function Notifications() {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
                 type: "INVITE",
-                invitationFrom: myUser.username,
-                to: userInvited.username,
-                parse: myUser.username + "|" + userInvited.username
+                invitationFrom: myUser.id,
+                to: userInvited.id,
+                parse: myUser.id + "|" + userInvited.id
             };
             socketUser.send(JSON.stringify(data));
         } else {
@@ -126,6 +126,8 @@ function Notifications() {
         }
     };
 
+
+	console.log("OUI")
 
 	return (
 		<div className="notifications">

@@ -7,9 +7,12 @@ import { getGamesInvitations, getFriendsInvitations } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
 import Notifications from '../notifications/Notifications';
-import logo from "../assets/logos/transcendence-logo.png"
-import logoActive from "../assets/logos/transcendence-logo-active.png"
 import Chat from './Chat';
+import flagF from '../assets/login_page/frenchFlag.svg'
+import flagI from '../assets/login_page/italianFlag.svg';
+import flagE from '../assets/login_page/englishFlag.svg';
+import { useTranslation } from 'react-i18next';
+import Languages from '../login_page/languages';
 
 import "./components.css"
 
@@ -29,7 +32,9 @@ function NavbarBS() {
   const navigate = useNavigate();
   const location = useLocation();
   const isHomePage = location.pathname === "/home";
-
+  const { i18n } = useTranslation();
+  const [selectedFlag, setSelectedFlag] = useState(null);
+  
   useEffect(() => {
     if (location.pathname === "/home") {
       setHomeShown(true);
@@ -82,6 +87,44 @@ function NavbarBS() {
   }, [subscribeToNotifs, nbFriendsInvitations, nbGamesInvitations]);
 
 
+  
+	useEffect(() => {
+	  const jwt = localStorage.getItem('jwt');
+	  
+	  if (jwt) {
+		const storedLang = localStorage.getItem('i18nextLng');
+		if (storedLang) {
+		  setSelectedFlag(storedLang);
+		  i18n.changeLanguage(storedLang);
+		}
+	  } 
+	  else {
+		const storedLang = sessionStorage.getItem('i18nextLng');
+		if (storedLang){
+		  setSelectedFlag(storedLang);
+		  i18n.changeLanguage(storedLang);
+			} 
+		else {
+		  setSelectedFlag('fr');
+		  i18n.changeLanguage('fr');
+			}
+		}
+	}, [i18n]);
+  
+	const handleFlagClick = (language) => {
+	setSelectedFlag(language);
+	i18n.changeLanguage(language);
+	  
+	 
+	const jwt = localStorage.getItem('jwt');
+
+	if (jwt)
+		localStorage.setItem('i18nextLng', language);
+	else
+		sessionStorage.setItem('i18nextLng', language);
+
+	};
+
 
   const handleProfile = () => {
     setProfile(!profileShown);
@@ -94,6 +137,7 @@ function NavbarBS() {
     setNotifClicked(!notifIsClicked);
     if (profileShown === true)
       setProfile(!profileShown);
+    console.log("YES")
 
   };
 

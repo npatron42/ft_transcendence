@@ -38,7 +38,7 @@ const App = () => {
       ) : (
         <WebSocketProvider>
           <TournamentSocketProvider>
-      <NavbarBS />
+          <NavbarBS />
           <Routes>
             <Route path="/profile" element={<ProfilPage />} />
             <Route path="/home" element={<HomePage />} />
@@ -54,7 +54,6 @@ const App = () => {
           </Routes>
         </TournamentSocketProvider>
       </WebSocketProvider>
-  
     )}
     </UserAuthProvider>
   );

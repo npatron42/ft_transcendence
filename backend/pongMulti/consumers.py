@@ -285,6 +285,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 					await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
 					PongConsumer.send_db[self.room_id] = True
 
+				logger.info("JE SUIS APSS ICI")
 				await self.channel_layer.group_send(
 					self.room_group_name,
 					{
@@ -293,6 +294,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 						'score': PongConsumer.score[self.room_id]
 					}
 				)
+
 
 			if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.matchIsPlayed[self.room_id] == False:
 				myUser = self.scope['user']

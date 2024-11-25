@@ -10,6 +10,7 @@ import './css/tournament.css';
 import Button from 'react-bootstrap/Button';
 import ShowTournaments from '../components/showTournaments';
 import "../home_page/HomeCadre.css"
+import NavbarBS from '../components/Navbar';
 
 const ChooseGame = () => {
     const [joinIsClicked, setJoinIsClicked] = useState(true)
@@ -60,10 +61,9 @@ const ChooseGame = () => {
     return (
         <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
             {joinIsClicked === true && (
-
-
-
+            
             <div className="row">
+                <NavbarBS />
                 <div className="col-md-4 mb-3">
                     <div className="flip-card">
                         <div className="flip-card-inner">

@@ -3,12 +3,12 @@
 	background-color: #161719;
 	width: 400px;
 	height: 200px;
-	border: solid 2px #161719;
+	border: solid 4px #000000;
     border-radius: 20px;
-    position: absolute; 
-	z-index: 5;
-	bottom: 130px;
-	left: 400px;
+    position: fixed; 
+	z-index: 100;
+	bottom: 580px;
+	left: 1430px;
 }
 
 
