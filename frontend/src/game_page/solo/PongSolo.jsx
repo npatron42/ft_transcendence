@@ -61,7 +61,7 @@ const usePaddleMovement = (webSocket, keyBind) => {
 
     useEffect(() => {
         if (!webSocket) return;
-
+        
         const handleKeyDown = (e) => {
             console.log(`Key pressed: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: true }));

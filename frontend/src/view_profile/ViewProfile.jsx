@@ -5,7 +5,7 @@ import { getUserMatchHistory, getUserByUsername, getUserFriendsListById } from '
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import WinLossChart from './WinLossChart';
-// import { getMediaUrl } from '../api/api';
+import { getMediaUrl } from '../api/api';
 import GoalChart from './GoalChart';
 import './viewProfile.css';
 import HistoryItem from '../components/HistoryItem';
