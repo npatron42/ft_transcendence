@@ -375,24 +375,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 				)
 			
 		if action == 'set_power_up':
-			if self.room_id in PongConsumer.power_up_bool:
-				await self.channel_layer.group_send(
-					self.room_group_name,
-					{
-						'type': 'sendPowerUpBool',
-						'power_up_bool': PongConsumer.power_up_bool.get(self.room_id)
-					}
-				)
-			else:
-				power_up = data.get('powerUp')
-				PongConsumer.power_up_bool[self.room_id] = power_up
-				await self.channel_layer.group_send(
-					self.room_group_name,
-					{
-						'type': 'sendPowerUpBool',
-						'power_up_bool': power_up
-					}
-				)
+			power_up = data.get('powerUp')
+			PongConsumer.power_up_bool[self.room_id] = power_up
+			await self.channel_layer.group_send(
+				self.room_group_name,
+				{
+					'type': 'sendPowerUpBool',
+					'power_up_bool': power_up
+				}
+			)
 
 		if action in ['paddleup', 'paddledown']:
 			if hasattr(self, 'username') and self.username in PongConsumer.players[self.room_id]:
