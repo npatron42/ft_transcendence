@@ -1,11 +1,13 @@
 import "./cadrePlay.css"
 import { useNavigate } from 'react-router-dom';
+import {useTranslation} from 'react-i18next';
 
 
 
 function CadrePlay() {
 
 	const navigate = useNavigate();
+	const { t } = useTranslation();
 
 	const handlePlay = () => {
 		navigate("/choosegame")
@@ -38,7 +40,7 @@ function CadrePlay() {
 		16.4783 14.8528C14.2136 14.8528 12.3781 16.6466 12.3781 18.8598C12.3781 19.3937 12.4861 19.9021 12.68
 		20.3676C11.9347 20.5316 11.1396 20.4203 10.4684 20.0413H10.4676Z"></path></svg>
 		<div className="modifyPlayPong" onClick={() => handlePlay()}>      
-			PLAY PONG
+			{(t('home.playPong'))}
 		</div>
 		</div>
 		</div>	

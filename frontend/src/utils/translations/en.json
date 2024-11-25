@@ -60,5 +60,83 @@
       "sup" : "Delete my account",
       "verif" : "Are you sure ?",
       "recup" : "Recover my data"
-    }
+    }, 
+
+    "chooseGame": { 
+  "soloTitle": "Local Game",
+  "soloDesc": "Play on the same device",
+  "multiTitle": "Online Game",
+  "multiDesc": "Play with your friends",
+  "tournoiTitle": "Tournaments",
+  "tournoiDesc": "Join tournaments",
+  "tournoiCreate": "Create",
+  "tournoiJoin": "Join",
+  "settings": "Settings",
+  "scoreMax": "Maximum Score: ",
+  "powerUp": "Power-ups & Penalties",
+  "start": "Start",
+  "options" : "Options",
+  "chooseOption" : "Choose an option",
+  "invite" : "Invite "
+},
+
+"gameSettings": {
+  "save": "Save settings"
+},
+
+"viewProfile": {
+  "stats": "Statistics",
+  "matchWin": "Matches Won:",
+  "tournamentsWin": "Tournaments Won:",
+  "infomations": "Information",
+  "friends": "Friends: ",
+  "status": "Status: ",
+  "addFriend": "Add",
+  "deleteFriend": "Delete",
+  "play": "Play",
+  "noMatch": "No matches played",
+  "win": "Win",
+  "lose": "Loss",
+  "percent": "Win Percentage: ",
+  "goalScore": "Goals Scored: ",
+  "goalConceded": "Goals Conceded: "
+}, 
+
+"home": { 
+  "playPong" : "Play Pong"
+},
+
+"game": {
+  "menu": "Return to menu"
+},
+
+"history": {
+  "noUser": "No user found",
+  "noFriend": "No friend found",
+  "invalidUserList": "Invalid user list",
+  "myHistory": "My history",
+  "noMatch": "No matches played"
+}
+
+,
+
+"notif": {
+  "friend": "Friend",
+  "game": "Game",
+  "invitation": "No invitation..."
+
+
+},
+
+"chat": {
+  "welcome": "Welcome ",
+  "write": "Write a message...",
+  "noUser": "No user found...",
+  "addFriend": "Add somme friend...",
+  "chooseDiscuss": "Choose a discussion",
+  "profile" : "Profile",
+  "play": "Play",
+  "block": "Block"
+}
+
   }

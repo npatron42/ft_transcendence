@@ -1,5 +1,5 @@
 - verifier dans le back que le bon joueur a rejoint la partie
-
-- avec curl changement de nom _ parse
-- avec curl envoie dune requete sans jwt 
-- changement de nom du user --> le faire aussi dans la friend list
+- traduire
+- set photo de profil par default 
+- utiliser la valuer des tournois dans view profile 
+- dans mon view profile invitation en ami a changer ? 

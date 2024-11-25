@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from '../provider/UserAuthProvider';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import "./ModalUserChat.css"
+import { useTranslation } from 'react-i18next';
 
 const host = import.meta.env.VITE_HOST;
 
@@ -13,6 +14,7 @@ function ModalUserChat(userSelected) {
   const navigate = useNavigate()
   const handleClose = () => setShow(false);
   const {socketUser} = useWebSocket();
+  const { t } = useTranslation();
 
   useEffect(() => {
     setShow(true);
@@ -53,13 +55,13 @@ function ModalUserChat(userSelected) {
           <img src={userSelected["userSelected"].profilePicture.startsWith('http') ? userSelected["userSelected"].profilePicture : `http://${host}:8000/media/${userSelected["userSelected"].profilePicture}`} className="profile-picture-discuss"></img>
         </div>
 				<div className="inside-div-custom-modal">
-          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleProfile()}>PROFILE</button>
+          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleProfile()}>{t('chat.profile')}</button>
 				</div>
 				<div className="inside-div-custom-modal">
-          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handlePlay(userSelected)}>PLAY</button>
+          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handlePlay(userSelected)}>{t('chat.play')}</button>
 				</div>
 				<div className="inside-div-custom-modal">
-          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleBlock()}>BLOCK</button>
+          <button type="button" className="btn btn-outline-dark buttonModal" onClick={() => handleBlock()}>{t('chat.block')}</button>
 				</div>
 			</div>
 		</Modal.Body>

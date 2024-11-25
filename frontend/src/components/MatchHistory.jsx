@@ -4,12 +4,14 @@ import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
 import { getMatchHistory } from '../api/api';
 import HistoryItem from './HistoryItem';
+import { useTranslation } from 'react-i18next';
 
 function MatchHistory() {
 
 	const [matchHistory, setMatchHistory] = useState([]);
 	const {myUser} = useAuth();
 	const {socketUser} = useWebSocket();
+	const { t } = useTranslation();
 
     useEffect(() => {
         initMyMatchs();
@@ -23,12 +25,12 @@ function MatchHistory() {
 	return (
 		<div className="matchHistory">
 			<div className="matchHistory-header">
-				<span className="writeHistory"> My Match History</span>
+				<span className="writeHistory"> {t('history.myHistory')}</span>
 			</div>
 			<div className={`matchHistory-content ${matchHistory.length >= 3 ? "scrollable" : ""}`}>
 				{matchHistory.length === 0 && (
 					<div className="historyInfo">
-						Play some matches to have history!
+						{t('history.noMatch')}
 					</div>
 				)}
 				{matchHistory.length !== 0 && (

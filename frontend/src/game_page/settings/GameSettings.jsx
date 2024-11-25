@@ -5,6 +5,7 @@ import { useWebSocket } from '../../provider/WebSocketProvider';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { getGameSettings, updateGameSettings } from '../../api/api';
 import { MiniPong } from './MiniPong';
+import { useTranslation } from 'react-i18next';
 
 const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
@@ -60,6 +61,7 @@ const GameSettings = () => {
     const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
     const [isCheckedUp, setIsCheckedUp] = useState(false);
     const [isCheckedDown, setIsCheckedDown] = useState(false);
+    const { t } = useTranslation();
 
     const paddleSkin = [
         { className: 'defaultPaddle' },
@@ -255,7 +257,7 @@ const GameSettings = () => {
                 <button
                     className="createJoinButton"
                     onClick={handleSaveSettings}>
-                    Save Settings
+                    {t('gameSettings.save')}
                 </button>
             </div>
         </div>

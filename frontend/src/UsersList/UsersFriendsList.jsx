@@ -5,6 +5,7 @@ import UserItem from './UserItem';
 import Loading from '../loading_page/Loading';
 import { useWebSocket } from '../provider/WebSocketProvider';
 import { useAuth } from '../provider/UserAuthProvider';
+import { useTranslation } from 'react-i18next';
 
 const UsersFriendsList = () => {
 
@@ -17,6 +18,7 @@ const UsersFriendsList = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isInviting, setIsInviting] = useState(false);
     const [activeList, setActiveList] = useState('users');
+    const { t } = useTranslation();
 
     useEffect(() => {
         const handleSocketUser = (data) => {
@@ -161,7 +163,7 @@ const UsersFriendsList = () => {
                         <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(usersList) ? (
                                 usersList.length === 0 ? (
-                                    <div className="noUsers">No users found</div>
+                                    <div className="noUsers">{t('history.noUser')}</div>
                                 ) : (
                                     <table>
                                         <tbody>
@@ -181,7 +183,7 @@ const UsersFriendsList = () => {
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <td colSpan="4" className="noUsers">Invalid user list</td>
+                                            <td colSpan="4" className="noUsers"> {t('history.invalidUserList')}</td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -191,7 +193,7 @@ const UsersFriendsList = () => {
                         <div className={`userslist ${usersList.length > 0 ? 'scroll' : ''}`}>
                             {Array.isArray(friendsList) ? (
                                 friendsList.length === 0 ? (
-                                    <div className="noUsers">No friends found</div>
+                                    <div className="noUsers">{t('history.noFriend')}</div>
                                 ) : (
                                     <table>
                                         <tbody>
@@ -210,7 +212,7 @@ const UsersFriendsList = () => {
                                 <table>
                                     <tbody>
                                         <tr>
-                                            <td colSpan="4" className="noUsers">Invalid user list</td>
+                                            <td colSpan="4" className="noUsers">{t('history.invalidUserlist')}</td>
                                         </tr>
                                     </tbody>
                                 </table>

@@ -156,7 +156,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
             ws.onopen = () => {
                 const maxScoreNum = Number(maxScore);
                 ws.send(JSON.stringify({ action: 'set_max_score', maxScore: maxScoreNum }));
-                ws.send(JSON.stringify({ name: myUser.username }));
+                ws.send(JSON.stringify({ id: myUser.id }));
                 if (powerUp !== undefined)
                     {
                         console.log("power up bool send", powerUp);
@@ -172,6 +172,7 @@ const PongMulti = ({ roomId, maxScore, powerUp, userSelected, isTournament, idTo
                 const data = JSON.parse(event.data);
                 if (data.players) {
                     setRoomPlayers(data.players);
+                    console.log("players", data.players);
                 }
                 if (!data.players)
                     console.log("data", data);

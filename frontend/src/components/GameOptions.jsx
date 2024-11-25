@@ -4,6 +4,7 @@ import { useAuth } from '../provider/UserAuthProvider';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Button from 'react-bootstrap/Button';
+import { useTranslation } from 'react-i18next';
 
 
 function GameOptions() {
@@ -16,6 +17,7 @@ function GameOptions() {
 	const [maxScore, setMaxScore] = useState(10);
 	const [invitedPlayer, setInvitedPlayer] = useState([]);
 	const [powerUp, setPowerUp] = useState(false);
+	const { t } = useTranslation();
 
 	const handleMultiClick = () => {
 		const roomId = uuidv4();
@@ -44,22 +46,22 @@ function GameOptions() {
 				<div className="flip-card-inner">
 					<div className="flip-card-front">
 						<div className="flip-card-content">
-							<p className="title2">Options</p>
-							<p>Choose your options</p>
+							<p className="title2">{t('chooseGame.options')}</p>
+							<p>{t('chooseGame.chooseOption')}</p>
 						</div>
 					</div>
 					<div className="flip-card-back">
 						<div className="flip-card-content">
-							<p className="title2">Settings</p>
+							<p className="title2">{t('chooseGame.settings')}</p>
 							<Button
 								type="button"
 								variant={powerUp ? "success" : "danger"}
 								onClick={handlePowerUp}
 							>
-								Power Up
+								{t('chooseGame.powerUp')}
 							</Button>
 							<div className="slider-container">
-								<label htmlFor="maxScoreMulti">Max Score: {maxScore}</label>
+								<label htmlFor="maxScoreMulti">{t('chooseGame.scoreMax')} {maxScore}</label>
 								<input
 									type="range"
 									id="maxScoreMulti"
@@ -71,7 +73,7 @@ function GameOptions() {
 									className="form-range"
 								/>
 							</div>
-							<button className="start-game" onClick={handleMultiClick}>Invite {userSelected.username}</button>
+							<button className="createJoinButton" onClick={handleMultiClick}>{t('chooseGame.invite')} {userSelected.username}</button>
 						</div>
 					</div>
 				</div>

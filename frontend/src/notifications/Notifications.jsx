@@ -7,6 +7,7 @@ import { useNavigate, useLocation, } from 'react-router-dom';
 import Loading from '../loading_page/Loading';
 import InviteItem from './InviteNotif';
 import GameNotif from './GameNotif';
+import { useTranslation } from 'react-i18next';
 
 function Notifications() {
 	const {myUser} = useAuth();
@@ -19,6 +20,7 @@ function Notifications() {
 	const [myGameNotifs, setGameNotifs] = useState([null]);
 	const navigate = useNavigate()
 	const { subscribeToNotifs } = useWebSocket();
+	const { t } = useTranslation();
 
 	useEffect(() => {
 		const handleNotif = (data) => {
@@ -139,21 +141,21 @@ function Notifications() {
 							type="button"
 							className={`btn btn-outline-dark ButtonNotif ${inviteNotifShown ? 'active' : ''}`}
 						>
-							Friends
+							{t('notif.friend')}
 						</h4>
 						<h4
 							onClick={() => handleGameNotifShown()}
 							type="button"
 							className={`btn btn-outline-dark ButtonNotif ${gameNotifShown ? 'active' : ''}`}
 						>
-							Game
+							{t('notif.game')}
 						</h4>
 					</div>
 					
 					{inviteNotifShown ? (
 						<div>
 							{myInviteNotifs && myInviteNotifs.length === 0 ? (
-								<div className="noNotif">No invitations...</div>
+								<div className="noNotif">{t('notif.invitation')}</div>
 							) : (
 								<div className={`inviteList ${myInviteNotifs.length >= 3 ? 'scroll' : ''}`}>
 									{myInviteNotifs.map((user) => (
@@ -170,7 +172,7 @@ function Notifications() {
 					) : (
 						<div>
 							{myGameNotifs && myGameNotifs.length === 0 ? (
-								<div className="noNotif">No invitations...</div>
+								<div className="noNotif">{t('notif.invitation')}</div>
 							) : (
 								<div className={`inviteList ${myGameNotifs.length >= 3 ? 'scroll' : ''}`}>
 									{myGameNotifs.map((user) => (

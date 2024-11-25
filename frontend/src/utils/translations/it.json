@@ -1,65 +1,138 @@
 {
-    "loginPage": {
-      "id": "Utente",
-      "champ1": "Inserisci il tuo Utente",
-      "mdp" : "Password",
-      "champ2" : "Inserisci la tua password",
-      "login" : "Accedi",
-      "new" : "Nuovo utente?",
-      "createAccount" : "Crea un account",
-      "log42" : "Connettiti con",
-      "error" : "Utente o password errati.",
-      "enterOtp" : "Inserisci il codice ricevuto via email.",
-      "errorOtp": "Codice non valido.",                                                                                                                                                                     
-      "errorOtpEx": "Codice scaduto",                                                                                                                                                                     
-      "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\".",
-      "sup" : "Account eliminato",                                                                                                                                                                        
-      "sup2" : "Il tuo account è stato eliminato."                                                                                                                                                                    
-    },
+  "loginPage": {
+    "id": "Utente",
+    "champ1": "Inserisci il tuo Utente",
+    "mdp": "Password",
+    "champ2": "Inserisci la tua password",
+    "login": "Accedi",
+    "new": "Nuovo utente?",
+    "createAccount": "Crea un account",
+    "log42": "Connettiti con",
+    "error": "Utente o password errati.",
+    "enterOtp": "Inserisci il codice ricevuto via email.",
+    "errorOtp": "Codice non valido.",
+    "errorOtpEx": "Codice scaduto",
+    "errorOtp1": "Codice non valido ? Per favore annulla e clicca di nuovo su \"Accedi\".",
+    "sup": "Account eliminato",
+    "sup2": "Il tuo account è stato eliminato."
+  },
+  "registerPage": {
+    "id": "Utente",
+    "champ1": "Inserisci il tuo Utente",
+    "mail": "Email",
+    "champ2": "Inserisci la tua Email",
+    "mdp": "Password",
+    "champ3": "Inserisci la tua password",
+    "login": "Accedi",
+    "createAccount": "Crea un account",
+    "Ihave": "Ho gia un account ?",
+    "idRequired": "Utente è richiesto",
+    "idCara": "Il nome utente deve contenere tra 3 e 11 caratteri (caratteri consentiti A-Z & a-z)",
+    "emailRequired": "L'email è richiesta",
+    "emailInvalid": "L'email non è valida",
+    "passwordRequired": "La password è richiesta",
+    "passwordMinLength": "La password deve essere lunga almeno 8 caratteri",
+    "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale.",
+    "userPris": "Utente già in uso",
+    "mailPris": "Email già in uso"
+  },
+  "profilPage": {
+    "2fa": "Abilitare l'autenticazione a due fattori",
+    "upload": "Clicca per scaricare",
+    "delete": "Sopprimere",
+    "lg": "Lingua predefinita : ",
+    "lg0": "Lingua predefinita",
+    "modif": "Modificare",
+    "valide": "Validare",
+    "inco": "Password errata",
+    "cancel": "Cancellare",
+    "oldmdp": "Inserisci la vecchia password",
+    "succesUpload": "Download riuscito",
+    "errorUpload": "Download non riuscito",
+    "erroUser": "L'email è già in uso",
+    "erroPass": "Password è già in uso",
+    "erroMail": "Utente è già in uso",
+    "enable2fa": "Abilitare l'autenticazione a due fattori",
+    "good2fa": "Autenticazione a due fattori implementata",
+    "disable2fa": "Disabilita l'autenticazione a due fattori",
+    "blocked": "Utenti bloccati",
+    "sup": "Elimina il mio account",
+    "verif": "Sei sicuro ?",
+    "recup": "Recupera i miei dati"
+  },
 
-    "registerPage": {
-      "id": "Utente",
-      "champ1": "Inserisci il tuo Utente",
-      "mail" : "Email",
-      "champ2": "Inserisci la tua Email",
-      "mdp" : "Password",
-      "champ3" : "Inserisci la tua password",
-      "login" : "Accedi",
-      "createAccount" : "Crea un account",
-      "Ihave" : "Ho gia un account ?",
-      "idRequired": "Utente è richiesto",
-      "idCara": "Utente deve contenere tra 3 & 11 caratteri (caratteri consentiti A-Z & a-z)",
-      "emailRequired": "L'email è richiesta",
-      "emailInvalid": "L'email non è valida",
-      "passwordRequired": "La password è richiesta",
-      "passwordMinLength": "La password deve essere lunga almeno 8 caratteri",
-      "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale.",
-      "userPris": "Utente già in uso",
-      "mailPris": "Email già in uso"
-    },
+  "chooseGame": {
+    "soloTitle": "Gioco locale",
+    "soloDesc": "Gioca sullo stesso dispositivo",
+    "multiTitle": "Gioco online",
+    "multiDesc": "Gioca con i tuoi amici",
+    "tournoiTitle": "Tornei",
+    "tournoiDesc": "Partecipa ai tornei",
+    "tournoiCreate": "Crea",
+    "tournoiJoin": "Unisciti",
+    "settings": "Impostazioni",
+    "scoreMax": "Punteggio massimo: ",
+    "powerUp": "Bonus e Malus",
+    "start": "Inizia",
+    "options" : "Opzioni",
+    "chooseOption" : "Scegli un'opzione",
+    "invite" : "Invita "
+  },
 
-    "profilPage" : {
-      "2fa" : "Abilitare l'autenticazione a due fattori",
-      "upload" : "Clicca per scaricare",
-      "delete" : "Sopprimere",
-      "lg" : "Lingua predefinita : ",
-      "lg0" : "Lingua predefinita",
-      "modif": "Modificare",
-      "valide": "Validare",
-      "inco" : "Password errata",
-      "cancel" : "Cancellare",
-      "oldmdp" : "Inserisci la vecchia password",
-      "succesUpload": "Download riuscito",
-      "errorUpload" : "Download non riuscito",
-      "erroUser": "L'email è già in uso",
-      "erroPass": "Password è già in uso",
-      "erroMail": "Utente è già in uso",
-      "enable2fa" : "Abilitare l'autenticazione a due fattori",
-      "good2fa" : "Autenticazione a due fattori implementata",
-      "disable2fa" : "Disabilita l'autenticazione a due fattori",
-      "blocked": "Utenti bloccati",
-      "sup" : "Elimina il mio account",
-      "verif" : "Sei sicuro ?",
-      "recup" : "Recupera i miei dati"
-    }
-  }
+  "gameSettings": {
+  "save": "Salva impostazioni"
+  }, 
+
+  "viewProfile": {
+  "stats": "Statistiche",
+  "matchWin": "Partite vinte:",
+  "tournamentsWin": "Tornei vinti:",
+  "infomations": "Informazioni",
+  "friends": "Amici: ",
+  "status": "Stato: ",
+  "addFriend": "Aggiungi",
+  "deleteFriend": "Rimuovi",
+  "play": "Gioca",
+  "noMatch": "Nessuna partita giocata",
+  "win": "Vittoria",
+  "lose": "Sconfitta",
+  "percent": "Percentuale di vittorie: ",
+  "goalScore": "Goal segnati: ",
+  "goalConceded": "Goal subiti: "
+},
+
+"home": { 
+  "playPong" : "Gioca a Pong"
+},
+
+"game": {
+  "menu": "Torna al menu"
+},
+
+"history": {
+  "noUser": "Nessun utente trovato",
+  "noFriend": "Nessun amico trovato",
+  "invalidUserList": "Elenco utenti non valido",
+  "myHistory": "Il mio storico",
+  "noMatch": "Nessuna partita giocata"
+}
+
+,
+
+"notif": {
+  "friend": "Amici",
+  "game": "Partite",
+  "invitation": "Nessun invito..."
+},
+
+"chat": {
+  "welcome": "Benvenuto ",
+  "write": "Scrivi un messaggio...",
+  "noUser": "Nessun utente trovato...",
+  "addFriend": "Aggiungi un amico...",
+  "chooseDiscuss": "Scegli una discussione",
+  "profile" : "Profilo",
+  "play": "Gioca",
+  "block": "Blocca"
+}
+}

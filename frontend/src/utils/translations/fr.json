@@ -61,5 +61,79 @@
       "sup" : "Supprimer mon compte",
       "verif" : "Êtes-vous sûr ?",
       "recup" : "Récupérer mes données"
-    }
-  }
+    },
+
+    "chooseGame" : { 
+      "soloTitle" : "Jeu en local",
+      "soloDesc" : "Jouez sur le même appareil",
+      "multiTitle" : "Jeu en ligne",
+      "multiDesc" : "Jouez avec vos amis",
+      "tournoiTitle" : "Tournois",
+      "tournoiDesc" : "Participez a des tournois",
+      "tournoiCreate": "Créer",
+      "tournoiJoin": "Rejoindre",
+      "settings" : "Paramètres",
+      "scoreMax" : "Score maximum : ",
+      "powerUp" : "Bonus & Malus",
+      "start" : "Commencer",
+      "options" : "Options",
+      "chooseOption" : "Choisissez vos options",
+      "invite" : "Invite "
+  },
+
+  "gameSettings": {
+  "save": "Sauvegarder les paramètres"
+}, 
+
+"viewProfile": {
+  "stats": "Statistiques",
+  "matchWin": "Parties gagnées :",
+  "tournamentsWin": "Tournois gagnés :",
+  "infomations" : "Informations",
+  "friends" : "Amis : ",
+  "status" : "Statut : ",
+  "addFriend" : "Ajouter",
+  "deleteFriend" : "Supprimer",
+  "play" : "Jouer",
+  "noMatch" : "Aucune partie jouée",
+  "win" : "Victoire",
+  "lose" : "Défaite",
+  "percent" : "Pourcentage de victoire : ",
+  "goalScore" : "Buts marqués : ",
+  "goalConceded" : "Buts encaissés : "
+},
+
+"home": { 
+  "playPong" : "Jouer au Pong"
+},
+
+"game": {
+  "menu": "Retourner au menu"
+}, 
+
+"history": {
+  "noUser": "Aucun utilisateur trouvé",
+  "noFriend": "Aucun ami trouvé",
+  "invalidUserList": "Liste d'utilisateurs invalide",
+  "myHistory": "Mon historique",
+  "noMatch": "Aucune partie jouée"
+},
+
+"notif": {
+  "friend": "Ami",
+  "game": "Partie",
+  "invitation": "Aucune invitation..."
+
+
+},
+"chat": {
+  "welcome": "Bienvenue ",
+  "write": "Ecrivez un message...",
+  "noUser": "Aucun utilisateur trouvé...",
+  "addFriend": "Ajoute un ami...",
+  "chooseDiscuss": "Choisissez une discussion",
+  "profile" : "Profil",
+  "play": "Jouer",
+  "block": "Bloquer"
+}
+}
