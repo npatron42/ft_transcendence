@@ -21,11 +21,6 @@ async def getUserById(myId):
     userSer = UserSerializer(userTmp)
     return userSer.data
 
-async def getUserByUsername(myUsername):
-    userTmp = await sync_to_async(User.objects.get)(username=myUsername)
-    userSer = UserSerializer(userTmp)
-    return userSer.data
-
 async def sendToSocket(self, socket, message):
         await self.channel_layer.send(socket, {
             "type": "socketTournament",
@@ -279,8 +274,8 @@ async def createFinalMatch(self, idTournament):
         destroyMyTournament(idTournament)
         return None, None
 
-    winnerUser1 = await getUserByUsername(winner0)
-    winnerUser2 = await getUserByUsername(winner1)
+    winnerUser1 = await getUserById(winner0)
+    winnerUser2 = await getUserById(winner1)
 
     idUser1 = winnerUser1.get("id")
     idUser2 = winnerUser2.get("id")
@@ -383,8 +378,8 @@ async def sendNextStepToUsers(self, myWinners, myLosers, idTournament):
     myRealWinner1 = await getUserById(win1)
     myRealWinner2 = await getUserById(win2)
 
-    myRealLoser1 = await getUserByUsername(los1)
-    myRealLoser2 = await getUserByUsername(los2)
+    myRealLoser1 = await getUserById(los1)
+    myRealLoser2 = await getUserById(los2)
 
     realsWinners = []
     realsWinners.extend((myRealWinner1, myRealWinner2))
@@ -396,14 +391,14 @@ async def sendNextStepToUsers(self, myWinners, myLosers, idTournament):
     while i < myLen:
         myPlayerId = players[i]
         myUser = await getUserById(myPlayerId)
-        userId = str(myUser.id)
+        userId = str(myUser.get("id"))
         if myPlayerId in myWinners:
             if myPlayerId == myWinners[0]:
-                opponentUsername = myWinners[1]
-                opponent = await getUserById(opponentUsername)
+                opponentId = myWinners[1]
+                opponent = await getUserById(opponentId)
             else:
-                opponentUsername = myWinners[0]
-                opponent = await getUserById(opponentUsername)
+                opponentId = myWinners[0]
+                opponent = await getUserById(opponentId)
             dataToSend = {
                 "status": "winner",
                 "opponent": opponent,
@@ -424,7 +419,6 @@ async def sendNextStepToUsers(self, myWinners, myLosers, idTournament):
             dataToSendBis = {
             "AFTER-00-LOSER": dataToSend
             }
-        
         mySocket = allSockets.get(userId)
         await sendToSocket(self, mySocket, dataToSendBis)
         i += 1
@@ -529,7 +523,6 @@ class Tournament(AsyncWebsocketConsumer):
         myDataToSend = {
             "allTournaments": allTournaments
         }
-        logger.info("Tournament sent --> %s", myDataToSend)
         await sendToTournamentsSocket(self, myDataToSend)
 
 
@@ -560,8 +553,8 @@ class Tournament(AsyncWebsocketConsumer):
 
             myPlayers = []
 
-            myPlayer00 = await getUserByUsername(myPlayersUsernames[0])
-            myPlayer01 = await getUserByUsername(myPlayersUsernames[1])
+            myPlayer00 = await getUserById(myPlayersUsernames[0])
+            myPlayer01 = await getUserById(myPlayersUsernames[1])
 
             myPlayers.append(myPlayer00["id"])
             myPlayers.append(myPlayer01["id"])
@@ -600,11 +593,11 @@ class Tournament(AsyncWebsocketConsumer):
                     myTournamentWinner = data.get("myWinner")
                     myTournamentSecond = data.get("myLoser")
 
-                    userWinner = await getUserByUsername(myTournamentWinner)
-                    userSecond = await getUserByUsername(myTournamentSecond)
+                    userWinner = await getUserById(myTournamentWinner)
+                    userSecond = await getUserById(myTournamentSecond)
 
-                    winnerId = str(userWinner.id)
-                    secondId = str(userSecond.id)
+                    winnerId = str(userWinner.get("id"))
+                    secondId = str(userSecond.get("id"))
 
                     socketTournamentWinner = allSockets.get(winnerId)
                     socketTournamentSecond = allSockets.get(secondId)
@@ -667,7 +660,6 @@ class Tournament(AsyncWebsocketConsumer):
             await self.channel_layer.group_add("shareTournaments", self.channel_name)
             await self.accept()
             addSocketToUser(self.channel_name, str(myUser.id))
-            logger.info("Toutes mes sockets ---> %s", allSockets)
             allUsers.append(myUser)
 
 
@@ -708,7 +700,6 @@ class Tournament(AsyncWebsocketConsumer):
             idTournamentToJoin = data.get("id")
             condition = userIsAlreadyInTheTournament(myUser, idTournamentToJoin)
             if condition == True:
-                logger.info("OK ERREUR ICI")
                 return
             await Tournament.sendAllTournaments(self)
 
@@ -717,7 +708,6 @@ class Tournament(AsyncWebsocketConsumer):
             nbPlayersInTournament = len(Tournament.players[idTournamentToJoin])
             condition = userIsAlreadyInTheTournament(myUser, idTournamentToJoin)
             if condition == True:
-                logger.info("OK ERREUR ICI")
                 return
             if nbPlayersInTournament == 3:
                 idTournamentToJoin = data.get("id")

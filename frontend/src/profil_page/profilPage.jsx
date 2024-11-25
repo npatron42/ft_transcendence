@@ -27,7 +27,6 @@ function profilPage() {
 	const initBlockedUsers = async () => {
 		const blockedUsersTmp = await getBlockedRelations2();
 		setBlockedUsers(blockedUsersTmp)
-		console.log(blockedUsersTmp)
 	}
 
 	useEffect(() => {
@@ -38,7 +37,6 @@ function profilPage() {
         const handleSocketUser = (data) => {
             if (data["blocked"]) {
                 setBlockedUsers(data["blocked"])
-				console.log("data received --> ", data["blocked"])
             }
         };
         const unsubscribeMess = subscribeToMessages(handleSocketUser);

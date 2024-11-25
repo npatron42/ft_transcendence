@@ -11,25 +11,27 @@ import Button from 'react-bootstrap/Button';
 import ShowTournaments from '../components/showTournaments';
 import "../home_page/HomeCadre.css"
 import NavbarBS from '../components/Navbar';
+import { useTranslation } from 'react-i18next';
 
 const ChooseGame = () => {
     const [joinIsClicked, setJoinIsClicked] = useState(true)
     const navigate = useNavigate();
     const [maxScore, setMaxScore] = useState(10);
-    const {tournamentSocket} = useTournamentSocket();
+    const { tournamentSocket } = useTournamentSocket();
     const idTournament = uuidv4();
     const isTournament = false
     const [powerUp, setPowerUp] = useState(false);
+    const { t } = useTranslation();
 
     const handleSoloClick = () => {
         const roomId = uuidv4();
-        navigate(`/globalGameSolo/${roomId}`, { state: { maxScore, powerUp} });
+        navigate(`/globalGameSolo/${roomId}`, { state: { maxScore, powerUp } });
     };
 
     const handleMultiClick = () => {
         const roomId = uuidv4();
         const mustInvite = true;
-        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament, mustInvite} });
+        navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, isTournament, mustInvite } });
     };
 
     const handleCreateTournaments = () => {
@@ -47,7 +49,7 @@ const ChooseGame = () => {
         }
         tournamentSocket.send(JSON.stringify(myData));
         setJoinIsClicked(!joinIsClicked);
-        return ;
+        return;
     }
 
     const handleScoreChange = (event) => {
@@ -57,121 +59,122 @@ const ChooseGame = () => {
     const handlePowerUp = () => {
         setPowerUp((prevPowerUp) => !prevPowerUp);
     };
-
     return (
-        <div id="ChooseGame" className="d-flex justify-content-center align-items-center vh-100">
+        <div id="ChooseGame">
             {joinIsClicked === true && (
-            
-            <div className="row">
-                <NavbarBS />
-                <div className="col-md-4 mb-3">
-                    <div className="flip-card">
-                        <div className="flip-card-inner">
-                            <div className="flip-card-front">
-                                <div className="flip-card-content">
-                                    <p className="title2">Solo</p>
-                                    <p>Play Alone</p>
-                                </div>
-                            </div>
-                            <div className="flip-card-back">
-                                <div className="flip-card-content">
-                                    <p className="title2">Settings</p>
-
-                                    <Button
-                                        type="button"
-                                        variant={powerUp ? "success" : "danger"}
-                                        onClick={handlePowerUp}
-                                    >
-                                        Power Up
-                                    </Button>
-
-                                    <div className="slider-container">
-                                        <label htmlFor="maxScoreSolo">Max Score: {maxScore}</label>
-                                        <input
-                                            type="range"
-                                            id="maxScoreSolo"
-                                            name="maxScore"
-                                            min="1"
-                                            max="20"
-                                            value={maxScore}
-                                            onChange={handleScoreChange}
-                                            className="form-range"
-                                        />
+                <div className="rowContainer">
+                    <div className="col-md-4 mb-3">
+                        <div className="flip-card">
+                            <div className="flip-card-inner">
+                                <div className="flip-card-front">
+                                    <div className="flip-card-content">
+                                        <p className="title2">{t('chooseGame.soloTitle')}</p>
+                                        <p>{t('chooseGame.soloDesc')}</p>
                                     </div>
-                                    <button className="ui-btn" onClick={handleSoloClick}>Lancer le jeu</button>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                                <div className="flip-card-back">
+                                    <div className="flip-card-content">
+                                        <p className="title2">{t('chooseGame.settings')}</p>
 
-                {/* Carte Multi */}
-                <div className="col-md-4 mb-3">
-                    <div className="flip-card">
-                        <div className="flip-card-inner">
-                            <div className="flip-card-front">
-                                <div className="flip-card-content">
-                                    <p className="title2">Multi</p>
-                                    <p>Play with Others</p>
-                                </div>
-                            </div>
-                            <div className="flip-card-back">
-                                <div className="flip-card-content">
-                                    <p className="title2">Settings</p>
+                                        <Button
+                                            type="button"
+                                            variant={powerUp ? "success" : "danger"}
+                                            onClick={handlePowerUp}
+                                        >
+                                            {t('chooseGame.powerUp')}
+                                        </Button>
 
-                                    <Button
-                                        type="button"
-                                        variant={powerUp ? "success" : "danger"}
-                                        onClick={handlePowerUp}
-                                    >
-                                        Power Up
-                                    </Button>
-
-                                    <div className="slider-container">
-                                        <label htmlFor="maxScoreMulti">Max Score: {maxScore}</label>
-                                        <input
-                                            type="range"
-                                            id="maxScoreMulti"
-                                            name="maxScore"
-                                            min="1"
-                                            max="20"
-                                            value={maxScore}
-                                            onChange={handleScoreChange}
-                                            className="form-range"
-                                        />
+                                        <div className="slider-container">
+                                            <label htmlFor="maxScoreSolo">{t('chooseGame.scoreMax')} {maxScore}</label>
+                                            <input
+                                                type="range"
+                                                id="maxScoreSolo"
+                                                name="maxScore"
+                                                min="1"
+                                                max="20"
+                                                value={maxScore}
+                                                onChange={handleScoreChange}
+                                                className="form-range"
+                                            />
+                                        </div>
+                                        <button className="createJoinButton" onClick={handleSoloClick}>{t('chooseGame.start')}</button>
                                     </div>
-                                    <button className="start-game" onClick={handleMultiClick}>Lancer le jeu</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Carte Tournaments */}
-                <div className="col-md-4 mb-3">
-                    <div className="flip-card">
-                        <div className="flip-card-inner">
-                            <div className="flip-card-front">
-                                <div className="flip-card-content">
-                                    <p className="title2">Tournament</p>
-                                    <p>Create / Join</p>
+                    {/* Carte Multi */}
+                    <div className="col-md-4 mb-3">
+                        <div className="flip-card">
+                            <div className="flip-card-inner">
+                                <div className="flip-card-front">
+                                    <div className="flip-card-content">
+                                        <p className="title2">{t('chooseGame.multiTitle')}</p>
+                                        <p>{t('chooseGame.multiDesc')}</p>
+                                    </div>
+                                </div>
+                                <div className="flip-card-back">
+                                    <div className="flip-card-content">
+                                    <p className="title2">{t('chooseGame.settings')}</p>
+
+                                        <Button
+                                            type="button"
+                                            variant={powerUp ? "success" : "danger"}
+                                            onClick={handlePowerUp}
+                                        >
+                                            {t('chooseGame.powerUp')}
+                                        </Button>
+
+                                        <div className="slider-container">
+                                            <label htmlFor="maxScoreMulti">{t('chooseGame.scoreMax')} {maxScore}</label>
+                                            <input
+                                                type="range"
+                                                id="maxScoreMulti"
+                                                name="maxScore"
+                                                min="1"
+                                                max="20"
+                                                value={maxScore}
+                                                onChange={handleScoreChange}
+                                                className="form-range"
+                                            />
+                                        </div>
+                                        <button className="createJoinButton" onClick={handleMultiClick}>{t('chooseGame.start')}</button>
+                                    </div>
                                 </div>
                             </div>
-                            <div className="flip-card-back">
-                                <div className="flip-card-content">
-                                    <button className="createJoinButton" onClick={() => handleCreateTournaments()}>CREATE</button>      
-                                    <button className="createJoinButton" onClick={() => handleJoinButton()}>JOIN</button>                                  
+                        </div>
+                    </div>
+
+                    {/* Carte Tournaments */}
+                    <div className="col-md-4 mb-3">
+                        <div className="flip-card">
+                            <div className="flip-card-inner">
+                                <div className="flip-card-front">
+                                    <div className="flip-card-content">
+                                        <p className="title2">{t('chooseGame.tournoiTitle')}</p>
+                                        <p>{t('chooseGame.tournoiDesc')}</p>
+                                    </div>
+                                </div>
+                                <div className="flip-card-back">
+                                    <div className="flip-card-content">
+                                        <button className="createJoinButton" onClick={() => handleCreateTournaments()}>{t('chooseGame.tournoiCreate')}</button>
+                                        <button className="createJoinButton" onClick={() => handleJoinButton()}>{t('chooseGame.tournoiJoin')}</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
             )}
             {joinIsClicked === false && (
                 <ShowTournaments />
             )}
-            <button className="settings" onClick={() => navigate('/game-settings')}>Settings</button>
+            {joinIsClicked === true && (
+            <div className="settings-container">
+                <button className="createJoinButton" onClick={() => navigate('/game-settings')}>{t('chooseGame.settings')}</button>
+            </div>
+            )}
         </div>
     );
 };

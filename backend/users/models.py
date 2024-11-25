@@ -14,8 +14,8 @@ class User(AbstractUser):
     dauth = models.BooleanField(default=False,  blank=True, null=True)
     otp_code = models.CharField(max_length=6, null=True)
     otp_created_at = models.DateTimeField(null=True)
-
     sup = models.BooleanField(default=False)
+    tournamentsWin = models.IntegerField(default=0)
 
 
 class Invitation(models.Model):
@@ -55,5 +55,6 @@ class GameSettings(models.Model):
     paddleSkin = models.CharField(max_length=125, default="default")
     boardSkin = models.CharField(max_length=125, default="default")
     ballSkin = models.CharField(max_length=125, default="default")
+
 
 

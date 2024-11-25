@@ -9,8 +9,6 @@ function bt2fa() {
 	const { t } = useTranslation();
 	const {myUser, setUser} = useAuth();
 	
-	console.log(myUser.dauth);
-
 	const handleChange = async() => {
 		try {
 			await toggle2fa(!myUser.dauth);
@@ -18,9 +16,7 @@ function bt2fa() {
 			setUser(tmpUser);
 			if (!myUser.dauth)
 				alert(t('profilPage.good2fa'))
-			// console.log("je vaux mtn", myUser.dauth);
 		} catch {
-			// alert("error actif 2fa");
 			console.log("error actif 2fa");
 		}
 	};

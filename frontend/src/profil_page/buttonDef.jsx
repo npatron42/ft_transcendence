@@ -13,12 +13,11 @@ function buttonDef() {
 	const {myUser, setUser} = useAuth();
 
 	const changeLanguage =  async (langue) => {
-			const response = await sendLangue(langue);
-			console.log("Response received:", response);
-			if (response){
-				const tmpUser = await getUser();
-          		setUser(tmpUser);
-			}
+		const response = await sendLangue(langue);
+		if (response){
+			const tmpUser = await getUser();
+			setUser(tmpUser);
+		}
 	};
 
   return (

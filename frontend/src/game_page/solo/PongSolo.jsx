@@ -5,6 +5,7 @@ import { ScoreBoard } from '../ScoreBoard';
 import { useAuth } from '../../provider/UserAuthProvider';
 import { useRef } from 'react';
 import { getGameSettings } from '../../api/api';
+import Loading from "../../loading_page/Loading";
 import npatronImage from '../../assets/game/npatron.png';
 import gradientImage from '../../assets/game/gradient.png';
 import ballImage from '../../assets/game/ball.png';
@@ -63,12 +64,10 @@ const usePaddleMovement = (webSocket, keyBind) => {
         if (!webSocket) return;
         
         const handleKeyDown = (e) => {
-            console.log(`Key pressed: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: true }));
         };
 
         const handleKeyUp = (e) => {
-            console.log(`Key released: ${e.key}`);
             setKeysPressed((prev) => ({ ...prev, [e.key]: false }));
         };
 
@@ -113,7 +112,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
         background: "black"
     });
 
-    // Game state
     const [paddlePos, setPaddlePos] = useState({ left: 300, right: 300 });
     const [paddleSizes, setPaddleSizes] = useState({ left: 90, right: 90 });
     const [ballPos, setBallPos] = useState({ x: 450, y: 300 });
@@ -123,7 +121,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     const [roomPlayers, setRoomPlayers] = useState([]);
     const [maxScoreToUse, setMaxScoreToUse] = useState(maxScore);
 
-    // Power Up gestion
     const [powerUpType, setPowerUpType] = useState(null);
     const [powerUpPosition, setPowerUpPosition] = useState({ x: 0, y: 0 });
     const [displayPowerUpBool, setDisplayPowerUpBool] = useState(false);
@@ -134,11 +131,9 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     const [centerLineClass, setCenterLineClass] = useState('center-line');
 
     useEffect(() => {
-        console.log("le voila", powerUpType);
-        console.log("la pos", powerUpPosition);
+
     }, [powerUpType, powerUpPosition]);
 
-    // Fetch game settings
     useEffect(() => {
         (async () => {
             try {
@@ -147,7 +142,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 setKeyBind({ up: settings.up, down: settings.down });
                 const tmpBoard = getBoardBackground(settings.boardSkin);
                 setBoardBackground(tmpBoard);
-                console.log("Settings récupérés :", settings);
             } catch (error) {
                 console.error("Erreur :", error);
             }
@@ -172,8 +166,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
-                if (!data.players)
-                    console.log("data", data);
                 if (data.paddles_pos) {
                     setPaddlePos(data.paddles_pos);
                 }
@@ -200,7 +192,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 if (data.power_up) {
                     setPowerUpType(data.power_up);
                     if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
-                        console.log("power up class", powerUpClass);
                         setPowerUpClass('power-up-bonus');
                     }
                     else {
@@ -209,7 +200,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
-                    console.log("power up type", data.power_up);
                 }
 
                 if (data.status === "erase") {
@@ -221,14 +211,12 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                     setPowerUpPosition({ x: 0, y: 0 });
                 }
                 if (data.power_up_release) {
-                    console.log("power up release voici ;e bool", displayPowerUpBool);
                     setDisplayPowerUpBool(false);
                     setPowerUpType(null);
                     setCenterLineClass('center-line');
                     setSoloPlayActive(false);
                 }
                 if (data.player_has_power_up) {
-                    console.log("player has power up", data.player_has_power_up);
                     setPlayerHasPowerUp(data.player_has_power_up);
                 }
                 if (data.solo_play_active) {
@@ -301,7 +289,7 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
     }, [soloPlayActive, powerUpType]);
 
     if (!gameSettings) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
 
     return (

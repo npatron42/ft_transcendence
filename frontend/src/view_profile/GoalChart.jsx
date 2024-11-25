@@ -9,12 +9,18 @@ import {
     Tooltip,
     Legend,
 } from 'chart.js';
+import { useTranslation } from 'react-i18next';
+import { useState } from 'react';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const GoalChart = ({ goalsConceded, goalsScored }) => {
+function GoalChart ({ goalsConceded, goalsScored }){
+    const { t } = useTranslation();
+    const [goalsScoredTxt] = useState(t('viewProfile.goalScore'));
+    const [goalsConcededTxt] = useState(t('viewProfile.goalConceded'));
+
     const data = {
-        labels: ['Goals Scored', 'Goals Conceded'],
+        labels: [goalsScoredTxt, goalsConcededTxt],
         datasets: [
             {
                 label: 'Goals',
@@ -63,7 +69,7 @@ const GoalChart = ({ goalsConceded, goalsScored }) => {
                 display: false,
             },
             tooltip: {
-                enabled: true, // Active les infobulles
+                enabled: true,
                 titleFont: {
                     family: 'Millimetre-Light',
                     size: 10,

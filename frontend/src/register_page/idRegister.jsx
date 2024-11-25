@@ -55,7 +55,6 @@ function idRegister() {
 			password
 		});
 			if (response.data.success) {
-				// console.log('Essai de connexion avec:', { username: response.data.user.username, email: response.data.user.email, password: response.data.user.password })
 				navigate('/');
 			}
 			else {
@@ -70,9 +69,7 @@ function idRegister() {
 					return;
 				}
 			}
-		
-	// console.log('Username ', username);
-	// console.log('Password ', password);registerPage.mail
+
 	};
 
 	return(

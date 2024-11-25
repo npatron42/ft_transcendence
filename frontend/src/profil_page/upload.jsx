@@ -11,14 +11,12 @@ import "./button.css";
 function Upload() {
 
   const { t } = useTranslation();
-  const {myUser, setUser} = useAuth();
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
   
   const handleButtonClick = (e) => {
     e.preventDefault();
-    // console.log(myUser.id);
     fileInputRef.current.click();
   };
 
@@ -49,15 +47,12 @@ function Upload() {
           setErrorMessage(''); 
           const tmpUser = await getUser();
           setUser(tmpUser);
-          // console.log(" in response : ", myUser);
           
         }
         
       } catch (error) {
-        // alert("tes");
         setSuccessMessage('');
         setErrorMessage('profilPage.errorUpload');
-        // alert('Failed to upload the image.');
       }
       clearMessages();
     };

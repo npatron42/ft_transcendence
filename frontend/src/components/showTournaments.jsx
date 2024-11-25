@@ -15,7 +15,6 @@ export default function ShowTournaments() {
         const handleSocketTournament = (data) => {
 			if (data.message["allTournaments"]) {
 				setTournaments(data.message["allTournaments"]);
-				console.log(data.message["allTournaments"])
             }
         };
 

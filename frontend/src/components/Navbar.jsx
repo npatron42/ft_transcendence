@@ -134,7 +134,6 @@ function NavbarBS() {
     setNotifClicked(!notifIsClicked);
     if (profileShown === true)
       setProfile(!profileShown);
-    console.log("YES")
 
   };
 

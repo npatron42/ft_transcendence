@@ -39,7 +39,6 @@ async def sendToEveryClientsUsersList(channel_layer):
     size = len(socketsUsers)
     i = 0
     usersConnected = list(socketsUsers.keys())
-    logger.info("usersConnected --> %s", usersConnected)
     sockets = list(socketsUsers.values())
     while i < size:
         myUser = await getUserById(usersConnected[i])
@@ -515,21 +514,23 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def disconnect(self, close_code):
         myUser = self.scope['user']
+        if myUser.is_authenticated:
+            if myUser.id in socketsUsers:
+                del socketsUsers[myUser.id]
+            pass
+            
+            myUser = await getUserById(myUser.id)
 
-        if myUser.id in socketsUsers:
-            del socketsUsers[myUser.id]
-        pass
-        
-        myUser = await getUserById(myUser.id)
+            userId = str(myUser.id)
+            await removeFromPool(myUser)
+            await changeUserStatus(userId, False)
+            await self.channel_layer.group_discard("status_updates", self.channel_name)
 
-        userId = str(myUser.id)
-        await removeFromPool(myUser)
-        await changeUserStatus(userId, False)
-        await self.channel_layer.group_discard("status_updates", self.channel_name)
-
-        await self.send_status_to_all()
-        socketsUsers.pop(userId, None)
-        await update_user_status(myUser, "offline")
+            await self.send_status_to_all()
+            socketsUsers.pop(userId, None)
+            await update_user_status(myUser, "offline")
+        else:
+            await self.close()
 
     
 
@@ -549,7 +550,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             parse = data.get('parse')
 
             myExpeditor = self.scope['user']
-            logger.info("Le id que je recois --> %s", myReceiverId)
             myReceiver = await getUserById(myReceiverId)
             socketReceiver = socketsUsers.get(str(myReceiverId))
 
@@ -604,10 +604,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             sender = data.get("sender")
             receiver = data.get("receiver")
 
-            logger.info("data received --> %s", data)
-
             myUserSender = await getUserById(sender.get("id"))
-            logger.info("myUserSender")
             myUserReceiver = await getUserById(receiver.get("id"))
 
             dataToDb = Message(sender=myUserSender, receiver=myUserReceiver, message=data.get("message"))

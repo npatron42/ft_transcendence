@@ -37,8 +37,6 @@ function Pseudo({ Actif, setActif }) {
 					setErrorMessage('');
 				} else if (response.success === false) {
 					setErrorMessage("profilPage.errorUser");
-				} else {
-					console.log("marche pas");
 				}
 			} catch (error) {
 				console.log('Failed user');

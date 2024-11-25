@@ -10,6 +10,7 @@ import { getDiscussions, getFriendsList, getUsersList } from "../api/api";
 import Message from "./Message";
 import Loading from "../loading_page/Loading";
 import ModalUserChat from "./ModalUserChat";
+import { useTranslation } from 'react-i18next';
 
 const host = import.meta.env.VITE_HOST;
 
@@ -32,6 +33,7 @@ function Chat() {
     const [usersMessagesClicked, setUsersMessagesClicked] = useState(false)
     const [blockedUsers, setBlockedUsers] = useState([])
     const [inputMessage, setInputMessage] = useState('');
+    const { t } = useTranslation();
 
     const handleWriting = (event) => {
         if (event.key === 'Enter' && inputMessage.length !== 0) { 
@@ -285,7 +287,7 @@ function Chat() {
 
                     {friendsMessagesClicked && !usersMessagesClicked && friendsList.length === 0 && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span-username">Add some friends..</span>
+                            <span className="welcomeMessage-span-username">{t('chat.addFriend')}</span>
                         </div>
                     )}
 
@@ -295,7 +297,7 @@ function Chat() {
 
                     {friendsMessagesClicked && !usersMessagesClicked && friendsList.length !== 0 && userSelected === null && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span-username">Choose a discuss</span>
+                            <span className="welcomeMessage-span-username">{t('chat.chooseDiscuss')}</span>
                         </div>
                     )}
 
@@ -327,7 +329,7 @@ function Chat() {
                                 value={inputMessage}
                                 onKeyDown={handleWriting}
                                 onChange={handleChange}
-                                placeholder="Write here"
+                                placeholder={t('chat.write')}
                             />
                         </form>
                         {userIsClicked && (
@@ -338,7 +340,7 @@ function Chat() {
 
                     {!friendsMessagesClicked && !usersMessagesClicked && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span">Welcome</span>
+                            <span className="welcomeMessage-span">{t('chat.welcome')}</span>
                             <span className="welcomeMessage-span-username">{myUser.username}</span>
                         </div>
                     )}
@@ -349,7 +351,7 @@ function Chat() {
 
                     {usersMessagesClicked && !friendsMessagesClicked && usersList.length === 0 && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span-username">There is no Users...</span>
+                            <span className="welcomeMessage-span-username">{t('chat.noUser')}</span>
                         </div>
                     )}
 
@@ -362,7 +364,7 @@ function Chat() {
 
                     {usersMessagesClicked && !friendsMessagesClicked && usersList.length !== 0 && userSelected === null && (
                         <div className="welcomeMessage">
-                            <span className="welcomeMessage-span-username">Choose a discuss</span>
+                            <span className="welcomeMessage-span-username">{t('chat.chooseDiscuss')}</span>
                         </div>
                     )}
 
@@ -393,7 +395,7 @@ function Chat() {
                                 value={inputMessage}
                                 onKeyDown={handleWriting}
                                 onChange={handleChange}
-                                placeholder="Write here"
+                                placeholder={t('chat.write')}
                             />
                         </form>
                         {userIsClicked && (
