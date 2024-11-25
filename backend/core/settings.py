@@ -5,7 +5,7 @@ from datetime import timedelta
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-MEDIA_URL = '/media/'
+MEDIA_URL = '/api/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
@@ -17,7 +17,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True 
 EMAIL_HOST_USER = 'ft.transcendence.42nice@gmail.com'
-EMAIL_HOST_PASSWORD =  'lgqm xtii tpjs jqqb'
+EMAIL_HOST_PASSWORD =  os.getenv('PASS_EMAIL')
 DEFAULT_FROM_EMAIL = 'ft.transcendence.42nice@gmail.com'
 
 
@@ -52,15 +52,11 @@ HOST= os.getenv('HOST')
 AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOWED_ORIGINS = [
-    f'http://{HOST}:5173',
-    f'http://{HOST}:8000',
-	# 'http://localhost:5173' ,
-	# 'http://localhost:8000' ,
+    f'https://{HOST}:4343',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
-    f'http://{HOST}:5173',
-    f'http://{HOST}:8000',
+    f'https://{HOST}:4343',
 ]
 
 ASGI_APPLICATION = 'core.asgi.application'

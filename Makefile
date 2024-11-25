@@ -3,7 +3,8 @@
 
 all:
 	./setup_env.sh 
-	docker-compose up --build -d
+	docker-compose up --build
+# -d
 
 clean:
 	docker-compose down

@@ -1,6 +1,7 @@
 import Image from 'react-bootstrap/Image';
 import "./utils.css";
 import Pong from "./pong.png";
+import { getMediaUrl } from '../api/api';
 import { useAuth } from '../provider/UserAuthProvider';
 
 const host = import.meta.env.VITE_HOST;
@@ -14,7 +15,7 @@ function image() {
   return (
 	  <div> 
 		<Image className="image-style"
-		 src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://${host}:8000/media/${myUser.profilePicture}`}
+		 src={getMediaUrl(myUser.profilePicture)}
 		 roundedCircle />
 	</div>
   );

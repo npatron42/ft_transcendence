@@ -6,13 +6,10 @@ import { useAuth } from '../provider/UserAuthProvider';
 import { getGamesInvitations, getFriendsInvitations } from '../api/api';
 import React, { useEffect, useState } from 'react';
 import UnderNavbar from './UnderNavbar';
+import { getMediaUrl } from '../api/api';
 import Notifications from '../notifications/Notifications';
 import Chat from './Chat';
-import flagF from '../assets/login_page/frenchFlag.svg'
-import flagI from '../assets/login_page/italianFlag.svg';
-import flagE from '../assets/login_page/englishFlag.svg';
 import { useTranslation } from 'react-i18next';
-import Languages from '../login_page/languages';
 
 import "./components.css"
 
@@ -64,7 +61,7 @@ function NavbarBS() {
       }
     };
 
-    const unsubscribe = subscribeToNotifs(handleNotif);
+    const unsubscribe = subscribeToNotifs(handleNotif)
 
     
     const initNotifs = async () => {
@@ -186,7 +183,7 @@ function NavbarBS() {
           {myUser && myUser.profilePicture && (
             <div className="profile-container">
               <img
-                src={myUser.profilePicture.startsWith('http') ? myUser.profilePicture : `http://${host}:8000/media/${myUser.profilePicture}`}
+                src={getMediaUrl(myUser.profilePicture)}
                 alt="Profile"
                 className="profile-picture-navbar"
                 onClick={handleProfile}

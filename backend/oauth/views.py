@@ -21,8 +21,8 @@ myRedirect = os.getenv('HOST')
 
 myId =  os.getenv('ID42')
 mySecret =  os.getenv('SECRET')
-url_42 = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=http%3A%2F%2F{myRedirect}%3A5173%2Fcheck42user&response_type=code"
-myRedirect = f"http://{myRedirect}:5173/check42user"
+url_42 = f"https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-833368055563188d4e7433e8ee83fe676656a831c2c0651ff295be883bde7122&redirect_uri=https%3A%2F%2F{myRedirect}%3A4343%2Fcheck42user&response_type=code"
+myRedirect = f"https://{myRedirect}:4343/check42user"
 
 class OAuthView(APIView):
     def post(self, request):
@@ -109,7 +109,7 @@ def attributeToUserJWT(myUser: User):
 	}
 	token = jwt.encode(myPayload, os.getenv('SECRET_KEY'), algorithm='HS256')
 	response = Response()
-	response.set_cookie(key='jwt', value=token, httponly=True)
+	# response.set_cookie(key='jwt', value=token, httponly=True)
 	response.data = {
 		'jwt': token
 	}

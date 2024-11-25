@@ -5,6 +5,7 @@ import { useAuth } from '../../provider/UserAuthProvider'
 import Countdown from '../../components/Coutdown';
 import CountdownToHome from '../../components/CountdownToHome';
 import '../css/waitTournaments.css';
+import { getMediaUrl } from '../../api/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -139,7 +140,7 @@ const WaitingTournaments = () => {
                 <>
                 <div className="playerWaiting playerWaiting-leftTop">
                     <div className="top">
-                        <img src={myTournament.players[0].profilePicture} className="picture"></img>   
+                        <img src={getMediaUrl(myTournament.players[0].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
                         <span className="usernamePlacement">{myTournament.players[0].username}</span>
@@ -159,7 +160,7 @@ const WaitingTournaments = () => {
                 {myTournament.players[1] && (
                 <div className="playerWaiting playerWaiting-rightTop">
                     <div className="top">
-                        <img src={myTournament.players[1].profilePicture} className="picture"></img>   
+                        <img src={getMediaUrl(myTournament.players[1].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
                         <span className="usernamePlacement">{myTournament.players[1].username}</span>
@@ -181,7 +182,7 @@ const WaitingTournaments = () => {
                 {myTournament.players[2] && (
                 <div className="playerWaiting playerWaiting-leftDown">
                     <div className="top">
-                        <img src={myTournament.players[2].profilePicture} className="picture"></img>   
+                        <img src={getMediaUrl(myTournament.players[2].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
                         <span className="usernamePlacement">{myTournament.players[2].username}</span>
@@ -203,7 +204,7 @@ const WaitingTournaments = () => {
                 {myTournament.players[3] && (
                 <div className="playerWaiting playerWaiting-rightDown">
                     <div className="top">
-                        <img src={myTournament.players[3].profilePicture} className="picture"></img>   
+                        <img src={getMediaUrl(myTournament.players[3].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
                         <span className="usernamePlacement">{myTournament.players[3].username}</span>
@@ -221,16 +222,16 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="headsTournament">
                     <div className="headPlayer">
-                        <img src={myTournament.players[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myTournament.players[0].profilePicture)} className="picture"></img>
                     </div> 
                     <div className="headPlayer">
-                        <img src={myTournament.players[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myTournament.players[1].profilePicture)} className="picture"></img>
                     </div> 
                     <div className="headPlayer">
-                        <img src={myTournament.players[2].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myTournament.players[2].profilePicture)} className="picture"></img>
                     </div> 
                     <div className="headPlayer">
-                        <img src={myTournament.players[3].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myTournament.players[3].profilePicture)} className="picture"></img>
                     </div> 
                 </div>
                 <div className="loaderBot">
@@ -245,25 +246,25 @@ const WaitingTournaments = () => {
             <div className="waitingTournament-bis fadeIn">
                 <div className="displayMatch">
                     <div className="displayUser-left">
-                        <img src={myUser.profilePicture} className="picture"></img>   
+                        <img src={getMediaUrl(myUser.profilePicture)} className="picture"></img>   
                     </div>
                     <div className="versus-left">
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="displayUser-left">
-                        <img src={myOpponent.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myOpponent.profilePicture)} className="picture"></img>
                     </div>
                     <Countdown roomId={myRoomId} idTournament={idTournament}/>
                 </div>
                 <div className="displayMatch">
                     <div className="displayUser-right">
-                        <img src={otherMatch[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(otherMatch[0].profilePicture)} className="picture"></img>
                     </div>
                     <div className="versus-right">
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="displayUser-right">
-                        <img src={otherMatch[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(otherMatch[1].profilePicture)} className="picture"></img>
                     </div>
                 </div>
             </div>
