@@ -663,7 +663,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             try:
                 gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
                 await saveGameInvitation(gameInvitation)
-                gameInvitation = await getGamesInvitations(myUserInvited.username)
+                gameInvitation = await getGamesInvitations(myUserInvited.id)
                 await sendToClient2(self, gameInvitation, myUserInvited.username)
                 
             except:
@@ -677,7 +677,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 myGame = myGameInvitationSer.data
                 roomId = myGame["roomId"]
                 await findGameInvitationToErase(myUserWhoInvites)
-                gamesInvitations = await getGamesInvitations(myUser.username)
+                gamesInvitations = await getGamesInvitations(myUser.id)
                 dataToSend = {
                     "acceptGameInvitation": roomId
                 }

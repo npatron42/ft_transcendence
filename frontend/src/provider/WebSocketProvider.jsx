@@ -28,7 +28,7 @@ export const WebSocketProvider = ({ children }) => {
 
         const pingInterval = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
-                // socket.send(JSON.stringify({ type: "ping" }));
+                socket.send(JSON.stringify({ type: "ping" }));
             }
         }, 10000);
 

@@ -1,5 +1,4 @@
-
-// import { getMediaUrl } from '../api/api';"
+import { getMediaUrl } from '../api/api';
 
 const host = import.meta.env.VITE_HOST;
 

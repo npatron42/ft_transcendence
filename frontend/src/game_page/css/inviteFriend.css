@@ -46,15 +46,13 @@
     width: 250px;
     border-radius: 50px;
     box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
-    ;
-
     background-color: transparent;
-    margin-left: 25px;
-    margin-right: 25px;
     margin-top: 20px;
     margin-bottom: 20px;
+    margin-left: 25px;
     display: flex;
     align-items: center;
+    overflow: hidden;
 }
 
 .invite-toGame-friend-item td {
@@ -83,23 +81,33 @@
     color: #FAF3DD;
 }
 
-.invite-users-list {
-    max-height: 200px;
-    overflow-x: hidden;
-    margin-right: 5px;
-}
-
-.users-list.scroll {
+  
+  .invite-toGame-friends-list {
+    height: 600px;
+    width: 300px;
+    border-radius: 50px;
+    border: 3px solid #161719;
+    background-color: transparent;
+    overflow: hidden;
+  }
+  
+  .invite-toGame-scroll-container {
+    max-height: 100%;
     overflow-y: auto;
-}
-
-.users-list.scroll::-webkit-scrollbar {
+  }
+  
+  .invite-users-list.scroll {
+    overflow-y: auto;
+  }
+  
+  .invite-users-list.scroll::-webkit-scrollbar {
     width: 10px;
     background-color: #2a2c31;
-}
-
-.users-list.scroll::-webkit-scrollbar-thumb {
+  }
+  
+  .invite-users-list.scroll::-webkit-scrollbar-thumb {
     border: 2px solid #000000;
     border-radius: 20px;
     background-color: #AED9E0;
-}
+  }
+  
