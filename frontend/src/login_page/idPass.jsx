@@ -48,7 +48,8 @@ function IdPass() {
                     const userLangue = user.langue;
                     
                     localStorage.setItem('i18nextLng', userLangue);
-                    navigate('/home');
+                    if (localStorage.getItem("jwt") && localStorage.getItem("i18nextLng"))
+                        navigate('/home');
                 }
 
             } else {
@@ -83,6 +84,7 @@ function IdPass() {
 
                 localStorage.setItem('i18nextLng', userLangue);
 
+            if (localStorage.getItem("jwt") && localStorage.getItem("i18nextLng"))
                 navigate('/home');
             } else {
                 setOtp('');
