@@ -21,7 +21,7 @@ pool_lock = asyncio.Lock()
 socketsUsers = {}
 usersPool = {}
 usersStatus = {}
-usersConnected = {}
+usersConnected = []
 
 async def finalFriendsList(friendsList):
     size = len(friendsList)
@@ -409,6 +409,15 @@ async def sendToSocketTournament(self, message):
         "message": message,
     })
 
+def checkIfUserIsAlreadyConnected(userId):
+    myLen = len(usersConnected)
+    i = 0
+    while i < myLen:
+        myInfo = usersConnected[i]
+        id = myInfo.get("id")
+        if id == userId:
+            return True, 
+
 
 class handleSocketConsumer(AsyncWebsocketConsumer):
 
@@ -429,7 +438,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             
             abortedId = data.get("userAborted")
             userAborted = await getUserById(abortedId)
-
 
             userToNotifID = await findGameInvitationToErase(userAborted)
             if userToNotifID == None:
@@ -494,14 +502,16 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'].is_authenticated:
             myUser = self.scope["user"]
+            logger.info("socket de %s, ---> %s", myUser.username, self.channel_name)
             userId = str(myUser.id)
-            if userId in usersConnected:
-                dataToSend = {
-                    "DEGAGE-FILS-DE-PUTE": "OH OUI"
-                }
-                await sendToClient2(self, dataToSend, myUser.id)
-                await self.close()
-                return
+            logger.info("usersConnected --> %s", usersConnected)
+            # if userId in usersConnected:
+            #     dataToSend = {
+            #         "DEGAGE-FILS-DE-PUTE": "OH OUI"
+            #     }
+            #     await sendToClient2(self, dataToSend, myUser.id)
+            #     logger.info("JE SEND")
+            #     return
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
             await self.channel_layer.group_add("status_updates", self.channel_name)
@@ -513,7 +523,17 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             idUser = str(myUser.id)
             socketsUsers[idUser] = mySocket
-            usersConnected[userId] = True
+
+            userInfo = {
+                "socket": self.channel_layer,
+                "id": myUser.id
+            }
+
+            usersConnected.append(userInfo)
+
+            condition, socketOne, socketTwo = checkIfUserIsAlreadyConnected(userId)
+
+            logger.info("%s add, --> %s", myUser.username, usersConnected)
 
             await addToPool(myUser, self.channel_name)
             await changeUserStatus(idUser, True)
@@ -541,7 +561,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             userId = str(myUser.id)
             await removeFromPool(myUser)
             if userId in usersConnected:
-                del usersConnected[userId]
+                logger.info("Avant de pop --> %s", usersConnected)
+                usersConnected.pop(userId)
+                logger.info("Apres pop  --> %s", usersConnected)
             await changeUserStatus(userId, False)
             await self.channel_layer.group_discard("status_updates", self.channel_name)
 
@@ -678,10 +700,17 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserInvitedId = userInvitedTmp.get("id")
             myUserInvited = await getUserById(myUserInvitedId)
             myRoomId = data.get("roomId")
+            stringParse = str(myUser.id) + "|" + str(myUserInvitedId)
+            
             try:
                 gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
                 await saveGameInvitation(gameInvitation)
                 gameInvitation = await getGamesInvitations(myUserInvited.id)
+                dataToSend = {
+		        "type": "CHECK-GAME-INVITATION",
+		        "users": stringParse
+	            }
+                await sendToShareSocket(self, dataToSend)
                 await sendToClient2(self, gameInvitation, str(myUserInvitedId))
                 
             except:

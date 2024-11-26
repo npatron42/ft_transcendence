@@ -26,6 +26,7 @@ function ViewProfile() {
     const [goalsConceded, setGoalsConceded] = useState(0);
     const [goalsScored, setGoalsScored] = useState(0);
     const { t } = useTranslation();
+    let i = 0;
 
     useEffect(() => {
         const handleSocketMessage = (message) => {
@@ -214,7 +215,7 @@ function ViewProfile() {
                             )}
                         </div>
                         <div className="matchHistory-content-profile3">
-                        <table className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+                        <div className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
                                     {username} {t('viewProfile.noMatch')}
@@ -222,12 +223,12 @@ function ViewProfile() {
                             ) : (
                                 matchHistory.slice().reverse().map((match) => (
                                     <HistoryItem
-                                        key={match.id}
+                                        key={i++}
                                         match={match}
                                     />
                                 ))
                             )}
-                        </table>
+                        </div>
                         </div>
                     </div>
                 </div>
