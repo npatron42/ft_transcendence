@@ -19,6 +19,7 @@
     
     "registerPage": {
       "id": "Identifiant",
+      "idTournament": "Identifiant de tournoi",
       "champ1": "Entrez votre Identifiant",
       "mail" : "Email",
       "champ2": "Entrez votre Email",

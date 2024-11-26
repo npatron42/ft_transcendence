@@ -20,8 +20,8 @@ pool_lock = asyncio.Lock()
 
 socketsUsers = {}
 usersPool = {}
-
 usersStatus = {}
+usersConnected = {}
 
 async def finalFriendsList(friendsList):
     size = len(friendsList)
@@ -381,17 +381,20 @@ async def sendToClient(channel_layer, socket, message):
     })
 
 
-
 async def findGameInvitationToErase(myUser):
     try:
         myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUser)
         myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
         myGame = myGameInvitationSer.data
         userToNotifID = myGame.get("userInvited")
+        
         await sync_to_async(myGameInvitation.delete)()
+        
         return userToNotifID
-    except:
-        raise Exception("Game cannot be find")
+    
+    except GameInvitation.DoesNotExist:
+        return None
+
 
 
 async def sendToShareSocket(self, message):
@@ -422,13 +425,17 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         type = data.get("type")
 
         myUser = self.scope["user"]
-        logger.info("[WEBSOCKET CONSUEMR] ---> %s", data)
         if type == "ABORT-MATCH":
-            userAborted = await getUserById(data.get("id"))
+            
+            abortedId = data.get("userAborted")
+            userAborted = await getUserById(abortedId)
+
+
             userToNotifID = await findGameInvitationToErase(userAborted)
-            userToNotif = await getUserByIdClean(userToNotifID)
-            gamesInvitations = await getGamesInvitations(userToNotif["username"])
-            await sendToClient2(self, gamesInvitations, userToNotif.get("id"))
+            if userToNotifID == None:
+                return
+            gamesInvitations = await getGamesInvitations(userToNotifID)
+            await sendToClient2(self, gamesInvitations, str(userToNotifID))
 
         elif type == "USERS-STATUS-INGAME":
             statusReceived = data["status"]
@@ -486,6 +493,15 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         if self.scope['user'].is_authenticated:
+            myUser = self.scope["user"]
+            userId = str(myUser.id)
+            if userId in usersConnected:
+                dataToSend = {
+                    "DEGAGE-FILS-DE-PUTE": "OH OUI"
+                }
+                await sendToClient2(self, dataToSend, myUser.id)
+                await self.close()
+                return
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
             await self.channel_layer.group_add("status_updates", self.channel_name)
@@ -497,6 +513,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             idUser = str(myUser.id)
             socketsUsers[idUser] = mySocket
+            usersConnected[userId] = True
 
             await addToPool(myUser, self.channel_name)
             await changeUserStatus(idUser, True)
@@ -523,6 +540,8 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             userId = str(myUser.id)
             await removeFromPool(myUser)
+            if userId in usersConnected:
+                del usersConnected[userId]
             await changeUserStatus(userId, False)
             await self.channel_layer.group_discard("status_updates", self.channel_name)
 
@@ -543,8 +562,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
         type = data["type"]
         myUser = self.scope["user"]
-        logger.info(" JE REOCIS --> %s", data)
-        # INVITE METHODE
         if (type == "INVITE"):
             myReceiverId = data.get('to')
             typeMessage = data.get('type')
@@ -552,7 +569,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             myExpeditor = self.scope['user']
             myReceiver = await getUserById(myReceiverId)
-            socketReceiver = socketsUsers.get(str(myReceiverId))
 
             myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
             invitation_exists = await checkInvitation(parse)

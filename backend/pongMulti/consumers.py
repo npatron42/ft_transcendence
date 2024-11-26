@@ -96,7 +96,7 @@ async def getUserByUsername(username):
 usersInGame = []
 myMatches = {}
 dataIsSent = {}
-
+usersConnect = {}
 
 class PongConsumer(AsyncWebsocketConsumer):
 	paddles_pos = {}
@@ -140,7 +140,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if room_id not in myMatches:
 				try:
 					if PongConsumer.isTournament[room_id] == True:
-						max_score = 5
+						max_score = 1
 					else:
 						max_score = PongConsumer.max_scores[room_id]
 					self.game_task = asyncio.create_task(self.update_ball(max_score))
@@ -178,14 +178,15 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 	async def connect(self):
 		myUser = self.scope["user"]
-		if myUser.is_authenticated:
+		if myUser.is_authenticated:	
 			self.room_id = self.scope['url_route']['kwargs']['room_id']
 			self.room_group_name = f'game_{self.room_id}'
 			if self.room_id not in PongConsumer.players:
 				PongConsumer.players[self.room_id] = []
 
 			if len(PongConsumer.players[self.room_id]) >= 2:
-				await self.close()
+				usersConnect[str(myUser.id)] = "doubleConnect"
+				logger.info(" usersConnect --> %s", usersConnect)
 				return
 
 			if self.room_id not in PongConsumer.paddles_pos:
@@ -237,6 +238,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.room_group_name,
 				self.channel_name
 			)
+			usersConnect[str(myUser.id)] = "alreadyConnect"
+			logger.info(" usersConnect --> %s", usersConnect)
 			await self.accept()
 			await self.channel_layer.group_add("shareSocket", self.channel_name)
 			await self.channel_layer.group_add("shareTournament", self.channel_name)
@@ -248,6 +251,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				}
 			)
 			usersInGame.append(myUser.username)
+			logger.info("Users in game --> %s", usersInGame)
 			await sendGameStatusToUsers(self)
 
 		else:
@@ -259,101 +263,107 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		myUser = self.scope["user"]
-		if hasattr(self, 'game_task'):
-			self.game_task.cancel()
-		if PongConsumer.isTournament[self.room_id] == False:
-			await self.channel_layer.group_discard(
-				self.room_group_name,
-				self.channel_name
-			)
-
-			if len(PongConsumer.players[self.room_id]) == 2:
-				disconnected = self.id
-				player1 = await getUserById(PongConsumer.players[self.room_id][0])
-				player2 = await getUserById(PongConsumer.players[self.room_id][1])
-
-
-				if disconnected == PongConsumer.players[self.room_id][0]:
-					winner = PongConsumer.players[self.room_id][1]
-					winnerdb = player2
-				else:
-					winner = PongConsumer.players[self.room_id][0]
-					winnerdb = player1
-				p1_score = PongConsumer.score[self.room_id]['player1']
-				p2_score = PongConsumer.score[self.room_id]['player2']
-				if PongConsumer.send_db[self.room_id] == False:
-					await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
-					PongConsumer.send_db[self.room_id] = True
-
-				await self.channel_layer.group_send(
+		if myUser.is_authenticated:
+			if usersConnect[str(myUser.id)] == "doubleConnect":
+				usersConnect[str(myUser.id)] = "alreadyConnect"
+				return
+			if hasattr(self, 'game_task'):
+				self.game_task.cancel()
+			if PongConsumer.isTournament[self.room_id] == False:
+				await self.channel_layer.group_discard(
 					self.room_group_name,
-					{
-						'type': 'game_over',
-						'winner': winnerdb.username,
-						'score': PongConsumer.score[self.room_id]
-					}
+					self.channel_name
 				)
 
+				if len(PongConsumer.players[self.room_id]) == 2:
+					disconnected = self.id
+					player1 = await getUserById(PongConsumer.players[self.room_id][0])
+					player2 = await getUserById(PongConsumer.players[self.room_id][1])
 
-			if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.matchIsPlayed[self.room_id] == False:
-				myUser = self.scope['user']
-				dataToSend = {
-					"type": "ABORT-MATCH",
-					"userAborted": myUser.id,
-				}
-				await sendToShareSocket(self, dataToSend)
-			await removeClientFromUsers(self, myUser.username)
-			PongConsumer.players[self.room_id].remove(self.id)
-			return
-		
-		# DISCONNECTION INTO TOURNAMENTS
 
+					if disconnected == PongConsumer.players[self.room_id][0]:
+						winner = PongConsumer.players[self.room_id][1]
+						winnerdb = player2
+					else:
+						winner = PongConsumer.players[self.room_id][0]
+						winnerdb = player1
+					p1_score = PongConsumer.score[self.room_id]['player1']
+					p2_score = PongConsumer.score[self.room_id]['player2']
+					if PongConsumer.send_db[self.room_id] == False:
+						await save_match(winnerdb, player1, player2, p2_score, p1_score, False)
+						PongConsumer.send_db[self.room_id] = True
+
+					await self.channel_layer.group_send(
+						self.room_group_name,
+						{
+							'type': 'game_over',
+							'winner': winnerdb.username,
+							'score': PongConsumer.score[self.room_id]
+						}
+					)
+
+
+				if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.matchIsPlayed[self.room_id] == False:
+					myUser = self.scope['user']
+					dataToSend = {
+						"type": "ABORT-MATCH",
+						"userAborted": myUser.id,
+					}
+					await sendToShareSocket(self, dataToSend)
+				await removeClientFromUsers(self, myUser.username)
+				PongConsumer.players[self.room_id].remove(self.id)
+				return
+			
+			# DISCONNECTION INTO TOURNAMENTS
+
+			else:
+
+
+				await self.channel_layer.group_discard(
+					self.room_group_name,
+					self.channel_name
+				)
+				if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.end[self.room_id] == False:
+					disconnected = self.id
+					player1 = await getUserById(PongConsumer.players[self.room_id][0])
+					player2 = await getUserById(PongConsumer.players[self.room_id][1])
+
+
+					if disconnected == PongConsumer.players[self.room_id][0]:
+						myWinner = PongConsumer.players[self.room_id][1]
+						myLoser = PongConsumer.players[self.room_id][0]
+						winnerdb = player2
+					else:
+						myWinner = PongConsumer.players[self.room_id][0]
+						myLoser = PongConsumer.players[self.room_id][1]
+						winnerdb = player1
+
+					await self.channel_layer.group_send(
+						self.room_group_name,
+						{
+							'type': 'game_over',
+							'winner': myWinner,
+							'score': PongConsumer.score[self.room_id]
+						}
+					)
+
+					myPlayers = []
+					myPlayers.append(PongConsumer.players[self.room_id][0])
+					myPlayers.append(PongConsumer.players[self.room_id][1])
+					dataToSend = {
+						"type": "RESULTS",
+						"idTournament": PongConsumer.idTournament[self.room_id],
+						"myWinner": myWinner,
+						"myLoser": myLoser,
+						"score": PongConsumer.score[self.room_id],
+						"players": myPlayers,
+					}
+					await PongConsumer.sendData(self, self.room_id, dataToSend)
+				await removeClientFromUsers(self, myUser.username)
+				PongConsumer.players[self.room_id].remove(self.id)
+				return
 		else:
-
-
-			await self.channel_layer.group_discard(
-				self.room_group_name,
-				self.channel_name
-			)
-			if len(PongConsumer.players[self.room_id]) == 2 and PongConsumer.end[self.room_id] == False:
-				disconnected = self.id
-				player1 = await getUserById(PongConsumer.players[self.room_id][0])
-				player2 = await getUserById(PongConsumer.players[self.room_id][1])
-
-
-				if disconnected == PongConsumer.players[self.room_id][0]:
-					myWinner = PongConsumer.players[self.room_id][1]
-					myLoser = PongConsumer.players[self.room_id][0]
-					winnerdb = player2
-				else:
-					myWinner = PongConsumer.players[self.room_id][0]
-					myLoser = PongConsumer.players[self.room_id][1]
-					winnerdb = player1
-
-				await self.channel_layer.group_send(
-					self.room_group_name,
-					{
-						'type': 'game_over',
-						'winner': myWinner,
-						'score': PongConsumer.score[self.room_id]
-					}
-				)
-
-				myPlayers = []
-				myPlayers.append(PongConsumer.players[self.room_id][0])
-				myPlayers.append(PongConsumer.players[self.room_id][1])
-				dataToSend = {
-					"type": "RESULTS",
-					"idTournament": PongConsumer.idTournament[self.room_id],
-					"myWinner": myWinner,
-					"myLoser": myLoser,
-					"score": PongConsumer.score[self.room_id],
-					"players": myPlayers,
-				}
-				await PongConsumer.sendData(self, self.room_id, dataToSend)
-			await removeClientFromUsers(self, myUser.username)
-			PongConsumer.players[self.room_id].remove(self.id)
-			return
+			await self.close()
 		
 		
 		###########
@@ -488,7 +498,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def update_ball(self, max_score):
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.paddle_left_height[self.room_id] = 90
-		speed = 2
+		speed = 4
 		ball = PongConsumer.ball_pos[self.room_id] 
 		direction = PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([-4, 4])}
 		acceleration = 0.3

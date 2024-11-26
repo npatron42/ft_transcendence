@@ -78,7 +78,7 @@
 
 .custom-rgpd {
 	position: absolute;
-	top: 80vh;
+	top: 90vh;
 	left: 38vw;
 	background-color:#5E6472;
 	color:#FDCDBE !important;
@@ -97,7 +97,7 @@
 
 	.custom-rgpd2 {
 	position: absolute;
-	top: 80vh;
+	top: 90vh;
 	left: 56vw;
 	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
 	background-color:rgb(255, 69, 69) !important;

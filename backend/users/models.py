@@ -10,7 +10,7 @@ class User(AbstractUser):
     isFrom42 = models.BooleanField(default=False)
     myid42 = models.CharField(default="Not42")
     langue = models.CharField(max_length=10, default="fr")
-
+    tournamentName = models.CharField(max_length=15)
     dauth = models.BooleanField(default=False,  blank=True, null=True)
     otp_code = models.CharField(max_length=6, null=True)
     otp_created_at = models.DateTimeField(null=True)
