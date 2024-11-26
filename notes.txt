@@ -3,3 +3,11 @@
 - utiliser la valuer des tournois dans view profile 
 
 - bug photo
+
+
+
+fix:
+
+-gameInvitaions
+-trad
+-status
