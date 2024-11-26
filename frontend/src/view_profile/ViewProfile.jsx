@@ -107,7 +107,7 @@ function ViewProfile() {
                 };
                 socketUser.send(JSON.stringify(data));
             } else {
-                console.log("WebSocket for invitations is not open");
+                console.log("WebSocket for invitations is not open aaaaaaaa");
             }
         };
 
@@ -121,7 +121,7 @@ function ViewProfile() {
                 };
                 socketUser.send(JSON.stringify(data));
             } else {
-                console.log("WebSocket for invitations is not open");
+                console.log("WebSocket for invitations is not open nop");
             }
         };
 
