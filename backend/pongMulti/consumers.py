@@ -299,7 +299,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				myUser = self.scope['user']
 				dataToSend = {
 					"type": "ABORT-MATCH",
-					"userAborted": myUser.username,
+					"userAborted": myUser.id,
 				}
 				await sendToShareSocket(self, dataToSend)
 			await removeClientFromUsers(self, myUser.username)

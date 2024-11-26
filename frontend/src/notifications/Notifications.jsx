@@ -105,8 +105,8 @@ function Notifications() {
         if (socketUser && socketUser.readyState === WebSocket.OPEN) {
             const data = {
                 type: "DECLINE-GameInvitation",
-                userWhoInvites: userWhoInvites,
-                userWhoDeclines: myUser,
+                userWhoInvites: userWhoInvites.id,
+                userWhoDeclines: myUser.id,
             };
             socketUser.send(JSON.stringify(data));
         } else {
