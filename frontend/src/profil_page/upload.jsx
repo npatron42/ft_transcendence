@@ -11,7 +11,8 @@ function Upload() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
-  Dans ce cas, si la promesse est réussie (resolve() est appelé da
+
+  
   const handleButtonClick = (e) => {
     e.preventDefault();
     fileInputRef.current.click();

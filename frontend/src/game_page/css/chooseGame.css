@@ -46,6 +46,7 @@
     text-align: center;
     transition: transform 0.8s;
     transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
 }
 
 .flip-card-content {
@@ -57,10 +58,12 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
+    -webkit-backface-visibility: hidden;
 }
 
 .flip-card:hover .flip-card-inner {
     transform: rotateY(180deg);
+    /* -webkit-backface-visibility: hidden; */
 }
 
 /* Effet de vitre sur les cartes */
@@ -70,8 +73,11 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    -webkit-backface-visibility: hidden; /* Support pour Safari */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
     border-radius: 50px;
     overflow: hidden;
     border: solid 3px #161719;

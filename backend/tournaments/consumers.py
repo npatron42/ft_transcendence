@@ -12,7 +12,7 @@ import asyncio
 logger = logging.getLogger(__name__)
 
 
-usersConnected = {}
+# usersConnected = {}
 
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
@@ -664,21 +664,21 @@ class Tournament(AsyncWebsocketConsumer):
         if myUser.is_authenticated:
 
             userId = str(myUser.id)
-            if userId in usersConnected:
-                logger.info("DOUBLE CONNEXION --> %s", myUser.username)
-                dataToSend = {
-                    "DEGAGE-FILS-DE-PUTE": "OH OUI"
-                }
-                userSocket = allSockets.get(userId)
-                await sendToSocket(self, userSocket, dataToSend)
-                await self.close()
-                return
+            # if userId in usersConnected:
+            #     logger.info("DOUBLE CONNEXION --> %s", myUser.username)
+            #     dataToSend = {
+            #         "DEGAGE-FILS-DE-PUTE": "OH OUI"
+            #     }
+            #     userSocket = allSockets.get(userId)
+            #     await sendToSocket(self, userSocket, dataToSend)
+            #     await self.close()
+            #     return
 
             await self.channel_layer.group_add("shareSocket", self.channel_name)
             await self.channel_layer.group_add("socketTournament", self.channel_name)
             await self.channel_layer.group_add("shareTournaments", self.channel_name)
 
-            usersConnected[userId] = True
+            # usersConnected[userId] = True
             await self.accept()
             addSocketToUser(self.channel_name, str(myUser.id))
             allUsers.append(myUser)
