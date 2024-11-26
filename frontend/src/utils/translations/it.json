@@ -80,7 +80,8 @@
   },
 
   "gameSettings": {
-  "save": "Salva impostazioni"
+  "unsave": "Salva impostazioni",
+  "save": "Salvato"
   }, 
 
   "viewProfile": {
@@ -134,5 +135,23 @@
   "profile" : "Profilo",
   "play": "Gioca",
   "block": "Blocca"
+},
+
+"tournament": {
+  "tournament": "Torneo",
+  "noTournament": "Nessun torneo trovato...",
+  "waiting": "In attesa di giocatori...",
+  "start": "Il torneo sta per iniziare",
+  "next": "In attesa della prossima partita",
+  "finalist": "Finalisti",
+  "eliminated": "Eliminato",
+  "result": "Risultato",
+  "won": "ha vinto!",
+  "won2": "Hai vinto",
+  "cancelled": "Torneo annullato",
+  "full": "Completo",
+  "join": "Unisciti",
+  "redirection": "Reindirizzamento al menu tra "
 }
+
 }

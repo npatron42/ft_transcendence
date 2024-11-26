@@ -5,12 +5,14 @@ import Loading from '../../loading_page/Loading';
 import { getMediaUrl } from '../../api/api';
 import { useWebSocket } from '../../provider/WebSocketProvider';
 import '../css/inviteFriend.css';
+import { useTranslation } from 'react-i18next';
 
 function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInviting, isInviting }) {
 
     const { myUser } = useAuth();
-
     const roomIdStr = roomId.roomId;
+    const { t } = useTranslation();
+
     const InviteFriendGame = () => {
         const dataToSend = {
             "type": "GameInvitation",
@@ -28,9 +30,9 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
             <td className="invite-toGame-friend-item.td">
             <img src={getMediaUrl(user.profilePicture)} alt={`${user.username}'s profile`} className="invite-profile-picture" />
             </td>
-            <td className="invite-toGame-friend-item.td"><span className={`status ${chooseStatus(user.username)}`}>{chooseStatus(user.username)}</span></td>
+        <td className="invite-toGame-friend-item.td"><span className={`status ${user.status}`}> {user.status} </span></td>
             <td className="invite-toGame-friend-item.td">
-                <button type="button" className="btn btn-outline-dark invite-toGame-button"  onClick={() => InviteFriendGame()}>Invite</button>
+                <button type="button" className="btn btn-outline-dark invite-toGame-button"  onClick={() => InviteFriendGame()}>{t('chooseGame.invite')}</button>
             </td>
         </tr>
     );
@@ -40,98 +42,87 @@ export default InviteFriendItem;
 
 export const InviteFriend = (roomId) => {
     const { socketUser } = useWebSocket();
-    const [userList, setUserList] = useState([]);
-    const [status, setStatus] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
     const { myUser } = useAuth();
+    const [userList, setUserList] = useState([]);
+    const [status, setStatus] = useState({});
+    const [isLoading, setIsLoading] = useState(true);
     const [isInviting, setIsInviting] = useState(false);
-
+    const { t } = useTranslation();
+  
     useEffect(() => {
-        const handleSocketMessage = (message) => {
-            const data = JSON.parse(message.data);
-            if (data.status) {
-                setStatus(data.status);
-            }
-        };
-
+      const handleSocketMessage = (message) => {
+        const data = JSON.parse(message.data);
+        if (data.status) {
+          setStatus(data.status);
+        }
+      };
+  
+      if (socketUser) {
+        socketUser.addEventListener("message", handleSocketMessage);
+      }
+  
+      return () => {
         if (socketUser) {
-            socketUser.addEventListener("message", handleSocketMessage);
+          socketUser.removeEventListener("message", handleSocketMessage);
         }
-
-        return () => {
-            if (socketUser) {
-                socketUser.removeEventListener("message", handleSocketMessage);
-            }
-        };
+      };
     }, [socketUser]);
-
+  
     const defineUsersList = async () => {
-        setIsLoading(true);
-        const allUsers = await getAllUsers();
-        const filteredUsers = allUsers.filter((user) => user.username !== myUser.username);
-        setUserList(filteredUsers);
-        setIsLoading(false);
+      setIsLoading(true);
+      const allUsers = await getAllUsers();
+      const filteredUsers = allUsers.filter((user) => user.username !== myUser.username);
+      setUserList(filteredUsers);
+      setIsLoading(false);
     };
-
-    const chooseStatus = (username) => {
-        if (status[username] === true) {
-            return "online";
-        } else if (status[username] === "in-game") {
-            return "in-game";
-        } else {
-            return "offline";
-        }
+  
+    const chooseStatus = (user) => {
+        console.log(user);
+      if (status[user.status] === "online") {
+        return "online";
+      } else if (status[user.status] === "in-game") {
+        return "in-game";
+      } else {
+        return "offline";
+      }
     };
-
+  
     useEffect(() => {
-        defineUsersList();
+      defineUsersList();
     }, [myUser.username]);
-
-    
+  
     if (isInviting) {
-        return;
+      return null;
     }
-
+  
     return (
-        
+      <div className="invite-toGame-container">
         <div className="invite-toGame-friends-list">
-            {isLoading ? (
-                <Loading />
-            ) : (
-                <>
-                    {Array.isArray(userList) ? (
-                        userList.length === 0 ? (
-                            <div className="invite-noUsers">No friends found</div>
-                        ) : (
-                            <table className={`invite-users-list ${userList.length >= 4 ? "scroll" : ""}`}>
-                                <tbody>
-                                    {userList.map((user) => (
-                                        <InviteFriendItem
-                                            key={user.id}
-                                            user={user}
-                                            chooseStatus={chooseStatus}
-                                            roomId={roomId}
-                                            socketUser={socketUser}
-                                            setIsInviting={setIsInviting}
-                                            isInviting={isInviting}
-                                        />
-                                    ))}
-                                </tbody>
-                            </table>
-                        )
-                    ) : (
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <td colSpan="4" className="invite-noUsers">
-                                        Invalid user list
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    )}
-                </>
-            )}
+          {isLoading ? (
+            <Loading />
+          ) : userList.length === 0 ? (
+            <div className="invite-noUsers">{t('chat.noUser')}</div>
+          ) : (
+            <div className="invite-toGame-scroll-container">
+              <table
+                className={`invite-users-list ${userList.length >= 4 ? "scroll" : ""}`}
+              >
+                <tbody>
+                  {userList.map((user) => (
+                    <InviteFriendItem
+                      key={user.id}
+                      user={user}
+                      chooseStatus={chooseStatus}
+                      roomId={roomId}
+                      socketUser={socketUser}
+                      setIsInviting={setIsInviting}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
+      </div>
     );
-};
+    };

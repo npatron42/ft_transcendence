@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect, useRef, useState } from 'react';
 import { getMediaUrl } from '../api/api'
 import { useTournamentSocket } from '../provider/TournamentSocketProvider';
+import { useTranslation } from 'react-i18next';
 
 import "./showTournaments.css"
 
@@ -10,6 +11,7 @@ export default function ShowTournaments() {
 	const [myTournaments, setTournaments] = useState([])
 	const {tournamentSocket, subscribeToTournaments} = useTournamentSocket()
 	const navigate = useNavigate()
+	const { t } = useTranslation();
 
 	useEffect(() => {
         const handleSocketTournament = (data) => {
@@ -43,12 +45,12 @@ export default function ShowTournaments() {
 	return (
 		<div className="showTournaments">
 			<div className="showTournaments-header">
-				<span className="modifyWriteTournament">TOURNAMENTS</span>
+				<span className="modifyWriteTournament">{t('tournament.tournament')}</span>
 			</div>
 			{myTournaments.length === 0 && (
 				<>
 				<div className="showTournaments-content">
-					<span className="modifyWriteTournament-2">There is no tournament for the moment...</span>
+					<span className="modifyWriteTournament-2">{t('tournament.noTournament')}</span>
 				<div className="wrapper">
 					<div className="circle"></div>
 					<div className="circle"></div>
@@ -77,7 +79,7 @@ export default function ShowTournaments() {
 						<div className="tournamentLine-button">
 							<button className="ui-btn" onClick={() => handleJoinTournament(tournament.id)}>
 								<span>
-									JOIN 
+									{t('tournament.join')} 
 								</span>
 							</button>
 						</div>
@@ -86,7 +88,7 @@ export default function ShowTournaments() {
 						<div className="tournamentLine-button">
 							<button className="ui-btn">
 								<span>
-									FULL 
+									{t('tournament.full')}
 								</span>
 							</button>
 						</div>
