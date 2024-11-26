@@ -32,12 +32,14 @@ const WaitingTournaments = () => {
     useEffect(() => {
 
         const isRefreshed = localStorage.getItem('isRefreshed');
+
         if (isRefreshed) {
         navigate('/home');
         } else {
         localStorage.setItem('isRefreshed', 'true');
         }
         return () => localStorage.removeItem('isRefreshed');
+
     }, [navigate]);
 
     useEffect(() => {
@@ -55,7 +57,7 @@ const WaitingTournaments = () => {
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-
+      
       const myData = {
         "type": "LEAVE-TOURNAMENT",
         "id": idTournament,
@@ -76,6 +78,7 @@ const WaitingTournaments = () => {
             setUserIsWinner(data.message["AFTER-00-WINNER"])
         }
         if (data.message["allTournaments"]) {
+
             setTournament(data.message["allTournaments"]);
             let i = 0;
             let tournaments = data.message["allTournaments"]
@@ -86,7 +89,9 @@ const WaitingTournaments = () => {
                 }
                 i++;
             }
+            console.log("allTournaments set")
         }
+
         if (data.message["DISPLAY-MATCH"]) {
                 const myOpponent = data.message["DISPLAY-MATCH"]["opponent"]
                 const otherMatch = data.message["DISPLAY-MATCH"]["otherMatch"]
@@ -139,7 +144,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[0].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[0].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[0].tournamentName}</span>
                     </div>
                 </div>
                 {!myTournament.players[1] && (
@@ -159,7 +164,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[1].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[1].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[1].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -181,7 +186,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[2].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[2].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[2].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -203,7 +208,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[3].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[3].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[3].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -341,7 +346,7 @@ const WaitingTournaments = () => {
                     </div>
 
                     <div className="sentenceWin">
-                        <span className="results-2">{winner["WINNER"].username}   {t('tournament.won')}</span>
+                        <span className="results-2">{winner["WINNER"].tournamentName}   {t('tournament.won')}</span>
                     </div>
 
                     
