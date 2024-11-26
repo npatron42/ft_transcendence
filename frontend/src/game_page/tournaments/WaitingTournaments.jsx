@@ -8,6 +8,7 @@ import '../css/waitTournaments.css';
 import { getMediaUrl } from '../../api/api';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
+import { useTranslation } from 'react-i18next';
 
 
 const WaitingTournaments = () => {
@@ -26,6 +27,7 @@ const WaitingTournaments = () => {
     const [winner, setWinner] = useState()
     const [second, setSecond] = useState()
     const [tournamentIsCancelled, setTournamentCancelled] = useState(false)
+    const { t } = useTranslation();
 
     useEffect(() => {
 
@@ -143,7 +145,7 @@ const WaitingTournaments = () => {
                 {!myTournament.players[1] && (
                 <div className="playerWaiting playerWaiting-rightTop">
                     <div className="top">
-                        <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                        <span className="writeWaitingOpponent"> {t('tournament.waiting')}</span>
                     </div>
                     <div className="bot">
                         <div className="loader-2">
@@ -165,7 +167,7 @@ const WaitingTournaments = () => {
                 {!myTournament.players[2] && (
                 <div className="playerWaiting playerWaiting-leftDown">
                     <div className="top">
-                    <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                    <span className="writeWaitingOpponent"> {t('tournament.waiting')}</span>
                     </div>
                     <div className="bot">
                         <div className="loader-2">
@@ -187,7 +189,7 @@ const WaitingTournaments = () => {
                 {!myTournament.players[3] && (
                 <div className="playerWaiting playerWaiting-rightDown">
                     <div className="top">
-                        <span className="writeWaitingOpponent"> Waiting for opponent...</span>
+                        <span className="writeWaitingOpponent"> {t('tournament.waiting')}</span>
                     </div>
                     <div className="bot">
                         <div className="loader-2">
@@ -212,7 +214,7 @@ const WaitingTournaments = () => {
         {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
-                    <span className="tournamentWriting">Tournament will start</span>
+                    <span className="tournamentWriting">{t('tournament.start')}</span>
                 </div>
                 <div className="headsTournament">
                     <div className="headPlayer">
@@ -267,7 +269,7 @@ const WaitingTournaments = () => {
         {!myTournament && !userIsLoser && !userIsWinner && end === false && (
             <>
                 <div className="waitingNextMatch">
-                    <span className="finalists">Waiting for next match...</span>
+                    <span className="finalists">{t('tournament.next')}</span>
                 <div className="loader"></div>
                 </div>
             </>
@@ -276,7 +278,7 @@ const WaitingTournaments = () => {
         {userIsLoser && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="finalistsWrite">
-                    <span className="finalists">FINALISTS</span>
+                    <span className="finalists">{t('tournament.finalist')}</span>
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
@@ -297,7 +299,7 @@ const WaitingTournaments = () => {
         {userIsWinner && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="finalistsWrite">
-                    <span className="finalists">FINALISTS</span>
+                    <span className="finalists">{t('tournament.finalist')}</span>
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
@@ -312,7 +314,7 @@ const WaitingTournaments = () => {
                     <Countdown roomId={userIsWinner.roomId} idTournament={userIsWinner.idTournament}/>
                 </div>
                 <div className="fuckingLoser">
-                    <span className="eliminated">ELIMINATED</span>
+                    <span className="eliminated">{t('tournament.eliminated')}</span>
                     <div className="headPlayer">
                         <img src={userIsWinner.playersEliminated[0].profilePicture} className="picture"></img>
                     </div>
@@ -331,7 +333,7 @@ const WaitingTournaments = () => {
                     <>
 
                     <div className="header-result">
-                        <span className="results">RESULTS</span>
+                        <span className="results">{t('tournament.result')}</span>
                     </div>
 
                     <div className="bigHead">
@@ -339,7 +341,7 @@ const WaitingTournaments = () => {
                     </div>
 
                     <div className="sentenceWin">
-                        <span className="results-2">{winner["WINNER"].username}   won !</span>
+                        <span className="results-2">{winner["WINNER"].username}   {t('tournament.won')}</span>
                     </div>
 
                     
@@ -348,13 +350,13 @@ const WaitingTournaments = () => {
                 {second && (
                     <>
                     <div className="header-result">
-                        <span className="results">RESULTS</span>
+                        <span className="results">{t('tournament.result')}</span>
                     </div>
                     <div className="bigHead">
                         <img src={myUser.profilePicture} className="picture"></img>
                     </div>
                     <div className="sentenceWin">
-                        <span className="results-2">you won !</span>
+                        <span className="results-2">{t('tournament.won2')}</span>
                     </div>
                     </>
                 )}
@@ -363,7 +365,7 @@ const WaitingTournaments = () => {
         {tournamentIsCancelled === true && (
             <div className="waitingTournament-full fadeIn">
                 <div className="bigHead">
-                    <span className="results">Tournament cancelled, please go HOME</span>
+                    <span className="results">{t('tournament.cancelled')}</span>
                 </div>
             </div>
         )}

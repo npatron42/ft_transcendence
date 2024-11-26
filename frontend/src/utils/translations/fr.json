@@ -82,8 +82,9 @@
   },
 
   "gameSettings": {
-  "save": "Sauvegarder les paramètres"
-}, 
+  "unsave": "Sauvegarder les paramètres",
+  "save": "Paramètres sauvegardés"
+  },
 
 "viewProfile": {
   "stats": "Statistiques",
@@ -135,5 +136,23 @@
   "profile" : "Profil",
   "play": "Jouer",
   "block": "Bloquer"
+},
+
+"tournament": {
+  "tournament": "Tournoi",
+  "noTournament": "Aucun tournoi trouvé...",
+  "waiting": "En attente de joueurs...",
+  "start": "le tournoi va commencer",
+  "next": "En attente du prochain match",
+  "finalist": "Finalistes",
+  "eliminated": "Eliminé",
+  "result": "Résultat",
+  "won": "a gagné !",
+  "won2": "Tu as gagné",
+  "cancelled": "Tournois annulé",
+  "full": "Complet",
+  "join": "Rejoindre",
+  "redirection": "Redirection vers le menu dans "
 }
+
 }
