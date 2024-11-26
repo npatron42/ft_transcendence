@@ -11,6 +11,7 @@ import './viewProfile.css';
 import HistoryItem from '../components/HistoryItem';
 import FriendItem from '../UsersList/FriendItem';
 import { useTranslation } from 'react-i18next';
+import Languages from '../login_page/languages';
 
 function ViewProfile() {
     const navigate = useNavigate();
@@ -146,6 +147,7 @@ function ViewProfile() {
 
         return (
             <div className="view-profile">
+                <Languages/>
                 <div className="matchHistory-profile">
                     <div className="card">
 

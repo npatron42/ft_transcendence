@@ -5,6 +5,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
 import Button from 'react-bootstrap/Button';
 import { useTranslation } from 'react-i18next';
+import Languages from '../login_page/languages';
 
 
 function GameOptions() {
@@ -42,6 +43,7 @@ function GameOptions() {
 
 	return (
 		<div id="background-container">
+			<Languages/>
 			<div className="flip-card">
 				<div className="flip-card-inner">
 					<div className="flip-card-front">
