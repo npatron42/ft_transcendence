@@ -662,10 +662,17 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserInvitedId = userInvitedTmp.get("id")
             myUserInvited = await getUserById(myUserInvitedId)
             myRoomId = data.get("roomId")
+            stringParse = str(myUser.id) + "|" + str(myUserInvitedId)
+            
             try:
                 gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
                 await saveGameInvitation(gameInvitation)
                 gameInvitation = await getGamesInvitations(myUserInvited.id)
+                dataToSend = {
+		        "type": "CHECK-GAME-INVITATION",
+		        "users": stringParse
+	            }
+                await sendToShareSocket(self, dataToSend)
                 await sendToClient2(self, gameInvitation, str(myUserInvitedId))
                 
             except:

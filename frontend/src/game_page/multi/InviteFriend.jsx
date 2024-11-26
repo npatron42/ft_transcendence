@@ -15,7 +15,7 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
 
     const InviteFriendGame = () => {
         const dataToSend = {
-            "type": "GameInvitation",
+      "type": "GameInvitation",
 			"leader": myUser,
 			"userInvited": user,
 			"roomId": roomIdStr
@@ -71,7 +71,7 @@ export const InviteFriend = (roomId) => {
     const defineUsersList = async () => {
       setIsLoading(true);
       const allUsers = await getAllUsers();
-      const filteredUsers = allUsers.filter((user) => user.username !== myUser.username);
+      const filteredUsers = allUsers.filter((user) => user.id !== myUser.id);
       setUserList(filteredUsers);
       setIsLoading(false);
     };

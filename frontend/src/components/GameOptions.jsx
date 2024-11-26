@@ -15,13 +15,12 @@ function GameOptions() {
 	const userSelected = location.state?.user
 	const navigate = useNavigate();
 	const [maxScore, setMaxScore] = useState(10);
-	const [invitedPlayer, setInvitedPlayer] = useState([]);
 	const [powerUp, setPowerUp] = useState(false);
 	const { t } = useTranslation();
 
 	const handleMultiClick = () => {
 		const roomId = uuidv4();
-		navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp, userSelected } });
+		navigate(`/globalGameMulti/${roomId}`, { state: { maxScore, powerUp } });
 		const dataToSend = {
 			"type": "GameInvitation",
 			"leader": myUser,
