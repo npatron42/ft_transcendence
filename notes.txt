@@ -1,5 +1,5 @@
 - verifier dans le back que le bon joueur a rejoint la partie
-- traduire
 - set photo de profil par default 
 - utiliser la valuer des tournois dans view profile 
-- dans mon view profile invitation en ami a changer ? 
+
+- bug photo

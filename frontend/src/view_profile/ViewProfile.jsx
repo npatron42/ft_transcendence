@@ -101,9 +101,9 @@ function ViewProfile() {
             if (socketUser && socketUser.readyState === WebSocket.OPEN) {
                 const data = {
                     type: "INVITE",
-                    invitationFrom: myUser.username,
-                    to: profileUser.username,
-                    parse: myUser.username + "|" + profileUser.username
+                    invitationFrom: myUser.id,
+                    to: profileUser.id,
+                    parse: myUser.id + "|" + profileUser.id
                 };
                 socketUser.send(JSON.stringify(data));
             } else {
@@ -115,9 +115,9 @@ function ViewProfile() {
             if (socketUser && socketUser.readyState === WebSocket.OPEN) {
                 const data = {
                     type: "DELETE",
-                    userWhoDelete: myUser.username,
-                    userDeleted: userDeleted.username,
-                    parse: myUser.username + "|" + userDeleted.username
+                    userWhoDelete: myUser.id,
+                    userDeleted: userDeleted.id,
+                    parse: myUser.id + "|" + userDeleted.id
                 };
                 socketUser.send(JSON.stringify(data));
             } else {
@@ -212,7 +212,7 @@ function ViewProfile() {
                             )}
                         </div>
                         <div className="matchHistory-content-profile3">
-                        <div className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+                        <table className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
                                     {username} {t('viewProfile.noMatch')}
@@ -225,7 +225,7 @@ function ViewProfile() {
                                     />
                                 ))
                             )}
-                        </div>
+                        </table>
                         </div>
                     </div>
                 </div>

@@ -184,7 +184,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    border-radius: 30%;
 }
 
 .neonPaddlePong {
@@ -197,7 +196,6 @@
     transform: translateY(-50%);
     box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
     animation: neonGlow 2s infinite alternate;
-    border-radius: 30%;
 }
 
 .redPaddlePong {
@@ -207,7 +205,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    border-radius: 30%;
 }
 
 .radientPaddlePong {
@@ -218,7 +215,6 @@
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    border-radius: 30%;
 }
 
 .glassPaddlePong {
@@ -231,7 +227,6 @@
     top: 50%; 
     transform: translateY(-50%);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    border-radius: 30%;
   }
 
   .firePaddlePong {
@@ -244,7 +239,6 @@
     transform: translateY(-50%);
     box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
     animation: fireGlow 2s infinite alternate;
-    border-radius: 30%;
   }
 
 

@@ -87,7 +87,7 @@
 }
 
 .tournamentLine-button {
-	width: 15%;
+	width: 20%;
 	height: 100%;
 	display: flex;
 	justify-content: center;
@@ -107,7 +107,7 @@
 }
 
 .tournamentLine-div {
-	width: 33%;
+	width: 30%;
 	height: 100%;
 	display: flex;
 	justify-content: center;
@@ -213,7 +213,7 @@
   }
   
 
-.ui-btn {
+  .ui-btn {
 	background-color: transparent;
 	--btn-padding: 15px 20px;
 	--btn-hover-bg: transparent;
@@ -228,7 +228,6 @@
 	--font-weight: 600;
 	--font-family: Menlo,Roboto Mono,monospace;
   }
-  
   
   .ui-btn {
 	box-sizing: border-box;
@@ -254,6 +253,7 @@
 	background: inherit;
   }
   
+
   .ui-btn span::before {
 	box-sizing: border-box;
 	position: absolute;

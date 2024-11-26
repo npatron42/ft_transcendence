@@ -40,7 +40,7 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     return (
         <div className="carouselContainer">
             <button onClick={handlePrev} className="carouselButtonRight">
-                <i className="bi bi-caret-left-square-fill"></i>
+            <i className="bi bi-arrow-left-square"></i>
             </button>
             <div className="carouselContent">
                 <div
@@ -49,7 +49,7 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
                 ></div>
             </div>
             <button onClick={handleNext} className="carouselButtonLeft">
-                <i className="bi bi-caret-right-square-fill"></i>
+            <i className="bi bi-arrow-right-square"></i>
             </button>
         </div>
     );
@@ -62,6 +62,8 @@ const GameSettings = () => {
     const [isCheckedUp, setIsCheckedUp] = useState(false);
     const [isCheckedDown, setIsCheckedDown] = useState(false);
     const { t } = useTranslation();
+    const [modif, setModif] = useState(false);
+    const [text, setText] = useState(t('gameSettings.save'));
 
     const paddleSkin = [
         { className: 'defaultPaddle' },
@@ -108,6 +110,14 @@ const GameSettings = () => {
         })();
     }, []);
 
+    useEffect(() => {
+        if (modif) {
+            setText(t('gameSettings.unsave'));
+        } else {
+            setText(t('gameSettings.save'));
+        }
+    }, [modif]);
+
     const handleSaveSettings = async () => {
         try {
             const updatedSettings = {
@@ -118,6 +128,7 @@ const GameSettings = () => {
                 boardSkin: gameSettings.boardSkin,
             };
             await updateGameSettings(updatedSettings);
+            setModif(false);
         } catch (error) {
             console.error("Erreur :", error);
         }
@@ -149,10 +160,12 @@ const GameSettings = () => {
                 setIsCheckedDown(false);
             }
         });
+        setModif(true);
     };
 
     const handleSelectItem = (className, type) => {
         setGameSettings({ ...gameSettings, [type]: className });
+        setModif(true);
     };
 
     if (!gameSettings) {
@@ -171,7 +184,10 @@ const GameSettings = () => {
         ];
         return allowedKeys.includes(key);
     };
+    
+    
 
+    console.log("txt", text);
 
     return (
         <div className="gameSettingsGlobalContainer">
@@ -253,11 +269,13 @@ const GameSettings = () => {
                         </div>
                     </div>
                 </div>
+                <div className="gameSettingsFooter">
                 <button
                     className="createJoinButton"
                     onClick={handleSaveSettings}>
-                    {t('gameSettings.save')}
+                    {text}
                 </button>
+                </div>
             </div>
         </div>
     );
