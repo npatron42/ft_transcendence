@@ -11,6 +11,7 @@ import Button from 'react-bootstrap/Button';
 import ShowTournaments from '../components/showTournaments';
 import "../home_page/HomeCadre.css"
 import NavbarBS from '../components/Navbar';
+import Languages from '../login_page/languages';
 import { useTranslation } from 'react-i18next';
 
 const ChooseGame = () => {
@@ -61,6 +62,7 @@ const ChooseGame = () => {
     };
     return (
         <div id="ChooseGame">
+            <Languages/>
             {joinIsClicked === true && (
                 <div className="rowContainer">
                     <div className="col-md-4 mb-3">
