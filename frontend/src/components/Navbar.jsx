@@ -160,6 +160,29 @@ function NavbarBS() {
     return ("logo-navbar");
   }
 
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === 'Escape') {
+        if (chatShown) {
+          setChatShown(false);
+        }
+        if (notifIsClicked) {
+          setNotifClicked(false);
+        }
+        if (profileShown) {
+          setProfile(false);
+        }
+      }
+    };
+  
+    document.addEventListener('keydown', handleKeyPress);
+  
+    return () => {
+      document.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [chatShown, notifIsClicked, profileShown]);
+
   return (
     <>
       <Navbar>
