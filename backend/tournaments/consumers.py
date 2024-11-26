@@ -559,6 +559,7 @@ class Tournament(AsyncWebsocketConsumer):
             return
         elif type == "RESULTS":
             # FIND MATCH
+            logger.info("RESULTS --> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -592,6 +593,7 @@ class Tournament(AsyncWebsocketConsumer):
 
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
                     if matchsPlayed == 2: ## MATCHS PLAYED
+                        logger.info("2 MATCHS PLAYED !!!!!!!!!!!!!!!!!!!!!!!!!!!")
                         tournamentMatchsEnded[idTournament] == 0
                         myWiners, myLosers = await createFinalMatch(self, idTournament)
                         if myWiners == None and myLosers == None:
@@ -662,23 +664,10 @@ class Tournament(AsyncWebsocketConsumer):
         myUser = self.scope["user"]
 
         if myUser.is_authenticated:
-
             userId = str(myUser.id)
-            # if userId in usersConnected:
-            #     logger.info("DOUBLE CONNEXION --> %s", myUser.username)
-            #     dataToSend = {
-            #         "DEGAGE-FILS-DE-PUTE": "OH OUI"
-            #     }
-            #     userSocket = allSockets.get(userId)
-            #     await sendToSocket(self, userSocket, dataToSend)
-            #     await self.close()
-            #     return
-
             await self.channel_layer.group_add("shareSocket", self.channel_name)
             await self.channel_layer.group_add("socketTournament", self.channel_name)
             await self.channel_layer.group_add("shareTournaments", self.channel_name)
-
-            # usersConnected[userId] = True
             await self.accept()
             addSocketToUser(self.channel_name, str(myUser.id))
             allUsers.append(myUser)
@@ -693,8 +682,6 @@ class Tournament(AsyncWebsocketConsumer):
             if wasLeader == True:
                 checkUserLeader(myUser, id)
             userId = str(myUser.id)
-            if userId in usersConnected:
-                del usersConnected[userId]
             await self.close()
 
 
@@ -707,7 +694,6 @@ class Tournament(AsyncWebsocketConsumer):
 
         if type == "CREATE-TOURNAMENT":
             logger.info("Disconnect from --> %s", myUser.username)
-            logger.info("usersConnected --> %s", usersConnected)
             idTournament = data.get("idTournament")
             if idTournament not in Tournament.players:
                 Tournament.players[idTournament] = []

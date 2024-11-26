@@ -30,12 +30,6 @@ export const TournamentSocketProvider = ({ children }) => {
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
             listeners.current.forEach(callback => callback(data));
-            if (data.message["DEGAGE-FILS-DE-PUTE"]) {
-                localStorage.removeItem("jwt")
-                navigate("/")
-                alert("Double JWT")
-                return
-            }
         };
 
         return () => {

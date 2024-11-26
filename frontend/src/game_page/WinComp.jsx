@@ -23,7 +23,7 @@ export const WinComp = ({ winner }) => {
                     </div>
                     <div className="flip-card-back">
                         <div className="flip-card-content">
-                            <button className="start-game" onClick={handleMenuClick}>{t('game.menu')} </button>
+                            <button className="createJoinButton" onClick={handleMenuClick}>{t('game.menu')} </button>
                         </div>
                     </div>
                 </div>

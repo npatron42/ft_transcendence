@@ -283,6 +283,12 @@ async def sendToClient2(self, message, id):
             "message": message,
         })
 
+async def sendToSocket(self, socket, message):
+    await self.channel_layer.send(socket, {
+        "type": "notification_to_client",
+        "message": message,
+    })
+
 
 async def getFriendsInvitations(id):
     result = []
@@ -409,14 +415,30 @@ async def sendToSocketTournament(self, message):
         "message": message,
     })
 
-def checkIfUserIsAlreadyConnected(userId):
+def checkIfUserIsAlreadyConnected(myUser):
     myLen = len(usersConnected)
     i = 0
     while i < myLen:
         myInfo = usersConnected[i]
         id = myInfo.get("id")
-        if id == userId:
-            return True, 
+        socket = myInfo.get("socket")
+        if id == myUser.id:
+            del usersConnected[i]
+            return True, socket
+        i += 1
+    return False, None
+
+def removeSocketObjet(myUser):
+    myLen = len(usersConnected)
+    i = 0
+    while i < myLen:
+        myInfo = usersConnected[i]
+        id = myInfo.get("id")
+        if id == myUser.id:
+            del usersConnected[i]
+            myLen -= 1
+        i += 1
+    return
 
 
 class handleSocketConsumer(AsyncWebsocketConsumer):
@@ -449,7 +471,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             statusReceived = data["status"]
             for key in statusReceived:
                 usersStatus[key] = "in-game"
-                userToChange = await getUserByUsername(key)
+                userToChange = await getUserById(key)
             await self.send_status_to_all()
             await update_user_status(userToChange, "in-game")
 
@@ -502,16 +524,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def connect(self):
         if self.scope['user'].is_authenticated:
             myUser = self.scope["user"]
-            logger.info("socket de %s, ---> %s", myUser.username, self.channel_name)
             userId = str(myUser.id)
-            logger.info("usersConnected --> %s", usersConnected)
-            # if userId in usersConnected:
-            #     dataToSend = {
-            #         "DEGAGE-FILS-DE-PUTE": "OH OUI"
-            #     }
-            #     await sendToClient2(self, dataToSend, myUser.id)
-            #     logger.info("JE SEND")
-            #     return
+
+            await self.accept()
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
             await self.channel_layer.group_add("status_updates", self.channel_name)
@@ -525,19 +540,27 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             socketsUsers[idUser] = mySocket
 
             userInfo = {
-                "socket": self.channel_layer,
+                "socket": self.channel_name,
                 "id": myUser.id
             }
 
-            usersConnected.append(userInfo)
 
-            condition, socketOne, socketTwo = checkIfUserIsAlreadyConnected(userId)
-
-            logger.info("%s add, --> %s", myUser.username, usersConnected)
+            condition, socketUserAlreadyConnected = checkIfUserIsAlreadyConnected(myUser)
+            if condition == True:
+                logger.info("JE RENTRE ICI")
+                dataToSend = {
+                    "DEGAGE-FILS-DE-PUTE": "OH OUI"
+                }
+                await sendToSocket(self, socketUserAlreadyConnected, dataToSend)
+                await sendToSocket(self, self.channel_name, dataToSend)
+                self.close()
+                return
 
             await addToPool(myUser, self.channel_name)
             await changeUserStatus(idUser, True)
-            await self.accept()
+
+            logger.info("UsersConnected --> %s", usersConnected)
+            usersConnected.append(userInfo)
 
             await self.send_status_to_all()
             await update_user_status(myUser, "online")
@@ -560,13 +583,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             userId = str(myUser.id)
             await removeFromPool(myUser)
-            if userId in usersConnected:
-                logger.info("Avant de pop --> %s", usersConnected)
-                usersConnected.pop(userId)
-                logger.info("Apres pop  --> %s", usersConnected)
             await changeUserStatus(userId, False)
             await self.channel_layer.group_discard("status_updates", self.channel_name)
-
+            removeSocketObjet(myUser)
             await self.send_status_to_all()
             socketsUsers.pop(userId, None)
             await update_user_status(myUser, "offline")

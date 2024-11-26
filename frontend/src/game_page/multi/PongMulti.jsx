@@ -182,7 +182,6 @@ const PongMulti = ({ roomId, maxScore, powerUp, isTournament, idTournament }) =>
                     setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
-                    
                     setBallPos(data.ball);
                 }
                 if (data.score) {
@@ -194,6 +193,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, isTournament, idTournament }) =>
                 if (data.winner) {
                     setIsGameOver(true);
                     setWinner(data.winner);
+                    console.log("ici --> ", isGameOver, isTournament)
+                    console.log("data.winner --> ", data.winner)
                 }
                 if (data.power_up) {
                     setPowerUpType(data.power_up);
