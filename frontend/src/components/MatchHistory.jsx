@@ -12,6 +12,7 @@ function MatchHistory() {
 	const {myUser} = useAuth();
 	const {socketUser} = useWebSocket();
 	const { t } = useTranslation();
+	let i = 0;
 
     useEffect(() => {
         initMyMatchs();
@@ -36,7 +37,7 @@ function MatchHistory() {
 				{matchHistory.length !== 0 && (
 					matchHistory.slice().reverse().map((match) => (
 						<HistoryItem
-							key={match.id} 
+							key={i++} 
 							match={match} 
 						/>
 					))

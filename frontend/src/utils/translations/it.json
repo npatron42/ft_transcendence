@@ -85,10 +85,10 @@
   }, 
 
   "viewProfile": {
-  "stats": "Statistiche",
+  "stats": "Statistiche :",
   "matchWin": "Partite vinte:",
   "tournamentsWin": "Tornei vinti:",
-  "infomations": "Informazioni",
+  "infomations": "Informazioni :",
   "friends": "Amici: ",
   "status": "Stato: ",
   "addFriend": "Aggiungi",

@@ -96,6 +96,7 @@ async def getUserByUsername(username):
 usersInGame = []
 myMatches = {}
 dataIsSent = {}
+usersDisconnectedForce = []
 
 
 class PongConsumer(AsyncWebsocketConsumer):
@@ -126,6 +127,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 	myTasks = {}
 	myTasks2 = {}
 	idTournament = {}
+	playersInvited = {}
+	invited = {}
 
 		###########
 		# CONNECT #
@@ -187,7 +190,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 			if len(PongConsumer.players[self.room_id]) >= 2:
 				await self.close()
 				return
-
+			
+			if self.room_id not in PongConsumer.invited:
+				PongConsumer.invited[self.room_id] = "noUserInvited"
+			
 			if self.room_id not in PongConsumer.paddles_pos:
 				PongConsumer.paddles_pos[self.room_id] = {'left': 300, 'right': 300}
 				PongConsumer.paddle_right_height[self.room_id] = 90
@@ -237,6 +243,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.room_group_name,
 				self.channel_name
 			)
+
+			if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.isTournament[self.room_id] == False:
+				if str(myUser.id) != str(PongConsumer.invited[self.room_id]):
+					usersDisconnectedForce.append(myUser.id)
+					await self.close()
+					return
+			
 			await self.accept()
 			await self.channel_layer.group_add("shareSocket", self.channel_name)
 			await self.channel_layer.group_add("shareTournament", self.channel_name)
@@ -259,6 +272,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 	async def disconnect(self, close_code):
 		myUser = self.scope["user"]
+
+		if myUser.id in usersDisconnectedForce:
+			usersDisconnectedForce.remove(myUser.id)
+			return
+
 		if hasattr(self, 'game_task'):
 			self.game_task.cancel()
 		if PongConsumer.isTournament[self.room_id] == False:
@@ -355,10 +373,20 @@ class PongConsumer(AsyncWebsocketConsumer):
 			PongConsumer.players[self.room_id].remove(self.id)
 			return
 		
+	async def shareSocket(self, event):
+		message = event['message']
+		type = message.get('type', None)
+		message = message.get('users', None)
+
+		if type == "CHECK-GAME-INVITATION":
+			splitMessage = str(message).split('|')
+			PongConsumer.invited[self.room_id] = splitMessage[1]
+			logger.info("Invited player: %s", PongConsumer.invited[self.room_id])
 		
 		###########
 		# RECEIVE #
 		###########
+
 
 	async def receive(self, text_data):
 		data = json.loads(text_data)
@@ -367,6 +395,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 
 		myUser = self.scope["user"]
+		logger.info("jai recu dand pong: %s", data)
 
 		if playerId:
 			self.id = playerId
@@ -488,7 +517,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 	async def update_ball(self, max_score):
 		PongConsumer.paddle_right_height[self.room_id] = 90
 		PongConsumer.paddle_left_height[self.room_id] = 90
-		speed = 2
+		speed = 4
 		ball = PongConsumer.ball_pos[self.room_id] 
 		direction = PongConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([-4, 4])}
 		acceleration = 0.3
@@ -536,7 +565,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 						self.room_group_name,
 						{
 							'type': 'sendSoloPlayActive',
-							'solo_play_active': True
+							'solo_play_active': True,
+							'solo_play': True
 						}
 					)
 				if PongConsumer.solo_play_power[self.room_id]['start_effect'] == True:
@@ -762,7 +792,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if random.random() < 0.01:
 			PongConsumer.power_up_visible[self.room_id] = True
-			power_ups = ['solo_play']
+			power_ups = ['solo_play', 'increase_paddle', 'decrease_paddle', 'inversed_control', 'x2']
 			selected_power_up = random.choice(power_ups)
 			PongConsumer.power_up_position[self.room_id] = {
 				'x': random.randint(100, 800),
@@ -862,7 +892,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			{
 				'type': 'sendSoloPlayActive',
-				'solo_play_active': False
+				'solo_play_active': False,
+				'solo_play': True
 			}
 		)
 
@@ -904,7 +935,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({'power_up_position': position, "status": status, "power_up": powerUp, "player_has_power_up": playerHasPowerUp }))
 
 	async def sendSoloPlayActive(self, event):
-		await self.send(text_data=json.dumps({'solo_play_active': event['solo_play_active']}))
+		await self.send(text_data=json.dumps({'solo_play_active': event['solo_play_active'], 'solo_play': event['solo_play']}))
 
 	async def game_state(self, event):
 		paddles_pos = event['paddles_pos']

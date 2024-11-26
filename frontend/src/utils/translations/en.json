@@ -86,10 +86,10 @@
 },
 
 "viewProfile": {
-  "stats": "Statistics",
+  "stats": "Statistics :",
   "matchWin": "Matches Won:",
   "tournamentsWin": "Tournaments Won:",
-  "infomations": "Information",
+  "infomations": "Information :",
   "friends": "Friends: ",
   "status": "Status: ",
   "addFriend": "Add",
