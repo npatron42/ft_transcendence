@@ -316,7 +316,7 @@ function Chat() {
                                 <span onClick={() => handleProfile()} className="header-discuss-name-custom">{userSelected.username}</span>
                             </div>
                             <div className="header-status">
-                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.username)}`}></i>
+                                <i className={`bi bi-circle-fill header-status-custom-${chooseStatus(userSelected.id)}`}></i>
                             </div>
                         </div>
                         <div className="core-discussion">
