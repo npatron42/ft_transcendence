@@ -11,7 +11,7 @@ function registerPage(){
 	return (
 		<div id="background-container">
 			<Cadre/>
-			<h1 className="h1_titre">{t("registerPage.createAccount")}</h1>
+			<h1 className="h1_Titre">{t("registerPage.createAccount")}</h1>
 			<IdRegister />
 			<Langue />
 			<p className="para-I">{t("registerPage.Ihave")}</p>
