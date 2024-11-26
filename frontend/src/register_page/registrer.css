@@ -146,6 +146,16 @@
 	font-size: 2.8vw;
 }
 
+.h1_Titre {
+	position: absolute;
+	top: 15vh;
+	left: -15vw;
+	color: #FAF3DD;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 650;
+	font-size: 2.8vw;
+}
+
 .custom-co {
 	position: absolute;
 	top: 80vh;
@@ -192,7 +202,7 @@
 	font-weight: 200;
 }
 
-.error-mail {
+.error-mail2 {
 	position: absolute;
 	left: 25vw;
 	top: 49.5vh;

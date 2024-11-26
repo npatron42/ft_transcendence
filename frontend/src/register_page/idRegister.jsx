@@ -106,7 +106,7 @@ function idRegister() {
 				</Form.Group>
 					
 					{errors.username && <p className="error-user">{t(errors.username)}</p>}
-					{errors.email && <p className="error-mail">{t(errors.email)}</p>}
+					{errors.email && <p className="error-mail2">{t(errors.email)}</p>}
 					{errors.password &&<p className="error-password" dangerouslySetInnerHTML={{ __html: t(errors.password).replace(/\n/g, '<br />') }}></p>}
 				<Button type="submit" variant="outline-dark" className="custom-create" onClick={handleClick}>{t("registerPage.createAccount")}</Button>
 			</Form>
