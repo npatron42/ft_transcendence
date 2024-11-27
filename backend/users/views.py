@@ -564,6 +564,7 @@ def changeTournamentName(request):
         return JsonResponse({'success': True})
     return HttpResponseForbidden("Bad access")
 
+
 @csrf_exempt  
 def changeMail(request):
     payload = middleWareAuthentication(request)
