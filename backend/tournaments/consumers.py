@@ -13,6 +13,12 @@ logger = logging.getLogger(__name__)
 
 
 # usersConnected = {}
+async def updateTournamentWin(idTournament, idUser):
+    user = await sync_to_async(User.objects.get)(id=idUser)
+    user.tournamentsWin += 1
+    await sync_to_async(user.save)()
+    return
+
 
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
@@ -213,7 +219,7 @@ def createRandomMatches(idTournament):
 
 
 def modifyMatchObjet(players, name, value):
-    i = 0;
+    i = 0
     myLen = len(myMatches)
     while i < myLen:
         myMatch = myMatches[i]
@@ -632,6 +638,7 @@ class Tournament(AsyncWebsocketConsumer):
                         "SECOND": dataToSendToSecond
                     }
 
+                    await updateTournamentWin(idTournament, myTournamentWinner)
                     await sendToSocket(self, socketTournamentWinner, dataToSendWIN)
                     await sendToSocket(self, socketTournamentSecond, dataToSendSECOND)
                     destroyMyTournament(idTournament)
