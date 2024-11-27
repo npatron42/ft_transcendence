@@ -454,8 +454,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def shareSocket(self, event):
         data = event['message']
         type = data.get("type")
-
-        logger.info("data received --> %s", data)
         myUser = self.scope["user"]
         if type == "ABORT-MATCH":
             abortedId = data.get("userAborted")

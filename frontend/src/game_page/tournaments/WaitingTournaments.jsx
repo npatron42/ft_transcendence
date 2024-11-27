@@ -10,7 +10,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 
-
 const WaitingTournaments = () => {
     const {myUser} = useAuth()
     const [myTournament, setTournament] = useState()
@@ -70,15 +69,14 @@ const WaitingTournaments = () => {
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-      
-      const myData = {
+        const myData = {
         "type": "LEAVE-TOURNAMENT",
         "id": idTournament,
-      };
+        };
 
-      if (tournamentSocket) {
-          tournamentSocket.send(JSON.stringify(myData));
-      }
+        if (tournamentSocket) {
+            tournamentSocket.send(JSON.stringify(myData));
+        }
     };
   }, [idTournament, tournamentSocket, location]);
 
@@ -87,9 +85,11 @@ const WaitingTournaments = () => {
         const handleSocketTournament = (data) => {
         if (data.message["AFTER-00-LOSER"]) {
             setUserIsLoser(data.message["AFTER-00-LOSER"])
+            console.log("JE RECOIS LE LOSER")
         }
         if (data.message["AFTER-00-WINNER"]) {
             setUserIsWinner(data.message["AFTER-00-WINNER"])
+            console.log("JE RECOIS LE WINNER")
         }
         if (data.message["allTournaments"]) {
 
@@ -149,7 +149,7 @@ const WaitingTournaments = () => {
 
   return (
     <div id="background-container">
-        {myTournament && myTournament.players.length !== 4 && !myOpponent && !otherMatch && end === false &&   (
+        {myTournament && myTournament.players && myTournament.players.length !== 4 && !myOpponent && !otherMatch && end === false &&   (
         <div className="waitingTournament">
             {myTournament !== undefined && (
                 <>
@@ -230,7 +230,7 @@ const WaitingTournaments = () => {
             )}
         </div>
         )}
-        {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
+        {myTournament && myTournament.players && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
                     <span className="tournamentWriting">{t('tournament.start')}</span>
@@ -257,7 +257,7 @@ const WaitingTournaments = () => {
 
 
 
-        {myTournament && myTournament.players.length === 4 && myOpponent && otherMatch && end === false && (
+        {myTournament && myTournament.players && myTournament.players.length === 4 && myOpponent && otherMatch && end === false && (
             <div className="waitingTournament-bis fadeIn">
                 <div className="displayMatch">
                     <div className="displayUser-left">

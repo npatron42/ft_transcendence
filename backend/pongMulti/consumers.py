@@ -59,13 +59,11 @@ async def removeClientFromUsers(self, id):
 		
 	i = 0
 	while i < myLen:
-		logger.info("usersInGame[i] --> %s, id = %s", usersInGame[i], id)
 		if usersInGame[i] == str(id):
 			del usersInGame[i]
 			await sendToShareSocket(self, dataToSend)
 			return
 		i += 1
-	logger.info("usersInGame --> %s", usersInGame)
 	return
 
 		###############
@@ -351,7 +349,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				# DISCONNECTION INTO TOURNAMENTS
 
 			else:
-				logger.info("JE DISCONNECTE EN PLEIN TOURNOI TRUC DE FOU QWDQWDQWDQWDQWDQWDQW")
 				await self.channel_layer.group_discard(
 					self.room_group_name,
 					self.channel_name
@@ -392,6 +389,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 						"players": myPlayers,
 					}
 					await PongConsumer.sendData(self, self.room_id, dataToSend)
+				if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.end[self.room_id] == False:
+					myBite = {
+						"type": "DESTROY-TOURNAMENT",
+						"idTournament": PongConsumer.idTournament[self.room_id],
+					}
+					await PongConsumer.sendData(self, self.room_id, myBite)
+
 				await removeClientFromUsers(self, myUser.id)
 				PongConsumer.players[self.room_id].remove(self.id)
 				return

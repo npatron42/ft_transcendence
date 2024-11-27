@@ -22,7 +22,7 @@ import logging
 import os
 import random
 from .utils import checkValidGameSettings
-from .utils import checkValidUsername
+from .utils import checkValidUsername, checkValidTournamentName
 from .utils import checkValidEmail
 from .utils import checkValidPassword
 
@@ -552,7 +552,7 @@ def changeTournamentName(request):
         name = data.get('name')
         
 
-        if checkValidUsername(name) == False:
+        if checkValidTournamentName(name) == False:
             return JsonResponse({'error': 'Invalid data llll'}, status=400)
         
         if User.objects.filter(username=name).exists():

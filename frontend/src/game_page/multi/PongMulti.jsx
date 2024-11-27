@@ -260,6 +260,8 @@ const PongMulti = ({ roomId, maxScore, powerUp, isTournament, idTournament }) =>
         };
     }, [roomId, maxScore]);
 
+    console.log("naxscore --> ", maxScore)
+
     usePaddleMovement(webSocket, keyBind);
 
     const renderPowerUp = () => {
