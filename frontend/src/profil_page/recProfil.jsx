@@ -3,14 +3,14 @@ import './utils.css';
 import { recupProfil } from '../api/api';
 import { useTranslation } from 'react-i18next';
 
-function recProfil() {
+function recProfil({Actif}) {
 	const { t } = useTranslation();
 
 	const handelClick = async() => {
 		try {
 			const response = await recupProfil();
 			if (response){
-				const data = response.data; // Assurez-vous que la réponse est bien structurée
+				const data = response.data;
 				const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
 				const url = URL.createObjectURL(blob);
 
@@ -33,6 +33,7 @@ function recProfil() {
 		<Button 
 		variant="outline-dark" 
 		className="custom-rgpd"
+		disabled={Actif}
 		onClick={handelClick}>
 			{t('profilPage.recup')}
 		</Button>

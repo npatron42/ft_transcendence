@@ -50,17 +50,17 @@ function profilPage() {
 		{/* <div className="custom-cadre-pic"></div> */}
 		{/* <div className="custom-cadre-change"></div> */}
 		<NavbarBS />
-		<Upload />
+		<Upload Actif={Actif} />
 		<Image />
-		<Del />
-		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser}/>
+		<Del Actif={Actif}/>
+		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser} Actif={Actif}/>
 		<Pseudo Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
-		<DelProfil/>
-		<Bt2fa />
-		<RecProfil />
-		<ButtonDef />
+		<DelProfil Actif={Actif}/>
+		<Bt2fa Actif={Actif}/>
+		<RecProfil Actif={Actif}/>
+		<ButtonDef Actif={Actif}/>
 		<Langue />
 	</div>
   )

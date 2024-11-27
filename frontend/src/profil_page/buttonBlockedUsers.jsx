@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import './buttonBlockedUsers.css'
 
-function buttonBlockedUsers({blockedUsers, myUser, socketUser}) {
+function buttonBlockedUsers({blockedUsers, myUser, socketUser, Actif}) {
 
 	const { t } = useTranslation();
 
@@ -26,7 +26,7 @@ function buttonBlockedUsers({blockedUsers, myUser, socketUser}) {
   return (
 	<div>
     <Dropdown className="custom-dropdown-blocked">
-      <Dropdown.Toggle variant="secondary custom-size">
+      <Dropdown.Toggle variant="secondary custom-size"  disabled={Actif}>
 		<span >{t('profilPage.blocked')}</span>
       </Dropdown.Toggle>
 	  	<Dropdown.Menu>

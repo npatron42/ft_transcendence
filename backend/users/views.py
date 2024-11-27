@@ -675,15 +675,22 @@ def exportProfile(request):
     user_data = {
         "username": user.username,
         "email": user.email,
+        "data_joined" : user.date_joined.isoformat(),
         "status": user.status,
+        "is_active" : user.is_active,
+        "is_staff" : user.is_staff,
+        "is_superuser" : user.is_superuser,
+        "statut" : user.status,
         "profilePicture": user.profilePicture,
         "isFrom42": user.isFrom42,
         "myid42": user.myid42,
         "langue": user.langue,
         "dauth": user.dauth,
+        "sup" : user.sup,
         "otp_code": user.otp_code,
         "otp_created_at": user.otp_created_at,
-        "delete_profile" : user.sup
+        "delete_profile" : user.sup,
+        "Tournament_win" : user.tournamentsWin
     }
 
     invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
