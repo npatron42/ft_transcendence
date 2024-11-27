@@ -28,8 +28,8 @@ async def finalFriendsList(friendsList):
     result = []
     i = 0
     while i < size:
-        username = friendsList[i]
-        myUser = await getUserByUsername(username)
+        id = friendsList[i]
+        myUser = await getUserById(id)
         result.append(myUser)
         i += 1
     return (result)
@@ -56,15 +56,6 @@ async def sendToEveryClientsUsersList(channel_layer):
         i += 1
 
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
-
-
-async def getUserByUsername(name):
-    return await sync_to_async(User.objects.get)(username=name)
-
-async def getUserByUsernameClean(name):
-    userTmp = await sync_to_async(User.objects.get)(username=name)
-    userSer = UserSerializer(userTmp)
-    return userSer.data
 
 async def getUserByIdClean(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
@@ -222,19 +213,19 @@ def giveOnlyFriendsName(friendsList, myUsername):
     return result
 
 
-async def usersListWithoutFriends(friendsList, AllUsers, myUsername): 
+async def usersListWithoutFriends(friendsList, AllUsers, id): 
     allFriendsName = []
     size = len(friendsList)
     i = 0
     while i < size:
-            allFriendsName.append(friendsList[i].get("username"))
+            allFriendsName.append(friendsList[i].get("id"))
             i += 1
 
     allUsersnames = []
     size = len(AllUsers)
     i = 0
     while i < size:
-        allUsersnames.append(AllUsers[i].get("username"))
+        allUsersnames.append(AllUsers[i].get("id"))
         i += 1
     allUsersnames.remove(myUsername)
 
@@ -252,7 +243,7 @@ async def usersListWithoutFriends(friendsList, AllUsers, myUsername):
     if size == 0:
         return userResult
     while i < size:
-        myUser = await getUserByUsername(result[i])
+        myUser = await getUserById(result[i])
         userResult.append(myUser)
         i += 1
     
@@ -470,7 +461,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             for key in statusReceived:
                 usersStatus[key] = "in-game"
                 userToChange = await getUserById(key)
-                logger.info("usersStatus --> %s", usersStatus)
             await self.send_status_to_all()
             await update_user_status(userToChange, "in-game")
 
@@ -480,7 +470,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             for key in statusReceived:
                 usersStatus[key] = True
             await self.send_status_to_all()
-            logger.info("usersStatus --> %s", usersStatus)
             await update_user_status(myUser, "online")
 
 
@@ -547,7 +536,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             condition, socketUserAlreadyConnected = checkIfUserIsAlreadyConnected(myUser)
             if condition == True:
-                logger.info("JE RENTRE ICI")
                 dataToSend = {
                     "DEGAGE-FILS-DE-PUTE": "OH OUI"
                 }
@@ -559,8 +547,8 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await addToPool(myUser, self.channel_name)
             await changeUserStatus(idUser, True)
 
-            logger.info("UsersConnected --> %s", usersConnected)
             usersConnected.append(userInfo)
+            logger.info("usersConnected --> %s", usersConnected)
 
             await self.send_status_to_all()
             await update_user_status(myUser, "online")
@@ -673,14 +661,14 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
-            myUser = await getUserByUsername(myUserTmp.get("username"))
-            myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username"))
+            myUser = await getUserById(myUserTmp.get("id"))
+            myUserBlocked = await getUserById(myUserBlockedTmp.get("id"))
 
             try:
                 myObj = RelationsBlocked(userWhoBlocks=myUser, userBlocked=myUserBlocked)
                 await saveBlockedRelation(myObj)
                 try:
-                    param = myUser.username + "|" + myUserBlocked.username
+                    param = str(myUser.id) + "|" + str(myUserBlocked.id)
                     theyAreFriend = await RelationshipIsExisting(param)
                     if theyAreFriend == True:
                         await eraseFriendRelationShip(param)
@@ -694,8 +682,8 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
-            myUser = await getUserByUsername(myUserTmp.get("username"))
-            myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username")) 
+            myUser = await getUserById(myUserTmp.get("id"))
+            myUserBlocked = await getUserById(myUserBlockedTmp.get("id")) 
             await eraseBlockedRelationShip(myUser, myUserBlocked)
             myUserRelationsBlocked = await getRelationsBlocked(myUser)
             myUserBlockedRelationsBlocked = await getRelationsBlocked(myUser)

@@ -158,7 +158,6 @@ function ViewProfile() {
                 </div>
             );
         }
-        console.log(profileUser);
 
         return (
             <div className="view-profile">
