@@ -27,7 +27,6 @@ async def sendToSocket(self, socket, message):
 
 async def sendToTournamentsSocket(self, message):
         myLen = len(allUsers)
-
         i = 0
         while i < myLen:
             myUser = allUsers[i]
@@ -456,7 +455,6 @@ async def isMyLeaderOnline(idTournament):
 
 
 def userWasInQueueFinal(userId):
-    logger.info("JE PASSE ICI")
     myLen = len(myMatches)
     i = 0
     while i < myLen:
@@ -470,7 +468,7 @@ def userWasInQueueFinal(userId):
                     playerToPrevent = players[1]
                 else:
                     playerToPrevent = players[0]
-                logger.info("playerToPrevent --> %s", playerToPrevent)
+                logger.info("JE DESTROY MALHEURESEMENT")
                 destroyMyTournament(idTournament)
         i += 1
 
@@ -576,9 +574,13 @@ class Tournament(AsyncWebsocketConsumer):
 
         if (myUser.id != myLeader):
             return
+        if type == "DESTROY-TOURNAMENT":
+            idTournament = data.get("idTournament")
+            destroyMyTournament(idTournament)
+            return
         elif type == "RESULTS":
+            logger.info("RESULTS RECEIVED ---> %s", data)
             # FIND MATCH
-            logger.info("RESULTS --> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -612,7 +614,6 @@ class Tournament(AsyncWebsocketConsumer):
 
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
                     if matchsPlayed == 2: ## MATCHS PLAYED
-                        logger.info("2 MATCHS PLAYED !!!!!!!!!!!!!!!!!!!!!!!!!!!")
                         tournamentMatchsEnded[idTournament] == 0
                         myWiners, myLosers = await createFinalMatch(self, idTournament)
                         if myWiners == None and myLosers == None:
@@ -651,6 +652,7 @@ class Tournament(AsyncWebsocketConsumer):
                         "SECOND": dataToSendToSecond
                     }
 
+                    logger.info("RESULTATS FIBAUX")
                     await sendToSocket(self, socketTournamentWinner, dataToSendWIN)
                     await sendToSocket(self, socketTournamentSecond, dataToSendSECOND)
                     destroyMyTournament(idTournament)
@@ -772,11 +774,9 @@ class Tournament(AsyncWebsocketConsumer):
                 }
                 clearPotentialGames(idTournament)
                 await sendToPlayersInTournament(self, dataToSend, idTournament)
-                logger.info("usersInTournament ---> %s", userInTournament)
-                logger.info("allTOurnamentsId --> %s", allTournamentsId)
                 logger.info("")
             else:
-                userWasInQueueFinal(myUser.id)
+                # userWasInQueueFinal(myUser.id)
                 defineUserSurrend(myUser)
 
         elif type == "NAVIGATE-TO-MATCH":

@@ -12,7 +12,6 @@ function Upload() {
   const [errorMessage, setErrorMessage] = useState('');
   const fileInputRef = useRef(null);
 
-  
   const handleButtonClick = (e) => {
     e.preventDefault();
     fileInputRef.current.click();
@@ -21,7 +20,7 @@ function Upload() {
   const handleFileChange = (event) => {
     const selectedFile = event.target.files[0];
 
-    const validTypes = ['image/jpeg','image/png', 'image/svg+xml'];
+    const validTypes = ['image/jpeg', 'image/png', 'image/svg+xml'];
     if (selectedFile && !validTypes.includes(selectedFile.type)) {
       setErrorMessage(t('profilPage.errorUpload'));
       setSuccessMessage('');
@@ -29,7 +28,7 @@ function Upload() {
       return;
     }
 
-    const maxSize = 5 * 1024 * 1024;
+    const maxSize = 5 * 1024 * 1024; // 5 Mo
     if (selectedFile && selectedFile.size > maxSize) {
       setErrorMessage(t('profilPage.errorUpload'));
       setSuccessMessage('');
