@@ -5,7 +5,7 @@ import { deleteProfil } from '../api/api';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function delProfil() {
+function delProfil({Actif}) {
 	const { t } = useTranslation();
 	const navigate = useNavigate();
 	const [sup, setSup] = useState(false);
@@ -46,6 +46,7 @@ function delProfil() {
 		<Button 
 		variant="danger" 
 		className="custom-rgpd2"
+		disabled={Actif}
 		onClick={handleShow}>
 			{t('profilPage.sup')}
 		</Button>
