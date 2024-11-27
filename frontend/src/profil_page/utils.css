@@ -1,0 +1,118 @@
+.image-style {
+	position: absolute;
+	top: 17.2vh;
+	left: 43vw;
+	width: 12.5vh;
+  	height: 12.5vh;
+  	object-fit: cover;
+	animation: float 3s ease-in-out infinite;
+	border: 2px solid #5E6472; 
+    border-radius: 50%;
+    box-shadow: 2px 10px 25px rgba(0, 0, 0, 0.3); 
+}
+
+@keyframes float {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-5px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+.succes-upload {
+	position: absolute;
+	top: 29.5vh;
+	left: 41vw;
+	color: #2886038e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}
+
+.error-upload {
+	position: absolute;
+	top: 29.5vh;
+	left: 41vw;
+	color: #fc00008e;
+	font-size: 0.9vw;
+	font-style: italic;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: 200;
+}
+
+.custom-cadre-change {
+	position:absolute;
+	width: 25vw;
+	height: 33vh;
+	margin: 2.5vw auto;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 2px solid #FDCDBE; ;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 10px;
+	top: 29vh;
+    left: 38.6vw;
+}
+
+.custom-cadre-pic {
+	position: absolute;
+	width: 25.2vw;
+	height: 19vh;
+	margin: 2.5vw auto;
+	background-color: rgba(0, 0, 0, 0.35);
+	border: 2px solid #FDCDBE; ;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+	display: flex;
+	border-radius: 10px;
+	transition: transform 0.3s ease;
+	top: 8.8vh;
+    left: 38.5vw;
+}
+
+.custom-rgpd {
+	position: absolute;
+	top: 90vh;
+	left: 38vw;
+	background-color:#5E6472;
+	color:#FDCDBE !important;
+	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
+	padding: 0.2vw 0.8vw;
+	font-size: 1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold;
+	border-radius: 10px; 
+	transition: transform 0.2s ease;
+}
+	.custom-rgpd:hover {
+		transform: translateY(-0.2vw);
+	}
+
+
+	.custom-rgpd2 {
+	position: absolute;
+	top: 90vh;
+	left: 56vw;
+	box-shadow: 0px 4px 6px rgba(0, 2, 10, 0.5);
+	background-color:rgb(255, 69, 69) !important;
+	color:#FDCDBE!important;
+	padding: 0.2vw 0.8vw;
+	font-size: 1vw;
+	font-family: 'Millimetre', sans-serif;
+	font-weight: bold;
+	border-radius: 10px;
+	transition: transform 0.2s ease;
+}
+
+	.custom-rgpd2:hover {
+		background-color: rgb(158, 1, 1) !important;
+		color: #FDCDBE!important;
+		border-color: rgb(158, 1, 1) !important;
+		transform: translateY(-0.2vw);
+	}

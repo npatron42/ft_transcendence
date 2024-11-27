@@ -1,7 +1,33 @@
 from django.urls import path, include
-from users.views import getUser, getAllUsers
+from users import views
 
 urlpatterns = [
-	path('user/', getUser, name="getUser"),
-	path('users/', getAllUsers, name="getAllUsers"),
+	path('user/', views.getUser, name="getUser"),
+	path('users/', views.getAllUsers, name="getAllUsers"),
+	path('blockedUsers/', views.getBlockedUsers, name="getBlockedUsers"),
+	path('blockedUsers2/', views.getUserBlockedRelations, name="getUserBlockedRelations"),
+	path('user/friendsInvitations/', views.getFriendsInvitations, name="getFriendsInvitations"),
+	path('user/matchHistory/', views.getMatchHistory, name="getMatchHistory"),
+	path('user/gamesInvitations/', views.getGamesInvitations, name="getFriendsInvitations"),
+	path('user/discussions/', views.getDiscussions, name="getDiscussions"),
+	path('sendInvite/', views.postInvite, name="postInvite"),
+	path('userFriendsList/', views.getFriendsList, name="getFriendsList"),
+	path('uploadProfilePicture/', views.uploadProfilePicture, name='uploadProfilePicture'),
+	path('resetProfilePicture/', views.resetProfilePicture, name='resetProfilePicture'),
+	path('changeLangue/', views.changeLangue, name='changeLangue'),
+	path('changeName/', views.changeName, name='changeName'),
+	path('changeTournamentName/', views.changeTournamentName, name='changeTournamentName'),
+	path('changeMail/', views.changeMail, name='changeMail'),
+	path('changePass/', views.changePass, name='changepass'),
+	path('checkPass/', views.checkPass, name='checkPass'),
+	path('toggle2fa/', views.toggle2fa, name='toggle2fa'),
+	path('friendsList/', views.getFriendsList, name="getFriendsList"),
+	path('usersList/', views.getUsersList, name="getUsersList"),
+	path('delProfile/', views.deleteProfile, name="delProfil"),
+	path('exportProfile/', views.exportProfile, name="exportProfil"),
+    path('user/matchHistory/<str:username>/', views.getMatchHistoryByUsername, name="getMatchHistoryByUsername"),
+    path('user/<str:username>/', views.getUserByUsername, name="getUserByUsername"),
+    path('user/friendsList/<str:id>/', views.getUserFriendsListById, name="getUserFriendsListById"),
+    path('gameSettings/', views.getGameSettings, name="getGameSettings"),
+    path('gameSettings/update/', views.updateGameSettings, name="updateGameSettings"),
 ]

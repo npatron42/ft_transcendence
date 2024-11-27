@@ -1,0 +1,59 @@
+.custom-dropdown-blocked {
+	position: absolute;
+	color : #FDCDBE !important;
+	top: 20vh;
+	left: 89.5vw;
+}
+
+.custom-size {
+	width: 180px;
+	height: 40px;
+}
+
+.dropdown-item {
+    width: 100%; /* Assure que l'élément parent prend toute la largeur disponible */
+}
+
+.blockedUser-item {
+	height: 40px;
+	width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.blockedUser-item-username {
+	width: 80%;
+	height: 100%;
+	display: flex;
+    align-items: center;
+}
+
+.blockedUser-item-cross {
+	width: 20%;
+	height: 100%;
+	padding-left: 10px;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modifyCross {
+	font-size: 15px;
+	color: #B3E6E3;
+}
+
+.modifyCross:hover {
+	font-size: 16px;
+	color: #FFA69E;
+}
+
+.modifyUsername {
+	font-size: 16px;
+	font-family: Millimetre;
+	color: #FAF3DD;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}

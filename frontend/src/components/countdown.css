@@ -1,0 +1,52 @@
+@font-face {
+    font-family: 'Millimetre-Light';
+    src: url('../assets/millimetre/Millimetre-Light.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Millimetre-Bold';
+    src: url('../assets/millimetre/Millimetre-Bold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.countdown {
+    height: 100px;
+    width: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.countdownLoser {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+}
+
+
+.seconds {
+	font-family: Millimetre-Bold;
+	font-size: 70px;
+	color: #FAF3DD;
+}
+
+.secondsLoser {
+	font-family: Millimetre-Bold;
+	font-size: 25px;
+	color: #FAF3DD;
+}

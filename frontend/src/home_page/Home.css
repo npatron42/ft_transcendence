@@ -1,7 +1,239 @@
 
-h6 {
-    font-size: 1.5rem; /* Taille de la police */
-    color: #f00b0b; /* Couleur du texte */
-    font-weight: 500; /* Poids de la police */
-    margin: 20; /* Suppression des marges par défaut */
+
+@font-face {
+    font-family: 'Millimetre'; /* Nom de la police */
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype'); /* Chemin relatif vers le fichier de police */
+    font-weight: normal;
+    font-style: normal;
+}
+
+.welcome-message {
+    position: absolute;
+    top: 20px; 
+    left: 20px;
+    font-family: 'Millimetre', sans-serif;
+    font-size: 24px; 
+    font-weight: bold;
+    color: #0e0404;
+    background-color: #363a45;
+    padding: 10px 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); 
+  }
+
+
+.nameUserComponent,
+.nameFriendComponent {
+      font-family: 'Millimetre', sans-serif;
+      font-size: 18px;
+      text-align: center;
+      color: #FAF3DD;
+      padding: 8px;
+      padding-bottom: 3px;
+      width: 85px;
+      margin-top: 10px;
+      margin-left: 10px;
+      margin-right: 10px;
+  }
+
+
+.nameUserComponent-active,
+.nameFriendComponent-active {
+        font-family: 'Millimetre', sans-serif;
+        font-size: 18px;
+        text-align: center;
+        color: #cdb4db !important;
+        padding: 8px;
+        padding-bottom: 3px;
+        width: 85px;
+        margin-top: 10px;
+        margin-left: 10px;
+        margin-right: 10px;
+}
+  
+.center-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+  }
+  
+
+.btn-outline-dark {
+    padding-bottom: 3px;
+    border: 1px solid #5E6472;
+
+}
+
+.username {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #f5f5f6;
+}
+
+.username:hover {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #f5f5f6;
+    text-decoration: underline #f5f5f6;
+    
+}
+.status.online {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #B8F2E6;
+}
+
+.status.offline {
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #FFA69E;
+}
+
+.status.in-game{
+
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: #cdb4db;
+}
+
+.friends-list {
+    height: 250px;
+    border-radius: 50px;
+    border: 3px solid #000000;
+    width: 450px;
+    background: #161719;
+}
+
+.buttonAdd {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 16px;
+    color: #ffa69e;
+    margin-right: 15px;
+
+}
+
+.friend-item {
+    height: 60px;
+    width: 380px;
+    border-radius: 50px;
+    border-top: 1px solid #FCE0CE;
+    border-bottom: 1px solid #FCE0CE;
+    border-left: 1px solid #FCE0CE;
+    border-right: 1px solid #FCE0CE;
+
+
+    background-color: transparent;
+    padding: 10px;
+    padding-top: 10px;
+    margin: 5px;
+    margin-left: 35px;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.friend-item td {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    width: 90px;
+}
+
+
+.profile-picture {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.noUsers {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 20px;
+    text-align: center;
+    color: #FAF3DD;
+}
+
+.userslist {
+	max-height: 170px;
+	overflow-x: hidden;
+    margin-right: 5px;
+    align-items: center;
+	text-align: center;
+	justify-content: center;
+}
+  
+  .userslist.scroll {
+	overflow-y: auto;
+    margin-right: 10px;
+  }
+  
+  .userslist.scroll::-webkit-scrollbar
+  {
+    width: 10px;
+    background-color: #2a2c31;
+  }
+  
+  .userslist.scroll::-webkit-scrollbar-thumb
+  {
+	border: 2px solid #000000;
+	border-radius: 20px;
+	background-color: #FFA69E;
+  }
+
+
+.modifyTrash {
+    font-size: 22px;
+    color: #cdb4db;
+}
+
+.modifyTrash2 {
+    font-size: 20px;
+    color: #cdb4db;
+}
+
+.modifyTrash2:hover {
+    font-size: 22px;
+    color: #AED9E0;
+}
+
+.modifyTrash:hover {
+    font-size: 24px;
+    color: #AED9E0;
+}
+
+.matchHistoryPlacement {
+    position: absolute;
+    margin-left: 740px;
+    margin-top: 300px;
+}
+
+.usersFriendsListPlacement {
+    position: absolute;
+    margin-left: 770px;
+    margin-bottom: 300px;
+}
+
+.languagesPlacement {
+    display: fixed;
+    margin-top: 0%;
+    z-index: 5;
+}
+.playPlacement {
+    position: absolute;
+    margin-right: 700px;
 }

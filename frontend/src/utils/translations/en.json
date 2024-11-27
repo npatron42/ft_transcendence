@@ -1,0 +1,161 @@
+{
+    "loginPage": {
+      "id": "Username",
+      "champ1": "Enter your Id",
+      "mdp" : "Password",
+      "champ2" : "Enter your password",
+      "login" : "Login",
+      "new" : "New user ?",
+      "createAccount" : "Create account",
+      "log42" : "Connect with",
+      "error" : "Incorrect username or password.",
+      "enterOtp": "Please enter the code received by email.",
+      "errorOtp": "Invalid code.",                                                                                                                                                                      
+      "errorOtpExp": "Expired code",                                                                                                                                                                      
+      "errorOtp1": "Invalid code ? Please cancel and click \"Login\" again." ,
+      "sup" : "Account deleted",                                                                                                                                                                        
+      "sup2" : "Your account has been deleted."                                                                                                                                                                     
+    },
+
+    "registerPage": {
+      "id": "Username",
+      "idTournament": "Tournament username",
+      "champ1": "Enter your Id",
+      "mail" : "Email",
+      "champ2": "Entrez your Email",
+      "mdp" : "Password",
+      "champ3" : "Enter your password",
+      "login" : "Login",
+      "createAccount" : "Create account",
+      "Ihave" : "I already have an account ?",
+      "idRequired": "Username is required",
+      "idCara": "Username must contain between 3 & 11 characters (allowed characters A-Z & a-z)",
+      "emailRequired": "Email is required",
+      "emailInvalid": "Email is not valid",
+      "passwordRequired": "Password is required",
+      "passwordInvalid": "Password must be at least 8 characters, including an uppercase letter,\na lowercase letter, a number, and a special character.",
+      "userPris": "Username already used",
+      "mailPris": "Email already used"
+    },
+
+    "profilPage" : {
+      "2fa" : "Enable two-factor authentication",
+      "upload" : "Click to upload",
+      "delete" : "Delete",
+      "lg" : "Default language : ",
+      "lg0" : "Default language",
+      "modif": "Modify",
+      "valide": "Validate",
+      "inco" : "Incorrect password",
+      "cancel" : "Cancel",
+      "oldmdp" : "Enter the old password",
+      "succesUpload": "Upload successful",
+      "errorUpload" : "Upload failed",
+      "errorUser" : "User is already in use",
+      "errorPass" : "Passwrod is already in use",
+      "errorMail" : "The email is already in use",
+      "enable2fa" : "Enable two-factor authentication",
+      "good2fa" : "Two-factor authentication implemented",
+      "disable2fa" : "Disable2fa two-factor authentication",
+      "blocked": "Blocked users",
+      "sup" : "Delete my account",
+      "verif" : "Are you sure ?",
+      "recup" : "Recover my data"
+    }, 
+
+    "chooseGame": { 
+  "soloTitle": "Local Game",
+  "soloDesc": "Play on the same device",
+  "multiTitle": "Online Game",
+  "multiDesc": "Play with your friends",
+  "tournoiTitle": "Tournaments",
+  "tournoiDesc": "Join tournaments",
+  "tournoiCreate": "Create",
+  "tournoiJoin": "Join",
+  "settings": "Settings",
+  "scoreMax": "Maximum Score: ",
+  "powerUp": "Power-ups & Penalties",
+  "start": "Start",
+  "options" : "Options",
+  "chooseOption" : "Choose an option",
+  "invite" : "Invite "
+},
+
+"gameSettings": {
+  "unsave": "Save settings",
+  "save": "Saved"
+},
+
+"viewProfile": {
+  "stats": "Statistics :",
+  "matchWin": "Matches Won:",
+  "tournamentsWin": "Tournaments Won:",
+  "infomations": "Information :",
+  "friends": "Friends: ",
+  "status": "Status: ",
+  "addFriend": "Add",
+  "deleteFriend": "Delete",
+  "play": "Play",
+  "noMatch": "No matches played",
+  "win": "Win",
+  "lose": "Loss",
+  "percent": "Win Percentage: ",
+  "goalScore": "Goals Scored: ",
+  "goalConceded": "Goals Conceded: "
+}, 
+
+"home": { 
+  "playPong" : "Play Pong"
+},
+
+"game": {
+  "menu": "Return to menu"
+},
+
+"history": {
+  "noUser": "No user found",
+  "noFriend": "No friend found",
+  "invalidUserList": "Invalid user list",
+  "myHistory": "My history",
+  "noMatch": "No matches played"
+}
+
+,
+
+"notif": {
+  "friend": "Friend",
+  "game": "Game",
+  "invitation": "No invitation..."
+
+
+},
+
+"chat": {
+  "welcome": "Welcome ",
+  "write": "Write a message...",
+  "noUser": "No user found...",
+  "addFriend": "Add somme friend...",
+  "chooseDiscuss": "Choose a discussion",
+  "profile" : "Profile",
+  "play": "Play",
+  "block": "Block"
+},
+
+"tournament": {
+  "tournament": "Tournament",
+  "noTournament": "No tournament found...",
+  "waiting": "Waiting for players...",
+  "start": "The tournament is about to start",
+  "next": "Waiting for the next match",
+  "finalist": "Finalists",
+  "eliminated": "Eliminated",
+  "result": "Result",
+  "won": "has won!",
+  "won2": "You have won",
+  "cancelled": "Tournament cancelled",
+  "full": "Full",
+  "join": "Join",
+  "redirection": "Redirecting to the menu in "
+}
+
+  }

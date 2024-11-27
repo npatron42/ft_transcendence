@@ -1,0 +1,101 @@
+.loader {
+	position: relative;
+	margin: auto;
+	box-sizing: border-box;
+	background-clip: padding-box;
+	width: 200px;
+	height: 200px;
+	border-radius: 50%;
+	border: 4px solid rgba(255, 255, 255, 0.1);
+	-webkit-mask: linear-gradient(rgba(24, 24, 24, 0.2), rgba(24, 24, 24,0.9) 90%);
+	transform-origin: 50% 60%;
+	transform: perspective(200px) rotateX(66deg);
+  }
+  
+  .loader:before, .loader:after {
+	content: "";
+	position: absolute;
+	margin: -4px;
+	box-sizing: inherit;
+	width: inherit;
+	height: inherit;
+	border-radius: inherit;
+	opacity: 0.05;
+	border: inherit;
+	border-color: transparent;
+	animation: spinner-spin 1.2s cubic-bezier(0.6, 0.2, 0, 0.8) infinite, spinner-fade 1.2s linear infinite;
+  }
+  
+  .loader:before {
+	border-top-color:#ffa69e;
+  }
+  
+  .loader:after {
+	border-top-color: #fdf0d5 ;
+	animation-delay: 0.3s;
+  }
+  
+  @keyframes spinner-spin {
+	100% {
+	  transform: rotate(360deg);
+	}
+  }
+  
+  @keyframes spinner-fade {
+	20% {
+	  opacity: 0.1;
+	}
+  
+	40% {
+	  opacity: 1;
+	}
+  
+	60% {
+	  opacity: 0.1;
+	}
+  }
+
+
+/* alert */
+
+.custom-swal-popup {
+    background-color: rgba(0, 0, 0, 0.80);    
+    border-radius: 8vw;       
+    padding: 20px;
+	font-family: 'Millimetre', sans-serif;        
+    color: white;               
+}
+
+
+.custom-swal-title {
+    color: #f07677;               
+    font-size: 24px;             
+    font-weight: bold;            
+}
+
+.custom-swal-text {
+    color: #d1d1d1;             
+    font-size: 18px;              
+    margin-top: 10px;           
+}
+
+.custom-swal-button {
+    background-color: #fc00008e;    
+    color: white;                 
+    font-size: 14px;               
+    padding: 10px 20px;           
+    border-radius: 5px;          
+    border: none;                 
+    transition: background-color 0.3s ease;
+	border-color:  #fc00008e!important;
+}
+
+.custom-swal-button:hover {
+	border-color:  #f80f0f !important;
+    background-color: #f80f0f;   
+}
+
+.custom-swal-button:focus {
+    outline: none; 
+    box-shadow: none;
+}
