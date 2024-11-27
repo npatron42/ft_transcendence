@@ -39,7 +39,6 @@ function Pseudo({ Actif, setActif }) {
 					setErrorMessage("profilPage.errorUser");
 				}
 			} catch (error) {
-				console.log('Failed user');
 			}
 		} else {
 			setInput('');

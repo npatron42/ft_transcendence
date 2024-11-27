@@ -187,7 +187,6 @@ const GameSettings = () => {
     
     
 
-    console.log("txt", text);
 
     return (
         <div className="gameSettingsGlobalContainer">

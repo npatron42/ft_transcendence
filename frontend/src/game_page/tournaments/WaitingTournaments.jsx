@@ -85,11 +85,9 @@ const WaitingTournaments = () => {
         const handleSocketTournament = (data) => {
         if (data.message["AFTER-00-LOSER"]) {
             setUserIsLoser(data.message["AFTER-00-LOSER"])
-            console.log("JE RECOIS LE LOSER")
         }
         if (data.message["AFTER-00-WINNER"]) {
             setUserIsWinner(data.message["AFTER-00-WINNER"])
-            console.log("JE RECOIS LE WINNER")
         }
         if (data.message["allTournaments"]) {
 
@@ -103,7 +101,6 @@ const WaitingTournaments = () => {
                 }
                 i++;
             }
-            console.log("allTournaments set")
         }
 
         if (data.message["DISPLAY-MATCH"]) {
