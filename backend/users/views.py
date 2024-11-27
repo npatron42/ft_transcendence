@@ -22,7 +22,7 @@ import logging
 import os
 import random
 from .utils import checkValidGameSettings
-from .utils import checkValidUsername
+from .utils import checkValidUsername, checkValidTournamentName
 from .utils import checkValidEmail
 from .utils import checkValidPassword
 
@@ -82,40 +82,42 @@ def getAllUsers2(request):
 
 def getMatchHistory(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
-        matchesSer = MatchHistorySerializer(matchesTmp, many=True)
-        matches = matchesSer.data
+        if myUser:
+            matchesTmp = MatchHistory.objects.filter(Q(player1=myUser) | Q(player2=myUser))
+            matchesSer = MatchHistorySerializer(matchesTmp, many=True)
+            matches = matchesSer.data
 
-        i = 0
-        myLen = len(matches)
-        result = []
-        while i < myLen:
-            if myUser.id == matches[i]["player1"]:
-                opponent = getUserById(matches[i]["player2"])
-                score = str(matches[i]["player1_score"]) + "  -  " + str(matches[i]["player2_score"])
-            else:
-                opponent = getUserById(matches[i]["player1"])
-                score = str(matches[i]["player2_score"]) + "  -  " + str(matches[i]["player1_score"])
-            if myUser.id == matches[i]["winner"]:
-                win = True
-            else:
-                win = False
-            date = matches[i]["date"]
-            dataToSend = {
-                "opponent": opponent,
-                "score": score,
-                "win": win,
-                "date": date
-            }
-            result.append(dataToSend)
-            i += 1
-        return JsonResponse(result, safe=False)
+            i = 0
+            myLen = len(matches)
+            result = []
+            while i < myLen:
+                if myUser.id == matches[i]["player1"]:
+                    opponent = getUserById(matches[i]["player2"])
+                    score = str(matches[i]["player1_score"]) + "  -  " + str(matches[i]["player2_score"])
+                else:
+                    opponent = getUserById(matches[i]["player1"])
+                    score = str(matches[i]["player2_score"]) + "  -  " + str(matches[i]["player1_score"])
+                if myUser.id == matches[i]["winner"]:
+                    win = True
+                else:
+                    win = False
+                date = matches[i]["date"]
+                dataToSend = {
+                    "opponent": opponent,
+                    "score": score,
+                    "win": win,
+                    "date": date
+                }
+                result.append(dataToSend)
+                i += 1
+            return JsonResponse(result, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
     else:
         return HttpResponseForbidden("Bad access")
-
 
 
 
@@ -157,24 +159,26 @@ def getMatchHistoryByUsername(request, username):
 
 def getGamesInvitations(request):
     payload = middleWareAuthentication(request)
+    if payload:
+        result = []
+        myUser = User.objects.filter(id = payload['id']).first()
+        if myUser:
+            id = myUser.id
 
-    result = []
-    myUser = User.objects.filter(id = payload['id']).first()
-    if myUser:
-        id = myUser.id
+            allInvitationsTmp = GameInvitation.objects.all()
+            allInvitations = GameInvitationSerializer(allInvitationsTmp, many=True)
 
-        allInvitationsTmp = GameInvitation.objects.all()
-        allInvitations = GameInvitationSerializer(allInvitationsTmp, many=True)
+            for invitation in allInvitations.data:
+                idInvitation = invitation.get("userInvited")
+                if (idInvitation == id):
+                    userToAdd = getUserById(invitation.get("leader"))
+                    result.append(userToAdd)
 
-        for invitation in allInvitations.data:
-            idInvitation = invitation.get("userInvited")
-            if (idInvitation == id):
-                userToAdd = getUserById(invitation.get("leader"))
-                result.append(userToAdd)
-
-        return JsonResponse(result, safe=False)
+            return JsonResponse(result, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
     else:
-        return HttpResponseForbidden("Bad access")
+            return HttpResponseForbidden("Bad access")
 
 def getFriendsInvitations(request):
     payload = middleWareAuthentication(request)
@@ -404,43 +408,44 @@ async def getUserFromJWT(token):
 
 def getUsersList(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        friendsList =  getFriendsList2(request)
+        if myUser:
+            friendsList =  getFriendsList2(request)
 
-        allUsers = getAllUsers2(request)
+            allUsers = getAllUsers2(request)
 
-        lenAllUsers = len(allUsers)
-        lenFriendsList = len(friendsList)
-        i = 0
+            lenAllUsers = len(allUsers)
+            lenFriendsList = len(friendsList)
+            i = 0
 
 
-        while i < lenAllUsers:
-            if (allUsers[i].get("username") == myUser.username):
-                lenAllUsers -= 1
-                del allUsers[i]
-            i += 1
-
-        i = 0
-        while i < lenFriendsList:
-            theFriend = friendsList[i].get("username")
-            j = 0
-            while j < lenAllUsers:
-                theUser = allUsers[j].get("username")
-                if (theUser == theFriend):
+            while i < lenAllUsers:
+                if (allUsers[i].get("username") == myUser.username):
                     lenAllUsers -= 1
-                    del allUsers[j]
-                    break
-                j += 1
-            i += 1
-        
-        usernamesBlocked = getUsernamesBlocked(request)
-        allUsers = removeUsernameFromList(usernamesBlocked, allUsers)
+                    del allUsers[i]
+                i += 1
 
-        return JsonResponse(allUsers, safe=False)
+            i = 0
+            while i < lenFriendsList:
+                theFriend = friendsList[i].get("username")
+                j = 0
+                while j < lenAllUsers:
+                    theUser = allUsers[j].get("username")
+                    if (theUser == theFriend):
+                        lenAllUsers -= 1
+                        del allUsers[j]
+                        break
+                    j += 1
+                i += 1
+            
+            usernamesBlocked = getUsernamesBlocked(request)
+            allUsers = removeUsernameFromList(usernamesBlocked, allUsers)
+
+            return JsonResponse(allUsers, safe=False)
+        return HttpResponseForbidden("Bad access")
     return HttpResponseForbidden("Bad access")
-
 
 
     ### INVITATIONS ###
@@ -535,6 +540,30 @@ def changeName(request):
         user.save()
         return JsonResponse({'success': True})
     return HttpResponseForbidden("Bad access")
+
+
+@csrf_exempt  
+def changeTournamentName(request):
+    payload = middleWareAuthentication(request)
+    user = User.objects.filter(id = payload['id']).first()
+    
+    if user:
+        data = json.loads(request.body)
+        name = data.get('name')
+        
+
+        if checkValidTournamentName(name) == False:
+            return JsonResponse({'error': 'Invalid data llll'}, status=400)
+        
+        if User.objects.filter(username=name).exists():
+            return JsonResponse({'success': False})
+        
+
+        user.tournamentName = name
+        user.save()
+        return JsonResponse({'success': True})
+    return HttpResponseForbidden("Bad access")
+
 
 @csrf_exempt  
 def changeMail(request):

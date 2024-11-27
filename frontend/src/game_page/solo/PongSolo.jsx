@@ -163,6 +163,8 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
 
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
+                if (!data.players) {
+                }
                 if (data.players) {
                     setRoomPlayers(data.players);
                 }
@@ -176,7 +178,7 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                     setPaddleSizes((prev) => ({ ...prev, right: data.paddle_right_height }));
                 }
                 if (data.ball) {
-
+                    
                     setBallPos(data.ball);
                 }
                 if (data.score) {
@@ -214,13 +216,17 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                     setDisplayPowerUpBool(false);
                     setPowerUpType(null);
                     setCenterLineClass('center-line');
-                    setSoloPlayActive(false);
                 }
                 if (data.player_has_power_up) {
                     setPlayerHasPowerUp(data.player_has_power_up);
                 }
-                if (data.solo_play_active) {
-                    setSoloPlayActive(true);
+                if (data.solo_play) {
+                    if (data.solo_play_active === true) {
+                        setSoloPlayActive(true);
+                    }
+                    else {
+                        setSoloPlayActive(false);
+                    }
                 }
             };
 
@@ -279,7 +285,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 setCenterLineClass('center-line-solo');
             }
             else {
-                console.log("je suis la");
                 setCenterLineClass('center-line');
             }
         }

@@ -278,7 +278,8 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 						self.room_group_name,
 						{
 							'type': 'sendSoloPlayActive',
-							'solo_play_active': True
+							'solo_play_active': True,
+							'solo_play': True
 						}
 					)
 				if PongSoloConsumer.solo_play_power[self.room_id]['start_effect'] == True:
@@ -557,7 +558,8 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 			self.room_group_name,
 			{
 				'type': 'sendSoloPlayActive',
-				'solo_play_active': False
+				'solo_play_active': False,
+				'solo_play': True
 			}
 		)
 
@@ -599,7 +601,7 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 		await self.send(text_data=json.dumps({'power_up_position': position, "status": status, "power_up": powerUp, "player_has_power_up": playerHasPowerUp }))
 
 	async def sendSoloPlayActive(self, event):
-		await self.send(text_data=json.dumps({'solo_play_active': event['solo_play_active']}))
+		await self.send(text_data=json.dumps({'solo_play_active': event['solo_play_active'], 'solo_play': event['solo_play']}))
 
 	async def game_state(self, event):
 		paddles_pos = event['paddles_pos']

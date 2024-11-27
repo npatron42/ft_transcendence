@@ -87,7 +87,8 @@ def add42UserToDB(jsonFile):
 		"username": login42 + "_42",
 		"email": email42,
 		"isFrom42": bool42,
-		"profilePicture": picture
+		"profilePicture": picture,
+		"tournamentName": login42 + "_42",
 	}
 
 

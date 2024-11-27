@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
+import { useNavigate } from 'react-router-dom'
+
 const TournamentContext = createContext(null);
 
 export const useTournamentSocket = () => {
@@ -15,13 +17,14 @@ export const TournamentSocketProvider = ({ children }) => {
 
     const myJwt = localStorage.getItem("jwt");
 
+    const navigate = useNavigate();
+
     useEffect(() => {
         if (!myJwt) {
             return;
         }
 
         const socket = new WebSocket(`wss://${location.host}/ws/tournamentsConsumer/?token=${myJwt}`);
-        console.log(" la")
         setSocket(socket);
 
         socket.onmessage = (event) => {

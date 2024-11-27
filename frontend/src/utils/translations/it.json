@@ -18,6 +18,7 @@
   },
   "registerPage": {
     "id": "Utente",
+    "idTournament": "Nome tornei",
     "champ1": "Inserisci il tuo Utente",
     "mail": "Email",
     "champ2": "Inserisci la tua Email",
@@ -85,10 +86,10 @@
   }, 
 
   "viewProfile": {
-  "stats": "Statistiche",
+  "stats": "Statistiche :",
   "matchWin": "Partite vinte:",
   "tournamentsWin": "Tornei vinti:",
-  "infomations": "Informazioni",
+  "infomations": "Informazioni :",
   "friends": "Amici: ",
   "status": "Stato: ",
   "addFriend": "Aggiungi",

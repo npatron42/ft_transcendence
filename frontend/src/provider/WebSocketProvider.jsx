@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useRef } from 'react';
 
 const WebSocketContext = createContext(null);
+import { useNavigate } from 'react-router-dom'
 
 const host = import.meta.env.VITE_HOST;
 
@@ -15,7 +16,7 @@ export const WebSocketProvider = ({ children }) => {
     const listeners = useRef([]);
     const listenersStatus = useRef([]);
     const listenersNotifs = useRef([]);
-
+    const navigate = useNavigate() 
     const myJwt = localStorage.getItem("jwt");
 
     useEffect(() => {
@@ -28,13 +29,19 @@ export const WebSocketProvider = ({ children }) => {
 
         const pingInterval = setInterval(() => {
             if (socket.readyState === WebSocket.OPEN) {
-                socket.send(JSON.stringify({ type: "ping" }));
+                // socket.send(JSON.stringify({ type: "ping" }));
             }
         }, 10000);
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data.status) {
+            if (data["DOUBLE-JWT"]) {
+                localStorage.removeItem("jwt")
+                navigate("/")
+                alert("Double JWT")
+                return
+            }
+            else if (data.status) {
                 listenersStatus.current.forEach(callback => callback(data));
             } else if (data.friendsInvitations || data.gamesInvitations || data.acceptGameInvitation) {
                 listenersNotifs.current.forEach(callback => callback(data));

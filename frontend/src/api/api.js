@@ -117,6 +117,25 @@ export const sendName = async (name) => {
 	}
 };
 
+export const sendTournamentName = async (name) => {
+	try {
+		const token = localStorage.getItem('jwt');
+		const config = {
+			headers: {
+				Authorization: `Bearer ${token}`
+			}
+		};
+		const response = await axios.post(`https://${location.host}/api/changeTournamentName/`, { name } , config);
+
+		return(response.data);
+
+	} catch (error) {
+		console.error(`Error fetching user data:`, error);
+		throw error;
+	}
+};
+
+
 export const sendMail = async (mail) => {
 	try {
 		const token = localStorage.getItem('jwt');

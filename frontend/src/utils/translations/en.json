@@ -19,6 +19,7 @@
 
     "registerPage": {
       "id": "Username",
+      "idTournament": "Tournament username",
       "champ1": "Enter your Id",
       "mail" : "Email",
       "champ2": "Entrez your Email",
@@ -86,10 +87,10 @@
 },
 
 "viewProfile": {
-  "stats": "Statistics",
+  "stats": "Statistics :",
   "matchWin": "Matches Won:",
   "tournamentsWin": "Tournaments Won:",
-  "infomations": "Information",
+  "infomations": "Information :",
   "friends": "Friends: ",
   "status": "Status: ",
   "addFriend": "Add",
