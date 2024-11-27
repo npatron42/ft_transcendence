@@ -19,6 +19,7 @@ const UsersFriendsList = () => {
     const [isInviting, setIsInviting] = useState(false);
     const [activeList, setActiveList] = useState('users');
     const { t } = useTranslation();
+    let i = 0;
 
     useEffect(() => {
         const handleSocketUser = (data) => {
@@ -167,7 +168,7 @@ const UsersFriendsList = () => {
                                         <tbody>
                                             {usersList.map((user) => (
                                                 <UserItem 
-                                                    key={user.id} 
+                                                    key={i++} 
                                                     user={user} 
                                                     handleInvitation={handleInvitation} 
                                                     isInviting={isInviting}
@@ -197,7 +198,7 @@ const UsersFriendsList = () => {
                                         <tbody>
                                             {friendsList.map((user) => (
                                                 <FriendItem 
-                                                    key={user.id} 
+                                                    key={i++} 
                                                     user={user} 
                                                     chooseStatus={chooseStatus}
                                                     deleteFriend={deleteFriend}

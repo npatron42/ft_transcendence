@@ -18,7 +18,6 @@ function buttonBlockedUsers({blockedUsers, myUser, socketUser, Actif}) {
 			socketUser.send(JSON.stringify(dataToSend));
 		}
 		else {
-			console.log("CLOSED BORDEL DE CUL")
 		}
 		return ;
 	}

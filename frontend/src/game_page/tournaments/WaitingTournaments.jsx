@@ -10,7 +10,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { v4 as uuidv4 } from 'uuid';
 import { useTranslation } from 'react-i18next';
 
-
 const WaitingTournaments = () => {
     const {myUser} = useAuth()
     const [myTournament, setTournament] = useState()
@@ -32,37 +31,52 @@ const WaitingTournaments = () => {
     useEffect(() => {
 
         const isRefreshed = localStorage.getItem('isRefreshed');
+
         if (isRefreshed) {
         navigate('/home');
         } else {
         localStorage.setItem('isRefreshed', 'true');
         }
         return () => localStorage.removeItem('isRefreshed');
+
     }, [navigate]);
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-        const myData = {
-            "type": "LEAVE-TOURNAMENT",
-            "id": idTournament,
-        };
-        if (tournamentSocket) {
-            tournamentSocket.send(JSON.stringify(myData));
+        if (!userIsLoser && !userIsWinner) {
+            const myData = {
+                "type": "LEAVE-TOURNAMENT",
+                "id": idTournament,
+                "final": true
+            };
+            if (tournamentSocket) {
+                tournamentSocket.send(JSON.stringify(myData));
+        }
+        else {
+            const myData = {
+                "type": "LEAVE-TOURNAMENT",
+                "id": idTournament,
+                "final": false
+            };
+            if (tournamentSocket) {
+                tournamentSocket.send(JSON.stringify(myData));
+        }
         }
         };
+    }
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
       window.removeEventListener('beforeunload', handleBeforeUnload);
-
-      const myData = {
+        const myData = {
         "type": "LEAVE-TOURNAMENT",
         "id": idTournament,
-      };
-      if (tournamentSocket) {
-          tournamentSocket.send(JSON.stringify(myData));
-      }
+        };
+
+        if (tournamentSocket) {
+            tournamentSocket.send(JSON.stringify(myData));
+        }
     };
   }, [idTournament, tournamentSocket, location]);
 
@@ -76,6 +90,7 @@ const WaitingTournaments = () => {
             setUserIsWinner(data.message["AFTER-00-WINNER"])
         }
         if (data.message["allTournaments"]) {
+
             setTournament(data.message["allTournaments"]);
             let i = 0;
             let tournaments = data.message["allTournaments"]
@@ -87,6 +102,7 @@ const WaitingTournaments = () => {
                 i++;
             }
         }
+
         if (data.message["DISPLAY-MATCH"]) {
                 const myOpponent = data.message["DISPLAY-MATCH"]["opponent"]
                 const otherMatch = data.message["DISPLAY-MATCH"]["otherMatch"]
@@ -130,7 +146,7 @@ const WaitingTournaments = () => {
 
   return (
     <div id="background-container">
-        {myTournament && myTournament.players.length !== 4 && !myOpponent && !otherMatch && end === false &&   (
+        {myTournament && myTournament.players && myTournament.players.length !== 4 && !myOpponent && !otherMatch && end === false &&   (
         <div className="waitingTournament">
             {myTournament !== undefined && (
                 <>
@@ -139,7 +155,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[0].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[0].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[0].tournamentName}</span>
                     </div>
                 </div>
                 {!myTournament.players[1] && (
@@ -159,7 +175,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[1].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[1].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[1].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -181,7 +197,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[2].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[2].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[2].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -203,7 +219,7 @@ const WaitingTournaments = () => {
                         <img src={getMediaUrl(myTournament.players[3].profilePicture)} className="picture"></img>   
                     </div>
                     <div className="bot">
-                        <span className="usernamePlacement">{myTournament.players[3].username}</span>
+                        <span className="usernamePlacement">{myTournament.players[3].tournamentName}</span>
                     </div>
                 </div>
                 )}
@@ -211,7 +227,7 @@ const WaitingTournaments = () => {
             )}
         </div>
         )}
-        {myTournament && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
+        {myTournament && myTournament.players && myTournament.players.length === 4 && myOpponent === undefined && !otherMatch === undefined && end === false && (
             <div className="waitingTournament-full fadeIn">
                 <div className="topFull">
                     <span className="tournamentWriting">{t('tournament.start')}</span>
@@ -238,7 +254,7 @@ const WaitingTournaments = () => {
 
 
 
-        {myTournament && myTournament.players.length === 4 && myOpponent && otherMatch && end === false && (
+        {myTournament && myTournament.players && myTournament.players.length === 4 && myOpponent && otherMatch && end === false && (
             <div className="waitingTournament-bis fadeIn">
                 <div className="displayMatch">
                     <div className="displayUser-left">
@@ -282,13 +298,13 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
-                        <img src={userIsLoser.finalists[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsLoser.finalists[0].profilePicture)} className="picture"></img>
                     </div>
                     <div>
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsLoser.finalists[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsLoser.finalists[1].profilePicture)} className="picture"></img>
                     </div>
                 </div>
                 <div className="fuckingLoser">
@@ -303,23 +319,23 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
-                        <img src={myUser.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myUser.profilePicture)} className="picture"></img>
                     </div>
                     <div>
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsWinner.opponent.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.opponent.profilePicture)} className="picture"></img>
                     </div>
                     <Countdown roomId={userIsWinner.roomId} idTournament={userIsWinner.idTournament}/>
                 </div>
                 <div className="fuckingLoser">
                     <span className="eliminated">{t('tournament.eliminated')}</span>
                     <div className="headPlayer">
-                        <img src={userIsWinner.playersEliminated[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.playersEliminated[0].profilePicture)} className="picture"></img>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsWinner.playersEliminated[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.playersEliminated[1].profilePicture)} className="picture"></img>
                     </div>
                 </div>
             </div>
@@ -341,7 +357,7 @@ const WaitingTournaments = () => {
                     </div>
 
                     <div className="sentenceWin">
-                        <span className="results-2">{winner["WINNER"].username}   {t('tournament.won')}</span>
+                        <span className="results-2">{winner["WINNER"].tournamentName}   {t('tournament.won')}</span>
                     </div>
 
                     
@@ -353,7 +369,7 @@ const WaitingTournaments = () => {
                         <span className="results">{t('tournament.result')}</span>
                     </div>
                     <div className="bigHead">
-                        <img src={myUser.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myUser.profilePicture)} className="picture"></img>
                     </div>
                     <div className="sentenceWin">
                         <span className="results-2">{t('tournament.won2')}</span>

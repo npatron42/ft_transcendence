@@ -2,10 +2,10 @@ import { useState } from "react";
 import { Form, Button } from 'react-bootstrap';
 import { useAuth } from '../provider/UserAuthProvider';
 import { useTranslation } from 'react-i18next';
-import { getUser, sendName } from '../api/api';
-import './pseudo.css';
+import { getUser, sendTournamentName} from '../api/api';
+import './tournamentAlias.css';
 
-function Pseudo({ Actif, setActif }) {
+function TournamentAlias({ Actif, setActif }) {
 	const { t } = useTranslation();
 	const { myUser, setUser } = useAuth();
 	const [input, setInput] = useState(myUser.username || '');
@@ -26,7 +26,8 @@ function Pseudo({ Actif, setActif }) {
 			}
 
 			try {
-				const response = await sendName(input);
+				const response = await sendTournamentName(input);
+				console.log("JE PASSE LA")
 				if (response.success) {
 					const tmpUser = await getUser();
 					setUser(tmpUser);
@@ -39,6 +40,7 @@ function Pseudo({ Actif, setActif }) {
 					setErrorMessage("profilPage.errorUser");
 				}
 			} catch (error) {
+				console.log('Failed user');
 			}
 		} else {
 			setInput('');
@@ -56,29 +58,29 @@ function Pseudo({ Actif, setActif }) {
 	};
 
 	return (
-		<div>
-			<Form onSubmit={handleSubmit}>
-				<p className="para-ps">{t("registerPage.id")}</p>
-				<Form.Group className="input-ps" controlId="User">
-					<Form.Control
-						type="text"
-						placeholder={myUser.username}
-						value={modif ? input : myUser.username}
-						onChange={(e) => setInput(e.target.value)}
-						readOnly={!modif}
-						className="form-test"
-					/>
-				</Form.Group>
-			</Form>
+	<div>
+		<Form onSubmit={handleSubmit}>
+			<p className="para-ps-2">{t("registerPage.idTournament")}</p>
+			<Form.Group className="inputTournoi" controlId="User">
+				<Form.Control
+					type="text"
+					placeholder={myUser.tournamentUsername}
+					value={modif ? input : myUser.tournamentUsername}
+					onChange={(e) => setInput(e.target.value)}
+					readOnly={!modif}
+					className="form-test-2"
+				/>
+			</Form.Group>
+		</Form>
 
-			{errorMessage && <p className="error-pseudo">{t(errorMessage)}</p>}
+		{errorMessage && <p className="error-TournamentAlias-2">{t(errorMessage)}</p>}
 
-			<Button variant="outline-dark" className="custom-pseudo"
-				onClick={handleClick} disabled={Actif && !valide}>
-				{modif ? t("profilPage.valide") : t('profilPage.modif')}
-			</Button>
-		</div>
+		<Button variant="outline-dark" className="custom-TournamentAlias-2"
+			onClick={handleClick} disabled={Actif && !valide}>
+			{modif ? t("profilPage.valide") : t('profilPage.modif')}
+		</Button>
+	</div>
 	);
 }
 
-export default Pseudo;
+export default TournamentAlias;

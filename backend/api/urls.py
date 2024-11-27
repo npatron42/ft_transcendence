@@ -16,6 +16,7 @@ urlpatterns = [
 	path('resetProfilePicture/', views.resetProfilePicture, name='resetProfilePicture'),
 	path('changeLangue/', views.changeLangue, name='changeLangue'),
 	path('changeName/', views.changeName, name='changeName'),
+	path('changeTournamentName/', views.changeTournamentName, name='changeTournamentName'),
 	path('changeMail/', views.changeMail, name='changeMail'),
 	path('changePass/', views.changePass, name='changepass'),
 	path('checkPass/', views.checkPass, name='checkPass'),

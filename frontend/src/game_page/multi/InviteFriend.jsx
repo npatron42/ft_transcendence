@@ -15,22 +15,21 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
 
     const InviteFriendGame = () => {
         const dataToSend = {
-            "type": "GameInvitation",
-			"leader": myUser,
-			"userInvited": user,
-			"roomId": roomIdStr
-		}
+          "type": "GameInvitation",
+          "leader": myUser,
+          "userInvited": user,
+          "roomId": roomIdStr
+		    }
         socketUser.send(JSON.stringify(dataToSend));
         setIsInviting(true);
         return;
     }
-
     return (
         <tr className="invite-toGame-friend-item">
             <td className="invite-toGame-friend-item.td">
             <img src={getMediaUrl(user.profilePicture)} alt={`${user.username}'s profile`} className="invite-profile-picture" />
             </td>
-        <td className="invite-toGame-friend-item.td"><span className={`status ${user.status}`}> {user.status} </span></td>
+        <td className="invite-toGame-friend-item.td"><span className={`status ${chooseStatus(user.id)}`}>{chooseStatus(user.id)} </span></td>
             <td className="invite-toGame-friend-item.td">
                 <button type="button" className="btn btn-outline-dark invite-toGame-button"  onClick={() => InviteFriendGame()}>{t('chooseGame.invite')}</button>
             </td>
@@ -41,7 +40,7 @@ function InviteFriendItem({ user, chooseStatus, roomId, socketUser, setIsInvitin
 export default InviteFriendItem;
 
 export const InviteFriend = (roomId) => {
-    const { socketUser } = useWebSocket();
+    const {socketUser, subscribeToStatus} = useWebSocket();
     const { myUser } = useAuth();
     const [userList, setUserList] = useState([]);
     const [status, setStatus] = useState({});
@@ -67,24 +66,35 @@ export const InviteFriend = (roomId) => {
         }
       };
     }, [socketUser]);
+
+    useEffect(() => {
+
+      const handleStatus = (data) => {
+          setStatus(data["status"]);
+      }
+
+      const unsubscribeStatus = subscribeToStatus(handleStatus);
+
+      return () => {
+          unsubscribeStatus();
+      };
+  }, [subscribeToStatus]);
+
+
+  const chooseStatus = (id) => {
+      if (status[id] === true)
+          return ("online")
+      else if (status[id] === "in-game")
+          return ("in-game")
+      return ("offline")
+  };
   
     const defineUsersList = async () => {
       setIsLoading(true);
       const allUsers = await getAllUsers();
-      const filteredUsers = allUsers.filter((user) => user.username !== myUser.username);
+      const filteredUsers = allUsers.filter((user) => user.id !== myUser.id);
       setUserList(filteredUsers);
       setIsLoading(false);
-    };
-  
-    const chooseStatus = (user) => {
-        console.log(user);
-      if (status[user.status] === "online") {
-        return "online";
-      } else if (status[user.status] === "in-game") {
-        return "in-game";
-      } else {
-        return "offline";
-      }
     };
   
     useEffect(() => {

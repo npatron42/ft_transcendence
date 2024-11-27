@@ -13,6 +13,7 @@ import FriendItem from '../UsersList/FriendItem';
 import { useTranslation } from 'react-i18next';
 import Languages from '../login_page/languages';
 
+
 function ViewProfile() {
     const navigate = useNavigate();
     const [matchHistory, setMatchHistory] = useState([]);
@@ -25,7 +26,17 @@ function ViewProfile() {
     const [itsFriend, setItsFriend] = useState(false);
     const [goalsConceded, setGoalsConceded] = useState(0);
     const [goalsScored, setGoalsScored] = useState(0);
+    const [nbMatchWin, setNbMatchWin] = useState(0);
     const { t } = useTranslation();
+    let i = 0;
+
+    const calculateWinLossRatio = (matchHistory) => {
+        const wins = matchHistory.filter(match => match.win).length;
+    
+        return {
+            wins,
+        };
+    };
 
     useEffect(() => {
         const handleSocketMessage = (message) => {
@@ -82,8 +93,11 @@ function ViewProfile() {
     useEffect(() => {
         if (profileUser && matchHistory.length > 0) {
             calculateGoalRatio(matchHistory);
+            const { wins } = calculateWinLossRatio(matchHistory);
+            setNbMatchWin(wins);
         }
     }, [profileUser, matchHistory]);
+
 
     const calculateGoalRatio = (matchHistory) => {
         let goalsConcededTmp = 0;
@@ -166,10 +180,10 @@ function ViewProfile() {
                         <div className="follow-info row">
                         <p className="info-profile">{t('viewProfile.stats')} </p>
                             <div className="col-md-6">
-                                <p className="info-profile">{t('viewProfile.matchWin')} {nbMatch}</p>
+                                <p className="info-profile">{t('viewProfile.matchWin')} {nbMatchWin}</p>
                             </div>
                             <div className="col-md-6">
-                                <p className="info-profile">{t('viewProfile.tournamentsWin')} {nbMatch}</p>
+                                <p className="info-profile">{t('viewProfile.tournamentsWin')} {profileUser.tournamentsWin}</p>
                             </div>
                         </div>
                         <div className="follow-info row">
@@ -214,7 +228,7 @@ function ViewProfile() {
                             )}
                         </div>
                         <div className="matchHistory-content-profile3">
-                        <table className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
+                        <div className={`matchHistory-content-history ${matchHistory.length >= 4 ? "scrollable" : ""}`}>
                             {matchHistory.length === 0 ? (
                                 <div className="history-info-profile">
                                     {username} {t('viewProfile.noMatch')}
@@ -222,12 +236,12 @@ function ViewProfile() {
                             ) : (
                                 matchHistory.slice().reverse().map((match) => (
                                     <HistoryItem
-                                        key={match.id}
+                                        key={i++}
                                         match={match}
                                     />
                                 ))
                             )}
-                        </table>
+                        </div>
                         </div>
                     </div>
                 </div>

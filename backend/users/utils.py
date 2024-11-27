@@ -27,14 +27,13 @@ def middleWareAuthentication(request):
 	auth_header = request.headers.get('Authorization')
 	token = auth_header.split(' ')[1]
 	if not token:
-		raise AuthenticationFailed('No existing token')
+		return None
 	try:
 		payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
 		isTokenExpired(payload)
 		
 	except:
-		jwt.ExpiredSignatureError
-		raise AuthenticationFailed('Unauthenticated')
+		return None
 	return payload
 
 def checkValidUsername(username):
@@ -50,6 +49,21 @@ def checkValidUsername(username):
 		return False
 	
 	return True
+
+def checkValidTournamentName(tournamentName):
+	tournamentName_regex = r'^[a-zA-Z0-9.-]{3,11}$'
+	
+	if not tournamentName:
+		return False
+	
+	if not re.match(tournamentName_regex, tournamentName):
+		return False
+	
+	if User.objects.filter(tournamentName=tournamentName).exists() and User.objects.filter(username=tournamentName).exists():
+		return False
+	
+	return True
+
 
 def checkValidEmail(email):
 	email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'

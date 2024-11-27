@@ -6,6 +6,7 @@ import Image from './image.jsx';
 import Del from './del.jsx';
 import Upload from './upload.jsx';
 import Pseudo from './pseudo.jsx';
+import TournamentAlias from './tournamentAlias.jsx';
 import Mail from './mail.jsx';
 import Mdp from './mdp.jsx';
 import DelProfil from './delProfil.jsx';
@@ -53,6 +54,7 @@ function profilPage() {
 		<Del Actif={Actif}/>
 		<ButtonBlockedUsers blockedUsers={blockedUsers} myUser={myUser} socketUser={socketUser} Actif={Actif}/>
 		<Pseudo Actif={Actif} setActif={setActif} />
+		<TournamentAlias Actif={Actif} setActif={setActif} />
 		<Mail Actif={Actif} setActif={setActif} />
 		<Mdp  Actif={Actif} setActif={setActif} />
 		<DelProfil Actif={Actif}/>

@@ -20,16 +20,16 @@ pool_lock = asyncio.Lock()
 
 socketsUsers = {}
 usersPool = {}
-
 usersStatus = {}
+usersConnected = []
 
 async def finalFriendsList(friendsList):
     size = len(friendsList)
     result = []
     i = 0
     while i < size:
-        username = friendsList[i]
-        myUser = await getUserByUsername(username)
+        id = friendsList[i]
+        myUser = await getUserById(id)
         result.append(myUser)
         i += 1
     return (result)
@@ -56,15 +56,6 @@ async def sendToEveryClientsUsersList(channel_layer):
         i += 1
 
 # UTILS FUNCTIONS FOR THE WAITINGINVITATIONS
-
-
-async def getUserByUsername(name):
-    return await sync_to_async(User.objects.get)(username=name)
-
-async def getUserByUsernameClean(name):
-    userTmp = await sync_to_async(User.objects.get)(username=name)
-    userSer = UserSerializer(userTmp)
-    return userSer.data
 
 async def getUserByIdClean(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
@@ -222,19 +213,19 @@ def giveOnlyFriendsName(friendsList, myUsername):
     return result
 
 
-async def usersListWithoutFriends(friendsList, AllUsers, myUsername): 
+async def usersListWithoutFriends(friendsList, AllUsers, id): 
     allFriendsName = []
     size = len(friendsList)
     i = 0
     while i < size:
-            allFriendsName.append(friendsList[i].get("username"))
+            allFriendsName.append(friendsList[i].get("id"))
             i += 1
 
     allUsersnames = []
     size = len(AllUsers)
     i = 0
     while i < size:
-        allUsersnames.append(AllUsers[i].get("username"))
+        allUsersnames.append(AllUsers[i].get("id"))
         i += 1
     allUsersnames.remove(myUsername)
 
@@ -252,7 +243,7 @@ async def usersListWithoutFriends(friendsList, AllUsers, myUsername):
     if size == 0:
         return userResult
     while i < size:
-        myUser = await getUserByUsername(result[i])
+        myUser = await getUserById(result[i])
         userResult.append(myUser)
         i += 1
     
@@ -282,6 +273,12 @@ async def sendToClient2(self, message, id):
             "type": "notification_to_client",
             "message": message,
         })
+
+async def sendToSocket(self, socket, message):
+    await self.channel_layer.send(socket, {
+        "type": "notification_to_client",
+        "message": message,
+    })
 
 
 async def getFriendsInvitations(id):
@@ -381,17 +378,20 @@ async def sendToClient(channel_layer, socket, message):
     })
 
 
-
 async def findGameInvitationToErase(myUser):
     try:
         myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUser)
         myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
         myGame = myGameInvitationSer.data
         userToNotifID = myGame.get("userInvited")
+        
         await sync_to_async(myGameInvitation.delete)()
+        
         return userToNotifID
-    except:
-        raise Exception("Game cannot be find")
+    
+    except GameInvitation.DoesNotExist:
+        return None
+
 
 
 async def sendToShareSocket(self, message):
@@ -405,6 +405,31 @@ async def sendToSocketTournament(self, message):
         "type": "socketTournament",
         "message": message,
     })
+
+def checkIfUserIsAlreadyConnected(myUser):
+    myLen = len(usersConnected)
+    i = 0
+    while i < myLen:
+        myInfo = usersConnected[i]
+        id = myInfo.get("id")
+        socket = myInfo.get("socket")
+        if id == myUser.id:
+            del usersConnected[i]
+            return True, socket
+        i += 1
+    return False, None
+
+def removeSocketObjet(myUser):
+    myLen = len(usersConnected)
+    i = 0
+    while i < myLen:
+        myInfo = usersConnected[i]
+        id = myInfo.get("id")
+        if id == myUser.id:
+            del usersConnected[i]
+            myLen -= 1
+        i += 1
+    return
 
 
 class handleSocketConsumer(AsyncWebsocketConsumer):
@@ -420,21 +445,22 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
     async def shareSocket(self, event):
         data = event['message']
         type = data.get("type")
-
         myUser = self.scope["user"]
-
         if type == "ABORT-MATCH":
-            userAborted = await getUserByUsername(data.get("userAborted"))
+            abortedId = data.get("userAborted")
+            userAborted = await getUserById(abortedId)
+
             userToNotifID = await findGameInvitationToErase(userAborted)
-            userToNotif = await getUserByIdClean(userToNotifID)
-            gamesInvitations = await getGamesInvitations(userToNotif["username"])
-            await sendToClient2(self, gamesInvitations, userToNotif.get("id"))
+            if userToNotifID == None:
+                return
+            gamesInvitations = await getGamesInvitations(userToNotifID)
+            await sendToClient2(self, gamesInvitations, str(userToNotifID))
 
         elif type == "USERS-STATUS-INGAME":
             statusReceived = data["status"]
             for key in statusReceived:
                 usersStatus[key] = "in-game"
-                userToChange = await getUserByUsername(key)
+                userToChange = await getUserById(key)
             await self.send_status_to_all()
             await update_user_status(userToChange, "in-game")
 
@@ -486,6 +512,10 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
         if self.scope['user'].is_authenticated:
+            myUser = self.scope["user"]
+            userId = str(myUser.id)
+
+            await self.accept()
             await self.channel_layer.group_add("notification", self.channel_name)
             await self.channel_layer.group_add("invitations", self.channel_name)
             await self.channel_layer.group_add("status_updates", self.channel_name)
@@ -498,9 +528,27 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             idUser = str(myUser.id)
             socketsUsers[idUser] = mySocket
 
+            userInfo = {
+                "socket": self.channel_name,
+                "id": myUser.id
+            }
+
+
+            condition, socketUserAlreadyConnected = checkIfUserIsAlreadyConnected(myUser)
+            if condition == True:
+                dataToSend = {
+                    "DOUBLE-JWT": "OH OUI"
+                }
+                await sendToSocket(self, socketUserAlreadyConnected, dataToSend)
+                await sendToSocket(self, self.channel_name, dataToSend)
+                self.close()
+                return
+
             await addToPool(myUser, self.channel_name)
             await changeUserStatus(idUser, True)
-            await self.accept()
+
+            usersConnected.append(userInfo)
+            logger.info("usersConnected --> %s", usersConnected)
 
             await self.send_status_to_all()
             await update_user_status(myUser, "online")
@@ -525,7 +573,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             await removeFromPool(myUser)
             await changeUserStatus(userId, False)
             await self.channel_layer.group_discard("status_updates", self.channel_name)
-
+            removeSocketObjet(myUser)
             await self.send_status_to_all()
             socketsUsers.pop(userId, None)
             await update_user_status(myUser, "offline")
@@ -539,11 +587,10 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
     async def receive(self, text_data):
 
-        data = json.loads(text_data);
+        data = json.loads(text_data)
 
         type = data["type"]
         myUser = self.scope["user"]
-        # INVITE METHODE
         if (type == "INVITE"):
             myReceiverId = data.get('to')
             typeMessage = data.get('type')
@@ -551,7 +598,6 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 
             myExpeditor = self.scope['user']
             myReceiver = await getUserById(myReceiverId)
-            socketReceiver = socketsUsers.get(str(myReceiverId))
 
             myInvitation = Invitation(expeditor=myExpeditor, receiver=myReceiver, message=typeMessage, parse=parse)
             invitation_exists = await checkInvitation(parse)
@@ -615,14 +661,14 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
-            myUser = await getUserByUsername(myUserTmp.get("username"))
-            myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username"))
+            myUser = await getUserById(myUserTmp.get("id"))
+            myUserBlocked = await getUserById(myUserBlockedTmp.get("id"))
 
             try:
                 myObj = RelationsBlocked(userWhoBlocks=myUser, userBlocked=myUserBlocked)
                 await saveBlockedRelation(myObj)
                 try:
-                    param = myUser.username + "|" + myUserBlocked.username
+                    param = str(myUser.id) + "|" + str(myUserBlocked.id)
                     theyAreFriend = await RelationshipIsExisting(param)
                     if theyAreFriend == True:
                         await eraseFriendRelationShip(param)
@@ -636,8 +682,8 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserTmp = data.get("userWhoBlocks")
             myUserBlockedTmp = data.get("userBlocked")
 
-            myUser = await getUserByUsername(myUserTmp.get("username"))
-            myUserBlocked = await getUserByUsername(myUserBlockedTmp.get("username")) 
+            myUser = await getUserById(myUserTmp.get("id"))
+            myUserBlocked = await getUserById(myUserBlockedTmp.get("id")) 
             await eraseBlockedRelationShip(myUser, myUserBlocked)
             myUserRelationsBlocked = await getRelationsBlocked(myUser)
             myUserBlockedRelationsBlocked = await getRelationsBlocked(myUser)
@@ -658,19 +704,28 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         
         elif type == "GameInvitation":
             userInvitedTmp = data.get("userInvited")
-            myUserInvited = await getUserByUsername(userInvitedTmp["username"])
+            myUserInvitedId = userInvitedTmp.get("id")
+            myUserInvited = await getUserById(myUserInvitedId)
             myRoomId = data.get("roomId")
+            stringParse = str(myUser.id) + "|" + str(myUserInvitedId)
+            
             try:
                 gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
                 await saveGameInvitation(gameInvitation)
                 gameInvitation = await getGamesInvitations(myUserInvited.id)
-                await sendToClient2(self, gameInvitation, myUserInvited.username)
+                dataToSend = {
+		        "type": "CHECK-GAME-INVITATION",
+		        "users": stringParse
+	            }
+                await sendToShareSocket(self, dataToSend)
+                await sendToClient2(self, gameInvitation, str(myUserInvitedId))
                 
             except:
                 raise (Exception("MOUAIS"))
         elif type == "ACCEPT-GameInvitation":
-            userWhoInvitesTmp = data.get("userWhoInvites")
-            myUserWhoInvites = await getUserByUsername(userWhoInvitesTmp["username"])
+            userWhoInvites = data.get("userWhoInvites")
+            myUserWhoInvitedID = userWhoInvites.get("id")
+            myUserWhoInvites = await getUserById(myUserWhoInvitedID)
             try:
                 myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=myUserWhoInvites)
                 myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
@@ -681,10 +736,28 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
                 dataToSend = {
                     "acceptGameInvitation": roomId
                 }
-                await sendToClient2(self, dataToSend, myUser.username)
-                await sendToClient2(self, gamesInvitations, myUser.username)
+
+                userId = str(myUser.id)
+                await sendToClient2(self, dataToSend, userId)
+                await sendToClient2(self, gamesInvitations, userId)
             except:
                 raise (Exception("MOUAIS"))
+        elif type == "DECLINE-GameInvitation":
+            userWhoInvitesId = data.get("userWhoInvites")
+            userWhoDeclinesId = data.get("userWhoDeclines")
+
+            userWhoInvites = await getUserById(userWhoInvitesId)
+            userWhoDeclines = await getUserById(userWhoDeclinesId)
+            try:
+                myGameInvitation = await sync_to_async(GameInvitation.objects.get)(leader=userWhoInvites)
+                myGameInvitationSer = GameInvitationSerializer(myGameInvitation)
+                myGame = myGameInvitationSer.data
+                await findGameInvitationToErase(userWhoInvites)
+                gamesInvitations = await getGamesInvitations(userWhoDeclines.id)
+                await sendToClient2(self, gamesInvitations, str(userWhoDeclinesId))
+            except:
+                raise (Exception("MOUAIS"))
+
         elif type == "CREATE-TOURNAMENT":
             await sendToSocketTournament(self, "oui")
 

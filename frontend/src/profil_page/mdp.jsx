@@ -52,7 +52,6 @@ function Mdp({Actif, setActif}) {
 					setErrorMessage("profilPage.errorPass");
 				}
 			} catch (error) {
-				console.log('Failed user');
 			}
     } else {
       handleShow();

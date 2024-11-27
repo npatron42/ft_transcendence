@@ -104,7 +104,7 @@ def registerPage(request):
                 'email': False
             })
 
-        user = user.objects.create_user(username=username, email=email, password=password)
+        user = user.objects.create_user(username=username, email=email, password=password, tournamentName=username)
         setDefaultGameSettings(user)
         
 
