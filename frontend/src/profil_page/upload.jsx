@@ -87,7 +87,7 @@ function Upload({ Actif }) {
         variant="outline-dark"
         className="custom-upload"
         onClick={handleButtonClick}
-        disabled={Actif} // Désactive le bouton si un autre composant est actif
+        disabled={Actif}
       >
         {t('profilPage.upload')}
       </Button>
