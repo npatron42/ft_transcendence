@@ -47,8 +47,6 @@ function profilPage() {
 	
 	return (
 	<div id="background-container">
-		{/* <div className="custom-cadre-pic"></div> */}
-		{/* <div className="custom-cadre-change"></div> */}
 		<NavbarBS />
 		<Upload Actif={Actif} />
 		<Image />
