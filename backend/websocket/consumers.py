@@ -455,9 +455,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
         data = event['message']
         type = data.get("type")
 
+        logger.info("data received --> %s", data)
         myUser = self.scope["user"]
         if type == "ABORT-MATCH":
-            
             abortedId = data.get("userAborted")
             userAborted = await getUserById(abortedId)
 
@@ -472,6 +472,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             for key in statusReceived:
                 usersStatus[key] = "in-game"
                 userToChange = await getUserById(key)
+                logger.info("usersStatus --> %s", usersStatus)
             await self.send_status_to_all()
             await update_user_status(userToChange, "in-game")
 
@@ -481,6 +482,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             for key in statusReceived:
                 usersStatus[key] = True
             await self.send_status_to_all()
+            logger.info("usersStatus --> %s", usersStatus)
             await update_user_status(myUser, "online")
 
 

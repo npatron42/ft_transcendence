@@ -43,7 +43,6 @@ async def sendGameStatusToUsers(self):
 			"type": "USERS-STATUS-INGAME",
 			"status": result,
 		}
-		logger.info("dataToSend --> %s", dataToSend)
 		await sendToShareSocket(self, dataToSend)
 
 async def removeClientFromUsers(self, id):
@@ -60,13 +59,14 @@ async def removeClientFromUsers(self, id):
 		
 	i = 0
 	while i < myLen:
-		if usersInGame[i] == id:
+		logger.info("usersInGame[i] --> %s, id = %s", usersInGame[i], id)
+		if usersInGame[i] == str(id):
 			del usersInGame[i]
 			await sendToShareSocket(self, dataToSend)
 			return
 		i += 1
-
-		return
+	logger.info("usersInGame --> %s", usersInGame)
+	return
 
 		###############
 		# MATCH IN DB #
