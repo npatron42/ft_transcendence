@@ -5,7 +5,7 @@ import { useAuth } from '../provider/UserAuthProvider';
 import { postPicture, getUser } from '../api/api';
 import './button.css';
 
-function Upload() {
+function Upload({ Actif }) {
   const { t } = useTranslation();
   const { myUser, setUser } = useAuth();
   const [successMessage, setSuccessMessage] = useState('');
@@ -87,6 +87,7 @@ function Upload() {
         variant="outline-dark"
         className="custom-upload"
         onClick={handleButtonClick}
+        disabled={Actif}
       >
         {t('profilPage.upload')}
       </Button>
