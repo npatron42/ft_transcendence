@@ -130,10 +130,8 @@ class PongConsumer(AsyncWebsocketConsumer):
 	idTournament = {}
 	playersInvited = {}
 	invited = {}
+	expectedPlayers = {}
 
-		###########
-		# CONNECT #
-		###########
 
 	async def createGameTask(self, room_id, myUser):
 		if room_id not in PongConsumer.myTasks:
@@ -180,6 +178,10 @@ class PongConsumer(AsyncWebsocketConsumer):
 		message = event['message']
 		await self.send(text_data=json.dumps(message))
 
+		###########
+		# CONNECT #
+		###########
+
 	async def connect(self):
 		myUser = self.scope["user"]
 		if myUser.is_authenticated:	
@@ -190,10 +192,20 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 			if len(PongConsumer.players[self.room_id]) >= 2:
 				usersConnect[str(myUser.id)] = "doubleConnect"
+				logger.info(" usersConnect ---------------------------------------------------------------> %s lui il degage %s", usersConnect, myUser.username)
+				usersDisconnectedForce.append(myUser.id)
 				return
+
+			if self.room_id not in PongConsumer.expectedPlayers:
+				PongConsumer.expectedPlayers[self.room_id] = {'player1': None, 'player2': None}
 			
-			if self.room_id not in PongConsumer.invited:
-				PongConsumer.invited[self.room_id] = "noUserInvited"
+			if PongConsumer.expectedPlayers[self.room_id]['player1'] != None:
+				if str(myUser.id) != str(PongConsumer.expectedPlayers[self.room_id]['player2']):
+					logger.info("for room %s player %s degage", self.room_id, myUser.id)
+					usersDisconnectedForce.append(myUser.id)
+					await self.close()
+					return
+
 			
 			if self.room_id not in PongConsumer.paddles_pos:
 				PongConsumer.paddles_pos[self.room_id] = {'left': 300, 'right': 300}
@@ -245,13 +257,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.channel_name
 			)
 			usersConnect[str(myUser.id)] = "alreadyConnect"
-			logger.info(" usersConnect --> %s", usersConnect)
-
-			if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.isTournament[self.room_id] == False:
-				if str(myUser.id) != str(PongConsumer.invited[self.room_id]):
-					usersDisconnectedForce.append(myUser.id)
-					await self.close()
-					return
+			# logger.info(" usersConnect --> %s", usersConnect)
 			
 			await self.accept()
 			await self.channel_layer.group_add("shareSocket", self.channel_name)
@@ -409,8 +415,11 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if type == "CHECK-GAME-INVITATION":
 			splitMessage = str(message).split('|')
-			PongConsumer.invited[self.room_id] = splitMessage[1]
-			logger.info("Invited player: %s", PongConsumer.invited[self.room_id])
+			logger.info("mes players --> %s", PongConsumer.players[self.room_id])
+			if splitMessage[0] == str(PongConsumer.players[self.room_id][0]):
+				PongConsumer.expectedPlayers[self.room_id]['player1'] = splitMessage[0]
+				PongConsumer.expectedPlayers[self.room_id]['player2'] = splitMessage[1]
+				logger.info("expectedPlayers --> %s for room %s", PongConsumer.expectedPlayers[self.room_id], self.room_id)
 		
 		###########
 		# RECEIVE #
@@ -430,13 +439,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			self.id = playerId
 			tmpUser = await getUserById(playerId)
 			self.username = tmpUser.username
-			if self.room_id in PongConsumer.invited_players:
-				invited_player = PongConsumer.invited_players[self.room_id]
-
-				if playerId != invited_player:
-					await self.close()
-					return
-			
 
 			if playerId not in PongConsumer.players[self.room_id]:
 				PongConsumer.players[self.room_id].append(playerId)
