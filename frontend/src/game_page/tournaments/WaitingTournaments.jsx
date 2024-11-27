@@ -44,14 +44,27 @@ const WaitingTournaments = () => {
 
     useEffect(() => {
         const handleBeforeUnload = (event) => {
-        const myData = {
-            "type": "LEAVE-TOURNAMENT",
-            "id": idTournament,
-        };
-        if (tournamentSocket) {
-            tournamentSocket.send(JSON.stringify(myData));
+        if (!userIsLoser && !userIsWinner) {
+            const myData = {
+                "type": "LEAVE-TOURNAMENT",
+                "id": idTournament,
+                "final": true
+            };
+            if (tournamentSocket) {
+                tournamentSocket.send(JSON.stringify(myData));
+        }
+        else {
+            const myData = {
+                "type": "LEAVE-TOURNAMENT",
+                "id": idTournament,
+                "final": false
+            };
+            if (tournamentSocket) {
+                tournamentSocket.send(JSON.stringify(myData));
+        }
         }
         };
+    }
 
     window.addEventListener('beforeunload', handleBeforeUnload);
 
@@ -62,6 +75,7 @@ const WaitingTournaments = () => {
         "type": "LEAVE-TOURNAMENT",
         "id": idTournament,
       };
+
       if (tournamentSocket) {
           tournamentSocket.send(JSON.stringify(myData));
       }
@@ -287,13 +301,13 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
-                        <img src={userIsLoser.finalists[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsLoser.finalists[0].profilePicture)} className="picture"></img>
                     </div>
                     <div>
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsLoser.finalists[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsLoser.finalists[1].profilePicture)} className="picture"></img>
                     </div>
                 </div>
                 <div className="fuckingLoser">
@@ -308,23 +322,23 @@ const WaitingTournaments = () => {
                 </div>
                 <div className="winnersMatchs">
                     <div className="headPlayer">
-                        <img src={myUser.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myUser.profilePicture)} className="picture"></img>
                     </div>
                     <div>
                         <span className="vsModified">VS</span>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsWinner.opponent.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.opponent.profilePicture)} className="picture"></img>
                     </div>
                     <Countdown roomId={userIsWinner.roomId} idTournament={userIsWinner.idTournament}/>
                 </div>
                 <div className="fuckingLoser">
                     <span className="eliminated">{t('tournament.eliminated')}</span>
                     <div className="headPlayer">
-                        <img src={userIsWinner.playersEliminated[0].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.playersEliminated[0].profilePicture)} className="picture"></img>
                     </div>
                     <div className="headPlayer">
-                        <img src={userIsWinner.playersEliminated[1].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(userIsWinner.playersEliminated[1].profilePicture)} className="picture"></img>
                     </div>
                 </div>
             </div>
@@ -358,7 +372,7 @@ const WaitingTournaments = () => {
                         <span className="results">{t('tournament.result')}</span>
                     </div>
                     <div className="bigHead">
-                        <img src={myUser.profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(myUser.profilePicture)} className="picture"></img>
                     </div>
                     <div className="sentenceWin">
                         <span className="results-2">{t('tournament.won2')}</span>

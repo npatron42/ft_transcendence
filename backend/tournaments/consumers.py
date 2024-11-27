@@ -302,6 +302,7 @@ def printMyMatches():
         match = myMatches[i]
         players = match["players"]
         logger.info("|----------MATCH %d----------|", i)
+        logger.info("| Id : %s", match["idTournament"])
         logger.info("| %s VS %s ", players[0], players[1])
         logger.info("| Type : %s", match["type"])
         logger.info("| Winner: %s", match["winner"])
@@ -432,6 +433,7 @@ def defineUserSurrend(myUser):
             myMatch["winner"] = "surrend"
             return
         i += 1
+    printMyMatches()
     return 
 
 def isUserWasLeaderInTournamentNotFinished(myUser):
@@ -453,7 +455,24 @@ async def isMyLeaderOnline(idTournament):
     return None
 
 
-
+def userWasInQueueFinal(userId):
+    logger.info("JE PASSE ICI")
+    myLen = len(myMatches)
+    i = 0
+    while i < myLen:
+        myMatch = myMatches[i]
+        idTournament = myMatch["idTournament"]
+        players = myMatch["players"]
+        logger.info("players --> %s, userId --> %s", players, userId)
+        if userId in players:
+            if myMatch["type"] == "final":
+                if userId == players[0]:
+                    playerToPrevent = players[1]
+                else:
+                    playerToPrevent = players[0]
+                logger.info("playerToPrevent --> %s", playerToPrevent)
+                destroyMyTournament(idTournament)
+        i += 1
 
 # OBJ ---> {"id": id of tournament}
 userInTournament = {}
@@ -691,7 +710,7 @@ class Tournament(AsyncWebsocketConsumer):
         type = data.get("type")
 
         # CREATION D'UN TOURNOI
-
+        logger.info("[ TOURNAMENT CONSUMER ] --> %s", data)
         if type == "CREATE-TOURNAMENT":
             logger.info("Disconnect from --> %s", myUser.username)
             idTournament = data.get("idTournament")
@@ -757,7 +776,7 @@ class Tournament(AsyncWebsocketConsumer):
                 logger.info("allTOurnamentsId --> %s", allTournamentsId)
                 logger.info("")
             else:
-                logger.info("[TOURNAMENT CONSUMER] --> %s", data)
+                userWasInQueueFinal(myUser.id)
                 defineUserSurrend(myUser)
 
         elif type == "NAVIGATE-TO-MATCH":
