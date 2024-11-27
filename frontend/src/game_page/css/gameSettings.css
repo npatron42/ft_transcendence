@@ -1,0 +1,577 @@
+@font-face {
+  font-family: 'Millimetre';
+  src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.gameSettingsGlobalContainer {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+  background-image: url("../../assets/background.png");
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gameSettingsContainer {
+  position: absolute;
+  display: flex;
+  margin-top: 110px !important;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 80vh;
+  width: 80vw;
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 2px solid #FFA69E;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-top: 20px;
+  border-radius: 10px;
+}
+
+.gameSettings {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 90%;
+  height: 90%;
+
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+  width: 100%;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 30px;
+  color: #FAF3DD;
+  width: 100%;
+}
+
+h2 {
+  text-align: center;
+  font-size: 20px;
+  color: #FAF3DD;
+  width: 100%;
+}
+
+.leftContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 40%;
+  margin-right: 10px;
+}
+
+.miniPongContainer {
+  border-radius: 50px;
+  border: 3px solid #161719;
+  background: transparent;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.keyBindContainer {
+  border-radius: 50px;
+  border: 3px solid #161719;
+    background: transparent;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 50%;
+  justify-content: center;
+}
+
+.SkinContainer {
+  border-radius: 50px;
+  border: 3px solid #161719;
+  background: transparent;
+  border-radius: 20px;
+  width: 80%;
+  padding:20px;
+  display: flex;
+  flex-direction: column;
+}
+
+input {
+  margin-top: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.container label {
+  cursor: pointer;
+  position: relative;
+  width: 120px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+label input {
+  appearance: none;
+}
+
+.container label span {
+  position: absolute;
+  width: auto;
+  min-width: 150px;
+  height: 100%;
+  background: linear-gradient(#555353, #363535, #303030);
+  border: 2px solid #222;
+  border-top-width: 4px;
+  border-radius: 6px;
+  box-shadow: inset 0 5px 1px rgba(0, 0, 0, 0.23), 0 5px 5px rgba(0, 0, 0, 0.5),
+    0 15px 25px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  font-family: 'Millimetre';
+  color: #111;
+  padding: 0 10px;
+}
+
+.container label span::before {
+  content: "";
+  position: absolute;
+  border-top: 1px solid #fff;
+  inset: 5px 3px;
+  filter: blur(5px);
+}
+
+.container label input:checked~span {
+  box-shadow: inset 0 2px 2px rgba(0, 0, 0, 0.35),
+    inset 0 5px 5px rgba(0, 0, 0, 0.5), inset 0 15px 25px rgba(0, 0, 0, 0.35);
+  color: #cdb4db;
+  text-shadow: 0 0 5px #cdb4db, 0 0 8px #b096be;
+}
+
+.container label span i {
+  margin-top: 5px;
+  margin-right: 20px;
+}
+
+.carouselContainer {
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  height: 100%;
+ 
+}
+
+.carouselButtonLeft,
+.carouselButtonRight {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.carouselButtonLeft:hover,
+.carouselButtonRight:hover {
+  background-color: transparent;
+  transform: scale(1.1);
+}
+
+.carouselButtonLeft i,
+.carouselButtonRight i {
+  font-size: 2rem;
+  color: #cdb4db;
+  transition: color 0.3s ease;
+}
+
+.carouselButtonLeft:hover i,
+.carouselButtonRight:hover i {
+  color: #fff;
+}
+
+
+.carouselContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 20px;
+}
+
+.selectSkinButton {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #219cf3;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.gameSettingsFooter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 10%;
+}
+
+
+.paddleSkinContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 20%;
+  border-radius: 20px;
+  margin: 5px;
+  padding: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.boardSkinContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  width: 100%;
+  height: 60%;
+  border-radius: 20px;
+  margin: 5px;
+  padding: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+.ballSkinContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: #FAF3DD;
+  box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  width: 100%;
+  height: 20%;
+  margin: 5px;
+  padding: 10px;
+  padding-left: 100px;
+  padding-right: 100px;
+}
+
+/*|-------------|*/
+/*| Paddle Skin |*/
+/*|-------------|*/
+
+.defaultPaddle {
+  background-color: #ffffff;
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.radientPaddle {
+  background: rgb(238, 174, 202);
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.neonPaddle {
+  background: black;
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  animation: neonGlow 2s infinite alternate;
+}
+
+@keyframes neonGlow {
+  0% {
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  }
+  50% {
+    box-shadow: 0 0 15px #ff00ff, 0 0 25px #00ffff, 0 0 40px #00ffff;
+  }
+  100% {
+    box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  }
+}
+
+.redPaddle {
+  background-color: #FF0000;
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.glassPaddle {
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 255, 255, 0.074);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.firePaddle {
+  background: linear-gradient(90deg, #ff4500, #ffa500, #ff4500);
+  width: 180px;
+  height: 20px;
+  position: absolute;
+  display: block;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 15px rgba(255, 69, 0, 0.8), 0 0 30px rgba(255, 165, 0, 0.5);
+  animation: fireGlow 2s infinite alternate;
+}
+
+@keyframes fireGlow {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 69, 0, 1), 0 0 40px rgba(255, 165, 0, 0.7);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8), 0 0 20px rgba(255, 165, 0, 0.5);
+  }
+}
+
+
+
+
+/*|------------|*/
+/*| Board Skin |*/
+/*|------------|*/
+
+.defaultBoard {
+  background: radial-gradient(circle, #5E6472 0%, #24272c 100%);
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  
+}
+
+.oldBoard {
+  background: black;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.pingPongBoard {
+  background: #008000;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.npatronBoard{
+  background-image: url("../../assets/game/npatron.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.galaxyBoard {
+  background: radial-gradient(circle, #1a1a2e 0%, #16213e 70%, #0f3460 100%);
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.retroGridBoard {
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px),
+                    linear-gradient(to right, rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.gradientBoard {
+  background-image: url("../../assets/game/gradient.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ballBoard {
+  background-image: url("../../assets/game/ball.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.ball2Board {
+  background-image: url("../../assets/game/ball2.png");
+  background-size: cover;
+  width: 360px;
+  height: 240px;
+  position: relative;
+  margin: 0 auto;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+/*|-----------|*/
+/*| Ball Skin |*/
+/*|-----------|*/
+
+.defaultBall {
+  width: 30px;
+  height: 30px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.radientBall {
+  width: 30px;
+  height: 30px;
+  background: rgb(238, 174, 202);
+  background: radial-gradient(circle, rgba(238, 174, 202, 1) 0%, rgba(148, 187, 233, 1) 100%);
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.neonBall {
+  width: 30px;
+  height: 30px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff, 0 0 30px #00ffff;
+  animation: neonGlow 2s infinite alternate;
+}
+
+.oldBall {
+  width: 30px;
+  height: 30px;
+  background: white;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.pingPongBall {
+  width: 30px;
+  height: 30px;
+  background: #FFCC00;
+  position: absolute;
+  border-radius: 50%;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+}
+
+.glassBall {
+  width: 30px;
+  height: 30px;
+  backdrop-filter: blur(4px);
+  background-color: rgba(0, 255, 255, 0.074);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 50%;
+  position: absolute;
+  left: 50%;
+  top: 50%; 
+  transform: translate(-50%, -50%);
+  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5), 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+
+
+

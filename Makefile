@@ -1,8 +1,14 @@
+# setup_env:
+# 	bash setup_env.sh
+
 all:
-	docker-compose up --build -d
+	./setup_env.sh 
+	docker-compose up --build
+# -d
 
 clean:
 	docker-compose down
+	rm -rf backend/media/*/
 
 fclean:
 	make clean

@@ -1,0 +1,252 @@
+@font-face {
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#ChooseGame {
+    font-family: 'Millimetre', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    padding: 0;
+    background-image: url("../../assets/background.png");
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Styles de la carte flip */
+.flip-card {
+    background-color: transparent;
+    width: 280px;
+    height: 400px;
+    perspective: 1000px;
+    font-family: sans-serif;
+    cursor: pointer;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.title2 {
+    font-family: 'Millimetre', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    text-align: center;
+    margin: 10px 0;
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+}
+
+.flip-card-content {
+    padding: 20px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    font-family: 'Millimetre', sans-serif;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    -webkit-backface-visibility: hidden;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+    /* -webkit-backface-visibility: hidden; */
+}
+
+/* Effet de vitre sur les cartes */
+.flip-card-front, 
+.flip-card-back {
+    box-shadow: 0 8px 14px 0 rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden; /* Support pour Safari */
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+
+    border-radius: 50px;
+    overflow: hidden;
+    border: solid 3px #161719;
+    backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.flip-card-content {
+    position: relative;
+    z-index: 1;
+    color: #FAF3DD;
+}
+
+.flip-card-front {
+    background: linear-gradient(120deg, rgba(40,43,51,0.2) 0%, rgba(60,65,78,0.2) 20%, rgba(85,94,116,0.2) 40%, rgba(72,78,94,0.2) 60%, rgba(50,55,67,0.2) 80%, rgba(40,43,51,0.2) 100%);
+}
+
+.flip-card-back {
+    background: linear-gradient(300deg, rgba(40,43,51,0.2) 0%, rgba(50,55,67,0.2) 20%, rgba(72,78,94,0.2) 40%, rgba(85,94,116,0.2) 60%, rgba(60,65,78,0.2) 80%, rgba(40,43,51,0.2) 100%);
+    transform: rotateY(180deg);
+}
+
+/* Boutons sur la carte arrière */
+.flip-card-back button {
+    margin: 10px 0;
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: none;
+    background-color: #5E6472;
+    color: #FAF3DD;
+    font-family: 'Millimetre', sans-serif;
+    font-size: 0.9em;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.flip-card-back button:hover {
+    background-color: #0c141f;
+    transform: translateY(-2px);
+}
+
+/* Styles du bouton "Start the Game" en bleu */
+.start-game {
+    --blue: #AED9E0;
+    color: #AED9E0 !important;
+    font-size: 15px;
+    padding: 0.7em 2.7em;
+    letter-spacing: 0.06em;
+    position: relative;
+    font-family: inherit;
+    border-radius: 0.6em;
+    overflow: hidden;
+    transition: all 0.3s;
+    line-height: 1.4em;
+    border: 2px solid var(--blue);
+    background: linear-gradient(to right, rgba(27, 108, 253, 0.1) 1%, transparent 40%, transparent 60%, rgba(27, 108, 253, 0.1) 100%);
+    color: var(--blue);
+    box-shadow: inset 0 0 10px #AED9E0, 0 0 9px 3px #5E6472;
+    margin-top: 20px;
+}
+
+.start-game:hover {
+    color: #FAF3DD;
+    box-shadow: inset 0 0 10px #AED9E0, 0 0 9px 3px rgba(28, 111, 255, 0)
+}
+
+.start-game:before {
+    content: "";
+    position: absolute;
+    left: -4em;
+    width: 4em;
+    height: 100%;
+    top: 0;
+    transition: transform .4s ease-in-out;
+    background: linear-gradient(to right, transparent 1%, rgba(27, 108, 253, 0.1) 40%, rgba(27, 108, 253, 0.1) 60%, transparent 100%);
+}
+
+.start-game:hover:before {
+    transform: translateX(15em);
+}
+
+/* Styles du slider */
+.slider-container input[type="range"] {
+    font-family: 'Millimetre', sans-serif !important;
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 8px;
+    background: #5E6472;
+    outline: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.slider-container input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #FAF3DD;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+}
+
+.slider-container input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #FAF3DD;
+    cursor: pointer;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+.slider-container input[type="range"]::-webkit-slider-runnable-track {
+    background: linear-gradient(120deg, rgba(40,43,51,0.2), rgba(60,65,78,0.2), rgba(85,94,116,0.2), rgba(72,78,94,0.2));
+}
+
+.slider-container input[type="range"]:hover::-webkit-slider-thumb {
+    background-color: #cdb4db;
+}
+
+.slider-container input[type="range"]:hover::-moz-range-thumb {
+    background-color: #cdb4db;
+}
+
+
+.btn-success {
+    background-color: #D9F3E2 !important;
+    color: #5E6472 !important;
+}
+
+.btn-success:hover {
+    background-color: #d9f3e28c !important;
+    border-color: #1e7e34 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger {
+    background-color: #FFA69E !important;
+    border-color: #000000 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger:hover {
+    background-color: #ffa69e81 !important;
+    border-color: #bd2130 !important;
+    color: #5E6472 !important;
+}
+
+.btn-danger:active {
+    background-color: #ffa69e81 !important;
+    border-color: #2421bd !important;
+    color: #5E6472 !important;
+}
+
+.rowContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+}
+.settings {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px;
+    font-family: 'Millimetre', sans-serif;
+    color: #FAF3DD;
+}

@@ -1,0 +1,158 @@
+
+
+@font-face {
+    font-family: 'Millimetre-Light';
+    src: url('../assets/millimetre/Millimetre-Light.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Millimetre';
+    src: url('../assets/millimetre/Millimetre-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Millimetre-Bold';
+    src: url('../assets/millimetre/Millimetre-Bold.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.matchHistory {
+    height: 250px;
+    border-radius: 50px;
+    border: 3px solid #000000;
+    width: 450px;
+    background: #161719;
+
+    margin-left: 30px;
+}
+
+.matchHistory-header {
+	height: 58px;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.writeHistory {
+	font-family: 'Millimetre-Bold', sans-serif;
+    font-size: 22px; 
+    font-weight: bold;
+	color: #FAF3DD;
+}
+
+.matchHistory-content {
+	width: 100%;
+	height: 80%;
+	display: flex;
+	flex-direction: column;
+    max-height: 170px;
+	overflow-x: hidden;
+}
+
+.scrollable {
+    overflow-y: auto;
+    height: 65%;
+    margin-right: 20px;
+}
+
+.scrollable::-webkit-scrollbar {
+    width: 10px;
+    background-color: #2a2c31;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+    border: 2px solid #000000;
+    border-radius: 20px;
+    background-color: #FFA69E;
+}
+
+.matchHistory {
+	font-family: 'Millimetre', sans-serif;
+    font-size: 20px; 
+    font-weight: bold;
+	color: #FAF3DD;
+}
+
+.historyInfo {
+	margin-top: 62px;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+    
+}
+
+.historyItem {
+    display: flex;              
+    justify-content: flex-end;  
+    width: 90%;
+    margin-left: 20px;
+    border-radius: 25px;
+    margin-bottom: 12px;
+}
+
+.historyItem-part {
+    flex: 1;                     
+    text-align: center;          
+    padding: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+}
+
+.modifyUsernameH {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #FAF3DD !important;
+}
+
+.modifyScorewin {
+    font-size: 18px; 
+    font-weight: bold;
+	color: #AED9E0;
+    font-family: Millimetre;
+    border-bottom: 1px solid #5E6472;
+}
+
+.modifyScorelose {
+    font-size: 18px; 
+    font-weight: bold;
+	color: #FAF3DD;
+    font-family: Millimetre;
+    border-bottom: 1px solid #5E6472;
+}
+
+.modifylose {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #FDCDBE !important;
+}
+
+.modifywin {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #B8F2E6;
+}
+
+.modifyDate {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #FAF3DD;    
+}
+
+
+.modifyUsername {
+	font-family: Millimetre;
+    font-size: 18px; 
+    font-weight: bold;
+	color: #AED9E0;
+}

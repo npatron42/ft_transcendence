@@ -6,6 +6,7 @@ function buttonCreate() {
   const { t } = useTranslation();
   return (
     <div>
+    <p className="para-user">{t('loginPage.new')}</p>
     <Button href="/register" size="sm" variant="outline-dark" className="custom-button">{t('loginPage.createAccount')}</Button>
   </div>
   );

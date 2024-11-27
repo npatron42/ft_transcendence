@@ -9,6 +9,8 @@ from rest_framework.exceptions import AuthenticationFailed
 import jwt, datetime
 import logging
 import os
+import string
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -25,13 +27,91 @@ def middleWareAuthentication(request):
 	auth_header = request.headers.get('Authorization')
 	token = auth_header.split(' ')[1]
 	if not token:
-		raise AuthenticationFailed('No existing token')
+		return None
 	try:
 		payload = jwt.decode(token, os.getenv('SECRET_KEY'), algorithms=['HS256'])
-		logger.info(payload)
 		isTokenExpired(payload)
 		
 	except:
-		jwt.ExpiredSignatureError
-		raise AuthenticationFailed('Unauthenticated')
+		return None
 	return payload
+
+def checkValidUsername(username):
+	username_regex = r'^[a-zA-Z0-9.-]{3,11}$'
+	
+	if not username:
+		return False
+	
+	if not re.match(username_regex, username):
+		return False
+	
+	if User.objects.filter(username=username).exists():
+		return False
+	
+	return True
+
+def checkValidTournamentName(tournamentName):
+	tournamentName_regex = r'^[a-zA-Z0-9.-]{3,11}$'
+	
+	if not tournamentName:
+		return False
+	
+	if not re.match(tournamentName_regex, tournamentName):
+		return False
+	
+	if User.objects.filter(tournamentName=tournamentName).exists() and User.objects.filter(username=tournamentName).exists():
+		return False
+	
+	return True
+
+
+def checkValidEmail(email):
+	email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
+	
+	if not email:
+		return False
+	
+	if not re.match(email_regex, email):
+		return False
+	
+	if User.objects.filter(email=email).exists():
+		return 'False'
+	
+	return True
+
+def checkValidPassword(password):
+	password_regex = r'^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#^_\-=~.])[A-Za-z\d@$!%*?&#^_\-=~.]{8,40}$'
+	
+	if not password:
+		return False
+	
+	if not re.match(password_regex, password):
+		return False
+	
+	return  True
+
+def checkValidGameSettings(data):
+	
+	up = data.get('up')
+	down = data.get('down')
+	paddleSkin = data.get('paddleSkin')
+	boardSkin = data.get('boardSkin')
+	ballSkin = data.get('ballSkin')
+
+	if not up or not down or not paddleSkin or not boardSkin or not ballSkin:
+		return False
+
+	allowed_keys = string.ascii_lowercase + string.digits + string.ascii_uppercase + 'ArrowUp' + 'ArrowDown' + 'ArrowLeft' + 'ArrowRight'
+	if up not in allowed_keys or down not in allowed_keys or up == down or (len(up) != 1 and up not in ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']) or (len(down) != 1 and down not in ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight']):
+		return False
+
+	if paddleSkin not in ['defaultPaddle', 'radientPaddle', 'neonPaddle', 'redPaddle', 'glassPaddle', 'firePaddle']:
+		return False
+	
+	if ballSkin not in ['defaultBall', 'radientBall', 'neonBall', 'oldBall', 'pingPongBall', 'glassBall']:
+		return False
+  
+	if boardSkin not in ['defaultBoard', 'oldBoard', 'pingPongBoard', 'npatronBoard', 'galaxyBoard', 'retroGridBoard', 'gradientBoard', 'ballBoard', 'ball2Board']:
+		return False
+ 
+	return True
