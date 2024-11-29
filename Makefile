@@ -2,7 +2,7 @@
 # 	bash setup_env.sh
 
 all:
-	./setup_env.sh 
+# ./setup_env.sh 
 	docker-compose up --build
 # -d
 

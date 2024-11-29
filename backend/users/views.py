@@ -463,6 +463,13 @@ def uploadProfilePicture(request):
 
     if user:
         file = request.FILES['profilPicture']
+        
+        VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']
+        MAX_SIZE_MB = 5
+
+        if file.content_type not in VALID_IMAGE_TYPES or file.size > MAX_SIZE_MB * 1024 * 1024:
+            return JsonResponse("Invalid file import.")
+        
         upload_directory = f'media/{user.id}/'
 
         if os.path.exists(upload_directory):
