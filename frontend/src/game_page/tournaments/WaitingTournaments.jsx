@@ -353,7 +353,7 @@ const WaitingTournaments = () => {
                     </div>
 
                     <div className="bigHead">
-                        <img src={winner["WINNER"].profilePicture} className="picture"></img>
+                        <img src={getMediaUrl(winner["WINNER"].profilePicture)} className="picture"></img>
                     </div>
 
                     <div className="sentenceWin">
