@@ -84,10 +84,10 @@ const usePaddleMovement = (webSocket, keyBind) => {
         if (!webSocket) return;
 
         const interval = setInterval(() => {
-            if (keysPressed['w']) {
+            if (keysPressed[keyBind.up]) {
                 webSocket.send(JSON.stringify({ action: 'paddleup', side: 'left' }));
             }
-            if (keysPressed['s']) {
+            if (keysPressed[keyBind.down]) {
                 webSocket.send(JSON.stringify({ action: 'paddledown', side: 'left' }));
             }
             if (keysPressed['ArrowUp']) {
