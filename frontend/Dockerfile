@@ -6,7 +6,7 @@
 #    By: isouaidi <isouaidi@student.42nice.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/08/24 14:30:21 by npatron           #+#    #+#              #
-#    Updated: 2024/11/27 21:11:43 by isouaidi         ###   ########.fr        #
+#    Updated: 2024/12/02 13:13:19 by isouaidi         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,5 +24,5 @@ RUN npm install react-router-dom
 
 COPY . .
 
-# CMD ["npm", "run", "dev"]
-ENTRYPOINT npm run build && npm run preview -- --port 5173
+CMD ["npm", "run", "dev"]
+# ENTRYPOINT npm run build && npm run preview -- --port 5173
