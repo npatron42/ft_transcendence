@@ -8,7 +8,7 @@ import { getUser } from '../api/api';
 import './button.css'
 import { sendLangue } from '../api/api';
 
-function buttonDef() {
+function buttonDef({Actif}) {
 	const { t } = useTranslation();
 	const {myUser, setUser} = useAuth();
 
@@ -23,7 +23,7 @@ function buttonDef() {
   return (
 	<div>
     <Dropdown className="custom-dropdown">
-      <Dropdown.Toggle variant="secondary custom-size">
+      <Dropdown.Toggle variant="secondary custom-size" disabled={Actif}>
 	  {t('profilPage.lg0')}
       </Dropdown.Toggle>
       <Dropdown.Menu>

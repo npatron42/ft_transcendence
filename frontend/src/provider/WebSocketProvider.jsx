@@ -35,7 +35,7 @@ export const WebSocketProvider = ({ children }) => {
 
         socket.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            if (data["DEGAGE-FILS-DE-PUTE"]) {
+            if (data["DOUBLE-JWT"]) {
                 localStorage.removeItem("jwt")
                 navigate("/")
                 alert("Double JWT")

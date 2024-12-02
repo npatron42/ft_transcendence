@@ -5,7 +5,7 @@ import { useAuth } from '../provider/UserAuthProvider';
 import { getUser} from '../api/api';
 import { toggle2fa } from '../api/api';
 
-function bt2fa() {
+function bt2fa({Actif}) {
 	const { t } = useTranslation();
 	const {myUser, setUser} = useAuth();
 	
@@ -26,7 +26,7 @@ function bt2fa() {
 		variant="outline-dark"
 		className="custom-2fA" 
 		onClick={handleChange}
-		disabled={myUser.isFrom42}>
+		disabled={myUser.isFrom42 || Actif}>
 			{myUser.dauth ? 
 			t('profilPage.disable2fa') : t('profilPage.enable2fa')}
 		</Button>

@@ -164,7 +164,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
             ws.onmessage = (event) => {
                 const data = JSON.parse(event.data);
                 if (!data.players) {
-                    console.log('Received:', data);
                 }
                 if (data.players) {
                     setRoomPlayers(data.players);
@@ -195,7 +194,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 if (data.power_up) {
                     setPowerUpType(data.power_up);
                     if (data.power_up === 'increase_paddle' || data.power_up === 'x2') {
-                        console.log ("power up class", powerUpClass);
                         setPowerUpClass('power-up-bonus');
                     }
                     else {
@@ -204,7 +202,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 }
                 if (data.status === "add" && data.power_up_position) {
                     setPowerUpPosition(data.power_up_position);
-                    console.log("power up type", data.power_up);
                 }
 
                 if (data.status === "erase") {
@@ -216,23 +213,18 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                     setPowerUpPosition({ x: 0, y: 0 });
                 }
                 if (data.power_up_release) {
-                    console.log("power up release voici ;e bool", displayPowerUpBool);
                     setDisplayPowerUpBool(false);
                     setPowerUpType(null);
                     setCenterLineClass('center-line');
                 }
                 if (data.player_has_power_up) {
-                    console.log("player has power up", data.player_has_power_up);
                     setPlayerHasPowerUp(data.player_has_power_up);
                 }
                 if (data.solo_play) {
-                    console.log("solo play active receivied");
                     if (data.solo_play_active === true) {
                         setSoloPlayActive(true);
-                        console.log("solo play active true");
                     }
                     else {
-                        console.log("solo play active false");
                         setSoloPlayActive(false);
                     }
                 }
@@ -293,7 +285,6 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
                 setCenterLineClass('center-line-solo');
             }
             else {
-                console.log("je suis la");
                 setCenterLineClass('center-line');
             }
         }

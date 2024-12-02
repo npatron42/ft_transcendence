@@ -8,6 +8,8 @@ from users.models import User
 import time
 import random
 import asyncio
+from django.db import transaction
+from django.db.models import F
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +21,11 @@ async def updateTournamentWin(idTournament, idUser):
     await sync_to_async(user.save)()
     return
 
-
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
     userSer = UserSerializer(userTmp)
     return userSer.data
-
+   
 async def sendToSocket(self, socket, message):
         await self.channel_layer.send(socket, {
             "type": "socketTournament",
@@ -33,7 +34,6 @@ async def sendToSocket(self, socket, message):
 
 async def sendToTournamentsSocket(self, message):
         myLen = len(allUsers)
-
         i = 0
         while i < myLen:
             myUser = allUsers[i]
@@ -308,6 +308,7 @@ def printMyMatches():
         match = myMatches[i]
         players = match["players"]
         logger.info("|----------MATCH %d----------|", i)
+        logger.info("| Id : %s", match["idTournament"])
         logger.info("| %s VS %s ", players[0], players[1])
         logger.info("| Type : %s", match["type"])
         logger.info("| Winner: %s", match["winner"])
@@ -433,11 +434,11 @@ def defineUserSurrend(myUser):
     myLen = len(myMatches)
     while i < myLen:
         myMatch = myMatches[i]
-        logger.info("myMatch --> %s", myMatch)
         if myMatch["winner"] == myId:
             myMatch["winner"] = "surrend"
             return
         i += 1
+    printMyMatches()
     return 
 
 def isUserWasLeaderInTournamentNotFinished(myUser):
@@ -459,7 +460,21 @@ async def isMyLeaderOnline(idTournament):
     return None
 
 
-
+def userWasInQueueFinal(userId):
+    myLen = len(myMatches)
+    i = 0
+    while i < myLen:
+        myMatch = myMatches[i]
+        idTournament = myMatch["idTournament"]
+        players = myMatch["players"]
+        if userId in players:
+            if myMatch["type"] == "final":
+                if userId == players[0]:
+                    playerToPrevent = players[1]
+                else:
+                    playerToPrevent = players[0]
+                destroyMyTournament(idTournament)
+        i += 1
 
 # OBJ ---> {"id": id of tournament}
 userInTournament = {}
@@ -563,9 +578,12 @@ class Tournament(AsyncWebsocketConsumer):
 
         if (myUser.id != myLeader):
             return
+        if type == "DESTROY-TOURNAMENT":
+            idTournament = data.get("idTournament")
+            destroyMyTournament(idTournament)
+            return
         elif type == "RESULTS":
             # FIND MATCH
-            logger.info("RESULTS --> %s", data)
             myPlayersUsernames = data.get("players")
 
             myPlayers = []
@@ -599,7 +617,6 @@ class Tournament(AsyncWebsocketConsumer):
 
                     matchsPlayed = tournamentMatchsEnded.get(idTournament)
                     if matchsPlayed == 2: ## MATCHS PLAYED
-                        logger.info("2 MATCHS PLAYED !!!!!!!!!!!!!!!!!!!!!!!!!!!")
                         tournamentMatchsEnded[idTournament] == 0
                         myWiners, myLosers = await createFinalMatch(self, idTournament)
                         if myWiners == None and myLosers == None:
@@ -637,7 +654,6 @@ class Tournament(AsyncWebsocketConsumer):
                     dataToSendSECOND = {
                         "SECOND": dataToSendToSecond
                     }
-
                     await updateTournamentWin(idTournament, myTournamentWinner)
                     await sendToSocket(self, socketTournamentWinner, dataToSendWIN)
                     await sendToSocket(self, socketTournamentSecond, dataToSendSECOND)
@@ -683,7 +699,6 @@ class Tournament(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         myUser = self.scope["user"]
         if myUser.is_authenticated:
-            logger.info("JE PASSE ICI")
             removeSocketIntoObjects(myUser)
             wasLeader, id = isUserWasLeaderInTournamentNotFinished(myUser)
             if wasLeader == True:
@@ -698,7 +713,6 @@ class Tournament(AsyncWebsocketConsumer):
         type = data.get("type")
 
         # CREATION D'UN TOURNOI
-
         if type == "CREATE-TOURNAMENT":
             logger.info("Disconnect from --> %s", myUser.username)
             idTournament = data.get("idTournament")
@@ -714,7 +728,6 @@ class Tournament(AsyncWebsocketConsumer):
 
             Tournament.leader[idTournament] = myUser.id
             Tournament.players[idTournament].append(myUser.id)
-            logger.info("userInTournament --> %s", userInTournament)
             await Tournament.sendAllTournamentsToUser(self, myUser)
 
         elif type == "SHOW-TOURNAMENTS":
@@ -744,7 +757,6 @@ class Tournament(AsyncWebsocketConsumer):
             
 
         elif type == "LEAVE-TOURNAMENT":
-            logger.info("[ TOURNAMENT CONSUMER ] --> %s", data)        
             idTournament = userInTournament.get(myUser.id)
             if idTournament is None:
                 return
@@ -760,11 +772,8 @@ class Tournament(AsyncWebsocketConsumer):
                 }
                 clearPotentialGames(idTournament)
                 await sendToPlayersInTournament(self, dataToSend, idTournament)
-                logger.info("usersInTournament ---> %s", userInTournament)
-                logger.info("allTOurnamentsId --> %s", allTournamentsId)
-                logger.info("")
             else:
-                logger.info("[TOURNAMENT CONSUMER] --> %s", data)
+                # userWasInQueueFinal(myUser.id)
                 defineUserSurrend(myUser)
 
         elif type == "NAVIGATE-TO-MATCH":
