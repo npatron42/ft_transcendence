@@ -191,7 +191,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				PongConsumer.players[self.room_id] = []
 
 			if len(PongConsumer.players[self.room_id]) >= 2:
-				usersConnect[str(myUser.id)] = "doubleConnect"
+				usersConnect[str(myUser.id)] = "doubleConnect" 
 				usersDisconnectedForce.append(myUser.id)
 				return
 

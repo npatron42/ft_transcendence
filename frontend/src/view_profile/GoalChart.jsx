@@ -18,12 +18,13 @@ function GoalChart ({ goalsConceded, goalsScored }){
     const { t } = useTranslation();
     const [goalsScoredTxt] = useState(t('viewProfile.goalScore'));
     const [goalsConcededTxt] = useState(t('viewProfile.goalConceded'));
+    const [goalTxt] = useState(t('viewProfile.goal'));
 
     const data = {
         labels: [goalsScoredTxt, goalsConcededTxt],
         datasets: [
             {
-                label: 'Goals',
+                label: goalTxt,
                 data: [goalsScored, goalsConceded],
                 backgroundColor: ['#B8F2E6', '#FFA69E'],
                 borderColor: ['#161719', '#161719'],

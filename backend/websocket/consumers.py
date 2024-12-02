@@ -368,6 +368,8 @@ async def removeFromPool(key):
         usersPool.pop(key.id, None)
 
 async def update_user_status(user, status):
+    #logger.info("user --> %s ses win %s", user, user.tournamentsWin)
+    await sync_to_async(user.refresh_from_db)()
     user.status = status
     await sync_to_async(user.save)()
 
@@ -469,8 +471,9 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             statusReceived = data["status"]
             for key in statusReceived:
                 usersStatus[key] = True
+                userToChange = await getUserById(key)
             await self.send_status_to_all()
-            await update_user_status(myUser, "online")
+            await update_user_status(userToChange, "online")
 
 
     async def notification_to_client(self, event):
@@ -537,7 +540,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             condition, socketUserAlreadyConnected = checkIfUserIsAlreadyConnected(myUser)
             if condition == True:
                 dataToSend = {
-                    "DEGAGE-FILS-DE-PUTE": "OH OUI"
+                    "DOUBLE-JWT": "OH OUI"
                 }
                 await sendToSocket(self, socketUserAlreadyConnected, dataToSend)
                 await sendToSocket(self, self.channel_name, dataToSend)

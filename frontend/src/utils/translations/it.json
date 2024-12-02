@@ -32,15 +32,15 @@
     "emailRequired": "L'email è richiesta",
     "emailInvalid": "L'email non è valida",
     "passwordRequired": "La password è richiesta",
-    "passwordMinLength": "La password deve essere lunga almeno 8 caratteri",
-    "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusi una lettera maiuscola,\nuna minuscola, un numero e un carattere speciale.",
+    "passwordMinLength": "La password deve contenere almeno 8 caratteri",
+    "passwordInvalid": "La password deve contenere almeno 8 caratteri, inclusa una lettera maiuscola,\nuna lettera minuscola, un numero e un carattere speciale.",
     "userPris": "Utente già in uso",
     "mailPris": "Email già in uso"
   },
   "profilPage": {
-    "2fa": "Abilitare l'autenticazione a due fattori",
+    "2fa": "Abilita l'autenticazione a due fattori",
     "upload": "Clicca per scaricare",
-    "delete": "Sopprimere",
+    "delete": "Elimina",
     "lg": "Lingua predefinita : ",
     "lg0": "Lingua predefinita",
     "modif": "Modificare",
@@ -49,7 +49,7 @@
     "cancel": "Cancellare",
     "oldmdp": "Inserisci la vecchia password",
     "succesUpload": "Download riuscito",
-    "errorUpload": "Download non riuscito",
+    "errorUpload": "Download fallito",
     "erroUser": "L'email è già in uso",
     "erroPass": "Password è già in uso",
     "erroMail": "Utente è già in uso",
@@ -99,8 +99,9 @@
   "win": "Vittoria",
   "lose": "Sconfitta",
   "percent": "Percentuale di vittorie: ",
-  "goalScore": "Goal segnati: ",
-  "goalConceded": "Goal subiti: "
+  "goalScore": "Goali segnati: ",
+  "goalConceded": "Goali subiti: ",
+  "goal": "Goali"
 },
 
 "home": { 

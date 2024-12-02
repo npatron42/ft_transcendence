@@ -8,6 +8,8 @@ from users.models import User
 import time
 import random
 import asyncio
+from django.db import transaction
+from django.db.models import F
 
 logger = logging.getLogger(__name__)
 
@@ -19,12 +21,11 @@ async def updateTournamentWin(idTournament, idUser):
     await sync_to_async(user.save)()
     return
 
-
 async def getUserById(myId):
     userTmp = await sync_to_async(User.objects.get)(id=myId)
     userSer = UserSerializer(userTmp)
     return userSer.data
-
+   
 async def sendToSocket(self, socket, message):
         await self.channel_layer.send(socket, {
             "type": "socketTournament",
@@ -653,7 +654,6 @@ class Tournament(AsyncWebsocketConsumer):
                     dataToSendSECOND = {
                         "SECOND": dataToSendToSecond
                     }
-
                     await updateTournamentWin(idTournament, myTournamentWinner)
                     await sendToSocket(self, socketTournamentWinner, dataToSendWIN)
                     await sendToSocket(self, socketTournamentSecond, dataToSendSECOND)
