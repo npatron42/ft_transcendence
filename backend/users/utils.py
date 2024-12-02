@@ -50,6 +50,21 @@ def checkValidUsername(username):
 	
 	return True
 
+def checkValidTournamentName(tournamentName):
+	tournamentName_regex = r'^[a-zA-Z0-9.-]{3,11}$'
+	
+	if not tournamentName:
+		return False
+	
+	if not re.match(tournamentName_regex, tournamentName):
+		return False
+	
+	if User.objects.filter(tournamentName=tournamentName).exists() and User.objects.filter(username=tournamentName).exists():
+		return False
+	
+	return True
+
+
 def checkValidEmail(email):
 	email_regex = r'^[^\s@]+@[^\s@]+\.[^\s@]+$'
 	

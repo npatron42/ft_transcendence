@@ -101,7 +101,8 @@
   "lose": "Loss",
   "percent": "Win Percentage: ",
   "goalScore": "Goals Scored: ",
-  "goalConceded": "Goals Conceded: "
+  "goalConceded": "Goals Conceded: ",
+  "goal": "Goals"
 }, 
 
 "home": { 

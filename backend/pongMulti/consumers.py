@@ -43,7 +43,6 @@ async def sendGameStatusToUsers(self):
 			"type": "USERS-STATUS-INGAME",
 			"status": result,
 		}
-		logger.info("dataToSend --> %s", dataToSend)
 		await sendToShareSocket(self, dataToSend)
 
 async def removeClientFromUsers(self, id):
@@ -60,13 +59,12 @@ async def removeClientFromUsers(self, id):
 		
 	i = 0
 	while i < myLen:
-		if usersInGame[i] == id:
+		if usersInGame[i] == str(id):
 			del usersInGame[i]
 			await sendToShareSocket(self, dataToSend)
 			return
 		i += 1
-
-		return
+	return
 
 		###############
 		# MATCH IN DB #
@@ -193,8 +191,7 @@ class PongConsumer(AsyncWebsocketConsumer):
 				PongConsumer.players[self.room_id] = []
 
 			if len(PongConsumer.players[self.room_id]) >= 2:
-				usersConnect[str(myUser.id)] = "doubleConnect"
-				logger.info(" usersConnect ---------------------------------------------------------------> %s lui il degage %s", usersConnect, myUser.username)
+				usersConnect[str(myUser.id)] = "doubleConnect" 
 				usersDisconnectedForce.append(myUser.id)
 				return
 
@@ -203,7 +200,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 			
 			if PongConsumer.expectedPlayers[self.room_id]['player1'] != None:
 				if str(myUser.id) != str(PongConsumer.expectedPlayers[self.room_id]['player2']):
-					logger.info("for room %s player %s degage", self.room_id, myUser.id)
 					usersDisconnectedForce.append(myUser.id)
 					await self.close()
 					return
@@ -259,7 +255,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				self.channel_name
 			)
 			usersConnect[str(myUser.id)] = "alreadyConnect"
-			# logger.info(" usersConnect --> %s", usersConnect)
 			
 			await self.accept()
 			await self.channel_layer.group_add("shareSocket", self.channel_name)
@@ -357,7 +352,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 				# DISCONNECTION INTO TOURNAMENTS
 
 			else:
-				logger.info("JE DISCONNECTE EN PLEIN TOURNOI TRUC DE FOU QWDQWDQWDQWDQWDQWDQW")
 				await self.channel_layer.group_discard(
 					self.room_group_name,
 					self.channel_name
@@ -385,7 +379,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 							'score': PongConsumer.score[self.room_id]
 						}
 					)
-					logger.info("[PONG CONSUMER DISCONNECT] --> JE SENT")
 					myPlayers = []
 					myPlayers.append(PongConsumer.players[self.room_id][0])
 					myPlayers.append(PongConsumer.players[self.room_id][1])
@@ -398,6 +391,13 @@ class PongConsumer(AsyncWebsocketConsumer):
 						"players": myPlayers,
 					}
 					await PongConsumer.sendData(self, self.room_id, dataToSend)
+				if len(PongConsumer.players[self.room_id]) == 1 and PongConsumer.end[self.room_id] == False:
+					myBite = {
+						"type": "DESTROY-TOURNAMENT",
+						"idTournament": PongConsumer.idTournament[self.room_id],
+					}
+					await PongConsumer.sendData(self, self.room_id, myBite)
+
 				await removeClientFromUsers(self, myUser.id)
 				PongConsumer.players[self.room_id].remove(self.id)
 				return
@@ -411,11 +411,9 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if type == "CHECK-GAME-INVITATION":
 			splitMessage = str(message).split('|')
-			logger.info("mes players --> %s", PongConsumer.players[self.room_id])
 			if splitMessage[0] == str(PongConsumer.players[self.room_id][0]):
 				PongConsumer.expectedPlayers[self.room_id]['player1'] = splitMessage[0]
 				PongConsumer.expectedPlayers[self.room_id]['player2'] = splitMessage[1]
-				logger.info("expectedPlayers --> %s for room %s", PongConsumer.expectedPlayers[self.room_id], self.room_id)
 		
 		###########
 		# RECEIVE #
@@ -429,7 +427,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 
 		myUser = self.scope["user"]
-		logger.info("jai recu dand pong: %s", data)
 
 		if playerId:
 			self.id = playerId
@@ -738,7 +735,6 @@ class PongConsumer(AsyncWebsocketConsumer):
 									'idTournament': PongConsumer.idTournament[self.room_id]
 								}
 							)
-							logger.info("[PONG CONSUMER TOURNAMENT] --> JE SENT")
 						myPlayers = []
 						myPlayers.append(PongConsumer.players[self.room_id][0])
 						myPlayers.append(PongConsumer.players[self.room_id][1])
