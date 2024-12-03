@@ -37,15 +37,16 @@ logger = logging.getLogger(__name__)
 
 def getUser(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    if user:
-        serializer = UserSerializer(user)
-        return JsonResponse(serializer.data)
-    else:
-        return HttpResponseForbidden("Bad access")
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        if user:
+            serializer = UserSerializer(user)
+            return JsonResponse(serializer.data)
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
         
 def getUserById(myId):
-
     user = User.objects.get(id=myId)
     serializer = UserSerializer(user)
     return serializer.data
@@ -184,21 +185,23 @@ def getFriendsInvitations(request):
     payload = middleWareAuthentication(request)
 
     result = []
-    myUser = User.objects.filter(id = payload['id']).first()
-    if myUser:
-        id = myUser.id
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
+        if myUser:
+            id = myUser.id
 
-        allInvitationsTmp = Invitation.objects.all()
-        allInvitations = InvitationSerializer(allInvitationsTmp, many=True)
+            allInvitationsTmp = Invitation.objects.all()
+            allInvitations = InvitationSerializer(allInvitationsTmp, many=True)
 
-        for invitation in allInvitations.data:
-            idInvitation = invitation.get("receiver")
-            if (idInvitation == id):
-                userToAdd = getUserById(invitation.get("expeditor"))
-                result.append(userToAdd)
-        return JsonResponse(result, safe=False)
-    else:
-        return JsonResponse({"type": "tg"})
+            for invitation in allInvitations.data:
+                idInvitation = invitation.get("receiver")
+                if (idInvitation == id):
+                    userToAdd = getUserById(invitation.get("expeditor"))
+                    result.append(userToAdd)
+            return JsonResponse(result, safe=False)
+        else:
+            return JsonResponse({"type": "tg"})
+    return HttpResponseForbidden("Bad access")
 
 
 
@@ -208,116 +211,126 @@ def getFriendsInvitations(request):
 
 def getUserBlockedRelations(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        relationsBlockedTmp = RelationsBlocked.objects.filter(userWhoBlocks=myUser)
-        relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
-        relationsBlocked = relationsBlockedSerial.data
+        if myUser:
+            relationsBlockedTmp = RelationsBlocked.objects.filter(userWhoBlocks=myUser)
+            relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
+            relationsBlocked = relationsBlockedSerial.data
 
-        i = 0
-        relationsLen = len(relationsBlocked)
-        result = []
-        while i < relationsLen:
-            userBlockedID = relationsBlocked[i].get("userBlocked")
-            myUserToAddTmp =  getUserById(userBlockedID)
-            myUserToAddSerial = UserSerializer(myUserToAddTmp)
-            myUserToAdd = myUserToAddSerial.data
-            result.append(myUserToAdd)            
-            i += 1
+            i = 0
+            relationsLen = len(relationsBlocked)
+            result = []
+            while i < relationsLen:
+                userBlockedID = relationsBlocked[i].get("userBlocked")
+                myUserToAddTmp =  getUserById(userBlockedID)
+                myUserToAddSerial = UserSerializer(myUserToAddTmp)
+                myUserToAdd = myUserToAddSerial.data
+                result.append(myUserToAdd)            
+                i += 1
 
-        return JsonResponse(result, safe=False)
+            return JsonResponse(result, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
     else:
         return HttpResponseForbidden("Bad access")
 
 
 def getBlockedUsers(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        relationsBlockedTmp = RelationsBlocked.objects.filter(Q(userWhoBlocks=myUser) | Q(userBlocked=myUser))
-        relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
-        relationsBlocked = relationsBlockedSerial.data
+        if myUser:
+            relationsBlockedTmp = RelationsBlocked.objects.filter(Q(userWhoBlocks=myUser) | Q(userBlocked=myUser))
+            relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
+            relationsBlocked = relationsBlockedSerial.data
 
-        i = 0
-        relationsLen = len(relationsBlocked)
-        result = []
-        while i < relationsLen:
-            userBlockedID = relationsBlocked[i].get("userBlocked")
-            userWhoBlocksID = relationsBlocked[i].get("userWhoBlocks")
-            if (myUser.id == userWhoBlocksID):
-                myUserToAddTmp =  getUserById(userBlockedID)
-                myUserToAddSerial = UserSerializer(myUserToAddTmp)
-                myUserToAdd = myUserToAddSerial.data
-                result.append(myUserToAdd)
-            elif (myUser.id == userBlockedID):
-                myUserToAddTmp =  getUserById(userWhoBlocksID)
-                myUserToAddSerial = UserSerializer(myUserToAddTmp)
-                myUserToAdd = myUserToAddSerial.data
-                result.append(myUserToAdd)            
-            i += 1
+            i = 0
+            relationsLen = len(relationsBlocked)
+            result = []
+            while i < relationsLen:
+                userBlockedID = relationsBlocked[i].get("userBlocked")
+                userWhoBlocksID = relationsBlocked[i].get("userWhoBlocks")
+                if (myUser.id == userWhoBlocksID):
+                    myUserToAddTmp =  getUserById(userBlockedID)
+                    myUserToAddSerial = UserSerializer(myUserToAddTmp)
+                    myUserToAdd = myUserToAddSerial.data
+                    result.append(myUserToAdd)
+                elif (myUser.id == userBlockedID):
+                    myUserToAddTmp =  getUserById(userWhoBlocksID)
+                    myUserToAddSerial = UserSerializer(myUserToAddTmp)
+                    myUserToAdd = myUserToAddSerial.data
+                    result.append(myUserToAdd)            
+                i += 1
 
-        return JsonResponse(result, safe=False)
+            return JsonResponse(result, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
     else:
         return HttpResponseForbidden("Bad access")
 
 def getBlockedUsers2(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        relationsBlockedTmp = RelationsBlocked.objects.filter(Q(userWhoBlocks=myUser) | Q(userBlocked=myUser))
-        relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
-        relationsBlocked = relationsBlockedSerial.data
+        if myUser:
+            relationsBlockedTmp = RelationsBlocked.objects.filter(Q(userWhoBlocks=myUser) | Q(userBlocked=myUser))
+            relationsBlockedSerial = RelationsBlockedSerializer(relationsBlockedTmp, many=True)
+            relationsBlocked = relationsBlockedSerial.data
 
-        i = 0
-        relationsLen = len(relationsBlocked)
-        result = []
-        while i < relationsLen:
-            userBlockedID = relationsBlocked[i].get("userBlocked")
-            userWhoBlocksID = relationsBlocked[i].get("userWhoBlocks")
-            if (myUser.id == userWhoBlocksID):
-                myUserToAddTmp =  getUserById(userBlockedID)
-                myUserToAddSerial = UserSerializer(myUserToAddTmp)
-                myUserToAdd = myUserToAddSerial.data
-                result.append(myUserToAdd)
-            elif (myUser.id == userBlockedID):
-                myUserToAddTmp =  getUserById(userWhoBlocksID)
-                myUserToAddSerial = UserSerializer(myUserToAddTmp)
-                myUserToAdd = myUserToAddSerial.data
-                result.append(myUserToAdd)            
-            i += 1
+            i = 0
+            relationsLen = len(relationsBlocked)
+            result = []
+            while i < relationsLen:
+                userBlockedID = relationsBlocked[i].get("userBlocked")
+                userWhoBlocksID = relationsBlocked[i].get("userWhoBlocks")
+                if (myUser.id == userWhoBlocksID):
+                    myUserToAddTmp =  getUserById(userBlockedID)
+                    myUserToAddSerial = UserSerializer(myUserToAddTmp)
+                    myUserToAdd = myUserToAddSerial.data
+                    result.append(myUserToAdd)
+                elif (myUser.id == userBlockedID):
+                    myUserToAddTmp =  getUserById(userWhoBlocksID)
+                    myUserToAddSerial = UserSerializer(myUserToAddTmp)
+                    myUserToAdd = myUserToAddSerial.data
+                    result.append(myUserToAdd)            
+                i += 1
 
-        return result
-    return None
+            return result
+        return None
+    return HttpResponseForbidden("Bad access")
 
     ### DISCUSSIONS ###
 
 
 def getDiscussions(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
-    
-    if myUser:
-        idSelected = request.GET.get("selectedUser")
-        myUserSelectedTmp = getUserById(idSelected)
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
+        
+        if myUser:
+            idSelected = request.GET.get("selectedUser")
+            myUserSelectedTmp = getUserById(idSelected)
 
-        myUserSelected = User.objects.filter(id = myUserSelectedTmp.get("id")).first()
+            myUserSelected = User.objects.filter(id = myUserSelectedTmp.get("id")).first()
 
-        discussionTmp = Message.objects.filter(
-            (Q(sender=myUser) & Q(receiver=myUserSelected)) | 
-            (Q(sender=myUserSelected) & Q(receiver=myUser))
-        )
+            discussionTmp = Message.objects.filter(
+                (Q(sender=myUser) & Q(receiver=myUserSelected)) | 
+                (Q(sender=myUserSelected) & Q(receiver=myUser))
+            )
 
-        discussion = MessageSerializer(discussionTmp, many=True)
+            discussion = MessageSerializer(discussionTmp, many=True)
 
-        dataToSend = {
-            "allDiscussion": discussion.data
-        }
-        return JsonResponse(dataToSend, safe=False)
-    else:
-        return HttpResponseForbidden("Bad access")
+            dataToSend = {
+                "allDiscussion": discussion.data
+            }
+            return JsonResponse(dataToSend, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 
 
@@ -343,48 +356,53 @@ def getUserFriendsListById(request, id):
 
 def getFriendsList(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
-        tabFriends = []
-        for relationship in friendsRelationships:
-            if relationship.user1 == myUser:
-                userToAdd = UserSerializer(relationship.user2)
-                tabFriends.append(userToAdd.data)
-            else:
-                userToAdd = UserSerializer(relationship.user1)
-                tabFriends.append(userToAdd.data)
+        if myUser:
+            friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
+            tabFriends = []
+            for relationship in friendsRelationships:
+                if relationship.user1 == myUser:
+                    userToAdd = UserSerializer(relationship.user2)
+                    tabFriends.append(userToAdd.data)
+                else:
+                    userToAdd = UserSerializer(relationship.user1)
+                    tabFriends.append(userToAdd.data)
 
-        usernamesBlocked = getUsernamesBlocked(request)
-        tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
+            usernamesBlocked = getUsernamesBlocked(request)
+            tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
 
-        return JsonResponse(tabFriends, safe=False)
+            return JsonResponse(tabFriends, safe=False)
+        else:
+            return HttpResponseForbidden("Bad access")
     else:
         return HttpResponseForbidden("Bad access")
 
 
 def getFriendsList2(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    if myUser:
-        friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
-        tabFriends = []
-        for relationship in friendsRelationships:
-            if relationship.user1 == myUser:
-                userToAdd = UserSerializer(relationship.user2)
-                tabFriends.append(userToAdd.data)
-            else:
-                userToAdd = UserSerializer(relationship.user1)
-                tabFriends.append(userToAdd.data)
-        
-        usernamesBlocked = getUsernamesBlocked(request)
-        tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
-        
-        return tabFriends
-    else:
-        return None
+        if myUser:
+            friendsRelationships = FriendsList.objects.filter(Q(user1=myUser) | Q(user2=myUser))
+            tabFriends = []
+            for relationship in friendsRelationships:
+                if relationship.user1 == myUser:
+                    userToAdd = UserSerializer(relationship.user2)
+                    tabFriends.append(userToAdd.data)
+                else:
+                    userToAdd = UserSerializer(relationship.user1)
+                    tabFriends.append(userToAdd.data)
+            
+            usernamesBlocked = getUsernamesBlocked(request)
+            tabFriends = removeUsernameFromList(usernamesBlocked, tabFriends)
+            
+            return tabFriends
+        else:
+            return None
+    return HttpResponseForbidden("Bad access")
 
 
     ### JWT ###
@@ -452,7 +470,6 @@ def getUsersList(request):
 
 
 def postInvite(request):
-    payload = middleWareAuthentication(request)
     users = User.objects.all()
     serializer = UserSerializer(users, many=True)
     return JsonResponse(serializer.data, safe=False)
@@ -464,199 +481,219 @@ def postInvite(request):
 @csrf_exempt
 def uploadProfilePicture(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
 
-    if user:
-        file = request.FILES['profilPicture']
+        if user:
+            file = request.FILES['profilPicture']
 
-        VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']
-        MAX_SIZE_MB = 5
+            VALID_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/svg+xml']
+            MAX_SIZE_MB = 5
 
-        if file.content_type not in VALID_IMAGE_TYPES or file.size > MAX_SIZE_MB * 1024 * 1024:
-            return HttpResponseForbidden("Bad access")
+            if file.content_type not in VALID_IMAGE_TYPES or file.size > MAX_SIZE_MB * 1024 * 1024:
+                return HttpResponseForbidden("Bad access")
 
-        upload_directory = f'media/{user.id}/'
+            upload_directory = f'media/{user.id}/'
 
-        if os.path.exists(upload_directory):
-            shutil.rmtree(upload_directory)
-            os.makedirs(upload_directory, exist_ok=True)
+            if os.path.exists(upload_directory):
+                shutil.rmtree(upload_directory)
+                os.makedirs(upload_directory, exist_ok=True)
+            else:
+                os.makedirs(upload_directory, exist_ok=True)
+
+            file_path = os.path.join(upload_directory, file.name)
+
+            with open(file_path, 'wb+') as destination:
+                for chunk in file.chunks():
+                    destination.write(chunk)
+
+            relative_path = f'{user.id}/{file.name}'
+            user.profilePicture = relative_path
+            user.save()
+
+            return JsonResponse({"message": "Profile picture updated successfully", "path": relative_path})
         else:
-            os.makedirs(upload_directory, exist_ok=True)
-
-        file_path = os.path.join(upload_directory, file.name)
-
-        with open(file_path, 'wb+') as destination:
-            for chunk in file.chunks():
-                destination.write(chunk)
-
-        relative_path = f'{user.id}/{file.name}'
-        user.profilePicture = relative_path
-        user.save()
-
-        return JsonResponse({"message": "Profile picture updated successfully", "path": relative_path})
-    else:
-        return HttpResponseForbidden("Bad access")
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def resetProfilePicture(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    if user:
-        upload_directory = f'media/{user.id}/'
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        if user:
+            upload_directory = f'media/{user.id}/'
 
-        if os.path.exists(upload_directory):
-            shutil.rmtree(upload_directory)
+            if os.path.exists(upload_directory):
+                shutil.rmtree(upload_directory)
 
-        user.profilePicture = 'default.jpg'
-        user.save()
-        return JsonResponse({'success': True})
-    else:
-        return HttpResponseForbidden("Bad access")
+            user.profilePicture = 'default.jpg'
+            user.save()
+            return JsonResponse({'success': True})
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def changeLangue(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    if user:
-        data = json.loads(request.body)
-        user.langue = data.get('langue')
-        user.save()
-        return JsonResponse({'success': True, 'langue': user.langue})
-    else:
-        return HttpResponseForbidden("Bad access")
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        
+        if user:
+            data = json.loads(request.body)
+            user.langue = data.get('langue')
+            user.save()
+            return JsonResponse({'success': True, 'langue': user.langue})
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def changeName(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    if user:
-        data = json.loads(request.body)
-        name = data.get('name')
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
         
+        if user:
+            data = json.loads(request.body)
+            name = data.get('name')
+            
 
-        if checkValidUsername(name) == False:
-            return JsonResponse({'error': 'Invalid data llll'}, status=400)
-        
-        if User.objects.filter(username=name).exists():
-            return JsonResponse({'success': False})
-        
+            if checkValidUsername(name) == False:
+                return JsonResponse({'error': 'Invalid data llll'}, status=400)
+            
+            if User.objects.filter(username=name).exists():
+                return JsonResponse({'success': False})
+            
 
-        user.username = name
-        user.save()
-        return JsonResponse({'success': True})
+            user.username = name
+            user.save()
+            return JsonResponse({'success': True})
+        return HttpResponseForbidden("Bad access")
     return HttpResponseForbidden("Bad access")
 
 
 @csrf_exempt  
 def changeTournamentName(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    if user:
-        data = json.loads(request.body)
-        name = data.get('name')
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
         
+        if user:
+            data = json.loads(request.body)
+            name = data.get('name')
+            
 
-        if checkValidTournamentName(name) == False:
-            return JsonResponse({'error': 'Invalid data llll'}, status=400)
-        
-        if User.objects.filter(username=name).exists():
-            return JsonResponse({'success': False})
-        
+            if checkValidTournamentName(name) == False:
+                return JsonResponse({'error': 'Invalid data llll'}, status=400)
+            
+            if User.objects.filter(username=name).exists():
+                return JsonResponse({'success': False})
+            
 
-        user.tournamentName = name
-        user.save()
-        return JsonResponse({'success': True})
+            user.tournamentName = name
+            user.save()
+            return JsonResponse({'success': True})
+        return HttpResponseForbidden("Bad access")
     return HttpResponseForbidden("Bad access")
 
 
 @csrf_exempt  
 def changeMail(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    if user:
-        data = json.loads(request.body)
-        mail = data.get('mail')
-        
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        if user:
+            data = json.loads(request.body)
+            mail = data.get('mail')
+            
 
-        if User.objects.filter(email=mail).exists():
-            return JsonResponse({'success': False})
-        
-        if checkValidEmail(mail) == False:
-            return JsonResponse({'error': 'Invalid data'}, status=400)
-        
+            if User.objects.filter(email=mail).exists():
+                return JsonResponse({'success': False})
+            
+            if checkValidEmail(mail) == False:
+                return JsonResponse({'error': 'Invalid data'}, status=400)
+            
 
-        user.email = mail
-        user.save()
-        return JsonResponse({'success': True})
-    else:
-        return HttpResponseForbidden("Bad access")
+            user.email = mail
+            user.save()
+            return JsonResponse({'success': True})
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def checkPass(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    if user:
-        data = json.loads(request.body)
-        password = data.get('pass')
-
-        if checkValidPassword(password) == False:
-            return JsonResponse({'error': 'Invalid data'}, status=400)
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
         
+        if user:
+            data = json.loads(request.body)
+            password = data.get('pass')
 
-        if (password==user.password):
-            return JsonResponse({'success': True})
-        else :
-            return JsonResponse({'success': False})
-    else:
-        return HttpResponseForbidden("Bad access")
+            if checkValidPassword(password) == False:
+                return JsonResponse({'error': 'Invalid data'}, status=400)
+            
+
+            if (password==user.password):
+                return JsonResponse({'success': True})
+            else :
+                return JsonResponse({'success': False})
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def changePass(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    data = json.loads(request.body)
-    password = data.get('pass')
-    
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        
+        data = json.loads(request.body)
+        password = data.get('pass')
+        
 
-    if User.objects.filter(password=password).exists():
-        return JsonResponse({'success': False})
-    
+        if User.objects.filter(password=password).exists():
+            return JsonResponse({'success': False})
+        
 
-    user.password = password
-    user.save()
-    return JsonResponse({'success': True})
+        user.password = password
+        user.save()
+        return JsonResponse({'success': True})
+    return HttpResponseForbidden("Bad access")
 
 @csrf_exempt  
 def toggle2fa(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    data = json.loads(request.body)
-    user.dauth = data.get('dauth')
-    user.save()
-    return JsonResponse({'success': True, 'dauth': user.dauth})
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        
+        data = json.loads(request.body)
+        user.dauth = data.get('dauth')
+        user.save()
+        return JsonResponse({'success': True, 'dauth': user.dauth})
+    return HttpResponseForbidden("Bad access")
     
 ### UTILS FUNCTIONS ###
 
 
 def getUsernamesBlocked(request):
     payload = middleWareAuthentication(request)
-    myUser = User.objects.filter(id = payload['id']).first()
+    if payload:
+        myUser = User.objects.filter(id = payload['id']).first()
 
-    usersBlocked = getBlockedUsers2(request)
-    myLen = len(usersBlocked)
-    i = 0
-    usernames = []
-    while i < myLen:
-        username = usersBlocked[i].get("username")
-        usernames.append(username)
-        i += 1
-    return usernames
+        usersBlocked = getBlockedUsers2(request)
+        myLen = len(usersBlocked)
+        i = 0
+        usernames = []
+        while i < myLen:
+            username = usersBlocked[i].get("username")
+            usernames.append(username)
+            i += 1
+        return usernames
+    return HttpResponseForbidden("Bad access")
 
 
 def removeUsernameFromList(usernamesToRemove, myList):
@@ -681,93 +718,99 @@ def removeUsernameFromList(usernamesToRemove, myList):
 @csrf_exempt  
 def deleteProfile(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    while True:
-        random_number = random.randint(10000, 99999)
-        name = f"user_{random_number}"
-        email = f"{name}@delete"
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        
+        while True:
+            random_number = random.randint(10000, 99999)
+            name = f"user_{random_number}"
+            email = f"{name}@delete"
+            if not user.isFrom42 :
+                password = f"{random_number}"
+            if not User.objects.filter(username=name).exists():
+                break
+        user.sup = True
+        user.username = name
+        user.profilePicture = 'default.jpg'
         if not user.isFrom42 :
-            password = f"{random_number}"
-        if not User.objects.filter(username=name).exists():
-            break
-    user.sup = True
-    user.username = name
-    user.profilePicture = 'default.jpg'
-    if not user.isFrom42 :
-        user.password = password
-    user.email = email
-    user.save()
-    return JsonResponse({'success': True})
+            user.password = password
+        user.email = email
+        user.save()
+        return JsonResponse({'success': True})
+    return HttpResponseForbidden("Bad access")
 
 
 @csrf_exempt  
 def exportProfile(request):
     
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    
-    
-    user_data = {
-        "username": user.username,
-        "email": user.email,
-        "data_joined" : user.date_joined.isoformat(),
-        "status": user.status,
-        "is_active" : user.is_active,
-        "is_staff" : user.is_staff,
-        "is_superuser" : user.is_superuser,
-        "statut" : user.status,
-        "profilePicture": user.profilePicture,
-        "isFrom42": user.isFrom42,
-        "myid42": user.myid42,
-        "langue": user.langue,
-        "dauth": user.dauth,
-        "sup" : user.sup,
-        "otp_code": user.otp_code,
-        "otp_created_at": user.otp_created_at,
-        "delete_profile" : user.sup,
-        "Tournament_win" : user.tournamentsWin
-    }
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        
+        
+        user_data = {
+            "username": user.username,
+            "email": user.email,
+            "data_joined" : user.date_joined.isoformat(),
+            "status": user.status,
+            "is_active" : user.is_active,
+            "is_staff" : user.is_staff,
+            "is_superuser" : user.is_superuser,
+            "statut" : user.status,
+            "profilePicture": user.profilePicture,
+            "isFrom42": user.isFrom42,
+            "myid42": user.myid42,
+            "langue": user.langue,
+            "dauth": user.dauth,
+            "sup" : user.sup,
+            "otp_code": user.otp_code,
+            "otp_created_at": user.otp_created_at,
+            "delete_profile" : user.sup,
+            "Tournament_win" : user.tournamentsWin
+        }
 
-    invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
-    invitations_received = list(Invitation.objects.filter(receiver=user).values())
-    
-    friends = list(FriendsList.objects.filter(user1=user).values()) + list(FriendsList.objects.filter(user2=user).values())
-    
-    blocked = list(RelationsBlocked.objects.filter(userWhoBlocks=user).values())
-    
-    game_invitations = list(GameInvitation.objects.filter(leader=user).values()) + list(GameInvitation.objects.filter(userInvited=user).values())
-    
-    messages_sent = list(Message.objects.filter(sender=user).values())
-    messages_received = list(Message.objects.filter(receiver=user).values())
-    
-    match_history = list(MatchHistory.objects.filter(Q(player1=user) | Q(player2=user)).values())
+        invitations_sent = list(Invitation.objects.filter(expeditor=user).values())
+        invitations_received = list(Invitation.objects.filter(receiver=user).values())
+        
+        friends = list(FriendsList.objects.filter(user1=user).values()) + list(FriendsList.objects.filter(user2=user).values())
+        
+        blocked = list(RelationsBlocked.objects.filter(userWhoBlocks=user).values())
+        
+        game_invitations = list(GameInvitation.objects.filter(leader=user).values()) + list(GameInvitation.objects.filter(userInvited=user).values())
+        
+        messages_sent = list(Message.objects.filter(sender=user).values())
+        messages_received = list(Message.objects.filter(receiver=user).values())
+        
+        match_history = list(MatchHistory.objects.filter(Q(player1=user) | Q(player2=user)).values())
 
-    full_data = {
-        "profile": user_data,
-        "invitations_sent": invitations_sent,
-        "invitations_received": invitations_received,
-        "friends": friends,
-        "blocked_users": blocked,
-        "game_invitations": game_invitations,
-        "messages_sent": messages_sent,
-        "messages_received": messages_received,
-        "match_history": match_history,
-    }
+        full_data = {
+            "profile": user_data,
+            "invitations_sent": invitations_sent,
+            "invitations_received": invitations_received,
+            "friends": friends,
+            "blocked_users": blocked,
+            "game_invitations": game_invitations,
+            "messages_sent": messages_sent,
+            "messages_received": messages_received,
+            "match_history": match_history,
+        }
 
-    return JsonResponse(full_data, json_dumps_params={'indent': 2})
+        return JsonResponse(full_data, json_dumps_params={'indent': 2})
+    return HttpResponseForbidden("Bad access")
 
 
 
 def getGameSettings(request):
     payload = middleWareAuthentication(request)
-    user = User.objects.filter(id = payload['id']).first()
-    if user:
-        gameSettings = GameSettings.objects.filter(user=user).first()
-        serializer = GameSettingsSerializer(gameSettings)
-        return JsonResponse(serializer.data)
-    else:
-        return HttpResponseForbidden("Bad access")
+    if payload:
+        user = User.objects.filter(id = payload['id']).first()
+        if user:
+            gameSettings = GameSettings.objects.filter(user=user).first()
+            serializer = GameSettingsSerializer(gameSettings)
+            return JsonResponse(serializer.data)
+        else:
+            return HttpResponseForbidden("Bad access")
+    return HttpResponseForbidden("Bad access")
 
 
 @csrf_exempt
