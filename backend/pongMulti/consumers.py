@@ -411,10 +411,12 @@ class PongConsumer(AsyncWebsocketConsumer):
 
 		if type == "CHECK-GAME-INVITATION":
 			splitMessage = str(message).split('|')
-			if splitMessage[0] == str(PongConsumer.players[self.room_id][0]):
-				PongConsumer.expectedPlayers[self.room_id]['player1'] = splitMessage[0]
-				PongConsumer.expectedPlayers[self.room_id]['player2'] = splitMessage[1]
-		
+			logger.info("CHECK-GAME-INVITATION --> %s", splitMessage)
+			if PongConsumer.players[self.room_id]:
+				if splitMessage[0] == str(PongConsumer.players[self.room_id][0]):
+					PongConsumer.expectedPlayers[self.room_id]['player1'] = splitMessage[0]
+					PongConsumer.expectedPlayers[self.room_id]['player2'] = splitMessage[1]
+				
 		###########
 		# RECEIVE #
 		###########
