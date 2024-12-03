@@ -711,6 +711,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserInvited = await getUserById(myUserInvitedId)
             myRoomId = data.get("roomId")
             stringParse = str(myUser.id) + "|" + str(myUserInvitedId)
+            await asyncio.sleep(2)
             
             try:
                 gameInvitation = GameInvitation(leader=myUser, userInvited=myUserInvited, roomId=myRoomId)
@@ -720,6 +721,7 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
 		        "type": "CHECK-GAME-INVITATION",
 		        "users": stringParse
 	            }
+                logger.info("dataToSend --> %s", dataToSend)
                 await sendToShareSocket(self, dataToSend)
                 await sendToClient2(self, gameInvitation, str(myUserInvitedId))
                 

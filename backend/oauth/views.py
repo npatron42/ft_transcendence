@@ -105,7 +105,7 @@ def attributeToUserJWT(myUser: User):
 	userId = myUser.id
 	myPayload = {
 		'id': userId,
-		'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=6000000),
+		'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=48),
 		'iat': datetime.datetime.utcnow()
 	}
 	token = jwt.encode(myPayload, os.getenv('SECRET_KEY'), algorithm='HS256')
