@@ -710,6 +710,11 @@ class Tournament(AsyncWebsocketConsumer):
     async def disconnect(self, close_code):
         myUser = self.scope["user"]
         if myUser.is_authenticated:
+            logger.info("Before disconnection usersInTournament --> %s", userInTournament)
+            logger.info("Before disconnection allSockets --> %s", allSockets)
+
+            #Player in my tournament but game not launched
+
             if Tournament.isPlayerInGame[myUser.id] == False:
                 idTournament = erasePlayerFromTournament(myUser)
                 if idTournament != None:
@@ -724,10 +729,15 @@ class Tournament(AsyncWebsocketConsumer):
                     else:
                         defineUserSurrend(myUser)
             removeSocketIntoObjects(myUser)
+
+
+
             wasLeader, id = isUserWasLeaderInTournamentNotFinished(myUser)
             if wasLeader == True:
                 checkUserLeader(myUser, id)
                 userId = str(myUser.id)
+            logger.info("After disconnection usersInTournament --> %s", userInTournament)
+            logger.info("After disconnection allSockets --> %s", allSockets)
             await self.close()
 
 

@@ -71,7 +71,7 @@ export default function ShowTournaments() {
 							<img src={getMediaUrl(tournament.players[0].profilePicture)} alt={`${tournament.players[0].username}'s profile`} className="profile-picture-tournament"/>
 						</div>
 						<div className="tournamentLine-div">
-							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].username}</span>
+							<span className="modifyWritingNoIdeaCssFuck">{tournament.players[0].tournamentName}</span>
 						</div>
 						<div className="tournamentLine-div">
 							<span className="modifyWritingNoIdeaCssFuck-2">{tournament.players.length} / 4</span>

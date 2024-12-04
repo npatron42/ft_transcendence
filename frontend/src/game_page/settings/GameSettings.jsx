@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import '../css/gameSettings.css';
 import '../css/miniPong.css';
 import { useWebSocket } from '../../provider/WebSocketProvider';
@@ -11,10 +11,11 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     const [currentIndex, setCurrentIndex] = useState(initialIndex);
 
     if (!className) {
-        return <div id="background-container">
-            <div className="loader">
+        return (
+            <div id="background-container">
+                <div className="loader"></div>
             </div>
-        </div>
+        );
     }
 
     const handleNext = () => {
@@ -40,7 +41,7 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
     return (
         <div className="carouselContainer">
             <button onClick={handlePrev} className="carouselButtonRight">
-            <i className="bi bi-arrow-left-square"></i>
+                <i className="bi bi-arrow-left-square"></i>
             </button>
             <div className="carouselContent">
                 <div
@@ -49,7 +50,7 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
                 ></div>
             </div>
             <button onClick={handleNext} className="carouselButtonLeft">
-            <i className="bi bi-arrow-right-square"></i>
+                <i className="bi bi-arrow-right-square"></i>
             </button>
         </div>
     );
@@ -58,12 +59,14 @@ const Carousel = ({ className, initialIndex = 0, onSelectItem, type }) => {
 const GameSettings = () => {
     const { myUser } = useAuth();
     const [gameSettings, setGameSettings] = useState();
-    const [keyBind, setKeyBind] = useState({ up: "w", down: "s" });
+    const [keyBind, setKeyBind] = useState({ up: 'w', down: 's' });
     const [isCheckedUp, setIsCheckedUp] = useState(false);
     const [isCheckedDown, setIsCheckedDown] = useState(false);
     const { t } = useTranslation();
     const [modif, setModif] = useState(false);
     const [text, setText] = useState(t('gameSettings.save'));
+
+    const [selectedSkin, setSelectedSkin] = useState(null);  // Nouveau state pour gérer la sélection de skins
 
     const paddleSkin = [
         { className: 'defaultPaddle' },
@@ -118,6 +121,15 @@ const GameSettings = () => {
         }
     }, [modif]);
 
+    useEffect(() => {
+        if (selectedSkin) {
+            setGameSettings((prevState) => ({
+                ...prevState,
+                [selectedSkin.type]: selectedSkin.className,
+            }));
+        }
+    }, [selectedSkin]);
+
     const handleSaveSettings = async () => {
         try {
             const updatedSettings = {
@@ -140,10 +152,9 @@ const GameSettings = () => {
                 if (!checkKey(event.key)) {
                     return;
                 }
-                if (event.key != keyBind.down) {
+                if (event.key !== keyBind.down) {
                     setKeyBind({ up: event.key, down: keyBind.down });
-                }
-                else {
+                } else {
                     return;
                 }
                 setIsCheckedUp(false);
@@ -151,10 +162,9 @@ const GameSettings = () => {
                 if (!checkKey(event.key)) {
                     return;
                 }
-                if (event.key != keyBind.up) {
+                if (event.key !== keyBind.up) {
                     setKeyBind({ up: keyBind.up, down: event.key });
-                }
-                else {
+                } else {
                     return;
                 }
                 setIsCheckedDown(false);
@@ -163,16 +173,17 @@ const GameSettings = () => {
         setModif(true);
     };
 
-    const handleSelectItem = (className, type) => {
-        setGameSettings({ ...gameSettings, [type]: className });
+    const handleSelectItem = useCallback((className, type) => {
+        setSelectedSkin({ className, type });  // Mise à jour de l'état temporaire
         setModif(true);
-    };
+    }, []);
 
     if (!gameSettings) {
-        return <div id="background-container">
-            <div className="loader">
+        return (
+            <div id="background-container">
+                <div className="loader"></div>
             </div>
-        </div>
+        );
     }
 
     const checkKey = (key) => {
@@ -184,9 +195,6 @@ const GameSettings = () => {
         ];
         return allowedKeys.includes(key);
     };
-    
-    
-
 
     return (
         <div className="gameSettingsGlobalContainer">
@@ -201,9 +209,6 @@ const GameSettings = () => {
                             />
                         </div>
                         <div className="keyBindContainer">
-                            {/* <div className="sectionHeader">
-                                <h2>Key Bind</h2>
-                            </div> */}
                             <section className="container">
                                 <label>
                                     <input
@@ -239,9 +244,6 @@ const GameSettings = () => {
                         </div>
                     </div>
                     <div className="SkinContainer">
-                        {/* <div className="sectionHeader">
-                            <h2>Skin</h2>
-                        </div> */}
                         <div className="paddleSkinContainer">
                             <Carousel
                                 className={paddleSkin}
@@ -269,11 +271,9 @@ const GameSettings = () => {
                     </div>
                 </div>
                 <div className="gameSettingsFooter">
-                <button
-                    className="createJoinButton"
-                    onClick={handleSaveSettings}>
-                    {text}
-                </button>
+                    <button className="createJoinButton" onClick={handleSaveSettings}>
+                        {text}
+                    </button>
                 </div>
             </div>
         </div>

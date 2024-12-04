@@ -1,4 +1,5 @@
 import shutil
+from django.contrib.auth.hashers import make_password
 import json
 from pongMulti.models import MatchHistory
 from django.contrib.auth.hashers import check_password
@@ -628,6 +629,8 @@ def checkPass(request):
     payload = middleWareAuthentication(request)
     if payload:
         user = User.objects.filter(id = payload['id']).first()
+
+        logger.info("user  == %s", user.password)
         
         if user:
             data = json.loads(request.body)
@@ -637,7 +640,8 @@ def checkPass(request):
                 return JsonResponse({'error': 'Invalid data'}, status=400)
             
 
-            if (password==user.password):
+            if check_password(password, user.password):
+            # if (password == user.password):
                 return JsonResponse({'success': True})
             else :
                 return JsonResponse({'success': False})
@@ -659,7 +663,7 @@ def changePass(request):
             return JsonResponse({'success': False})
         
 
-        user.password = password
+        user.password = make_password(password)
         user.save()
         return JsonResponse({'success': True})
     return HttpResponseForbidden("Bad access")

@@ -62,6 +62,7 @@ function Mdp({Actif, setActif}) {
     e.preventDefault();
     try {
       const response = await checkPass(oldPassword);
+      console.log(response);
       if (response.success) {
         setModif(true);
         setActif(true);

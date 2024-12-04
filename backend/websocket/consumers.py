@@ -213,44 +213,6 @@ def giveOnlyFriendsName(friendsList, myUsername):
     return result
 
 
-async def usersListWithoutFriends(friendsList, AllUsers, id): 
-    allFriendsName = []
-    size = len(friendsList)
-    i = 0
-    while i < size:
-            allFriendsName.append(friendsList[i].get("id"))
-            i += 1
-
-    allUsersnames = []
-    size = len(AllUsers)
-    i = 0
-    while i < size:
-        allUsersnames.append(AllUsers[i].get("id"))
-        i += 1
-    allUsersnames.remove(myUsername)
-
-    result = []
-    i = 0
-    size = len(allUsersnames)
-    while i < size:
-        username = allUsersnames[i]
-        if username not in allFriendsName:
-            result.append(username)
-        i += 1
-    i = 0
-    userResult = []
-    size = len(result)
-    if size == 0:
-        return userResult
-    while i < size:
-        myUser = await getUserById(result[i])
-        userResult.append(myUser)
-        i += 1
-    
-    finalUserResult = UserSerializer(userResult, many=True)
-    return finalUserResult.data
-
-
 async def deleteRelationShip(parseLine):
     key, key2 = parseLine.split("|", 1)
     solution1 = parseLine
@@ -656,6 +618,10 @@ class handleSocketConsumer(AsyncWebsocketConsumer):
             myUserSender = await getUserById(sender.get("id"))
             myUserReceiver = await getUserById(receiver.get("id"))
 
+            messageHiHi = data.get("message")
+            logger.info("Len du message --> %d", len(messageHiHi))
+            if len(messageHiHi) > 250:
+                return
             dataToDb = Message(sender=myUserSender, receiver=myUserReceiver, message=data.get("message"))
             await saveMessage(dataToDb)
             await sendDiscussionToBothClient(self, myUserSender, myUserReceiver)

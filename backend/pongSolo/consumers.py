@@ -229,7 +229,7 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 	async def update_ball(self, max_score):
 		PongSoloConsumer.paddle_right_height[self.room_id] = 90
 		PongSoloConsumer.paddle_left_height[self.room_id] = 90
-		speed = 4
+		speed = 7
 		ball = PongSoloConsumer.ball_pos[self.room_id] 
 		direction = PongSoloConsumer.ball_dir[self.room_id] = {'x': random.choice([speed, -speed]), 'y': random.choice([-4, 4])}
 		acceleration = 0.3
@@ -412,15 +412,15 @@ class PongSoloConsumer(AsyncWebsocketConsumer):
 		percent_score = (total_score / 2) * 100 / max_score
 
 		if percent_score < 10:
-			return 4.5
+			return 7.5
 		elif percent_score < 25:
-			return 5
+			return 8
 		elif percent_score < 50:
-			return 5.5
+			return 8.5
 		elif percent_score < 75:
-			return 6
+			return 9
 		else: 
-			return 6.5
+			return 9.5
 
 		############
 		# POWER UP #

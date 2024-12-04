@@ -257,9 +257,9 @@ const PongSolo = ({ roomId, maxScore, powerUp }) => {
             case 'inversed_control':
                 return <img src="../../src/assets/game/inversed_control.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
             case 'decrease_paddle':
-                return <img src="../../src/assets/game/decrease_paddle.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+                return <img src="../../src/assets/game/decrease_paddle.svg" alt="decrease paddle" style={{ width: '40px', height: '40px' }} />;
             case 'x2':
-                return <img src="../../src/assets/game/x2.svg" alt="inversed control" style={{ width: '40px', height: '40px' }} />;
+                return <img src="../../src/assets/game/x2.svg" alt="x2" style={{ width: '40px', height: '40px' }} />;
             case 'solo_play':
                 return <img src="../../src/assets/game/solo_play.svg" alt="solo play" style={{ width: '40px', height: '40px' }} />;
             default:
