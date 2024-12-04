@@ -1,5 +1,6 @@
 import shutil
 import json
+from django.contrib.auth.hashers import make_password, check_password
 from pongMulti.models import MatchHistory
 from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
@@ -574,11 +575,11 @@ def checkPass(request):
         data = json.loads(request.body)
         password = data.get('pass')
 
-        if checkValidPassword(password) == False:
+        if not checkValidPassword(password):
             return JsonResponse({'error': 'Invalid data'}, status=400)
         
 
-        if (password==user.password):
+        if check_password(password , user.password):
             return JsonResponse({'success': True})
         else :
             return JsonResponse({'success': False})
@@ -598,7 +599,7 @@ def changePass(request):
         return JsonResponse({'success': False})
     
 
-    user.password = password
+    user.password = make_password(password)
     user.save()
     return JsonResponse({'success': True})
 
@@ -666,7 +667,7 @@ def deleteProfile(request):
     user.username = name
     user.profilePicture = 'default.jpg'
     if not user.isFrom42 :
-        user.password = password
+        user.password = make_password(password)
     user.email = email
     user.save()
     return JsonResponse({'success': True})
