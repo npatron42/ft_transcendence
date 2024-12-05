@@ -72,7 +72,7 @@ function Mdp({Actif, setActif}) {
         alert(t('profilPage.inco'));
       }
     }catch (error) {
-      alert("echoue");
+      alert(t('profilPage.inco'));
     }
   };
 
